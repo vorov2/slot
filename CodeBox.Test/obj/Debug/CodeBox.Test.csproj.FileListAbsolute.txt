@@ -1,0 +1,11 @@
+C:\repos\codebox\CodeBox.Test\bin\Debug\CodeBox.Test.exe.config
+C:\repos\codebox\CodeBox.Test\obj\Debug\CodeBox.Test.csprojResolveAssemblyReference.cache
+C:\repos\codebox\CodeBox.Test\obj\Debug\CodeBox.Test.MainForm.resources
+C:\repos\codebox\CodeBox.Test\obj\Debug\CodeBox.Test.Properties.Resources.resources
+C:\repos\codebox\CodeBox.Test\obj\Debug\CodeBox.Test.csproj.GenerateResource.Cache
+C:\repos\codebox\CodeBox.Test\bin\Debug\CodeBox.Test.exe
+C:\repos\codebox\CodeBox.Test\bin\Debug\CodeBox.Test.pdb
+C:\repos\codebox\CodeBox.Test\bin\Debug\CodeBox.dll
+C:\repos\codebox\CodeBox.Test\bin\Debug\CodeBox.pdb
+C:\repos\codebox\CodeBox.Test\obj\Debug\CodeBox.Test.exe
+C:\repos\codebox\CodeBox.Test\obj\Debug\CodeBox.Test.pdb

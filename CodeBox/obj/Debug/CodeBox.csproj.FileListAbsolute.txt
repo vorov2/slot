@@ -16,3 +16,9 @@ C:\Projects\Source\Repos\CodeBox\Source\CodeBox\obj\Debug\CodeBox.pdb
 C:\repos\codebox\src\CodeBox\bin\Debug\CodeBox.exe.config
 C:\repos\codebox\src\CodeBox\obj\Debug\CodeBox.exe
 C:\repos\codebox\src\CodeBox\obj\Debug\CodeBox.pdb
+C:\repos\codebox\CodeBox\obj\Debug\CodeBox.pdb
+C:\repos\codebox\CodeBox\bin\Debug\CodeBox.dll
+C:\repos\codebox\CodeBox\bin\Debug\CodeBox.pdb
+C:\repos\codebox\CodeBox\obj\Debug\CodeBox.Properties.Resources.resources
+C:\repos\codebox\CodeBox\obj\Debug\CodeBox.csproj.GenerateResource.Cache
+C:\repos\codebox\CodeBox\obj\Debug\CodeBox.dll
