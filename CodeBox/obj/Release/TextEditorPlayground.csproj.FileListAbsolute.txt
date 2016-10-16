@@ -1,0 +1,8 @@
+C:\Projects\TextEditorPlayground\bin\Release\TextEditorPlayground.exe.config
+C:\Projects\TextEditorPlayground\bin\Release\TextEditorPlayground.exe
+C:\Projects\TextEditorPlayground\bin\Release\TextEditorPlayground.pdb
+C:\Projects\TextEditorPlayground\obj\Release\TextEditorPlayground.Form1.resources
+C:\Projects\TextEditorPlayground\obj\Release\TextEditorPlayground.Properties.Resources.resources
+C:\Projects\TextEditorPlayground\obj\Release\TextEditorPlayground.csproj.GenerateResource.Cache
+C:\Projects\TextEditorPlayground\obj\Release\TextEditorPlayground.exe
+C:\Projects\TextEditorPlayground\obj\Release\TextEditorPlayground.pdb

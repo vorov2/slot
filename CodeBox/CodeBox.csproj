@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A12AC5FD-FDDB-4253-AC43-92F305AC9D56}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeBox</RootNamespace>
+    <AssemblyName>CodeBox</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandManager.cs" />
+    <Compile Include="Commands\ClearSelectionCommand.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CopyCommand.cs" />
+    <Compile Include="Commands\CutCommand.cs" />
+    <Compile Include="Commands\DeleteBackCommand.cs" />
+    <Compile Include="Commands\DeleteCommand.cs" />
+    <Compile Include="Commands\DeleteRangeCommand.cs" />
+    <Compile Include="Commands\DocumentEndCommand.cs" />
+    <Compile Include="Commands\DocumentHomeCommand.cs" />
+    <Compile Include="Commands\ExtendDocumentEndCommand.cs" />
+    <Compile Include="Commands\ExtendDocumentHomeCommand.cs" />
+    <Compile Include="Commands\ExtendDownCommand.cs" />
+    <Compile Include="Commands\ExtendEndCommand.cs" />
+    <Compile Include="Commands\ExtendHomeCommand.cs" />
+    <Compile Include="Commands\ExtendLeftCommand.cs" />
+    <Compile Include="Commands\ExtendPageDownCommand.cs" />
+    <Compile Include="Commands\ExtendPageUpCommand.cs" />
+    <Compile Include="Commands\ExtendRightCommand.cs" />
+    <Compile Include="Commands\ExtendUpCommand.cs" />
+    <Compile Include="Commands\ExtendWordLeftCommand.cs" />
+    <Compile Include="Commands\ExtendWordRightCommand.cs" />
+    <Compile Include="Commands\InsertCharCommand.cs" />
+    <Compile Include="Commands\DownCommand.cs" />
+    <Compile Include="Commands\EndCommand.cs" />
+    <Compile Include="Commands\HomeCommand.cs" />
+    <Compile Include="Commands\InsertNewLineCommand.cs" />
+    <Compile Include="Commands\InsertRangeCommand.cs" />
+    <Compile Include="Commands\PageDownCommand.cs" />
+    <Compile Include="Commands\PageUpCommand.cs" />
+    <Compile Include="Commands\PasteCommand.cs" />
+    <Compile Include="Commands\CaretCommand.cs" />
+    <Compile Include="Commands\SelectAllCommand.cs" />
+    <Compile Include="Commands\SelectionCommand.cs" />
+    <Compile Include="Commands\SelectWordCommand.cs" />
+    <Compile Include="Commands\ShiftTabCommand.cs" />
+    <Compile Include="Commands\TabCommand.cs" />
+    <Compile Include="Commands\WordLeftCommand.cs" />
+    <Compile Include="Commands\WordRightCommand.cs" />
+    <Compile Include="EditorCaret.cs" />
+    <Compile Include="EditorInfo.cs" />
+    <Compile Include="EditorSettings.cs" />
+    <Compile Include="Margins\GutterMargin.cs" />
+    <Compile Include="Margins\LineNumberMargin.cs" />
+    <Compile Include="Margins\Margin.cs" />
+    <Compile Include="Margins\MarginList.cs" />
+    <Compile Include="ObjectModel\Character.cs" />
+    <Compile Include="ObjectModel\CommandBehaviorAttribute.cs" />
+    <Compile Include="EditorContext.cs" />
+    <Compile Include="ObjectModel\ICommand.cs" />
+    <Compile Include="Commands\LeftCommand.cs" />
+    <Compile Include="Commands\UpCommand.cs" />
+    <Compile Include="Commands\RightCommand.cs" />
+    <Compile Include="Editor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectModel\Line.cs" />
+    <Compile Include="ObjectModel\Document.cs" />
+    <Compile Include="ObjectModel\Pos.cs" />
+    <Compile Include="ObjectModel\Range.cs" />
+    <Compile Include="ObjectModel\Selection.cs" />
+    <Compile Include="ObjectModel\Selections.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScrollArea.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

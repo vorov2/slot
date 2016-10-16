@@ -1,0 +1,27 @@
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\bin\Debug\TextEditorPlayground.exe.config
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.Form1.resources
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.Properties.Resources.resources
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.csproj.GenerateResource.Cache
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\bin\Debug\TextEditorPlayground.exe
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\bin\Debug\TextEditorPlayground.pdb
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.exe
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.pdb
+C:\Users\basil_000\Documents\Visual Studio 2012\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.csprojResolveAssemblyReference.cache
+C:\Projects\TextEditorPlayground\bin\Debug\TextEditorPlayground.exe.config
+C:\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.exe
+C:\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.pdb
+C:\Projects\TextEditorPlayground\bin\Debug\TextEditorPlayground.exe
+C:\Projects\TextEditorPlayground\bin\Debug\TextEditorPlayground.pdb
+C:\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.Form1.resources
+C:\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.Properties.Resources.resources
+C:\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.csproj.GenerateResource.Cache
+C:\Projects\TextEditorPlayground\obj\Debug\TextEditorPlayground.csprojResolveAssemblyReference.cache
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\bin\Debug\TextEditorPlayground.exe.config
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\obj\Debug\TextEditorPlayground.exe
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\obj\Debug\TextEditorPlayground.pdb
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\obj\Debug\TextEditorPlayground.csprojResolveAssemblyReference.cache
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\obj\Debug\TextEditorPlayground.Form1.resources
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\obj\Debug\TextEditorPlayground.Properties.Resources.resources
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\obj\Debug\TextEditorPlayground.csproj.GenerateResource.Cache
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\bin\Debug\TextEditorPlayground.exe
+C:\WORKSPACE\Projects\_MSA_EXT\TextEditorPlayground\bin\Debug\TextEditorPlayground.pdb
