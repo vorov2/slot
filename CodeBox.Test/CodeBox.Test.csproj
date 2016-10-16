@@ -68,9 +68,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="bin\Debug\CodeBox.Test.exe.config" />
-    <None Include="bin\Debug\CodeBox.Test.vshost.exe.config" />
-    <None Include="bin\Debug\CodeBox.Test.vshost.exe.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -90,16 +87,7 @@
       <Name>CodeBox</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="bin\Debug\CodeBox.dll" />
-    <Content Include="bin\Debug\CodeBox.pdb" />
-    <Content Include="bin\Debug\CodeBox.Test.exe" />
-    <Content Include="bin\Debug\CodeBox.Test.pdb" />
-    <Content Include="bin\Debug\CodeBox.Test.vshost.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Release\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
