@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.Scroll | ActionExponent.ClearSelections)]
+    [CommandBehavior(Scroll | ClearSelections)]
     internal class RightCommand : CaretCommand
     {
         protected override Pos GetPosition(EditorContext context, Pos caret)
@@ -22,10 +23,7 @@ namespace CodeBox.Commands
             var line = doc.Lines[pos.Line];
 
             if (pos.Col > line.Length && pos.Line < doc.Lines.Count)
-            {
-                line = doc.Lines[pos.Line + 1];
-                pos = new Pos(line.Index, 0);
-            }
+                pos = new Pos(pos.Line + 1, 0);
 
             return pos;
         }

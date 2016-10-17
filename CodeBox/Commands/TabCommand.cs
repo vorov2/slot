@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.Scroll | ActionExponent.Undoable)]
+    [CommandBehavior(Modify | Scroll | Undoable)]
     internal sealed class TabCommand : InsertRangeCommand
     {
         private bool undoIndent;

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.Scroll | ActionExponent.ClearSelections)]
+    [CommandBehavior(Scroll | ClearSelections)]
     internal class SelectWordCommand : Command
     {
         internal enum Strategy
@@ -26,8 +27,8 @@ namespace CodeBox.Commands
                 var line = context.Document.Lines[sel.Caret.Line];
 
                 if (line.Length > 0)
-                    range = new Range(new Pos(line.Index, line.Length - 1), 
-                        new Pos(line.Index, line.Length));
+                    range = new Range(new Pos(sel.Caret.Line, line.Length - 1), 
+                        new Pos(sel.Caret.Line, line.Length));
             }
 
             if (range != null)
@@ -63,7 +64,7 @@ namespace CodeBox.Commands
 
                 if (start < 0) start = 0;
                 if (end > line.Length) end = line.Length;
-                return new Range(new Pos(line.Index, start), new Pos(line.Index, end));
+                return new Range(new Pos(caret.Line, start), new Pos(caret.Line, end));
             }
         }
 

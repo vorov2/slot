@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.RestoreCaret | ActionExponent.Scroll | ActionExponent.Undoable)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     internal sealed class DeleteBackCommand : Command //Tested
     {
         private IEnumerable<Character> @string;
@@ -41,7 +42,7 @@ namespace CodeBox.Commands
                     var txt = lines[caret.Line];
                     lines.RemoveAt(caret.Line);
                     ln.Append(txt);
-                    sel.Clear(new Pos(ln.Index, col));
+                    sel.Clear(new Pos(caret.Line - 1, col));
                 }
             }
 
@@ -65,7 +66,8 @@ namespace CodeBox.Commands
             else if (@char == Character.NewLine)
             {
                 pos = new Pos(undoPos.Line, undoPos.Col);
-                var txt = DeleteRangeCommand.DeleteRange(context, new Selection(pos, new Pos(pos.Line, context.Document.Lines[pos.Line].Length)));
+                var txt = DeleteRangeCommand.DeleteRange(context, new Selection(pos,
+                    new Pos(pos.Line, context.Document.Lines[pos.Line].Length)));
                 var ipos = InsertNewLineCommand.InsertNewLine(context.Document, pos);
                 context.Document.Lines[ipos.Line].Append(txt);
                 pos = ipos;

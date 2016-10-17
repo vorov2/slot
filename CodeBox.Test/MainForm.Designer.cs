@@ -43,8 +43,6 @@
             // 
             // editor1
             // 
-            this.editor1.AutoScroll = true;
-            this.editor1.AutoScrollMinSize = new System.Drawing.Size(56, 570);
             this.editor1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.editor1.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.editor1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -55,6 +53,7 @@
             this.editor1.Size = new System.Drawing.Size(1108, 578);
             this.editor1.TabIndex = 0;
             this.editor1.Text = "editor1";
+            this.editor1.StyleNeeded += new System.EventHandler<CodeBox.StyleNeededEventArgs>(this.editor1_StyleNeeded);
             // 
             // menuStrip1
             // 
@@ -133,7 +132,7 @@
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -141,7 +140,7 @@
             this.Controls.Add(this.editor1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.Activated += new System.EventHandler(this.Form1_Activated);
             this.Load += new System.EventHandler(this.Form1_Load);

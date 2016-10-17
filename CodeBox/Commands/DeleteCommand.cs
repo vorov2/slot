@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.RestoreCaret | ActionExponent.Scroll | ActionExponent.Undoable)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     internal sealed class DeleteCommand : Command //Tested
     {
         private IEnumerable<Character> @string;
@@ -34,7 +35,7 @@ namespace CodeBox.Commands
                 }
                 else if (caret.Line < lines.Count)
                 {
-                    var nl = lines[ln.Index + 1];
+                    var nl = lines[caret.Line + 1];
                     @char = Character.NewLine;
                     lines.Remove(nl);
                     ln.Append(nl);

@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.RestoreCaret | ActionExponent.Scroll | ActionExponent.Undoable)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     internal sealed class CutCommand : DeleteRangeCommand
     {
         public override void Execute(EditorContext context, Selection sel)

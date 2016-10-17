@@ -13,7 +13,7 @@ namespace CodeBox.ObjectModel
 
         }
 
-        internal Range(Pos start, Pos end)
+        public Range(Pos start, Pos end)
         {
             Start = start;
             End = end;

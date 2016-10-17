@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.Silent)]
+    [CommandBehavior(Silent)]
     internal sealed class CopyCommand : Command
     {
         public override void Execute(EditorContext context, Selection sel)
@@ -43,7 +44,7 @@ namespace CodeBox.Commands
                     .MakeString(ctx.Eol));
                 var len = endLine.Length - sel.End.Col;
 
-                if (endLine.Index - startLine.Index > 0)
+                if (sel.End.Line - sel.Start.Line > 0)
                 {
                     sb.AppendLine();
 

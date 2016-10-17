@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.RestoreCaret | ActionExponent.Undoable | ActionExponent.Scroll)]
+    [CommandBehavior(Modify | RestoreCaret | Undoable | Scroll)]
     internal class InsertRangeCommand : Command //Tested
     {
         private Selection undo;
@@ -64,7 +65,7 @@ namespace CodeBox.Commands
                 if (len == 1)
                 {
                     startLine.Insert(pos.Col, textRange);
-                    retPos = new Pos(startLine.Index, pos.Col + textRange.Count());
+                    retPos = new Pos(pos.Line, pos.Col + textRange.Count());
                 }
                 else
                 {
@@ -80,7 +81,7 @@ namespace CodeBox.Commands
                         {
                             startLine.RemoveRange(pos.Col, startLine.Length - pos.Col);
                             startLine.Insert(pos.Col, ln);
-                            retPos = new Pos(startLine.Index, startLine.Length);
+                            retPos = new Pos(pos.Line, startLine.Length);
                         }
                         else if (last)
                         {

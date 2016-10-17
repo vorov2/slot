@@ -62,7 +62,6 @@ namespace CodeBox
                 int count;
                 var exp = Undo(ctx, undoStack.Peek().Id, out count, out pos);
 
-                ctx.Document.ReindexLines();
                 SetCarets(ctx, count, pos);
                 DoAftermath(exp);
             }
@@ -105,7 +104,6 @@ namespace CodeBox
                 int count;
                 var exp = Redo(ctx, redoStack.Peek().Id, out count, out pos);
 
-                ctx.Document.ReindexLines();
                 SetCarets(ctx, count, pos);
                 DoAftermath(exp);
             }
@@ -233,10 +231,7 @@ namespace CodeBox
                 EndUndoAction();
 
             if (restoreCaret)
-            {
-                ctx.Document.ReindexLines();
                 SetCarets(ctx, ctx.Document.Selections.TotalCount, lastSel.Caret);
-            }
 
             DoAftermath(exp);
         }
@@ -265,7 +260,7 @@ namespace CodeBox
 
                 if (line.TrailingCaret)
                 {
-                    sels.Add(new Selection(new Pos(line.Index, line.Length)));
+                    sels.Add(new Selection(new Pos(i, line.Length)));
                     line.TrailingCaret = false;
                     count--;
 
@@ -281,7 +276,7 @@ namespace CodeBox
 
                     if (c.HasCaret)
                     {
-                        sels.Add(new Selection(new Pos(line.Index, j)));
+                        sels.Add(new Selection(new Pos(i, j)));
                         line[j] = c.WithoutCaret();
                         count--;
 
@@ -294,14 +289,23 @@ namespace CodeBox
 
         private void DoAftermath(ActionExponent exp)
         {
-            if ((exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret)
+            var scrolled = false;
+
+            if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
                 editor.InvalidateLines();
 
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
-                editor.UpdateVisibleRectangle();
+                scrolled = editor.UpdateVisibleRectangle();
 
             if ((exp & ActionExponent.Silent) != ActionExponent.Silent)
                 editor.Redraw();
+
+            if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
+                || (exp & ActionExponent.Modify) == ActionExponent.Modify)
+            {
+                editor.ClearFirstLastVisibles();
+                editor.Restyle();
+            }
         }
     }
 }

@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.RestoreCaret | ActionExponent.Undoable | ActionExponent.Scroll)]
+    [CommandBehavior(Modify | RestoreCaret | Undoable | Scroll)]
     internal sealed class PasteCommand : InsertRangeCommand
     {
         public override void Execute(EditorContext context, Selection sel)

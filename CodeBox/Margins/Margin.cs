@@ -16,7 +16,7 @@ namespace CodeBox.Margins
 
         }
 
-        public virtual void Click(int x, int y, Line line, EditorContext context)
+        public virtual void Click(int x, int y, int lineIndex, EditorContext context)
         {
             
         }

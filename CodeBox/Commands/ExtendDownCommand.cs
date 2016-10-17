@@ -1,9 +1,10 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.Scroll)]
+    [CommandBehavior(Scroll)]
     internal sealed class ExtendDownCommand : SelectionCommand
     {
         protected override Pos Select(EditorContext context, Pos pos)

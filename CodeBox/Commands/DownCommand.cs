@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.Scroll | ActionExponent.ClearSelections)]
+    [CommandBehavior(Scroll | ClearSelections)]
     internal class DownCommand : CaretCommand
     {
         protected override Pos GetPosition(EditorContext context, Pos pos)
@@ -33,7 +34,7 @@ namespace CodeBox.Commands
                     {
                         var newLn = doc.Lines[pos.Line + 1];
                         var newCut = newLn.GetCut(0);
-                        return new Pos(newLn.Index, newCut > tetra ? tetra : newCut);
+                        return new Pos(pos.Line + 1, newCut > tetra ? tetra : newCut);
                     }
                 }
                 else
@@ -47,7 +48,7 @@ namespace CodeBox.Commands
             else if (pos.Line + 1 < doc.Lines.Count)
             {
                 var ln = doc.Lines[pos.Line + 1];
-                return new Pos(ln.Index, ln.Length < pos.Col ? ln.Length : pos.Col);
+                return new Pos(pos.Line + 1, ln.Length < pos.Col ? ln.Length : pos.Col);
             }
             else
                 return pos;

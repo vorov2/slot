@@ -114,7 +114,7 @@ namespace CodeBox
                     caretY = y;
                 }
 
-                g.FillRectangle(Editor.Foreground, x, 
+                g.FillRectangle(editor.Renderer.GetBrush(Editor.ForegroundColor), x, 
                     BlockCaret ? y + editor.Info.LineHeight - h : y, w, h);
             }
         }
@@ -123,13 +123,13 @@ namespace CodeBox
         {
             return BlockCaret ?
                 editor.Info.CharWidth :
-                (Int32)Math.Round(g.DpiX / 96f) * 2;
+                (int)Math.Round(g.DpiX / 96f) * 2;
         }
 
         private int GetCaretHeight(Graphics g)
         {
             return BlockCaret ?
-                (Int32)Math.Round(g.DpiY / 96f) * 2 :
+                (int)Math.Round(g.DpiY / 96f) * 2 :
                 editor.Info.LineHeight;
         }
 

@@ -14,12 +14,6 @@ namespace CodeBox.ObjectModel
             Id = Guid.NewGuid();
             Selections = new Selections();
         }
-
-        internal void ReindexLines()
-        {
-            for (var i = 0; i < Lines.Count; i++)
-                Lines[i].Index = i;
-        }
         
         internal int LineIndexById(int id)
         {
@@ -38,7 +32,7 @@ namespace CodeBox.ObjectModel
 
         internal int LineSequence { get; set; }
 
-        internal List<Line> Lines { get; private set; }
+        public List<Line> Lines { get; private set; }
 
         internal Selections Selections { get; private set; }
     }

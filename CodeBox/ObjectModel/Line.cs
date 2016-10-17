@@ -30,8 +30,6 @@ namespace CodeBox.ObjectModel
         }
 
         internal int Y { get; set; }
-        
-        internal int Index { get; set; }
 
         internal bool TrailingCaret { get; set; }
 
@@ -41,6 +39,8 @@ namespace CodeBox.ObjectModel
         {
             get { return chars.Count; }
         }
+
+        public byte State { get; set; }
 
         public string Text
         {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
+using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ActionExponent.RestoreCaret | ActionExponent.Scroll | ActionExponent.Undoable)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     internal class DeleteRangeCommand : Command
     {
         protected IEnumerable<Character> data;
@@ -60,7 +61,7 @@ namespace CodeBox.Commands
                 if (len > 0)
                     startLine.Append(endLine.GetRange(sel.End.Col, len));
 
-                if (endLine.Index - startLine.Index > 0)
+                if (sel.End.Line - sel.Start.Line > 0)
                 {
                     range.Add(Character.NewLine);
 

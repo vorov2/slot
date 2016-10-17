@@ -31,6 +31,8 @@ namespace CodeBox.ObjectModel
 
         ClearSelections = 0x10,
 
-        Undoable = 0x20
+        Undoable = 0x20,
+
+        Modify = 0x40
     }
 }

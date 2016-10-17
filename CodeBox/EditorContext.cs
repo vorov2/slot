@@ -56,6 +56,8 @@ namespace CodeBox
 
         public string String { get; internal set; }
 
+        public int Edits { get; set; }
+
         public int StripesPerScreen
         {
             get { return Info.ClientHeight / Info.LineHeight; }
@@ -83,6 +85,11 @@ namespace CodeBox
         public EditorInfo Info
         {
             get { return editor.Info; }
+        }
+
+        internal Renderer Renderer
+        {
+            get { return editor.Renderer; }
         }
     }
 }
