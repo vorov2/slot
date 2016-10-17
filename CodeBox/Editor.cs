@@ -37,9 +37,6 @@ namespace CodeBox
             
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
-        private static extern bool ShowScrollBar(IntPtr hWnd, int wBar, bool bShow);
         public void HideScrolls()
         {
             //ShowScrollBar(Handle, 3, false);
