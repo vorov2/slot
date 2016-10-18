@@ -8,30 +8,33 @@ using CodeBox.ObjectModel;
 
 namespace CodeBox.Margins
 {
-    public sealed class GutterMargin : Margin
+    public class GutterMargin : Margin
     {
-        public override void Click(int x, int y, int lineIndex, EditorContext context)
+        public override MarginEffects MouseDown(Point loc, EditorContext context)
         {
             context.Document.Selections.Clear();
             var sel = context.Document.Selections.Main;
-            sel.Start = new Pos(lineIndex, 0);
-            sel.End = new Pos(lineIndex, context.Document.Lines[lineIndex].Length);
+            var lineIndex = context.Editor.FindLineByLocation(loc.Y);
+
+            if (lineIndex >= 0)
+            {
+                sel.Start = new Pos(lineIndex, 0);
+                sel.End = new Pos(lineIndex, context.Document.Lines[lineIndex].Length);
+            }
+
+            return MarginEffects.Redraw;
         }
 
         public override bool Draw(Graphics g, Rectangle bounds, EditorContext ctx)
         {
-            _width = ctx.Info.CharWidth;
             g.FillRectangle(ctx.Renderer.GetBrush(Editor.BackgroundColor),
-                new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, _width, ctx.Info.ClientHeight));
+                new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, CalculateSize(ctx), bounds.Height));
             return true;
         }
 
-        private int _width;
-        public override int Width
+        public override int CalculateSize(EditorContext ctx)
         {
-            get { return _width; }
+            return ctx.Info.CharWidth;
         }
-
-        public bool MarkCurrentLine { get; set; }
     }
 }

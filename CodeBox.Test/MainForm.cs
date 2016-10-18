@@ -25,6 +25,8 @@ namespace CodeBox.Test
         {
             editor1.LeftMargins.Add(new LineNumberMargin { MarkCurrentLine = true });
             editor1.LeftMargins.Add(new GutterMargin());
+            editor1.RightMargins.Add(new ScrollBarMargin());
+            editor1.BottomMargins.Add(new ScrollBarMargin());
             editor1.Text = File.ReadAllText("C:\\test\\doc.json");
         }
         
@@ -32,7 +34,6 @@ namespace CodeBox.Test
         private void Form1_Activated(object sender, EventArgs e)
         {
             editor1.Focus();
-            editor1.HideScrolls();
         }
         
 
@@ -70,10 +71,10 @@ namespace CodeBox.Test
         {
             Focus();
         }
-        int count = 0;
+        
         private void editor1_StyleNeeded(object sender, StyleNeededEventArgs e)
         {
-            Console.WriteLine(count++);
+            //Console.WriteLine("StyleNeeded:"+count++);
             //var txt = editor1.GetTextRange(e.Range);
             editor1.StyleRange(0, e.Range);
             var state = 0;// e.Range.Start.Line > 0 ? editor1.Document.Lines[e.Range.Start.Line - 1].State : 0;

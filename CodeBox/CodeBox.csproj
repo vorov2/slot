@@ -93,7 +93,9 @@
     <Compile Include="Margins\GutterMargin.cs" />
     <Compile Include="Margins\LineNumberMargin.cs" />
     <Compile Include="Margins\Margin.cs" />
+    <Compile Include="Margins\MarginEffect.cs" />
     <Compile Include="Margins\MarginList.cs" />
+    <Compile Include="Margins\ScrollBarMargin.cs" />
     <Compile Include="ObjectModel\Character.cs" />
     <Compile Include="ObjectModel\CommandBehaviorAttribute.cs" />
     <Compile Include="EditorContext.cs" />
@@ -102,7 +104,7 @@
     <Compile Include="Commands\UpCommand.cs" />
     <Compile Include="Commands\RightCommand.cs" />
     <Compile Include="Editor.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />

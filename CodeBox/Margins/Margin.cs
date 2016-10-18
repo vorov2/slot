@@ -16,13 +16,23 @@ namespace CodeBox.Margins
 
         }
 
-        public virtual void Click(int x, int y, int lineIndex, EditorContext context)
+        public virtual MarginEffects MouseDown(Point loc, EditorContext ctx)
         {
-            
+            return MarginEffects.None;
         }
 
-        public abstract bool Draw(Graphics g, Rectangle bounds, EditorContext context);
+        public virtual MarginEffects MouseUp(Point loc, EditorContext ctx)
+        {
+            return MarginEffects.None;
+        }
 
-        public abstract int Width { get; }
+        public virtual MarginEffects MouseMove(Point loc, EditorContext ctx)
+        {
+            return MarginEffects.None;
+        }
+
+        public abstract bool Draw(Graphics g, Rectangle bounds, EditorContext ctx);
+
+        public abstract int CalculateSize(EditorContext ctx);
     }
 }

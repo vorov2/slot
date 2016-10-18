@@ -63,9 +63,9 @@ namespace CodeBox
             get { return Info.ClientHeight / Info.LineHeight; }
         }
 
-        public Point Scroll
+        public Rectangle Scroll
         {
-            get { return editor.AutoScrollPosition; }
+            get { return new Rectangle(editor.scrollX, editor.scrollY, editor.scrollXMax, editor.scrollYMax); }
         }
 
         public bool Overtype
@@ -90,6 +90,11 @@ namespace CodeBox
         internal Renderer Renderer
         {
             get { return editor.Renderer; }
+        }
+
+        internal Editor Editor
+        {
+            get { return editor; }
         }
     }
 }

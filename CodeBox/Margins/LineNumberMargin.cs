@@ -8,35 +8,21 @@ using CodeBox.ObjectModel;
 
 namespace CodeBox.Margins
 {
-    public sealed class LineNumberMargin : Margin
+    public sealed class LineNumberMargin : GutterMargin
     {
-        private int lastScrollY = -1;
-
-        public override void Click(int x, int y, int lineIndex, EditorContext context)
-        {
-            context.Document.Selections.Clear();
-            var sel = context.Document.Selections.Main;
-            sel.Start = new Pos(lineIndex, 0);
-            sel.End = new Pos(lineIndex, context.Document.Lines[lineIndex].Length);
-        }
-
         public override bool Draw(Graphics g, Rectangle bounds, EditorContext ctx)
         {
             var sc = ctx.Scroll;
 
-            //if (lastScrollY == sc.Y)
-            //    return false;
-            lastScrollY = sc.Y;
             var lines = ctx.Document.Lines;
             var info = ctx.Info;
             var len = lines.Count.ToString().Length;
-            _width = (len + 3) * info.CharWidth;
             var line = lines[0];
             var lineIndex = 0;
             var caret = ctx.Document.Selections.Main.Caret;
 
             g.FillRectangle(ctx.Renderer.GetBrush(Editor.BackgroundColor), 
-                new Rectangle(bounds.X - sc.X, bounds.Y - sc.Y, _width, info.ClientHeight));
+                new Rectangle(bounds.X - sc.X, bounds.Y - sc.Y, CalculateSize(ctx), info.ClientHeight));
             var sb = new StringBuilder();
             do
             {
@@ -63,10 +49,9 @@ namespace CodeBox.Margins
             } while (true);
         }
 
-        private int _width;
-        public override int Width
+        public override int CalculateSize(EditorContext ctx)
         {
-            get { return _width; }
+            return (ctx.Document.Lines.Count.ToString().Length + 3) * ctx.Info.CharWidth;
         }
 
         public bool MarkCurrentLine { get; set; }

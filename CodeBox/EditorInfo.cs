@@ -26,24 +26,39 @@ namespace CodeBox
             get { return 0; } //Temp
         }
 
+        public int RightMargin
+        {
+            get { return editor.RightMargins.TotalWidth; }
+        }
+
+        public int BottomMargin
+        {
+            get { return editor.BottomMargins.TotalWidth; }
+        }
+
         public int ClientWidth
         {
-            get { return editor.ClientSize.Width - LeftMargin; }
+            get { return editor.ClientSize.Width - LeftMargin - RightMargin; }
         }
 
         public int ClientHeight
         {
-            get { return editor.ClientSize.Height - TopMargin; } //Temp
+            get { return editor.ClientSize.Height - TopMargin - BottomMargin; }
         }
 
         public int IntegralHeight
         {
-            get { return (ClientHeight / LineHeight) * LineHeight - editor.AutoScrollPosition.Y; }
+            get { return (ClientHeight / LineHeight) * LineHeight - editor.scrollY; }
         }
         
         public int CharWidth
         {
             get { return editor.FontSize.Width; }
+        }
+
+        public int CharHeight
+        {
+            get { return editor.FontSize.Height; }
         }
 
         public int LineHeight

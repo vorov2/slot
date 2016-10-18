@@ -59,7 +59,7 @@ namespace CodeBox.Margins
                 var w = 0;
 
                 foreach (var m in margins)
-                    w += m.Width;
+                    w += m.CalculateSize(editor.GetEditorContext());
 
                 return w;
             }
