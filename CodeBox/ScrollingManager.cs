@@ -19,6 +19,10 @@ namespace CodeBox
         internal bool UpdateVisibleRectangle()
         {
             var caret = editor.Document.Selections.Main.Caret;
+
+            if (caret.Line >= editor.Document.Lines.Count)
+                return false;
+
             var sv = IsLineStripeVisible(caret);
             var update = false;
 
@@ -27,7 +31,7 @@ namespace CodeBox
                 var sign = Math.Sign(sv);
 
                 if (Math.Abs(sv) > 1 && caret.Line + sign < editor.Lines.Count
-                    && IsLineStripeVisible(new Pos(caret.Line + sign, caret.Col)) == 0)
+                    && sign < 0 && IsLineStripeVisible(new Pos(caret.Line + sign, caret.Col)) == 0)
                     sv = sign;
 
                 ScrollY(sv);
@@ -76,10 +80,10 @@ namespace CodeBox
             var stripe = ln.GetStripe(pos.Col);
             var cy = editor.Info.EditorTop + ln.Y + stripe * editor.Info.LineHeight + Y;
 
-            if (cy < 0)
+            if (cy < editor.Info.EditorTop)
                 return -(cy / editor.Info.LineHeight - 1);
-            else if (cy + editor.Info.LineHeight > editor.ClientSize.Height - editor.Info.BottomMargin)
-                return -(cy / editor.Info.LineHeight);
+            else if (cy + editor.Info.LineHeight > editor.Info.EditorBottom)//editor.ClientSize.Height - editor.Info.BottomMargin - editor.Info.EditorTop)
+                return -((cy - editor.Info.EditorTop) / editor.Info.LineHeight);
             else
                 return 0;
         }

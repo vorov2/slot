@@ -134,10 +134,10 @@ namespace CodeBox.ObjectModel
                 if (start > end)
                 {
                     end = start;
-                    start = s.Start;
+                    start = s.End;
                 }
 
-                if (!s.IsEmpty && lineIndex >= s.Start.Line && lineIndex <= s.End.Line)
+                if (!s.IsEmpty && lineIndex >= start.Line && lineIndex <= end.Line)
                     return true;
             }
 

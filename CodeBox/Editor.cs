@@ -362,11 +362,9 @@ namespace CodeBox
                         g.FillRectangle(CachedBrush.Create(high ? HighlightColor : style.BackColor.Value),
                             new Rectangle(x, y, xw, Info.LineHeight));
 
-                    var fnt = style.FontStyle != null ? CachedFont.Create(font.Name, font.Size, style.FontStyle.Value)
-                        : font;
+                    var fnt = style.FontStyle != null ? CachedFont.Create(font.Name, font.Size, style.FontStyle.Value) : font;
                     if (visible)
                         g.DrawString(str, fnt, CachedBrush.Create(col), new PointF(x, y), sf);
-                    //Renderer.DrawString(g, str, fnt, col, x, y);
 
                     if (visible && Document.Selections.HasCaret(new Pos(lineIndex, i)))
                     {
@@ -472,25 +470,21 @@ namespace CodeBox
             {
                 Cursor = Cursors.Arrow;
                 MouseMargins(e.Location, LeftMargins, 0, MarginMethod.MouseMove);
-                return;
             }
             else if (e.X > ClientSize.Width - Info.RightMargin)
             {
                 Cursor = Cursors.Arrow;
                 MouseMargins(e.Location, RightMargins, ClientSize.Width - Info.RightMargin, MarginMethod.MouseMove);
-                return;
             }
             else if (e.Y < Info.EditorTop)
             {
                 Cursor = Cursors.Arrow;
                 MouseMargins(e.Location, TopMargins, 0, MarginMethod.MouseMove);
-                return;
             }
             else if (e.Y > ClientSize.Height - Info.BottomMargin)
             {
                 Cursor = Cursors.Arrow;
                 MouseMargins(e.Location, BottomMargins, ClientSize.Height - Info.BottomMargin, MarginMethod.MouseMove);
-                return;
             }
             else
                 Cursor = Cursors.IBeam;
@@ -500,23 +494,16 @@ namespace CodeBox
 
             var p = default(Pos);
 
-            if (mouseDown)
+            if (mouseDown && e.Button == MouseButtons.Left)
             {
                 var lineIndex = FindLineByLocation(e.Location.Y);
                 p = lineIndex != -1 ? FindTextLocation(lineIndex, e.Location) : Pos.Empty;
 
-                //Test if we need to scroll down in selection mode
-                if (e.Y - Scroll.Y > Info.EditorIntegralHeight)
+                if (p.IsEmpty && e.Y - Scroll.Y > Info.EditorIntegralHeight)
                 {
-                    lineIndex = FindLineByLocation(Info.EditorIntegralHeight + Scroll.Y);
-                    p = FindTextLocation(lineIndex, e.Location);
-
-                    if (Document.Lines.Count > lineIndex && lineIndex != -1)
-                    {
-                        var ln = Document.Lines[lineIndex];
-                        p = new Pos(lineIndex + 1, ln.Length <= p.Col ? p.Col : ln.Length);
-                        Redraw();
-                    }
+                    lineIndex = Scroll.LastVisibleLine;
+                    var ln = Document.Lines[lineIndex];
+                    p = new Pos(lineIndex + 1, ln.Length <= p.Col ? p.Col : ln.Length);
                 }
             }
 
@@ -616,15 +603,11 @@ namespace CodeBox
                 if (osel != null)
                     Document.Selections.Remove(osel);
 
+                Console.WriteLine(sel);
                 Scroll.UpdateVisibleRectangle();
                 Redraw();
             }
         }
-
-        
-
-
-        
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
