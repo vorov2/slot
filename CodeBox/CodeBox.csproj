@@ -119,7 +119,7 @@
     <Compile Include="ObjectModel\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\CachedBrush.cs" />
-    <Compile Include="ScrollArea.cs" />
+    <Compile Include="ScrollingManager.cs" />
     <Compile Include="StyleNeededEventArgs.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

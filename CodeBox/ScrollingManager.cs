@@ -7,7 +7,7 @@ using CodeBox.ObjectModel;
 
 namespace CodeBox
 {
-    internal sealed class ScrollArea
+    internal sealed class ScrollingManager
     {
         
     }

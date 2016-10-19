@@ -30,7 +30,7 @@ namespace CodeBox.Margins
                 if (line.Y >= info.EditorBottom - sc.Y)
                     return true;
 
-                if (line.Y >= sc.Y && y<= bounds.Height)
+                if (line.Y >= sc.Y)// && y<= bounds.Height)
                 {
                     var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth - sc.X;

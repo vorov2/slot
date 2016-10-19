@@ -343,15 +343,15 @@ namespace CodeBox
         {
             var len = Document.Lines.Count;
             var lh = Info.LineHeight;
-            var maxh = Info.EditorBottom - scrollY;
-
+            var maxh = Info.EditorBottom - Info.EditorTop - scrollY;
+            
             for (var i = FirstVisibleLine; i < len; i++)
             {
                 var ln = Document.Lines[i];
                 var lnEnd = ln.Y + ln.Stripes * lh;
 
-                if (ln.Y + lh > maxh)
-                    return i;
+                if (ln.Y >= maxh)
+                    return i > FirstVisibleLine ? i - 1 : i;
             }
 
             return len > FirstVisibleLine ? (int?)len - 1 : null;
@@ -461,6 +461,7 @@ namespace CodeBox
                         : font;
                     if (visible)
                         g.DrawString(str, fnt, CachedBrush.Create(col), new PointF(x, y), sf);
+                    //Renderer.DrawString(g, str, fnt, col, x, y);
 
                     if (visible && Document.Selections.HasCaret(new Pos(lineIndex, i)))
                     {
