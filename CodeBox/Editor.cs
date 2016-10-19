@@ -232,6 +232,10 @@ namespace CodeBox
         {
             if (value <= 0 && value > -scrollYMax)
             {
+                //scroll by whole lines
+                var lines = (int)Math.Round((double)value / Info.LineHeight);
+                value = lines * Info.LineHeight;
+
                 scrollY = value;
                 OnScroll();
             }
@@ -241,6 +245,10 @@ namespace CodeBox
         {
             if (value <= 0 && value > -scrollXMax)
             {
+                //scroll by whole chars
+                var chars = (int)Math.Round((double)value / Info.CharWidth);
+                value = chars * Info.CharWidth;
+
                 scrollX = value;
                 OnScroll();
             }

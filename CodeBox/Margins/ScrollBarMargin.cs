@@ -112,9 +112,9 @@ namespace CodeBox.Margins
             }
             else
             {
-                if (ctx.Scroll.Height <= ctx.Info.ClientHeight)
-                    return 0;
-                else
+                //if (ctx.Scroll.Height <= ctx.Info.ClientHeight)
+                //    return 0;
+                //else
                     return ctx.Info.CharWidth;
             }
         }
