@@ -11,28 +11,36 @@ namespace CodeBox.Margins
 {
     public abstract class Margin
     {
-        protected Margin()
+        protected Margin(Editor editor)
         {
-
+            Editor = editor;
         }
 
-        public virtual MarginEffects MouseDown(Point loc, EditorContext ctx)
-        {
-            return MarginEffects.None;
-        }
-
-        public virtual MarginEffects MouseUp(Point loc, EditorContext ctx)
+        public virtual MarginEffects MouseDown(Point loc)
         {
             return MarginEffects.None;
         }
 
-        public virtual MarginEffects MouseMove(Point loc, EditorContext ctx)
+        public virtual MarginEffects MouseUp(Point loc)
         {
             return MarginEffects.None;
         }
 
-        public abstract bool Draw(Graphics g, Rectangle bounds, EditorContext ctx);
+        public virtual MarginEffects MouseMove(Point loc)
+        {
+            return MarginEffects.None;
+        }
 
-        public abstract int CalculateSize(EditorContext ctx);
+        public abstract bool Draw(Graphics g, Rectangle bounds);
+
+        public abstract int CalculateSize();
+
+        protected Editor Editor { get; }
+
+        public event EventHandler SizeChanged;
+        protected virtual void OnSizeChanged()
+        {
+            SizeChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

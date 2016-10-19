@@ -124,6 +124,26 @@ namespace CodeBox.ObjectModel
             return true;
         }
         
+        internal bool IsLineSelected(int lineIndex)
+        {
+            foreach (var s in this)
+            {
+                var start = s.Start;
+                var end = s.End;
+
+                if (start > end)
+                {
+                    end = start;
+                    start = s.Start;
+                }
+
+                if (!s.IsEmpty && lineIndex >= s.Start.Line && lineIndex <= s.End.Line)
+                    return true;
+            }
+
+            return false;
+        }
+
         internal Selection this[int index]
         {
             get { return sels[index]; }

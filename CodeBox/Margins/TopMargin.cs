@@ -10,15 +10,20 @@ namespace CodeBox.Margins
 {
     public class TopMargin : Margin
     {
-        public override bool Draw(Graphics g, Rectangle bounds, EditorContext ctx)
+        public TopMargin(Editor editor) : base(editor)
         {
-            g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
+
+        }
+
+        public override bool Draw(Graphics g, Rectangle bounds)
+        {
+            g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
             return true;
         }
 
-        public override int CalculateSize(EditorContext ctx)
+        public override int CalculateSize()
         {
-            return ctx.Info.LineHeight;
+            return Editor.Info.LineHeight;
         }
     }
 }

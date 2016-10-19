@@ -22,11 +22,6 @@ namespace CodeBox
         internal Size FontSize { get; private set; }
         internal Font font;
 
-        internal int scrollY;
-        internal int scrollX;
-        internal int scrollXMax;
-        internal int scrollYMax;
-
         public Editor()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
@@ -43,6 +38,7 @@ namespace CodeBox
             CachedBrush = new CachedBrush();
             CachedFont = new CachedFont();
             context = new EditorContext(this);
+            Scroll = new ScrollingManager(this);
             Initialize();
             
         }
@@ -145,7 +141,7 @@ namespace CodeBox
             DrawMargins(0, e.Graphics, LeftMargins);
 
             //DrawSelections(e.Graphics);
-            e.Graphics.TranslateTransform(scrollX, scrollY);
+            e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             DrawLines(e.Graphics);
 #if DEBUG
             // Console.WriteLine($"OnPaint: {call++}; Selections: {Document.Selections.Count}");
@@ -156,7 +152,7 @@ namespace CodeBox
             e.Graphics.ResetTransform();
             if (BottomMargins.Any())
                 DrawMargins(ClientSize.Height -
-                    BottomMargins.First().CalculateSize(GetEditorContext()), e.Graphics, BottomMargins);
+                    BottomMargins.First().CalculateSize(), e.Graphics, BottomMargins);
 
             DrawMargins(ClientSize.Width - Info.CharWidth, e.Graphics, RightMargins);
             base.OnPaint(e);
@@ -164,7 +160,6 @@ namespace CodeBox
 
         private void DrawMargins(int start, Graphics g, MarginList margins)
         {
-            var ctx = GetEditorContext();
             var vertical = margins == LeftMargins || margins == RightMargins;
             var top = margins == TopMargins;
 
@@ -173,14 +168,14 @@ namespace CodeBox
                 var bounds = default(Rectangle);
 
                 if (vertical)
-                    bounds = new Rectangle(start, Info.EditorTop, m.CalculateSize(ctx), ClientSize.Height - Info.EditorTop);
+                    bounds = new Rectangle(start, Info.EditorTop, m.CalculateSize(), ClientSize.Height - Info.EditorTop);
                 else if (top)
-                    bounds = new Rectangle(0, start, ClientSize.Width, m.CalculateSize(ctx));
+                    bounds = new Rectangle(0, start, ClientSize.Width, m.CalculateSize());
                 else
-                    bounds = new Rectangle(Info.EditorLeft, start, Info.EditorWidth, m.CalculateSize(ctx));
+                    bounds = new Rectangle(Info.EditorLeft, start, Info.EditorWidth, m.CalculateSize());
 
-                m.Draw(g, bounds, ctx);
-                start += vertical ? m.CalculateSize(ctx) : -m.CalculateSize(ctx);
+                m.Draw(g, bounds);
+                start += vertical ? m.CalculateSize() : -m.CalculateSize();
             }
         }
 
@@ -195,85 +190,23 @@ namespace CodeBox
             foreach (var ln in txt.Split('\n'))
                 Document.Lines.Add(Line.FromString(ln, ++Document.LineSequence));
 
-            _lastVisibleLine = null;
+            Scroll.FirstVisibleLine = Scroll.FirstVisibleLine;
         }
 
         protected override void OnResize(EventArgs eventargs)
         {
-            //if (Settings.WordWrap)
-                InvalidateLines();
-            _lastVisibleLine = null;
+            InvalidateLines();
             Restyle();
             Invalidate();
             base.OnResize(eventargs);
         }
 
-        protected virtual void OnScroll()
-        {
-            _lastVisibleLine = null;
-            Restyle();
-            Redraw();
-            //InvalidateScrollbars();
-            //Update();
-        }
-
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
-
-            ScrollY((e.Delta / 120) * 2);
-
-            //ClearFirstLastVisibles();
-            //Restyle();
-            //Redraw();
+            Scroll.ScrollY((e.Delta / 120) * 2);
         }
 
-        internal void ScrollY(int times)
-        {
-            SetScrollPositionY(scrollY + times * Info.LineHeight);
-        }
-
-        internal void ScrollX(int times)
-        {
-            SetScrollPositionX(scrollX + times * Info.CharWidth);
-        }
-        
-        internal void SetScrollPositionY(int value)
-        {
-            if (value > 0)
-                value = 0;
-
-            if (value < -scrollYMax)
-                value = -scrollYMax;
-
-            //scroll by whole lines
-            var lines = (int)Math.Round((double)value / Info.LineHeight);
-            FirstVisibleLine = -lines;
-
-            if (FirstVisibleLine >= Lines.Count)
-                FirstVisibleLine = Lines.Count - 1;
-
-            value = lines * Info.LineHeight;
-
-            scrollY = value;
-            OnScroll();
-        }
-
-        internal void SetScrollPositionX(int value)
-        {
-            if (value > 0)
-                value = 0;
-
-            if (value < -scrollXMax)
-                value = -scrollXMax;
-
-            //scroll by whole chars
-            var chars = (int)Math.Round((double)value / Info.CharWidth);
-            value = chars * Info.CharWidth;
-
-            scrollX = value;
-            OnScroll();
-        }
 
         StringFormat sf = new StringFormat(StringFormat.GenericTypographic)
         {
@@ -302,8 +235,9 @@ namespace CodeBox
                         maxWidth = w;
                 }
 
-                scrollXMax = maxWidth - Info.EditorWidth + Info.CharWidth * 5;
-                scrollYMax = Document.Lines.Count * Info.LineHeight - Info.EditorHeight + Info.LineHeight * 5;
+                Scroll.XMax = maxWidth - Info.EditorWidth + Info.CharWidth * 5;
+                Scroll.XMax = Scroll.XMax < 0 ? 0 : Scroll.XMax;
+                Scroll.YMax = Document.Lines.Count * Info.LineHeight;
             }
             else
             {
@@ -317,46 +251,17 @@ namespace CodeBox
                     maxHeight += ln.Stripes * Info.LineHeight;
                 }
 
-                scrollXMax = 0;
-                scrollYMax = maxHeight;
+                Scroll.XMax = 0;
+                Scroll.YMax = maxHeight;
             }
 
-            _lastVisibleLine = null;
+            Scroll.YMax = Scroll.YMax - Info.EditorHeight + Info.LineHeight * 5;
+            Scroll.YMax = Scroll.YMax < 0 ? 0 : Scroll.YMax;
+
+            Scroll.FirstVisibleLine = Scroll.FirstVisibleLine; //HACKs
             Console.WriteLine("Invalidate: " + (DateTime.Now - dt).TotalMilliseconds);
         }
-
-        public int FirstVisibleLine { get; private set; }
-
-        private int? _lastVisibleLine;
-        public int LastVisibleLine
-        {
-            get
-            {
-                if (_lastVisibleLine == null)
-                    _lastVisibleLine = CalculateLastVisibleLine();
-
-                return _lastVisibleLine != null ? _lastVisibleLine.Value : 0;
-            }
-        }
-
-        private int? CalculateLastVisibleLine()
-        {
-            var len = Document.Lines.Count;
-            var lh = Info.LineHeight;
-            var maxh = Info.EditorBottom - Info.EditorTop - scrollY;
-            
-            for (var i = FirstVisibleLine; i < len; i++)
-            {
-                var ln = Document.Lines[i];
-                var lnEnd = ln.Y + ln.Stripes * lh;
-
-                if (ln.Y >= maxh)
-                    return i > FirstVisibleLine ? i - 1 : i;
-            }
-
-            return len > FirstVisibleLine ? (int?)len - 1 : null;
-        }
-
+        
         public string GetTextRange(Range range)
         {
             return CopyCommand.GetTextRange(GetEditorContext(), range);
@@ -400,8 +305,8 @@ namespace CodeBox
 
         internal void Restyle()
         {
-            var fvl = FirstVisibleLine;
-            var lvl = LastVisibleLine;
+            var fvl = Scroll.FirstVisibleLine;
+            var lvl = Scroll.LastVisibleLine;
 
             StyleNeeded?.Invoke(this, new StyleNeededEventArgs(
                 new Range(new Pos(fvl, 0), 
@@ -410,8 +315,8 @@ namespace CodeBox
 
         private void DrawLines(Graphics g)
         {
-            var fvl = FirstVisibleLine;
-            var lvl = LastVisibleLine;
+            var fvl = Scroll.FirstVisibleLine;
+            var lvl = Scroll.LastVisibleLine;
 
             for (var i = fvl; i < lvl + 1; i++)
             {
@@ -430,7 +335,7 @@ namespace CodeBox
             var x = lmarg;
             var y = tmarg + line.Y;
             var oldcut = 0;
-            var sel = IsLineSelected(lineIndex);
+            var sel = Document.Selections.IsLineSelected(lineIndex);
 
             for (var j = 0; j < line.Stripes; j++)
             {
@@ -451,7 +356,7 @@ namespace CodeBox
                     str = c == '\0' && Settings.ShowEol ? "\u00B6" : str;
                     var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
                     var high = sel && Document.Selections.IsSelected(new Pos(lineIndex, i));
-                    var visible = x + scrollX >= lmarg && x + scrollX + xw <= cwidth;
+                    var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth;
 
                     if (visible && (high || style.BackColor != null))
                         g.FillRectangle(CachedBrush.Create(high ? HighlightColor : style.BackColor.Value),
@@ -507,7 +412,7 @@ namespace CodeBox
                     {
                         var sx = i == sel.Start.Line ? line.GetTetras(sel.Start.Col, Settings.TabSize) : 0;
                         var ex = i == sel.End.Line ? line.GetTetras(sel.End.Col, Settings.TabSize) : line.GetTetras(Settings.TabSize) + 1;
-                        sx = lmarg + sx * Info.CharWidth - scrollX;
+                        sx = lmarg + sx * Info.CharWidth - Scroll.X;
                         ex = lmarg + ex * Info.CharWidth;
                         g.FillRectangle(CachedBrush.Create(HighlightColor), new Rectangle(sx, y, ex - sx, Info.LineHeight));
                     }
@@ -544,30 +449,6 @@ namespace CodeBox
             }
         }
 
-        private bool IsLineSelected(int lineIndex)
-        {
-            foreach (var s in Document.Selections)
-            {
-                var sel = s.Normalize();
-
-                if (!s.IsEmpty && lineIndex >= sel.Start.Line && lineIndex <= sel.End.Line)
-                    return true;
-            }
-
-            return false;
-        }
-
-
-        private int IsLineStripeVisible(Pos pos)
-        {
-            var ln = Lines[pos.Line];
-            var stripe = ln.GetStripe(pos.Col);
-            var cy = Info.EditorTop + ln.Y + stripe * Info.LineHeight + scrollY;
-            return cy < 0 ? -(cy / Info.LineHeight - 1) :
-                   cy + Info.LineHeight > ClientSize.Height - Info.BottomMargin ? -(cy / Info.LineHeight) :
-                   0;
-        }
-
         protected override void OnDoubleClick(EventArgs e)
         {
             var ctx = GetEditorContext();
@@ -583,7 +464,7 @@ namespace CodeBox
 
             if (mouseTheft != null)
             {
-                mouseTheft.MouseMove(e.Location, GetEditorContext());
+                mouseTheft.MouseMove(e.Location);
                 return;
             }
 
@@ -625,9 +506,9 @@ namespace CodeBox
                 p = lineIndex != -1 ? FindTextLocation(lineIndex, e.Location) : Pos.Empty;
 
                 //Test if we need to scroll down in selection mode
-                if (e.Y - scrollY > Info.EditorIntegralHeight)
+                if (e.Y - Scroll.Y > Info.EditorIntegralHeight)
                 {
-                    lineIndex = FindLineByLocation(Info.EditorIntegralHeight + scrollY);
+                    lineIndex = FindLineByLocation(Info.EditorIntegralHeight + Scroll.Y);
                     p = FindTextLocation(lineIndex, e.Location);
 
                     if (Document.Lines.Count > lineIndex && lineIndex != -1)
@@ -722,7 +603,7 @@ namespace CodeBox
                     }
                 }
 
-                UpdateVisibleRectangle();
+                Scroll.UpdateVisibleRectangle();
                 Redraw();
             }
             #endregion
@@ -735,81 +616,15 @@ namespace CodeBox
                 if (osel != null)
                     Document.Selections.Remove(osel);
 
-                UpdateVisibleRectangle();
+                Scroll.UpdateVisibleRectangle();
                 Redraw();
             }
         }
 
-        internal bool UpdateVisibleRectangle()
-        {
-            var caret = Document.Selections.Main.Caret;
-            var sv = IsLineStripeVisible(caret);
-            var update = false;
-
-            if (sv != 0)
-            {
-                var sign = Math.Sign(sv);
-
-                if (Math.Abs(sv) > 1 && IsLineStripeVisible(new Pos(caret.Line + sign, caret.Col)) == 0)
-                    sv = sign;
-
-                ScrollY(sv);
-                update = true;
-            }
-
-            if (!Settings.WordWrap)
-            {
-                //var xpos = GetX(caret);
-                //var p = xpos + scrollX;
-
-                sv = IsColumnVisible(caret);
-
-                if (sv != 0)
-                {
-                    var sign = Math.Sign(sv);
-
-                    if (Math.Abs(sv) > 10 && IsColumnVisible(new Pos(caret.Line, caret.Col + sign * 10)) == 0)
-                        sv = sign*10;
-
-                    ScrollX(sv);
-                    update = true;
-                }
-
-                //if (p >= Info.EditorRight - Info.CharWidth|| p < Info.EditorLeft)
-                //{
-                    //HorizontalScroll.Value = xpos - Info.LeftMargin;
-                 //   SetScrollPositionX(-xpos + Info.EditorLeft);
-                   // update = true;
-               // }
-
-                //InvalidateScrollbars();
-
-                //if (HorizontalScroll.Value < HorizontalScroll.Minimum)
-                //    HorizontalScroll.Value = HorizontalScroll.Minimum;
-            }
-
-            return update;
-        }
+        
 
 
-        private int IsColumnVisible(Pos pos)
-        {
-            var tetras = Lines[pos.Line].GetTetras(pos.Col, Settings.TabSize);
-            var curpos = tetras * Info.CharWidth + Info.EditorLeft + scrollX;
-
-            if (curpos > Info.EditorRight)
-            {
-                curpos += Info.CharWidth;
-                var diff = curpos - Info.EditorRight;
-                return -(int)(Math.Ceiling((double)diff / Info.CharWidth));
-            }
-            else if (curpos < Info.EditorLeft)
-            {
-                return (int)Math.Ceiling((Info.EditorLeft - curpos) / (double)Info.CharWidth);
-            }
-            else
-                return 0;
-        }
+        
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
@@ -818,7 +633,7 @@ namespace CodeBox
 
             if (mouseTheft != null)
             {
-                mouseTheft.MouseUp(e.Location, GetEditorContext());
+                mouseTheft.MouseUp(e.Location);
                 mouseTheft = null;
                 Redraw();
             }
@@ -845,29 +660,29 @@ namespace CodeBox
             foreach (var m in margins)
             {
                 var sel = margins == LeftMargins || margins == RightMargins
-                    ? loc.X >= start && loc.X <= start + m.CalculateSize(ctx)
-                    : loc.Y >= start && loc.Y <= start + m.CalculateSize(ctx);
+                    ? loc.X >= start && loc.X <= start + m.CalculateSize()
+                    : loc.Y >= start && loc.Y <= start + m.CalculateSize();
 
                 if (sel)
                 {
                     var effect = 
-                        meth == MarginMethod.MouseDown ? m.MouseDown(loc, ctx)
-                        : meth == MarginMethod.MouseUp ? m.MouseUp(loc, ctx)
-                        : m.MouseMove(loc, ctx);
+                        meth == MarginMethod.MouseDown ? m.MouseDown(loc)
+                        : meth == MarginMethod.MouseUp ? m.MouseUp(loc)
+                        : m.MouseMove(loc);
 
                     if ((effect & MarginEffects.Invalidate) == MarginEffects.Invalidate)
                         InvalidateLines();
                     if ((effect & MarginEffects.Redraw) == MarginEffects.Redraw)
                         Redraw();
                     if ((effect & MarginEffects.Scroll) == MarginEffects.Scroll)
-                        UpdateVisibleRectangle();
+                        Scroll.UpdateVisibleRectangle();
                     if ((effect & MarginEffects.CaptureMouse) == MarginEffects.CaptureMouse)
                         mouseTheft = m;
 
                     return true;
                 }
 
-                start += m.CalculateSize(ctx);
+                start += m.CalculateSize();
             }
 
             return false;
@@ -922,11 +737,11 @@ namespace CodeBox
 
         private int LocateColumn(Line line, Point loc)
         {
-            var stripe = (int)Math.Ceiling((loc.Y - Info.EditorTop - line.Y - scrollY) / (double)Info.LineHeight) - 1;
+            var stripe = (int)Math.Ceiling((loc.Y - Info.EditorTop - line.Y - Scroll.Y) / (double)Info.LineHeight) - 1;
             var cut = line.GetCut(stripe);
             var sc = stripe > 0 ? line.GetCut(stripe - 1) + 1 : 0;
             var width = Info.EditorLeft;
-            var locX = loc.X - scrollX;
+            var locX = loc.X - Scroll.X;
             var app = Info.CharWidth * .15;
 
             for (var i = sc; i < cut + 1; i++)
@@ -1045,10 +860,10 @@ namespace CodeBox
 
         internal int FindLineByLocation(int locY)
         {
-            var line = Lines[FirstVisibleLine];
+            var line = Lines[Scroll.FirstVisibleLine];
             var lineIndex = 0;
-            var y = 0;
-            locY = locY - scrollY;
+            var y = Info.EditorTop;
+            locY = locY - Scroll.Y;
             var maxHeight = Info.EditorIntegralHeight; //Round by line height
 
             do
@@ -1170,6 +985,8 @@ namespace CodeBox
         internal EditorCaret Caret { get; private set; }
         
         internal CommandManager CommandManager { get; private set; }
+
+        public ScrollingManager Scroll { get; private set; }
 
         internal Eol OriginalEol { get; private set; }
     }

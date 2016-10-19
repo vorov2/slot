@@ -58,7 +58,7 @@ namespace CodeBox
 
             using (var g = editor.CreateGraphics())
             {
-                g.TranslateTransform(editor.scrollX, editor.scrollY);
+                g.TranslateTransform(editor.Scroll.X, editor.Scroll.Y);
 
                 if (timerDraw && timerBitmap != null)
                     g.DrawImage(timerBitmap, caretX, caretY);
@@ -105,8 +105,8 @@ namespace CodeBox
             if (!main && BlockCaret)
                 h /= 2;
 
-            if (x >= editor.Info.EditorLeft - editor.scrollX
-                && x < editor.Info.EditorRight - editor.scrollX)
+            if (x >= editor.Info.EditorLeft - editor.Scroll.X
+                && x < editor.Info.EditorRight - editor.Scroll.X)
             {
                 if (main)
                 {

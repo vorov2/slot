@@ -59,11 +59,6 @@ namespace CodeBox
 
         public int Edits { get; set; }
 
-        public Rectangle Scroll
-        {
-            get { return new Rectangle(editor.scrollX, editor.scrollY, editor.scrollXMax, editor.scrollYMax); }
-        }
-
         public bool Overtype
         {
             get { return editor.Overtype; }

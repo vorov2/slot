@@ -10,20 +10,26 @@ namespace CodeBox.Margins
 {
     public sealed class LineNumberMargin : GutterMargin
     {
-        public override bool Draw(Graphics g, Rectangle bounds, EditorContext ctx)
+        public LineNumberMargin(Editor editor) : base(editor)
         {
-            var sc = ctx.Scroll;
 
-            var lines = ctx.Document.Lines;
-            var info = ctx.Info;
+        }
+
+        public override bool Draw(Graphics g, Rectangle bounds)
+        {
+            OnSizeChanged();
+            var sc = new Point(Editor.Scroll.X, Editor.Scroll.Y);
+
+            var lines = Editor.Document.Lines;
+            var info = Editor.Info;
             var len = lines.Count.ToString().Length;
-            var caret = ctx.Document.Selections.Main.Caret;
+            var caret = Editor.Document.Selections.Main.Caret;
 
-            g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
+            g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
             var sb = new StringBuilder();
             var y = bounds.Y;
             
-            for (var i = ctx.Editor.FirstVisibleLine; i < ctx.Editor.LastVisibleLine + 1; i++)
+            for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var line = lines[i];
 
@@ -38,7 +44,7 @@ namespace CodeBox.Margins
                     if (i == caret.Line && MarkCurrentLine)
                         x -= info.CharWidth;
 
-                    g.DrawString(str, info.Font, ctx.Renderer.Create(Editor.GrayColor), x + sc.X, y);
+                    g.DrawString(str, info.Font, Editor.CachedBrush.Create(Editor.GrayColor), x + sc.X, y);
                     sb.Append(str);
                     y += info.LineHeight;
                 }
@@ -47,9 +53,9 @@ namespace CodeBox.Margins
             return true;
         }
 
-        public override int CalculateSize(EditorContext ctx)
+        public override int CalculateSize()
         {
-            return (ctx.Document.Lines.Count.ToString().Length + 3) * ctx.Info.CharWidth;
+            return (Editor.Document.Lines.Count.ToString().Length + 3) * Editor.Info.CharWidth;
         }
 
         public bool MarkCurrentLine { get; set; }

@@ -295,7 +295,7 @@ namespace CodeBox
                 editor.InvalidateLines();
 
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
-                scrolled = editor.UpdateVisibleRectangle();
+                scrolled = editor.Scroll.UpdateVisibleRectangle();
 
             if ((exp & ActionExponent.Silent) != ActionExponent.Silent)
                 editor.Redraw();

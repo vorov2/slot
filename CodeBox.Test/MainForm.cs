@@ -23,11 +23,11 @@ namespace CodeBox.Test
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            editor1.LeftMargins.Add(new LineNumberMargin { MarkCurrentLine = true });
-            editor1.LeftMargins.Add(new GutterMargin());
-            editor1.RightMargins.Add(new ScrollBarMargin());
-            editor1.BottomMargins.Add(new ScrollBarMargin());
-            editor1.TopMargins.Add(new TopMargin());
+            editor1.LeftMargins.Add(new LineNumberMargin(editor1) { MarkCurrentLine = true });
+            editor1.LeftMargins.Add(new GutterMargin(editor1));
+            editor1.RightMargins.Add(new ScrollBarMargin(editor1));
+            editor1.BottomMargins.Add(new ScrollBarMargin(editor1));
+            editor1.TopMargins.Add(new TopMargin(editor1));
             editor1.Text = File.ReadAllText(
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName,"test.json"));
         }

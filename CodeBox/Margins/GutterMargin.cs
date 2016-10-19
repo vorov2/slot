@@ -10,30 +10,35 @@ namespace CodeBox.Margins
 {
     public class GutterMargin : Margin
     {
-        public override MarginEffects MouseDown(Point loc, EditorContext context)
+        public GutterMargin(Editor editor) : base(editor)
         {
-            context.Document.Selections.Clear();
-            var sel = context.Document.Selections.Main;
-            var lineIndex = context.Editor.FindLineByLocation(loc.Y);
+
+        }
+
+        public override MarginEffects MouseDown(Point loc)
+        {
+            Editor.Document.Selections.Clear();
+            var sel = Editor.Document.Selections.Main;
+            var lineIndex = Editor.FindLineByLocation(loc.Y);
 
             if (lineIndex >= 0)
             {
                 sel.Start = new Pos(lineIndex, 0);
-                sel.End = new Pos(lineIndex, context.Document.Lines[lineIndex].Length);
+                sel.End = new Pos(lineIndex, Editor.Document.Lines[lineIndex].Length);
             }
 
             return MarginEffects.Redraw;
         }
 
-        public override bool Draw(Graphics g, Rectangle bounds, EditorContext ctx)
+        public override bool Draw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
+            g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
             return true;
         }
 
-        public override int CalculateSize(EditorContext ctx)
+        public override int CalculateSize()
         {
-            return ctx.Info.CharWidth;
+            return Editor.Info.CharWidth;
         }
     }
 }

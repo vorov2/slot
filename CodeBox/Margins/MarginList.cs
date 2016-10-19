@@ -21,18 +21,26 @@ namespace CodeBox.Margins
 
         public void Add(Margin margin)
         {
+            margin.SizeChanged += MarginSizeChanged;
             margins.Add(margin);
             editor.Redraw();
         }
 
+        private void MarginSizeChanged(object sender, EventArgs e)
+        {
+            _totalWidth = null;
+        }
+
         public void Insert(int index, Margin margin)
         {
+            margin.SizeChanged += MarginSizeChanged;
             margins.Insert(index, margin);
             editor.Redraw();
         }
 
         public void Remove(Margin margin)
         {
+            margin.SizeChanged -= MarginSizeChanged;
             margins.Remove(margin);
             editor.Redraw();
         }
@@ -52,16 +60,22 @@ namespace CodeBox.Margins
             get { return margins.Count; }
         }
 
+        private int? _totalWidth;
         public int TotalWidth
         {
             get
             {
-                var w = 0;
+                if (_totalWidth == null || (_totalWidth == 0 && margins.Count > 0))
+                {
+                    var w = 0;
 
-                foreach (var m in margins)
-                    w += m.CalculateSize(editor.GetEditorContext());
+                    foreach (var m in margins)
+                        w += m.CalculateSize();
 
-                return w;
+                    _totalWidth = w;
+                }
+
+                return _totalWidth.Value;
             }
         }
     }

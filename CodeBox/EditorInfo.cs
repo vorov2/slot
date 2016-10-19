@@ -58,7 +58,7 @@ namespace CodeBox
 
         public int EditorIntegralHeight
         {
-            get { return (EditorHeight / LineHeight) * LineHeight - editor.scrollY; }
+            get { return (EditorHeight / LineHeight) * LineHeight - editor.Scroll.Y; }
         }
 
         public int StripesPerScreen

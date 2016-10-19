@@ -13,44 +13,49 @@ namespace CodeBox.Margins
         private int lastCaretPos;
         private int lastCaretSize;
 
-        public override MarginEffects MouseDown(Point loc, EditorContext ctx)
+        public ScrollBarMargin(Editor editor) : base(editor)
         {
-            if (IsCaretInLocation(ctx, loc))
+
+        }
+
+        public override MarginEffects MouseDown(Point loc)
+        {
+            if (IsCaretInLocation(loc))
             {
                 mouseDown = true;
                 return MarginEffects.Redraw | MarginEffects.CaptureMouse;
             }
             else
             {
-                var value = GetScrollValue(loc, ctx);
-                SetScrollPosition(ctx, value);
+                var value = GetScrollValue(loc);
+                SetScrollPosition(value);
                 return MarginEffects.Redraw;
             }
         }
 
-        public override MarginEffects MouseUp(Point loc, EditorContext ctx)
+        public override MarginEffects MouseUp(Point loc)
         {
             mouseDown = false;
             return MarginEffects.Redraw;
         }
 
-        public override MarginEffects MouseMove(Point loc, EditorContext ctx)
+        public override MarginEffects MouseMove(Point loc)
         {
             if (mouseDown)
             {
-                var value = GetScrollValue(loc, ctx);
-                SetScrollPosition(ctx, value);
+                var value = GetScrollValue(loc);
+                SetScrollPosition(value);
                 return MarginEffects.Redraw;
             }
 
             return MarginEffects.None;
         }
 
-        private int GetScrollValue(Point loc, EditorContext ctx)
+        private int GetScrollValue(Point loc)
         {
-            var max = GetMaximum(ctx);
-            var v = Horizontal(ctx) ? loc.X : loc.Y;
-            var ret = -(max * (v - lastCaretSize / 2) / (GetScrollSize(ctx) - lastCaretSize));
+            var max = GetMaximum();
+            var v = Horizontal() ? loc.X : loc.Y;
+            var ret = -(max * (v - lastCaretSize / 2) / (GetScrollSize() - lastCaretSize));
 
             if (ret > 0)
                 ret = 0;
@@ -60,103 +65,119 @@ namespace CodeBox.Margins
             return ret;
         }
 
-        public override bool Draw(Graphics g, Rectangle bounds, EditorContext ctx)
+        public override bool Draw(Graphics g, Rectangle bounds)
         {
-            if (Horizontal(ctx))
+            Enabled = CalculateSize() != 0;
+
+            if (!Enabled)
+                return false;
+
+            var sc = new Rectangle(Editor.Scroll.X, Editor.Scroll.Y,
+                Editor.Scroll.XMax, Editor.Scroll.YMax);
+
+            if (Horizontal())
             {
-                g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
-                    //new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, bounds.Width, CalculateSize(ctx)));
+                g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
+                var caretSize = ((double)bounds.Width / (bounds.Width + sc.Width)) * bounds.Width;
 
-                var caretSize = ((double)bounds.Width / ctx.Scroll.Width) * bounds.Width;
-
-                if (caretSize < ctx.Info.CharWidth*3)
-                    caretSize = ctx.Info.CharWidth*3;
+                if (caretSize < Editor.Info.CharWidth*3)
+                    caretSize = Editor.Info.CharWidth*3;
 
                 var perc = (bounds.Width - caretSize) / 100d;
-                var curpos = (int)Math.Floor(Math.Floor(ctx.Scroll.X / (ctx.Scroll.Width / 100d)) * perc);
+                var curpos = sc.Width != 0 ? (int)Math.Floor(Math.Floor(sc.X / (sc.Width / 100d)) * perc) : 0;
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle(ctx.Renderer.Create(mouseDown ? Color.White : Editor.GrayColor),
-                    new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, lastCaretSize, CalculateSize(ctx)));
-                    //new Rectangle(bounds.X + Math.Abs(curpos) - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, lastCaretSize, CalculateSize(ctx)));
+                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Color.White : Editor.GrayColor),
+                    new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, lastCaretSize, bounds.Height));
                 lastCaretPos = bounds.X + Math.Abs(curpos);
             }
             else
             {
-                g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
-                    //new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, CalculateSize(ctx), bounds.Height));
+                g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
+                var caretSize = ((double)bounds.Height / (bounds.Height + sc.Height)) * bounds.Height;
 
-                var caretSize = ((double)bounds.Height / ctx.Scroll.Height) * bounds.Height;
-
-                if (caretSize < ctx.Info.LineHeight)
-                    caretSize = ctx.Info.LineHeight;
+                if (caretSize < Editor.Info.LineHeight)
+                    caretSize = Editor.Info.LineHeight;
 
                 var perc = (bounds.Height - caretSize) / 100d;
-                var curpos = (int)Math.Floor(Math.Floor(ctx.Scroll.Y / (ctx.Scroll.Height / 100d)) * perc);
+                var curpos = sc.Height != 0 ? (int)Math.Floor(Math.Floor(sc.Y / (sc.Height / 100d)) * perc) : 0;
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle(ctx.Renderer.Create(mouseDown ? Color.White : Editor.GrayColor),
-                    new Rectangle(bounds.X, bounds.Y + Math.Abs(curpos), CalculateSize(ctx), lastCaretSize));
-                    //new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y + Math.Abs(curpos) - ctx.Scroll.Y, CalculateSize(ctx), lastCaretSize));
+                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Color.White : Editor.GrayColor),
+                    new Rectangle(bounds.X, bounds.Y + Math.Abs(curpos), bounds.Width, lastCaretSize));
                 lastCaretPos = bounds.Y + Math.Abs(curpos);
             }
 
             return true;
         }
 
-        public override int CalculateSize(EditorContext ctx)
+        public override int CalculateSize()
         {
-            if (Horizontal(ctx))
+            if (Horizontal())
             {
-                if (ctx.Scroll.Width <= ctx.Info.EditorWidth)
+                if (Editor.Scroll.XMax == 0)
                     return 0;
                 else
-                    return ctx.Info.CharWidth;
+                    return Editor.Info.CharWidth;
             }
             else
             {
-                //if (ctx.Scroll.Height <= ctx.Info.ClientHeight)
-                //    return 0;
-                //else
-                    return ctx.Info.CharWidth;
+                if (Editor.Scroll.YMax == 0)
+                    return 0;
+                else
+                    return Editor.Info.CharWidth;
             }
         }
 
-        private bool IsCaretInLocation(EditorContext ctx, Point loc)
+        private bool IsCaretInLocation(Point loc)
         {
-            if (Horizontal(ctx))
+            if (Horizontal())
                 return loc.X >= lastCaretPos && loc.X < lastCaretPos + lastCaretSize;
             else
                 return loc.Y >= lastCaretPos && loc.Y < lastCaretPos + lastCaretSize;
         }
 
-        private void SetScrollPosition(EditorContext ctx, int value)
+        private void SetScrollPosition(int value)
         {
-            if (Horizontal(ctx))
-                ctx.Editor.SetScrollPositionX(value);
+            if (Horizontal())
+                Editor.Scroll.SetScrollPositionX(value);
             else
-                ctx.Editor.SetScrollPositionY(value);
+                Editor.Scroll.SetScrollPositionY(value);
         }
 
-        private int GetScrollSize(EditorContext ctx)
+        private int GetScrollSize()
         {
-            if (Horizontal(ctx))
-                return ctx.Editor.ClientSize.Width;
+            if (Horizontal())
+                return Editor.ClientSize.Width;
             else
-                return ctx.Info.EditorHeight;
+                return Editor.Info.EditorHeight;
         }
 
-        private int GetMaximum(EditorContext ctx)
+        private int GetMaximum()
         {
-            if (Horizontal(ctx))
-                return ctx.Scroll.Width;
+            if (Horizontal())
+                return Editor.Scroll.XMax;
             else
-                return ctx.Scroll.Height;
+                return Editor.Scroll.YMax;
         }
 
-        private bool Horizontal(EditorContext ctx)
+        private bool Horizontal()
         {
-            return ctx.Editor.BottomMargins.Any(b => b == this);
+            return Editor.BottomMargins.Any(b => b == this);
+        }
+
+        private bool _enabled;
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set
+            {
+                if (value != _enabled)
+                {
+                    _enabled = value;
+                    OnSizeChanged();
+                }
+            }
         }
     }
 }
