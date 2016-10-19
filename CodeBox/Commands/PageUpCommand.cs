@@ -12,10 +12,10 @@ namespace CodeBox.Commands
             return PageUp(context);
         }
 
-        internal static Pos PageUp(EditorContext context)
+        internal static Pos PageUp(EditorContext ctx)
         {
-            var lines = context.Document.Lines;
-            var caret = context.Document.Selections.Main.Caret;
+            var lines = ctx.Document.Lines;
+            var caret = ctx.Document.Selections.Main.Caret;
             var line = lines[caret.Line];
             var stripes = 0;
             var lastLine = default(Line);
@@ -27,7 +27,7 @@ namespace CodeBox.Commands
                 lastLineIndex = i;
                 stripes += lastLine.Stripes;
 
-                if (stripes >= context.StripesPerScreen)
+                if (stripes >= ctx.Info.StripesPerScreen)
                     break;
             }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using CodeBox.Drawing;
 
 namespace CodeBox
 {
@@ -58,11 +59,6 @@ namespace CodeBox
 
         public int Edits { get; set; }
 
-        public int StripesPerScreen
-        {
-            get { return Info.ClientHeight / Info.LineHeight; }
-        }
-
         public Rectangle Scroll
         {
             get { return new Rectangle(editor.scrollX, editor.scrollY, editor.scrollXMax, editor.scrollYMax); }
@@ -87,9 +83,9 @@ namespace CodeBox
             get { return editor.Info; }
         }
 
-        internal Renderer Renderer
+        internal CachedBrush Renderer
         {
-            get { return editor.Renderer; }
+            get { return editor.CachedBrush; }
         }
 
         internal Editor Editor

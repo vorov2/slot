@@ -17,36 +17,34 @@ namespace CodeBox.Margins
             var lines = ctx.Document.Lines;
             var info = ctx.Info;
             var len = lines.Count.ToString().Length;
-            var line = lines[0];
-            var lineIndex = 0;
             var caret = ctx.Document.Selections.Main.Caret;
 
-            g.FillRectangle(ctx.Renderer.GetBrush(Editor.BackgroundColor), 
-                new Rectangle(bounds.X - sc.X, bounds.Y - sc.Y, CalculateSize(ctx), info.ClientHeight));
+            g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
             var sb = new StringBuilder();
-            do
+            var y = bounds.Y;
+            
+            for (var i = ctx.Editor.FirstVisibleLine; i < ctx.Editor.LastVisibleLine + 1; i++)
             {
-                if (line.Y >= info.ClientHeight - sc.Y)
+                var line = lines[i];
+
+                if (line.Y >= info.EditorBottom - sc.Y)
                     return true;
 
-                if (line.Y >= info.TopMargin - sc.Y)
+                if (line.Y >= sc.Y && y<= bounds.Height)
                 {
-                    var str = (lineIndex + 1).ToString().PadLeft(len);
+                    var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth - sc.X;
 
-                    if (lineIndex == caret.Line && MarkCurrentLine)
+                    if (i == caret.Line && MarkCurrentLine)
                         x -= info.CharWidth;
 
-                    g.DrawString(str, info.Font, ctx.Renderer.GetBrush(Editor.GrayColor), x, line.Y);
-
+                    g.DrawString(str, info.Font, ctx.Renderer.Create(Editor.GrayColor), x + sc.X, y);
                     sb.Append(str);
+                    y += info.LineHeight;
                 }
+            }
 
-                if (lines.Count == lineIndex + 1)
-                    return true;
-
-                line = lines[++lineIndex];
-            } while (true);
+            return true;
         }
 
         public override int CalculateSize(EditorContext ctx)

@@ -27,6 +27,7 @@ namespace CodeBox.Test
             editor1.LeftMargins.Add(new GutterMargin());
             editor1.RightMargins.Add(new ScrollBarMargin());
             editor1.BottomMargins.Add(new ScrollBarMargin());
+            editor1.TopMargins.Add(new TopMargin());
             editor1.Text = File.ReadAllText(
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName,"test.json"));
         }

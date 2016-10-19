@@ -40,9 +40,10 @@ namespace CodeBox.Margins
             {
                 var value = GetScrollValue(loc, ctx);
                 SetScrollPosition(ctx, value);
+                return MarginEffects.Redraw;
             }
 
-            return MarginEffects.Redraw;
+            return MarginEffects.None;
         }
 
         private int GetScrollValue(Point loc, EditorContext ctx)
@@ -63,8 +64,8 @@ namespace CodeBox.Margins
         {
             if (Horizontal(ctx))
             {
-                g.FillRectangle(ctx.Renderer.GetBrush(Editor.BackgroundColor),
-                    new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, bounds.Width, CalculateSize(ctx)));
+                g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
+                    //new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, bounds.Width, CalculateSize(ctx)));
 
                 var caretSize = ((double)bounds.Width / ctx.Scroll.Width) * bounds.Width;
 
@@ -75,14 +76,15 @@ namespace CodeBox.Margins
                 var curpos = (int)Math.Floor(Math.Floor(ctx.Scroll.X / (ctx.Scroll.Width / 100d)) * perc);
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle(ctx.Renderer.GetBrush(mouseDown ? Color.White : Editor.GrayColor),
-                    new Rectangle(bounds.X + Math.Abs(curpos) - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, lastCaretSize, CalculateSize(ctx)));
+                g.FillRectangle(ctx.Renderer.Create(mouseDown ? Color.White : Editor.GrayColor),
+                    new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, lastCaretSize, CalculateSize(ctx)));
+                    //new Rectangle(bounds.X + Math.Abs(curpos) - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, lastCaretSize, CalculateSize(ctx)));
                 lastCaretPos = bounds.X + Math.Abs(curpos);
             }
             else
             {
-                g.FillRectangle(ctx.Renderer.GetBrush(Editor.BackgroundColor),
-                    new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, CalculateSize(ctx), bounds.Height));
+                g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
+                    //new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, CalculateSize(ctx), bounds.Height));
 
                 var caretSize = ((double)bounds.Height / ctx.Scroll.Height) * bounds.Height;
 
@@ -93,8 +95,9 @@ namespace CodeBox.Margins
                 var curpos = (int)Math.Floor(Math.Floor(ctx.Scroll.Y / (ctx.Scroll.Height / 100d)) * perc);
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle(ctx.Renderer.GetBrush(mouseDown ? Color.White : Editor.GrayColor),
-                    new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y + Math.Abs(curpos) - ctx.Scroll.Y, CalculateSize(ctx), lastCaretSize));
+                g.FillRectangle(ctx.Renderer.Create(mouseDown ? Color.White : Editor.GrayColor),
+                    new Rectangle(bounds.X, bounds.Y + Math.Abs(curpos), CalculateSize(ctx), lastCaretSize));
+                    //new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y + Math.Abs(curpos) - ctx.Scroll.Y, CalculateSize(ctx), lastCaretSize));
                 lastCaretPos = bounds.Y + Math.Abs(curpos);
             }
 
@@ -105,7 +108,7 @@ namespace CodeBox.Margins
         {
             if (Horizontal(ctx))
             {
-                if (ctx.Scroll.Width <= ctx.Info.ClientWidth)
+                if (ctx.Scroll.Width <= ctx.Info.EditorWidth)
                     return 0;
                 else
                     return ctx.Info.CharWidth;
@@ -138,9 +141,9 @@ namespace CodeBox.Margins
         private int GetScrollSize(EditorContext ctx)
         {
             if (Horizontal(ctx))
-                return ctx.Info.ClientWidth;
+                return ctx.Editor.ClientSize.Width;
             else
-                return ctx.Info.ClientHeight;
+                return ctx.Info.EditorHeight;
         }
 
         private int GetMaximum(EditorContext ctx)

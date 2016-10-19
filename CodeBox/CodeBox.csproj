@@ -87,6 +87,9 @@
     <Compile Include="Commands\TabCommand.cs" />
     <Compile Include="Commands\WordLeftCommand.cs" />
     <Compile Include="Commands\WordRightCommand.cs" />
+    <Compile Include="Drawing\CachedFont.cs" />
+    <Compile Include="Drawing\FontInfo.cs" />
+    <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="EditorCaret.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorSettings.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="Margins\MarginEffect.cs" />
     <Compile Include="Margins\MarginList.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
+    <Compile Include="Margins\TopMargin.cs" />
     <Compile Include="ObjectModel\Character.cs" />
     <Compile Include="ObjectModel\CommandBehaviorAttribute.cs" />
     <Compile Include="EditorContext.cs" />
@@ -114,7 +118,7 @@
     <Compile Include="ObjectModel\Selections.cs" />
     <Compile Include="ObjectModel\Style.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderer.cs" />
+    <Compile Include="Drawing\CachedBrush.cs" />
     <Compile Include="ScrollArea.cs" />
     <Compile Include="StyleNeededEventArgs.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

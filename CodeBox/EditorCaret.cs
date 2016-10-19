@@ -105,8 +105,8 @@ namespace CodeBox
             if (!main && BlockCaret)
                 h /= 2;
 
-            if (x >= editor.Info.LeftMargin - editor.scrollX
-                && x < editor.Info.LeftMargin + editor.Info.ClientWidth - editor.scrollX)
+            if (x >= editor.Info.EditorLeft - editor.scrollX
+                && x < editor.Info.EditorRight - editor.scrollX)
             {
                 if (main)
                 {
@@ -114,7 +114,7 @@ namespace CodeBox
                     caretY = y;
                 }
 
-                g.FillRectangle(editor.Renderer.GetBrush(Editor.ForegroundColor), x, 
+                g.FillRectangle(editor.CachedBrush.Create(Editor.ForegroundColor), x, 
                     BlockCaret ? y + editor.Info.LineHeight - h : y, w, h);
             }
         }

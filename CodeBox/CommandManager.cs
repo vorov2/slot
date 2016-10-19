@@ -302,10 +302,7 @@ namespace CodeBox
 
             if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
                 || (exp & ActionExponent.Modify) == ActionExponent.Modify)
-            {
-                editor.ClearFirstLastVisibles();
                 editor.Restyle();
-            }
         }
     }
 }

@@ -5,51 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox
+namespace CodeBox.Drawing
 {
-    internal sealed class Renderer : IDisposable
-    {
-        private readonly Dictionary<Color, Brush> brushCache = new Dictionary<Color, Brush>();
-        private readonly Dictionary<FontInfo, Font> fontCache = new Dictionary<FontInfo, Font>();
-
-        public void Dispose()
-        {
-            Reset();
-        }
-
-        public void Reset()
-        {
-            foreach (var b in brushCache.Values)
-                b.Dispose();
-            brushCache.Clear();
-
-            foreach (var f in fontCache.Values)
-                f.Dispose();
-            fontCache.Clear();
-        }
-
-        public Brush GetBrush(Color color)
-        {
-            Brush b;
-
-            if (!brushCache.TryGetValue(color, out b))
-                brushCache.Add(color, b = new SolidBrush(color));
-
-            return b;
-        }
-
-        public Font GetFont(string name, float size, FontStyle style)
-        {
-            Font f;
-            var fi = new FontInfo(name, size, style);
-
-            if (!fontCache.TryGetValue(fi, out f))
-                fontCache.Add(fi, f = new Font(name, size, style));
-
-            return f;
-        }
-    }
-
     internal sealed class FontInfo
     {
         public FontInfo(string name, float size, FontStyle style)

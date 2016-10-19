@@ -27,8 +27,7 @@ namespace CodeBox.Margins
 
         public override bool Draw(Graphics g, Rectangle bounds, EditorContext ctx)
         {
-            g.FillRectangle(ctx.Renderer.GetBrush(Editor.BackgroundColor),
-                new Rectangle(bounds.X - ctx.Scroll.X, bounds.Y - ctx.Scroll.Y, CalculateSize(ctx), bounds.Height));
+            g.FillRectangle(ctx.Renderer.Create(Editor.BackgroundColor), bounds);
             return true;
         }
 

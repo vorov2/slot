@@ -16,14 +16,24 @@ namespace CodeBox
             this.editor = editor;
         }
 
-        public int LeftMargin
+        public int EditorLeft
         {
             get { return editor.LeftMargins.TotalWidth; }
         }
 
-        public int TopMargin
+        public int EditorTop
         {
-            get { return 0; } //Temp
+            get { return editor.TopMargins.TotalWidth; }
+        }
+
+        public int EditorRight
+        {
+            get { return editor.ClientSize.Width - RightMargin; }
+        }
+
+        public int EditorBottom
+        {
+            get { return editor.ClientSize.Height - BottomMargin; }
         }
 
         public int RightMargin
@@ -36,21 +46,26 @@ namespace CodeBox
             get { return editor.BottomMargins.TotalWidth; }
         }
 
-        public int ClientWidth
+        public int EditorHeight
         {
-            get { return editor.ClientSize.Width - LeftMargin - RightMargin; }
+            get { return EditorBottom - EditorTop; }
         }
 
-        public int ClientHeight
+        public int EditorWidth
         {
-            get { return editor.ClientSize.Height - TopMargin - BottomMargin; }
+            get { return EditorRight - EditorLeft; }
         }
 
-        public int IntegralHeight
+        public int EditorIntegralHeight
         {
-            get { return (ClientHeight / LineHeight) * LineHeight - editor.scrollY; }
+            get { return (EditorHeight / LineHeight) * LineHeight - editor.scrollY; }
         }
-        
+
+        public int StripesPerScreen
+        {
+            get { return EditorHeight / LineHeight; }
+        }
+
         public int CharWidth
         {
             get { return editor.FontSize.Width; }
