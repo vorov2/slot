@@ -9,7 +9,13 @@ namespace CodeBox.Drawing
 {
     internal sealed class CachedFont : IDisposable
     {
-        private readonly Dictionary<FontInfo, Font> cache = new Dictionary<FontInfo, Font>();
+        private readonly Dictionary<FontStyle, Font> cache = new Dictionary<FontStyle, Font>();
+        private readonly Font baseFont;
+
+        public CachedFont(Font baseFont)
+        {
+            this.baseFont = baseFont;
+        }
 
         public void Dispose()
         {
@@ -23,13 +29,12 @@ namespace CodeBox.Drawing
             cache.Clear();
         }
 
-        public Font Create(string name, float size, FontStyle style)
+        public Font Create(FontStyle style)
         {
             Font f;
-            var fi = new FontInfo(name, size, style);
-
-            if (!cache.TryGetValue(fi, out f))
-                cache.Add(fi, f = new Font(name, size, style));
+            
+            if (!cache.TryGetValue(style, out f))
+                cache.Add(style, f = new Font(baseFont, style));
 
             return f;
         }

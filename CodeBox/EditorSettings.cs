@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CodeBox.Drawing;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,15 +12,23 @@ namespace CodeBox
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
         private const int TABSIZE = 4;
+        private readonly Editor editor;
 
-        public EditorSettings()
+        public EditorSettings(Editor editor)
         {
+            this.editor = editor;
+
             //Defaults
             WordSeparators = SEPS;
             UseTabs = false;
             TabSize = 4;
             LinePadding = .1;
             ShowWhitespace = true;
+            Font = new Font("Consolas", 11f);
+            SelectionColor = ColorTranslator.FromHtml("#264F78");
+            CaretColor = Color.White;
+            ScrollThumbColor = ColorTranslator.FromHtml("#505050");
+            ScrollActiveThumbColor = Color.White;
         }
 
         public string WordSeparators { get; set; }
@@ -36,6 +46,39 @@ namespace CodeBox
         public bool ShowEol { get; set; }
 
         public bool ShowWhitespace { get; set; }
+
+        public Font Font
+        {
+            get { return editor.Font; }
+            set
+            {
+                if (value != editor.Font)
+                {
+                    editor.Font = value;
+
+                    if (editor.CachedFont != null)
+                        editor.CachedFont.Dispose();
+
+                    editor.CachedFont = new CachedFont(value);
+
+                    using (var g = editor.CreateGraphics())
+                    {
+                        var size1 = g.MeasureString("<F>", value);
+                        var size2 = g.MeasureString("<>", value);
+                        editor.Info.CharWidth = (int)(size1.Width - size2.Width);
+                        editor.Info.CharHeight = (int)value.GetHeight(g);
+                    }
+                }
+            }
+        }
+
+        public Color SelectionColor { get; set; }
+
+        public Color CaretColor { get; set; }
+
+        public Color ScrollThumbColor { get; set; }
+
+        public Color ScrollActiveThumbColor { get; set; }
     }
 
     public enum Eol

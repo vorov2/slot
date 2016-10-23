@@ -88,7 +88,6 @@
     <Compile Include="Commands\WordLeftCommand.cs" />
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Drawing\CachedFont.cs" />
-    <Compile Include="Drawing\FontInfo.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="EditorCaret.cs" />
     <Compile Include="EditorInfo.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="Margins\Margin.cs" />
     <Compile Include="Margins\MarginEffect.cs" />
     <Compile Include="Margins\MarginList.cs" />
+    <Compile Include="Margins\MarginMethod.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
     <Compile Include="Margins\TopMargin.cs" />
     <Compile Include="ObjectModel\Character.cs" />
@@ -116,7 +116,9 @@
     <Compile Include="ObjectModel\Range.cs" />
     <Compile Include="ObjectModel\Selection.cs" />
     <Compile Include="ObjectModel\Selections.cs" />
-    <Compile Include="ObjectModel\Style.cs" />
+    <Compile Include="StyleManager.cs" />
+    <Compile Include="Styling\StandardStyle.cs" />
+    <Compile Include="Styling\StyleInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\CachedBrush.cs" />
     <Compile Include="ScrollingManager.cs" />

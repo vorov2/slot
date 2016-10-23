@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.editor1 = new CodeBox.Editor();
+            this.ed = new CodeBox.Editor();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,17 +43,17 @@
             // 
             // editor1
             // 
-            this.editor1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.editor1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.editor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.editor1.Location = new System.Drawing.Point(0, 24);
-            this.editor1.Margin = new System.Windows.Forms.Padding(0);
-            this.editor1.Name = "editor1";
-            this.editor1.Overtype = false;
-            this.editor1.Size = new System.Drawing.Size(1108, 578);
-            this.editor1.TabIndex = 0;
-            this.editor1.Text = "editor1";
-            this.editor1.StyleNeeded += new System.EventHandler<CodeBox.StyleNeededEventArgs>(this.editor1_StyleNeeded);
+            this.ed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.ed.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.ed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ed.Location = new System.Drawing.Point(0, 24);
+            this.ed.Margin = new System.Windows.Forms.Padding(0);
+            this.ed.Name = "editor1";
+            this.ed.Overtype = false;
+            this.ed.Size = new System.Drawing.Size(1108, 578);
+            this.ed.TabIndex = 0;
+            this.ed.Text = "editor1";
+            this.ed.Styles.StyleNeeded += new System.EventHandler<CodeBox.StyleNeededEventArgs>(this.editor1_StyleNeeded);
             // 
             // menuStrip1
             // 
@@ -137,7 +137,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1108, 602);
-            this.Controls.Add(this.editor1);
+            this.Controls.Add(this.ed);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -154,7 +154,7 @@
 
         #endregion
 
-        private Editor editor1;
+        private Editor ed;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;

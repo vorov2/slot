@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeBox.Styling;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace CodeBox.Margins
             return ret;
         }
 
-        public override bool Draw(Graphics g, Rectangle bounds)
+        protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
             Enabled = CalculateSize() != 0;
 
@@ -77,7 +78,7 @@ namespace CodeBox.Margins
 
             if (Horizontal())
             {
-                g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
+                g.FillRectangle(Editor.Styles.BackBrush(StandardStyle.Default), bounds);
                 var caretSize = ((double)bounds.Width / (bounds.Width + sc.Width)) * bounds.Width;
 
                 if (caretSize < Editor.Info.CharWidth*3)
@@ -87,13 +88,13 @@ namespace CodeBox.Margins
                 var curpos = sc.Width != 0 ? (int)Math.Floor(Math.Floor(sc.X / (sc.Width / 100d)) * perc) : 0;
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Color.White : Editor.GrayColor),
+                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
                     new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, lastCaretSize, bounds.Height));
                 lastCaretPos = bounds.X + Math.Abs(curpos);
             }
             else
             {
-                g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
+                g.FillRectangle(Editor.Styles.BackBrush(StandardStyle.Default), bounds);
                 var caretSize = ((double)bounds.Height / (bounds.Height + sc.Height)) * bounds.Height;
 
                 if (caretSize < Editor.Info.LineHeight)
@@ -103,7 +104,7 @@ namespace CodeBox.Margins
                 var curpos = sc.Height != 0 ? (int)Math.Floor(Math.Floor(sc.Y / (sc.Height / 100d)) * perc) : 0;
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Color.White : Editor.GrayColor),
+                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
                     new Rectangle(bounds.X, bounds.Y + Math.Abs(curpos), bounds.Width, lastCaretSize));
                 lastCaretPos = bounds.Y + Math.Abs(curpos);
             }

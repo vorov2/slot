@@ -66,28 +66,17 @@ namespace CodeBox
             get { return EditorHeight / LineHeight; }
         }
 
-        public int CharWidth
-        {
-            get { return editor.FontSize.Width; }
-        }
+        public int CharWidth { get; internal set; }
 
-        public int CharHeight
-        {
-            get { return editor.FontSize.Height; }
-        }
+        public int CharHeight { get; internal set; }
 
         public int LineHeight
         {
             get
             {
-                return editor.FontSize.Height + 
-                    (int)Math.Round(editor.FontSize.Height * editor.Settings.LinePadding);
+                return CharHeight + 
+                    (int)Math.Round(CharHeight * editor.Settings.LinePadding);
             }
-        }
-
-        public Font Font
-        {
-            get { return editor.font; }
         }
     }
 }

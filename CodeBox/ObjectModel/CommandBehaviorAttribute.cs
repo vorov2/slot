@@ -17,6 +17,7 @@ namespace CodeBox.ObjectModel
         public ActionExponent Exponent { get; private set; }
     }
 
+	[Flags]
     public enum ActionExponent
     {
         None = 0x00,

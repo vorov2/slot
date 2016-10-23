@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using CodeBox.Commands;
 using CodeBox.ObjectModel;
 
 namespace CodeBox
 {
     internal sealed class CommandManager
     {
-        private readonly Dictionary<Guid, CommandInfo> commands;
+        private readonly Dictionary<Type, CommandInfo> commands;
         private readonly Dictionary<Keys, CommandInfo> commandsByKeys;
         private readonly Stack<CommandInfo> undoStack;
         private readonly Stack<CommandInfo> redoStack;
@@ -28,7 +26,7 @@ namespace CodeBox
 
         public CommandManager(Editor editor)
         {
-            commands = new Dictionary<Guid, CommandInfo>();
+            commands = new Dictionary<Type, CommandInfo>();
             commandsByKeys = new Dictionary<Keys, CommandInfo>();
             undoStack = new Stack<CommandInfo>();
             redoStack = new Stack<CommandInfo>();
@@ -147,7 +145,7 @@ namespace CodeBox
                 Exponent = exp
             };
 
-            commands.Add(type.GUID, ci);
+            commands.Add(type, ci);
 
             if (keys != Keys.None)
                 commandsByKeys.Add(keys, ci);
@@ -157,7 +155,7 @@ namespace CodeBox
         {
             CommandInfo ci;
 
-            if (commands.TryGetValue(typeof(T).GUID, out ci))
+            if (commands.TryGetValue(typeof(T), out ci))
                 Run(ctx, ci);
         }
 
@@ -292,7 +290,7 @@ namespace CodeBox
             var scrolled = false;
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
-                editor.InvalidateLines();
+                editor.Scroll.InvalidateLines();
 
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
                 scrolled = editor.Scroll.UpdateVisibleRectangle();
@@ -302,7 +300,7 @@ namespace CodeBox
 
             if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
                 || (exp & ActionExponent.Modify) == ActionExponent.Modify)
-                editor.Restyle();
+                editor.Styles.Restyle();
         }
     }
 }

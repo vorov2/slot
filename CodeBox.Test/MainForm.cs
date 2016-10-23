@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.Margins;
 using CodeBox.ObjectModel;
+using CodeBox.Styling;
 
 namespace CodeBox.Test
 {
@@ -23,50 +24,83 @@ namespace CodeBox.Test
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            editor1.LeftMargins.Add(new LineNumberMargin(editor1) { MarkCurrentLine = true });
-            editor1.LeftMargins.Add(new GutterMargin(editor1));
-            editor1.RightMargins.Add(new ScrollBarMargin(editor1));
-            editor1.BottomMargins.Add(new ScrollBarMargin(editor1));
-            editor1.TopMargins.Add(new TopMargin(editor1));
-            editor1.Text = File.ReadAllText(
+            ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
+            ed.LeftMargins.Add(new GutterMargin(ed));
+            ed.RightMargins.Add(new ScrollBarMargin(ed));
+            ed.BottomMargins.Add(new ScrollBarMargin(ed));
+            ed.TopMargins.Add(new TopMargin(ed));
+
+            ed.Styles.Register(StandardStyle.Default,
+                new StyleInfo(
+                    ColorTranslator.FromHtml("#DCDCDC"),
+                    ColorTranslator.FromHtml("#1E1E1E"),
+                    FontStyle.Regular
+                ));
+            ed.Styles.Register(StandardStyle.LineNumber,
+                new StyleInfo(
+                    ColorTranslator.FromHtml("#505050")
+                ));
+            ed.Styles.Register(StandardStyle.CurrentLineNumber,
+                new StyleInfo(
+                    ColorTranslator.FromHtml("#848484"),
+                    ColorTranslator.FromHtml("#262626")
+                ));
+            ed.Styles.Register(StandardStyle.SpecialSymbol,
+                new StyleInfo(
+                    ColorTranslator.FromHtml("#505050")
+                ));
+            ed.Styles.Register(10,
+                new StyleInfo(
+                    ColorTranslator.FromHtml("#8CDCDB")
+                ));
+            ed.Styles.Register(11,
+                new StyleInfo(
+                    ColorTranslator.FromHtml("#D69D85")
+                ));
+            ed.Styles.Register(12,
+                new StyleInfo(
+                    ColorTranslator.FromHtml("#579032")
+                ));
+
+            ed.Text = File.ReadAllText(
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName,"test.json"));
         }
         
 
         private void Form1_Activated(object sender, EventArgs e)
         {
-            editor1.Focus();
+            ed.Focus();
         }
         
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editor1.Undo();
+            ed.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editor1.Redo();
+            ed.Redo();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editor1.Cut();
+            ed.Cut();
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editor1.Copy();
+            ed.Copy();
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editor1.Paste();
+            ed.Paste();
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editor1.SelectAll();
+            ed.SelectAll();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -78,22 +112,22 @@ namespace CodeBox.Test
         {
             //Console.WriteLine("StyleNeeded:"+count++);
             //var txt = editor1.GetTextRange(e.Range);
-            editor1.StyleRange(0, e.Range);
+            ed.Styles.StyleRange(0, e.Range);
             var state = 0;// e.Range.Start.Line > 0 ? editor1.Document.Lines[e.Range.Start.Line - 1].State : 0;
             var li = e.Range.Start.Line;
 
-            while (li > -1 && (state = editor1.Document.Lines[li].State) == 0)
+            while (li > -1 && (state = ed.Document.Lines[li].State) == 0)
                 li--;
 
 
             for (var i = e.Range.Start.Line; i < e.Range.End.Line + 1; i++)
             {
-                var txt = editor1.Document.Lines[i].Text;
+                var txt = ed.Document.Lines[i].Text;
 
                 if (state == 2)
-                    state = editor1.Document.Lines[i].State = ParseComment(i, txt);
+                    state = ed.Document.Lines[i].State = ParseComment(i, txt);
                 else
-                    state = editor1.Document.Lines[i].State = Parse(i, txt);
+                    state = ed.Document.Lines[i].State = Parse(i, txt);
 
             }
 
@@ -113,7 +147,7 @@ namespace CodeBox.Test
                 {
                     var ei = ParseString(i + 1, str);
                     var st = FindSemi(ei + 1, str);
-                    editor1.StyleRange(st ? (byte)1 : (byte)3, 
+                    ed.Styles.StyleRange(st ? (byte)10 : (byte)11, 
                         new Range(new Pos(line, i), new Pos(line, ei)));
                     i = ei + 1;
                 }
@@ -121,7 +155,7 @@ namespace CodeBox.Test
                 {
                     bool end;
                     var ei = ParseComment(i + 1, str, out end);
-                    editor1.StyleRange(2,
+                    ed.Styles.StyleRange(12,
                         new Range(new Pos(line, i), new Pos(line, ei)));
                     i = ei + 1;
                     if (!end)
@@ -136,7 +170,7 @@ namespace CodeBox.Test
         {
             bool end;
             var i = ParseComment(0, str, out end);
-            editor1.StyleRange(2,
+            ed.Styles.StyleRange(2,
                 new Range(new Pos(line, 0), new Pos(line, i)));
 
             if (!end)

@@ -45,6 +45,39 @@ namespace CodeBox.Margins
             editor.Redraw();
         }
 
+        internal bool CallMarginMethod(MarginMethod method, Point loc)
+        {
+            var ctx = editor.GetEditorContext();
+
+            foreach (var m in margins)
+            {
+                var sel = loc.X >= m.Bounds.X && loc.Y >= m.Bounds.Y
+                    && loc.X <= m.Bounds.X + m.Bounds.Width
+                    && loc.Y <= m.Bounds.Y + m.Bounds.Height;
+
+                if (sel)
+                {
+                    var effect =
+                          method == MarginMethod.MouseDown ? m.MouseDown(loc)
+                        : method == MarginMethod.MouseUp ? m.MouseUp(loc)
+                        : m.MouseMove(loc);
+
+                    if ((effect & MarginEffects.Invalidate) == MarginEffects.Invalidate)
+                        editor.Scroll.InvalidateLines();
+                    if ((effect & MarginEffects.Redraw) == MarginEffects.Redraw)
+                        editor.Redraw();
+                    if ((effect & MarginEffects.Scroll) == MarginEffects.Scroll)
+                        editor.Scroll.UpdateVisibleRectangle();
+                    if ((effect & MarginEffects.CaptureMouse) == MarginEffects.CaptureMouse)
+                        editor.mouseThief = m;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public IEnumerator<Margin> GetEnumerator()
         {
             return margins.GetEnumerator();

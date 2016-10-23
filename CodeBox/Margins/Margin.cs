@@ -31,11 +31,19 @@ namespace CodeBox.Margins
             return MarginEffects.None;
         }
 
-        public abstract bool Draw(Graphics g, Rectangle bounds);
+        public bool Draw(Graphics g, Rectangle bounds)
+        {
+            Bounds = bounds;
+            return OnDraw(g, bounds);
+        }
+
+        protected abstract bool OnDraw(Graphics g, Rectangle bounds);
 
         public abstract int CalculateSize();
 
         protected Editor Editor { get; }
+
+        internal Rectangle Bounds { get; private set;  }
 
         public event EventHandler SizeChanged;
         protected virtual void OnSizeChanged()

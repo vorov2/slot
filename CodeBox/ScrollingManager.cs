@@ -137,7 +137,7 @@ namespace CodeBox
         
         private void OnScroll()
         {
-            editor.Restyle();
+            editor.Styles.Restyle();
             editor.Redraw();
         }
 
@@ -157,6 +157,52 @@ namespace CodeBox
             }
 
             return len > FirstVisibleLine ? (int?)len - 1 : null;
+        }
+
+        public void InvalidateLines()
+        {
+            var dt = DateTime.Now;
+
+            if (!editor.Settings.WordWrap)
+            {
+                var maxWidth = 0;
+                var y = 0;
+
+                foreach (var ln in editor.Document.Lines)
+                {
+                    ln.Y = y;
+                    var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth;
+                    y += editor.Info.LineHeight;
+
+                    if (w > maxWidth)
+                        maxWidth = w;
+                }
+
+                XMax = maxWidth - editor.Info.EditorWidth + editor.Info.CharWidth * 5;
+                XMax = XMax < 0 ? 0 : XMax;
+                YMax = editor.Document.Lines.Count * editor.Info.LineHeight;
+            }
+            else
+            {
+                var maxHeight = 0;
+                var twidth = editor.Info.EditorWidth;
+
+                foreach (var ln in editor.Document.Lines)
+                {
+                    ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
+                    ln.Y = maxHeight;
+                    maxHeight += ln.Stripes * editor.Info.LineHeight;
+                }
+
+                XMax = 0;
+                YMax = maxHeight;
+            }
+
+            YMax = YMax - editor.Info.EditorHeight + editor.Info.LineHeight * 5;
+            YMax = YMax < 0 ? 0 : YMax;
+
+            FirstVisibleLine = FirstVisibleLine; //HACKs
+            Console.WriteLine("Invalidate: " + (DateTime.Now - dt).TotalMilliseconds);
         }
 
         private int _firstVisibleLine;

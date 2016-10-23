@@ -14,20 +14,17 @@ using CodeBox.Commands;
 using CodeBox.Margins;
 using CodeBox.ObjectModel;
 using CodeBox.Drawing;
+using CodeBox.Styling;
 
 namespace CodeBox
 {
     public class Editor : Control
     {
-        internal Size FontSize { get; private set; }
-        internal Font font;
-
         public Editor()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.Selectable, true);
             Cursor = Cursors.IBeam;
-            //AutoScroll = true;
             TabStop = true;
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
@@ -36,9 +33,10 @@ namespace CodeBox
             Info = new EditorInfo(this);
             Caret = new EditorCaret(this);
             CachedBrush = new CachedBrush();
-            CachedFont = new CachedFont();
             context = new EditorContext(this);
             Scroll = new ScrollingManager(this);
+            Styles = new StyleManager(this);
+            Settings = new EditorSettings(this);
             Initialize();
             
         }
@@ -58,30 +56,9 @@ namespace CodeBox
 
             disposed = true;
         }
-
-        internal static Color ForegroundColor = ColorTranslator.FromHtml("#DCDCDC");
-        internal static Color BackgroundColor = ColorTranslator.FromHtml("#1E1E1E");
-        internal static Color HighlightColor = ColorTranslator.FromHtml("#264F78");
-        internal static Color GrayColor = ColorTranslator.FromHtml("#505050");
-        //
-
-        
+                
         private void Initialize()
         {
-            if (FontSize.IsEmpty)
-            {
-                using (var g = CreateGraphics())
-                {
-                    var fs = 11f;
-                    font = CachedFont.Create("Consolas", fs, FontStyle.Regular);
-                    var size1 = g.MeasureString("<F>", font);
-                    var size2 = g.MeasureString("<>", font);
-                    FontSize = new Size((int)(size1.Width - size2.Width), (int)font.GetHeight(g));
-                    //HorizontalScroll.SmallChange = Info.CharWidth;
-                    //VerticalScroll.SmallChange = Info.LineHeight;
-                }
-            }
-
             Document = new Document();
             //Settings.WordWrap = true;
 
@@ -132,8 +109,7 @@ namespace CodeBox
 
             var dt = DateTime.Now;
 
-            BackColor = BackgroundColor;
-            e.Graphics.FillRectangle(CachedBrush.Create(BackgroundColor),
+            e.Graphics.FillRectangle(Styles.BackBrush(StandardStyle.Default),
                 new Rectangle(Info.EditorLeft, Info.EditorTop, Info.EditorWidth, Info.EditorHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -195,8 +171,8 @@ namespace CodeBox
 
         protected override void OnResize(EventArgs eventargs)
         {
-            InvalidateLines();
-            Restyle();
+            Scroll.InvalidateLines();
+            Styles.Restyle();
             Invalidate();
             base.OnResize(eventargs);
         }
@@ -206,112 +182,16 @@ namespace CodeBox
             base.OnMouseWheel(e);
             Scroll.ScrollY((e.Delta / 120) * 2);
         }
+        
 
-
-        StringFormat sf = new StringFormat(StringFormat.GenericTypographic)
-        {
-            LineAlignment = StringAlignment.Near,
-            Alignment = StringAlignment.Near,
-            Trimming = StringTrimming.None
-        };
-
-
-        internal void InvalidateLines()
-        {
-            var dt = DateTime.Now;
-
-            if (!Settings.WordWrap)
-            {
-                var maxWidth = 0;
-                var y = 0;
-
-                foreach (var ln in Document.Lines)
-                {
-                    ln.Y = y;
-                    var w = ln.GetTetras(Settings.TabSize) * Info.CharWidth;
-                    y += Info.LineHeight;
-
-                    if (w > maxWidth)
-                        maxWidth = w;
-                }
-
-                Scroll.XMax = maxWidth - Info.EditorWidth + Info.CharWidth * 5;
-                Scroll.XMax = Scroll.XMax < 0 ? 0 : Scroll.XMax;
-                Scroll.YMax = Document.Lines.Count * Info.LineHeight;
-            }
-            else
-            {
-                var maxHeight = 0;
-                var twidth = Info.EditorWidth;
-
-                foreach (var ln in Document.Lines)
-                {
-                    ln.RecalculateCuts(twidth, Info.CharWidth, Settings.TabSize);
-                    ln.Y = maxHeight;
-                    maxHeight += ln.Stripes * Info.LineHeight;
-                }
-
-                Scroll.XMax = 0;
-                Scroll.YMax = maxHeight;
-            }
-
-            Scroll.YMax = Scroll.YMax - Info.EditorHeight + Info.LineHeight * 5;
-            Scroll.YMax = Scroll.YMax < 0 ? 0 : Scroll.YMax;
-
-            Scroll.FirstVisibleLine = Scroll.FirstVisibleLine; //HACKs
-            Console.WriteLine("Invalidate: " + (DateTime.Now - dt).TotalMilliseconds);
-        }
+        
         
         public string GetTextRange(Range range)
         {
             return CopyCommand.GetTextRange(GetEditorContext(), range);
         }
 
-        public void StyleRange(byte style, Range range)
-        {
-            var lines = Lines;
-
-            for (var i = range.Start.Line; i < range.End.Line + 1; i++)
-            {
-                var max = i == range.End.Line ? range.End.Col + 1: lines[i].Length;
-
-                for (var j = i == range.Start.Line ? range.Start.Col : 0; j < max; j++)
-                {
-                    var ln = lines[i];
-                    
-                    if (ln.Length > j)
-                        ln[j] = ln[j].WithStyle(style);
-                }
-            }
-        }
-        static Style defaultStyle = new Style { BackColor = BackgroundColor, ForeColor = ForegroundColor };
-        static Style stringStyle = new Style { BackColor = BackgroundColor, ForeColor = ColorTranslator.FromHtml("#D69D85") };
-        static Style keywordStyle = new Style { BackColor = BackgroundColor, ForeColor = ColorTranslator.FromHtml("#8CDCDB") };
-        static Style commentStyle = new Style { BackColor = BackgroundColor, ForeColor = ColorTranslator.FromHtml("#579032") };
-
-        public Style GetStyle(byte style)
-        {
-            if (style == 0)
-                return defaultStyle;
-            else if (style == 1)
-                return keywordStyle;
-            else if (style == 2)
-                return commentStyle;
-            else
-                return stringStyle;
-        }
-
-        public event EventHandler<StyleNeededEventArgs> StyleNeeded;
-
-        internal void Restyle()
-        {
-            var fvl = Scroll.FirstVisibleLine;
-            var lvl = Scroll.LastVisibleLine;
-
-            StyleNeeded?.Invoke(this, new StyleNeededEventArgs(
-                new Range(new Pos(fvl, 0), 
-                new Pos(lvl, Lines[lvl].Length - 1))));
-        }
+        
 
         private void DrawLines(Graphics g)
         {
@@ -347,24 +227,33 @@ namespace CodeBox
                 for (var i = oldcut; i < cut; i++)
                 {
                     var c = line.CharAt(i);
-                    var style = c != '\0' ? GetStyle(line[i].Style) : defaultStyle;
+                    //var style = c != '\0' ? GetStyle(line[i].Style) : defaultStyle;
+                    var style = c != '\0' ? line[i].Style : (byte)0;
 
-                    var col = c == ' ' || c == '\t' || c == '\0' ? GrayColor :
-                        style.ForeColor == null ? defaultStyle.ForeColor.Value : style.ForeColor.Value;
-                    var str = c == ' ' && Settings.ShowWhitespace ? "·" : c.ToString();
-                    str = c == '\t' && Settings.ShowWhitespace ? "\u2192" : str;
-                    str = c == '\0' && Settings.ShowEol ? "\u00B6" : str;
+                    if (c == '\0' || c == '\t' || c == ' ')
+                    {
+                        style = (byte)StandardStyle.SpecialSymbol;
+                        if (c == '\0' && Settings.ShowEol) c = '\u00B6';
+                        else if (c == '\t' && Settings.ShowWhitespace) c = '\u2192';
+                        else if (c == ' ' && Settings.ShowWhitespace) c = '·';
+                    }
+
                     var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
-                    var high = sel && Document.Selections.IsSelected(new Pos(lineIndex, i));
                     var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth;
+                    var high = visible && sel && Document.Selections.IsSelected(new Pos(lineIndex, i));
 
-                    if (visible && (high || style.BackColor != null))
-                        g.FillRectangle(CachedBrush.Create(high ? HighlightColor : style.BackColor.Value),
-                            new Rectangle(x, y, xw, Info.LineHeight));
+                    //if (visible && (high || style.BackColor != null))
+                    //    g.FillRectangle(CachedBrush.Create(high ? HighlightColor : style.BackColor.Value),
+                    //        new Rectangle(x, y, xw, Info.LineHeight));
 
-                    var fnt = style.FontStyle != null ? CachedFont.Create(font.Name, font.Size, style.FontStyle.Value) : font;
+                    //var fnt = style.FontStyle != null ? CachedFont.Create(font.Name, font.Size, style.FontStyle.Value) : font;
+                    //if (visible)
+                    //    g.DrawString(str, fnt, CachedBrush.Create(col), new PointF(x, y), sf);
+
+                    var rect = new RectangleF(x, y, xw, Info.LineHeight);
+
                     if (visible)
-                        g.DrawString(str, fnt, CachedBrush.Create(col), new PointF(x, y), sf);
+                        Styles.Draw(g, c, style, rect, high);
 
                     if (visible && Document.Selections.HasCaret(new Pos(lineIndex, i)))
                     {
@@ -374,8 +263,10 @@ namespace CodeBox
                         if (blink)
                         {
                             var cg = Caret.GetDrawingSurface();
-                            cg.Clear(high ? HighlightColor : BackgroundColor);
-                            cg.DrawString(str, fnt, CachedBrush.Create(col), new Point(0, 0), sf);
+                            if (!high)
+                                cg.Clear(BackColor);
+                            //cg.DrawString(str, fnt, CachedBrush.Create(col), new Point(0, 0), sf);
+                            Styles.Draw(cg, c, style, new RectangleF(0, 0, rect.Width, rect.Height), high);
                             Caret.Resume();
                         }
 
@@ -412,7 +303,7 @@ namespace CodeBox
                         var ex = i == sel.End.Line ? line.GetTetras(sel.End.Col, Settings.TabSize) : line.GetTetras(Settings.TabSize) + 1;
                         sx = lmarg + sx * Info.CharWidth - Scroll.X;
                         ex = lmarg + ex * Info.CharWidth;
-                        g.FillRectangle(CachedBrush.Create(HighlightColor), new Rectangle(sx, y, ex - sx, Info.LineHeight));
+                        g.FillRectangle(CachedBrush.Create(Settings.SelectionColor), new Rectangle(sx, y, ex - sx, Info.LineHeight));
                     }
                     else
                     {
@@ -436,7 +327,7 @@ namespace CodeBox
                                     ? lmarg + (line.GetTetras(sel.End.Col, Settings.TabSize) * Info.CharWidth - oldcut * Info.CharWidth) - sx
                                     : line.GetTetras(cut, Settings.TabSize) * Info.CharWidth - oldcut * Info.CharWidth - sx
                                         + Info.CharWidth * (cut == line.Length ? 2 : 1);
-                                g.FillRectangle(CachedBrush.Create(HighlightColor), new Rectangle(sx, y, wi, Info.LineHeight));
+                                g.FillRectangle(CachedBrush.Create(Settings.SelectionColor), new Rectangle(sx, y, wi, Info.LineHeight));
                             }
 
                             y += Info.LineHeight;
@@ -460,31 +351,18 @@ namespace CodeBox
         {
             base.OnMouseMove(e);
 
-            if (mouseTheft != null)
+            if (mouseThief != null)
             {
-                mouseTheft.MouseMove(e.Location);
+                mouseThief.MouseMove(e.Location);
                 return;
             }
 
-            if (e.X < Info.EditorLeft)
+            var mlist = FindMargin(e.Location);
+
+            if (mlist != null)
             {
+                mlist.CallMarginMethod(MarginMethod.MouseMove, e.Location);
                 Cursor = Cursors.Arrow;
-                MouseMargins(e.Location, LeftMargins, 0, MarginMethod.MouseMove);
-            }
-            else if (e.X > ClientSize.Width - Info.RightMargin)
-            {
-                Cursor = Cursors.Arrow;
-                MouseMargins(e.Location, RightMargins, ClientSize.Width - Info.RightMargin, MarginMethod.MouseMove);
-            }
-            else if (e.Y < Info.EditorTop)
-            {
-                Cursor = Cursors.Arrow;
-                MouseMargins(e.Location, TopMargins, 0, MarginMethod.MouseMove);
-            }
-            else if (e.Y > ClientSize.Height - Info.BottomMargin)
-            {
-                Cursor = Cursors.Arrow;
-                MouseMargins(e.Location, BottomMargins, ClientSize.Height - Info.BottomMargin, MarginMethod.MouseMove);
             }
             else
                 Cursor = Cursors.IBeam;
@@ -614,28 +492,34 @@ namespace CodeBox
             base.OnMouseUp(e);
             mouseDown = false;
 
-            if (mouseTheft != null)
+            if (mouseThief != null)
             {
-                mouseTheft.MouseUp(e.Location);
-                mouseTheft = null;
+                mouseThief.MouseUp(e.Location);
+                mouseThief = null;
                 Redraw();
             }
 
-            if (e.X < Info.EditorLeft)
-                MouseMargins(e.Location, LeftMargins, 0, MarginMethod.MouseUp);
-            else if (e.X > ClientSize.Width - Info.RightMargin)
-                MouseMargins(e.Location, RightMargins, ClientSize.Width - Info.RightMargin, MarginMethod.MouseUp);
-            else if (e.Y < Info.EditorTop)
-                MouseMargins(e.Location, TopMargins, 0, MarginMethod.MouseUp);
-            else if (e.Y > ClientSize.Height - Info.BottomMargin)
-                MouseMargins(e.Location, BottomMargins, ClientSize.Height - Info.BottomMargin, MarginMethod.MouseUp);
+            var mlist = FindMargin(e.Location);
+
+            if (mlist != null)
+                mlist.CallMarginMethod(MarginMethod.MouseUp, e.Location);
         }
 
-        enum MarginMethod
+        private MarginList FindMargin(Point loc)
         {
-            MouseDown, MouseUp, MouseMove
+            if (loc.X < Info.EditorLeft)
+                return LeftMargins;
+            else if (loc.X > ClientSize.Width - Info.RightMargin)
+                return RightMargins;
+            else if (loc.Y < Info.EditorTop)
+                return TopMargins;
+            else if (loc.Y > ClientSize.Height - Info.BottomMargin)
+                return BottomMargins;
+            else
+                return null;
         }
-        private Margin mouseTheft;
+
+        internal Margin mouseThief;
         private bool MouseMargins(Point loc, MarginList margins, int start, MarginMethod meth)
         {
             var ctx = GetEditorContext();
@@ -654,13 +538,13 @@ namespace CodeBox
                         : m.MouseMove(loc);
 
                     if ((effect & MarginEffects.Invalidate) == MarginEffects.Invalidate)
-                        InvalidateLines();
+                        Scroll.InvalidateLines();
                     if ((effect & MarginEffects.Redraw) == MarginEffects.Redraw)
                         Redraw();
                     if ((effect & MarginEffects.Scroll) == MarginEffects.Scroll)
                         Scroll.UpdateVisibleRectangle();
                     if ((effect & MarginEffects.CaptureMouse) == MarginEffects.CaptureMouse)
-                        mouseTheft = m;
+                        mouseThief = m;
 
                     return true;
                 }
@@ -680,14 +564,10 @@ namespace CodeBox
                 return;
 
             mouseDown = true;
-            if (e.X < Info.EditorLeft)
-                MouseMargins(e.Location, LeftMargins, 0, MarginMethod.MouseDown);
-            else if (e.X > ClientSize.Width - Info.RightMargin)
-                MouseMargins(e.Location, RightMargins, ClientSize.Width - Info.RightMargin, MarginMethod.MouseDown);
-            else if (e.Y < Info.EditorTop)
-                MouseMargins(e.Location, TopMargins, 0, MarginMethod.MouseDown);
-            else if (e.Y > ClientSize.Height - Info.BottomMargin)
-                MouseMargins(e.Location, BottomMargins, ClientSize.Height - Info.BottomMargin, MarginMethod.MouseDown);
+            var mlist = FindMargin(e.Location);
+
+            if (mlist != null)
+                mlist.CallMarginMethod(MarginMethod.MouseDown, e.Location);
             else
             {
                 var lineIndex = FindLineByLocation(e.Location.Y);
@@ -711,14 +591,14 @@ namespace CodeBox
         {
             if (lineIndex != -1)
             {
-                var col = LocateColumn(Lines[lineIndex], loc);
+                var col = FindColumnByLocation(Lines[lineIndex], loc);
                 return col == -1 ? Pos.Empty : new Pos(lineIndex, col);
             }
 
             return Pos.Empty;
         }
 
-        private int LocateColumn(Line line, Point loc)
+        private int FindColumnByLocation(Line line, Point loc)
         {
             var stripe = (int)Math.Ceiling((loc.Y - Info.EditorTop - line.Y - Scroll.Y) / (double)Info.LineHeight) - 1;
             var cut = line.GetCut(stripe);
@@ -903,19 +783,13 @@ namespace CodeBox
 
         public override string Text
         {
-            get
-            {
-                return base.Text;
-            }
-
+            get { return base.Text; }
             set
             {
                 base.Text = value;
-
-
                 BuildLines(Text);
-                InvalidateLines();
-                Restyle();
+                Scroll.InvalidateLines();
+                Styles.Restyle();
             }
         }
 
@@ -941,17 +815,7 @@ namespace CodeBox
 
         public EditorInfo Info { get; private set; }
 
-        private EditorSettings _settings;
-        public EditorSettings Settings
-        {
-            get
-            {
-                if (_settings == null)
-                    _settings = new EditorSettings();
-
-                return _settings;
-            }
-        }
+        public EditorSettings Settings { get; }
 
         public MarginList TopMargins { get; private set; }
 
@@ -963,15 +827,16 @@ namespace CodeBox
 
         internal CachedBrush CachedBrush { get; private set; }
 
-        internal CachedFont CachedFont { get; private set; }
+        internal CachedFont CachedFont { get; set; }
 
         internal EditorCaret Caret { get; private set; }
         
         internal CommandManager CommandManager { get; private set; }
 
+        public StyleManager Styles { get; private set; }
+
         public ScrollingManager Scroll { get; private set; }
 
         internal Eol OriginalEol { get; private set; }
     }
-
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using CodeBox.Styling;
 
 namespace CodeBox.Margins
 {
@@ -15,7 +16,7 @@ namespace CodeBox.Margins
 
         }
 
-        public override bool Draw(Graphics g, Rectangle bounds)
+        protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
             OnSizeChanged();
             var sc = new Point(Editor.Scroll.X, Editor.Scroll.Y);
@@ -24,8 +25,9 @@ namespace CodeBox.Margins
             var info = Editor.Info;
             var len = lines.Count.ToString().Length;
             var caret = Editor.Document.Selections.Main.Caret;
+            var backBrush = Editor.Styles.BackBrush(StandardStyle.LineNumber);
 
-            g.FillRectangle(Editor.CachedBrush.Create(Editor.BackgroundColor), bounds);
+            g.FillRectangle(backBrush, bounds);
             var sb = new StringBuilder();
             var y = bounds.Y;
             
@@ -40,11 +42,21 @@ namespace CodeBox.Margins
                 {
                     var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth - sc.X;
+                    var font = Editor.Styles.Font(StandardStyle.LineNumber);
+                    var col = Editor.Styles.ForeBrush(StandardStyle.LineNumber);
 
                     if (i == caret.Line && MarkCurrentLine)
-                        x -= info.CharWidth;
+                    {
+                        var selBrush = Editor.Styles.BackBrush(StandardStyle.CurrentLineNumber);
 
-                    g.DrawString(str, info.Font, Editor.CachedBrush.Create(Editor.GrayColor), x + sc.X, y);
+                        if (selBrush != backBrush)
+                            g.FillRectangle(selBrush, new RectangleF(x + sc.X, y, bounds.Width, info.LineHeight));
+
+                        font = Editor.Styles.Font(StandardStyle.CurrentLineNumber);
+                        col = Editor.Styles.ForeBrush(StandardStyle.CurrentLineNumber);
+                    }
+
+                    g.DrawString(str, font, col, x + sc.X, y);
                     sb.Append(str);
                     y += info.LineHeight;
                 }
