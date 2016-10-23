@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeBox.Styling;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -136,6 +137,21 @@ namespace CodeBox.ObjectModel
                 else
                     chars.Add(value);
             }
+        }
+        #endregion
+
+        #region Styles
+        internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
+
+        public int GetStyle(int index)
+        {
+            foreach (var a in AppliedStyles)
+            {
+                if (index >= a.Start && index <= a.End)
+                    return a.StyleId;
+            }
+
+            return (int)StandardStyle.Default;
         }
         #endregion
 

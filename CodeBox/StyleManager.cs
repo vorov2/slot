@@ -11,7 +11,7 @@ namespace CodeBox
 {
     public sealed class StyleManager
     {
-        private readonly Dictionary<byte, StyleInfo> styles = new Dictionary<byte, StyleInfo>();
+        private readonly Dictionary<int, StyleInfo> styles = new Dictionary<int, StyleInfo>();
         private readonly Editor editor;
         private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
         {
@@ -19,7 +19,7 @@ namespace CodeBox
             Alignment = StringAlignment.Near,
             Trimming = StringTrimming.None
         };
-                
+
         public StyleManager(Editor editor)
         {
             this.editor = editor;
@@ -32,10 +32,10 @@ namespace CodeBox
 
         public void Register(StandardStyle style, StyleInfo info)
         {
-            Register((byte)style, info);
+            Register((int)style, info);
         }
 
-        public void Register(byte code, StyleInfo info)
+        public void Register(int code, StyleInfo info)
         {
             if (code < 4)
                 info = PopulateStyle(code, info);
@@ -44,7 +44,7 @@ namespace CodeBox
             styles.Add(code, info);
         }
 
-        private StyleInfo PopulateStyle(byte code, StyleInfo info)
+        private StyleInfo PopulateStyle(int code, StyleInfo info)
         {
             var old = default(StyleInfo);
 
@@ -57,7 +57,7 @@ namespace CodeBox
                 info.FontStyle ?? old.FontStyle
             );
 
-            if (code == (byte)StandardStyle.Default)
+            if (code == (int)StandardStyle.Default)
             {
                 Default = info;
                 editor.BackColor = info.BackColor.Value;
@@ -70,10 +70,10 @@ namespace CodeBox
 
         public Font Font(StandardStyle style)
         {
-            return Font((byte)style);
+            return Font((int)style);
         }
 
-        public Font Font(byte style)
+        public Font Font(int style)
         {
             var st = styles[style];
             var fs = default(FontStyle);
@@ -88,10 +88,10 @@ namespace CodeBox
 
         public Brush BackBrush(StandardStyle style)
         {
-            return BackBrush((byte)style);
+            return BackBrush((int)style);
         }
 
-        public Brush BackBrush(byte style)
+        public Brush BackBrush(int style)
         {
             var st = styles[style];
             var col = default(Color);
@@ -106,10 +106,10 @@ namespace CodeBox
 
         public Brush ForeBrush(StandardStyle style)
         {
-            return ForeBrush((byte)style);
+            return ForeBrush((int)style);
         }
 
-        public Brush ForeBrush(byte style)
+        public Brush ForeBrush(int style)
         {
             var st = styles[style];
             var col = default(Color);
@@ -122,7 +122,7 @@ namespace CodeBox
             return editor.CachedBrush.Create(col);
         }
 
-        internal void Draw(Graphics g, char c, byte styleCode, RectangleF rec, bool selected)
+        internal void Draw(Graphics g, char c, int styleCode, RectangleF rec, bool selected)
         {
             var info = styles[styleCode];
             var font = info.FontStyle != null
@@ -140,26 +140,21 @@ namespace CodeBox
             g.DrawString(c.ToString(), font, fc, rec.Location, format);
         }
 
-        public void StyleRange(byte style, Range range)
+        public void ClearStyles(int line)
         {
-            var lines = editor.Lines;
+            editor.Lines[line].AppliedStyles.Clear();
+        }
 
-            for (var i = range.Start.Line; i < range.End.Line + 1; i++)
-            {
-                var max = i == range.End.Line ? range.End.Col + 1 : lines[i].Length;
-
-                for (var j = i == range.Start.Line ? range.Start.Col : 0; j < max; j++)
-                {
-                    var ln = lines[i];
-
-                    if (ln.Length > j)
-                        ln[j] = ln[j].WithStyle(style);
-                }
-            }
+        public void StyleRange(int style, int line, int start, int end)
+        {
+            editor.Lines[line].AppliedStyles.Add(new AppliedStyle(style, start, end));
         }
 
         internal void Restyle()
         {
+            if (editor.Lines.Count == 0)
+                return;
+
             var fvl = editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
             OnStyleNeeded(

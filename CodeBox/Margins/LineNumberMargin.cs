@@ -29,16 +29,16 @@ namespace CodeBox.Margins
 
             g.FillRectangle(backBrush, bounds);
             var sb = new StringBuilder();
-            var y = bounds.Y;
             
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var line = lines[i];
+                var y = line.Y + sc.Y + info.EditorTop;
 
                 if (line.Y >= info.EditorBottom - sc.Y)
                     return true;
 
-                if (line.Y >= sc.Y)// && y<= bounds.Height)
+                if (line.Y >= sc.Y && y >= bounds.Y)
                 {
                     var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth - sc.X;
@@ -58,7 +58,6 @@ namespace CodeBox.Margins
 
                     g.DrawString(str, font, col, x + sc.X, y);
                     sb.Append(str);
-                    y += info.LineHeight;
                 }
             }
 

@@ -1,6 +1,7 @@
-﻿using CodeBox.ObjectModel;
-using System;
-namespace CodeBox
+﻿using System;
+using CodeBox.ObjectModel;
+
+namespace CodeBox.Styling
 {
     public sealed class StyleNeededEventArgs : EventArgs
     {

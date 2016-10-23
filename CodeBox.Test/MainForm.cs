@@ -112,7 +112,6 @@ namespace CodeBox.Test
         {
             //Console.WriteLine("StyleNeeded:"+count++);
             //var txt = editor1.GetTextRange(e.Range);
-            ed.Styles.StyleRange(0, e.Range);
             var state = 0;// e.Range.Start.Line > 0 ? editor1.Document.Lines[e.Range.Start.Line - 1].State : 0;
             var li = e.Range.Start.Line;
 
@@ -122,6 +121,7 @@ namespace CodeBox.Test
 
             for (var i = e.Range.Start.Line; i < e.Range.End.Line + 1; i++)
             {
+                ed.Styles.ClearStyles(i);
                 var txt = ed.Document.Lines[i].Text;
 
                 if (state == 2)
@@ -147,16 +147,18 @@ namespace CodeBox.Test
                 {
                     var ei = ParseString(i + 1, str);
                     var st = FindSemi(ei + 1, str);
-                    ed.Styles.StyleRange(st ? (byte)10 : (byte)11, 
-                        new Range(new Pos(line, i), new Pos(line, ei)));
+                    //ed.Styles.StyleRange(st ? (byte)10 : (byte)11, 
+                    //    new Range(new Pos(line, i), new Pos(line, ei)));
+                    ed.Styles.StyleRange(st ? 10 : 11, line, i, ei);
                     i = ei + 1;
                 }
                 else if (c == '/' && i < str.Length - 1 && str[i + 1] == '*')
                 {
                     bool end;
                     var ei = ParseComment(i + 1, str, out end);
-                    ed.Styles.StyleRange(12,
-                        new Range(new Pos(line, i), new Pos(line, ei)));
+                    //ed.Styles.StyleRange(12,
+                    //    new Range(new Pos(line, i), new Pos(line, ei)));
+                    ed.Styles.StyleRange(12, line, i, ei);
                     i = ei + 1;
                     if (!end)
                         state = 2;
@@ -170,8 +172,7 @@ namespace CodeBox.Test
         {
             bool end;
             var i = ParseComment(0, str, out end);
-            ed.Styles.StyleRange(2,
-                new Range(new Pos(line, 0), new Pos(line, i)));
+            ed.Styles.StyleRange(12, line, 0, i);
 
             if (!end)
                 return 2;

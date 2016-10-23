@@ -116,7 +116,6 @@ namespace CodeBox
             DrawMargins(0, e.Graphics, TopMargins);
             DrawMargins(0, e.Graphics, LeftMargins);
 
-            //DrawSelections(e.Graphics);
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             DrawLines(e.Graphics);
 #if DEBUG
@@ -126,10 +125,7 @@ namespace CodeBox
 
 
             e.Graphics.ResetTransform();
-            if (BottomMargins.Any())
-                DrawMargins(ClientSize.Height -
-                    BottomMargins.First().CalculateSize(), e.Graphics, BottomMargins);
-
+            DrawMargins(Info.EditorBottom, e.Graphics, BottomMargins);
             DrawMargins(ClientSize.Width - Info.CharWidth, e.Graphics, RightMargins);
             base.OnPaint(e);
         }
@@ -151,7 +147,7 @@ namespace CodeBox
                     bounds = new Rectangle(Info.EditorLeft, start, Info.EditorWidth, m.CalculateSize());
 
                 m.Draw(g, bounds);
-                start += vertical ? m.CalculateSize() : -m.CalculateSize();
+                start += m.CalculateSize();
             }
         }
 
@@ -197,14 +193,13 @@ namespace CodeBox
         {
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
+            Console.WriteLine($"FistLine {fvl} and LastLine {lvl}");
 
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];
                 DrawLine(g, ln, i);
             }
-
-            Console.WriteLine($"Last line draw: {lvl}");
         }
 
         private void DrawLine(Graphics g, Line line, int lineIndex)
@@ -220,6 +215,7 @@ namespace CodeBox
             for (var j = 0; j < line.Stripes; j++)
             {
                 var cut = line.GetCut(j);
+                Console.WriteLine($"Draw {line.Text}");
 
                 if (cut == line.Length)
                     cut++;
@@ -227,114 +223,51 @@ namespace CodeBox
                 for (var i = oldcut; i < cut; i++)
                 {
                     var c = line.CharAt(i);
-                    //var style = c != '\0' ? GetStyle(line[i].Style) : defaultStyle;
-                    var style = c != '\0' ? line[i].Style : (byte)0;
-
-                    if (c == '\0' || c == '\t' || c == ' ')
-                    {
-                        style = (byte)StandardStyle.SpecialSymbol;
-                        if (c == '\0' && Settings.ShowEol) c = '\u00B6';
-                        else if (c == '\t' && Settings.ShowWhitespace) c = '\u2192';
-                        else if (c == ' ' && Settings.ShowWhitespace) c = '·';
-                    }
-
                     var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
-                    var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth;
-                    var high = visible && sel && Document.Selections.IsSelected(new Pos(lineIndex, i));
-
-                    //if (visible && (high || style.BackColor != null))
-                    //    g.FillRectangle(CachedBrush.Create(high ? HighlightColor : style.BackColor.Value),
-                    //        new Rectangle(x, y, xw, Info.LineHeight));
-
-                    //var fnt = style.FontStyle != null ? CachedFont.Create(font.Name, font.Size, style.FontStyle.Value) : font;
-                    //if (visible)
-                    //    g.DrawString(str, fnt, CachedBrush.Create(col), new PointF(x, y), sf);
-
-                    var rect = new RectangleF(x, y, xw, Info.LineHeight);
+                    var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth
+                        && y + Scroll.Y >= tmarg;
 
                     if (visible)
-                        Styles.Draw(g, c, style, rect, high);
-
-                    if (visible && Document.Selections.HasCaret(new Pos(lineIndex, i)))
                     {
-                        var blink = Document.Selections.Main.Caret.Line == lineIndex
-                            && Document.Selections.Main.Caret.Col == i;
+                        //var style = c != '\0' ? line[i].Style : (byte)0;
+                        var style = c != '\0' ? line.GetStyle(i) : 0;
 
-                        if (blink)
+                        if (c == '\0' || c == '\t' || c == ' ')
                         {
-                            var cg = Caret.GetDrawingSurface();
-                            if (!high)
-                                cg.Clear(BackColor);
-                            //cg.DrawString(str, fnt, CachedBrush.Create(col), new Point(0, 0), sf);
-                            Styles.Draw(cg, c, style, new RectangleF(0, 0, rect.Width, rect.Height), high);
-                            Caret.Resume();
+                            style = (int)StandardStyle.SpecialSymbol;
+                            if (c == '\0' && Settings.ShowEol) c = '\u00B6';
+                            else if (c == '\t' && Settings.ShowWhitespace) c = '\u2192';
+                            else if (c == ' ' && Settings.ShowWhitespace) c = '·';
                         }
 
-                        Caret.DrawCaret(g, x, y, blink);
+                        var rect = new RectangleF(x, y, xw, Info.LineHeight);
+                        var pos = new Pos(lineIndex, i);
+                        var high = sel && Document.Selections.IsSelected(pos);
+                        Styles.Draw(g, c, style, rect, high);
+
+                        if (Document.Selections.HasCaret(pos))
+                        {
+                            var blink = Document.Selections.Main.Caret.Line == lineIndex
+                                && Document.Selections.Main.Caret.Col == i;
+
+                            if (blink)
+                            {
+                                var cg = Caret.GetDrawingSurface();
+                                cg.Clear(high ? Settings.SelectionColor : BackColor);
+                                Styles.Draw(cg, c, style, new RectangleF(default(PointF), rect.Size), high);
+                                Caret.Resume();
+                            }
+
+                            Caret.DrawCaret(g, x, y, blink);
+                        }
                     }
+
                     x += xw;
                 }
 
                 oldcut = cut;
                 y += Info.LineHeight;
                 x = lmarg;
-            }
-        }
-
-        private void DrawSelections(Graphics g)
-        {
-            var dt = DateTime.Now;
-            foreach (var s in Document.Selections)
-            {
-                if (s.IsEmpty)
-                    continue;
-
-                var sel = s.Normalize();
-                var lmarg = Info.EditorLeft;
-
-                for (var i = sel.Start.Line; i < sel.End.Line + 1; i++)
-                {
-                    var line = Document.Lines[i];
-                    var y = line.Y;
-
-                    if (line.Stripes == 1)
-                    {
-                        var sx = i == sel.Start.Line ? line.GetTetras(sel.Start.Col, Settings.TabSize) : 0;
-                        var ex = i == sel.End.Line ? line.GetTetras(sel.End.Col, Settings.TabSize) : line.GetTetras(Settings.TabSize) + 1;
-                        sx = lmarg + sx * Info.CharWidth - Scroll.X;
-                        ex = lmarg + ex * Info.CharWidth;
-                        g.FillRectangle(CachedBrush.Create(Settings.SelectionColor), new Rectangle(sx, y, ex - sx, Info.LineHeight));
-                    }
-                    else
-                    {
-                        var oldcut = 0;
-
-                        for (var j = 0; j < line.Stripes; j++)
-                        {
-                            var cut = line.GetCut(j);
-                            var instart = sel.Start.Line == i && sel.Start.Col <= cut && sel.Start.Col > oldcut;
-                            var inend = sel.End.Line == i && sel.End.Col <= cut && sel.End.Col > oldcut;
-                            var inside = (i != sel.Start.Line && i != sel.End.Line)
-                                || (i == sel.Start.Line && i != sel.End.Line && cut > sel.Start.Col)
-                                || (i == sel.End.Line && i != sel.Start.Line && cut < sel.End.Col);
-
-                            if (inside || instart || inend)
-                            {
-                                var sx = instart
-                                    ? lmarg + (line.GetTetras(sel.Start.Col, Settings.TabSize) * Info.CharWidth - oldcut * Info.CharWidth)
-                                    : lmarg;
-                                var wi = inend
-                                    ? lmarg + (line.GetTetras(sel.End.Col, Settings.TabSize) * Info.CharWidth - oldcut * Info.CharWidth) - sx
-                                    : line.GetTetras(cut, Settings.TabSize) * Info.CharWidth - oldcut * Info.CharWidth - sx
-                                        + Info.CharWidth * (cut == line.Length ? 2 : 1);
-                                g.FillRectangle(CachedBrush.Create(Settings.SelectionColor), new Rectangle(sx, y, wi, Info.LineHeight));
-                            }
-
-                            y += Info.LineHeight;
-                            oldcut = cut;
-                        }
-                    }
-                }
             }
         }
 
@@ -520,40 +453,6 @@ namespace CodeBox
         }
 
         internal Margin mouseThief;
-        private bool MouseMargins(Point loc, MarginList margins, int start, MarginMethod meth)
-        {
-            var ctx = GetEditorContext();
-
-            foreach (var m in margins)
-            {
-                var sel = margins == LeftMargins || margins == RightMargins
-                    ? loc.X >= start && loc.X <= start + m.CalculateSize()
-                    : loc.Y >= start && loc.Y <= start + m.CalculateSize();
-
-                if (sel)
-                {
-                    var effect = 
-                        meth == MarginMethod.MouseDown ? m.MouseDown(loc)
-                        : meth == MarginMethod.MouseUp ? m.MouseUp(loc)
-                        : m.MouseMove(loc);
-
-                    if ((effect & MarginEffects.Invalidate) == MarginEffects.Invalidate)
-                        Scroll.InvalidateLines();
-                    if ((effect & MarginEffects.Redraw) == MarginEffects.Redraw)
-                        Redraw();
-                    if ((effect & MarginEffects.Scroll) == MarginEffects.Scroll)
-                        Scroll.UpdateVisibleRectangle();
-                    if ((effect & MarginEffects.CaptureMouse) == MarginEffects.CaptureMouse)
-                        mouseThief = m;
-
-                    return true;
-                }
-
-                start += m.CalculateSize();
-            }
-
-            return false;
-        }
 
         bool mouseDown;
         protected override void OnMouseDown(MouseEventArgs e)
@@ -727,13 +626,13 @@ namespace CodeBox
             var lineIndex = 0;
             var y = Info.EditorTop;
             locY = locY - Scroll.Y;
-            var maxHeight = Info.EditorIntegralHeight; //Round by line height
+            //var maxHeight = Info.EditorIntegralHeight; //Round by line height
 
             do
             {
                 var lh = line.Stripes * Info.LineHeight;
 
-                if (locY >= y && locY <= y + lh && locY <= maxHeight)
+                if (locY >= y && locY <= y + lh)// && locY <= maxHeight)
                     return lineIndex;
 
                 if (Lines.Count == lineIndex + 1)

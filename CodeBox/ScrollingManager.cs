@@ -108,11 +108,12 @@ namespace CodeBox
 
             //scroll by whole lines
             var lines = (int)Math.Round((double)value / editor.Info.LineHeight);
-            FirstVisibleLine = -lines;
+            var fvl = CalculateFirstVisibleLine(-lines);
 
-            if (FirstVisibleLine >= editor.Lines.Count)
-                FirstVisibleLine = editor.Lines.Count - 1;
+            if (fvl >= editor.Lines.Count)
+                fvl = editor.Lines.Count - 1;
 
+            FirstVisibleLine = fvl;
             value = lines * editor.Info.LineHeight;
 
             Y = value;
@@ -139,6 +140,22 @@ namespace CodeBox
         {
             editor.Styles.Restyle();
             editor.Redraw();
+        }
+
+        private int CalculateFirstVisibleLine(int stripes)
+        {
+            var len = editor.Document.Lines.Count;
+            var cs = 0;
+
+            for (var i = 0; i < len; i++)
+            {
+                cs += editor.Lines[i].Stripes;
+
+                if (cs >= stripes)
+                    return i;
+            }
+
+            return len - 1;
         }
 
         private int? CalculateLastVisibleLine()

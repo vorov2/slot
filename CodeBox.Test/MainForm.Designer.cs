@@ -53,7 +53,7 @@
             this.ed.Size = new System.Drawing.Size(1108, 578);
             this.ed.TabIndex = 0;
             this.ed.Text = "editor1";
-            this.ed.Styles.StyleNeeded += new System.EventHandler<CodeBox.StyleNeededEventArgs>(this.editor1_StyleNeeded);
+            this.ed.Styles.StyleNeeded += new System.EventHandler<CodeBox.Styling.StyleNeededEventArgs>(this.editor1_StyleNeeded);
             // 
             // menuStrip1
             // 

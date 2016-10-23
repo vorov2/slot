@@ -11,14 +11,13 @@ namespace CodeBox.ObjectModel
         public static readonly Character NewLine = new Character('\n');
         public static readonly Character Empty = new Character('\0');
 
-        private Character(char ch, bool caret, byte style)
+        private Character(char ch, bool caret)
         {
             Char = ch;
             HasCaret = caret;
-            Style = style;
         }
 
-        public Character(char ch) : this(ch, false, 0)
+        public Character(char ch) : this(ch, false)
         {
 
         }
@@ -33,31 +32,19 @@ namespace CodeBox.ObjectModel
             get { return Char == '\n'; }
         }
 
-        public Character WithStyle(byte style)
-        {
-            return new Character(Char, HasCaret, style);
-        }
-
-        public Character ClearStyle()
-        {
-            return new Character(Char, HasCaret, 0);
-        }
-
         public Character WithCaret()
         {
-            return new Character(Char, true, Style);
+            return new Character(Char, true);
         }
 
         public Character WithoutCaret()
         {
-            return new Character(Char, false, Style);
+            return new Character(Char, false);
         }
 
         public readonly bool HasCaret;
 
         public readonly char Char;
-
-        public readonly byte Style;
 
         public static bool operator == (Character fst, Character snd)
         {

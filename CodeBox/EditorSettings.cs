@@ -20,6 +20,7 @@ namespace CodeBox
 
             //Defaults
             WordSeparators = SEPS;
+            //WordWrap = true;
             UseTabs = false;
             TabSize = 4;
             LinePadding = .1;
