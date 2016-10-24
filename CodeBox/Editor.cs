@@ -109,7 +109,7 @@ namespace CodeBox
 
             var dt = DateTime.Now;
 
-            e.Graphics.FillRectangle(Styles.BackBrush(StandardStyle.Default),
+            e.Graphics.FillRectangle(Styles.Default.BackBrush,
                 new Rectangle(Info.EditorLeft, Info.EditorTop, Info.EditorWidth, Info.EditorHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -215,7 +215,6 @@ namespace CodeBox
             for (var j = 0; j < line.Stripes; j++)
             {
                 var cut = line.GetCut(j);
-                Console.WriteLine($"Draw {line.Text}");
 
                 if (cut == line.Length)
                     cut++;
@@ -229,21 +228,27 @@ namespace CodeBox
 
                     if (visible)
                     {
-                        //var style = c != '\0' ? line[i].Style : (byte)0;
-                        var style = c != '\0' ? line.GetStyle(i) : 0;
+                        var style = default(Style);
+                        var rect = new Rectangle(x, y, xw, Info.LineHeight);
+                        var pos = new Pos(lineIndex, i);
+                        var high = sel && Document.Selections.IsSelected(pos);
 
                         if (c == '\0' || c == '\t' || c == ' ')
                         {
-                            style = (int)StandardStyle.SpecialSymbol;
-                            if (c == '\0' && Settings.ShowEol) c = '\u00B6';
-                            else if (c == '\t' && Settings.ShowWhitespace) c = '\u2192';
-                            else if (c == ' ' && Settings.ShowWhitespace) c = '·';
+                            style = Styles.GetStyle((int)StandardStyle.SpecialSymbol);
+                            style.NextStyle = null;
+                        }
+                        else
+                            style = line.GetStyle(i, Styles);
+
+                        if (high)
+                        {
+                            var sstyle = Styles.GetStyle((int)StandardStyle.Selection);
+                            sstyle.NextStyle = style;
+                            style = sstyle;
                         }
 
-                        var rect = new RectangleF(x, y, xw, Info.LineHeight);
-                        var pos = new Pos(lineIndex, i);
-                        var high = sel && Document.Selections.IsSelected(pos);
-                        Styles.Draw(g, c, style, rect, high);
+                        style.DrawAll(g, rect, pos);
 
                         if (Document.Selections.HasCaret(pos))
                         {
@@ -253,8 +258,8 @@ namespace CodeBox
                             if (blink)
                             {
                                 var cg = Caret.GetDrawingSurface();
-                                cg.Clear(high ? Settings.SelectionColor : BackColor);
-                                Styles.Draw(cg, c, style, new RectangleF(default(PointF), rect.Size), high);
+                                cg.Clear(high ? Styles.Selection.Color : Styles.Default.BackColor);
+                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
                                 Caret.Resume();
                             }
 
@@ -269,6 +274,12 @@ namespace CodeBox
                 y += Info.LineHeight;
                 x = lmarg;
             }
+        }
+
+        public override Color BackColor
+        {
+            get { return Styles.Default.BackColor; }
+            set { Styles.Default.BackColor = value; }
         }
 
         protected override void OnDoubleClick(EventArgs e)

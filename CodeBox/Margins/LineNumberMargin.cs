@@ -25,7 +25,7 @@ namespace CodeBox.Margins
             var info = Editor.Info;
             var len = lines.Count.ToString().Length;
             var caret = Editor.Document.Selections.Main.Caret;
-            var backBrush = Editor.Styles.BackBrush(StandardStyle.LineNumber);
+            var backBrush = Editor.Styles.LineNumber.BackBrush;
 
             g.FillRectangle(backBrush, bounds);
             var sb = new StringBuilder();
@@ -42,18 +42,18 @@ namespace CodeBox.Margins
                 {
                     var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth - sc.X;
-                    var font = Editor.Styles.Font(StandardStyle.LineNumber);
-                    var col = Editor.Styles.ForeBrush(StandardStyle.LineNumber);
+                    var font = Editor.Styles.LineNumber.Font;
+                    var col = Editor.Styles.LineNumber.ForeBrush;
 
                     if (i == caret.Line && MarkCurrentLine)
                     {
-                        var selBrush = Editor.Styles.BackBrush(StandardStyle.CurrentLineNumber);
+                        var selBrush = Editor.Styles.CurrentLineNumber.BackBrush;
 
                         if (selBrush != backBrush)
                             g.FillRectangle(selBrush, new RectangleF(x + sc.X, y, bounds.Width, info.LineHeight));
 
-                        font = Editor.Styles.Font(StandardStyle.CurrentLineNumber);
-                        col = Editor.Styles.ForeBrush(StandardStyle.CurrentLineNumber);
+                        font = Editor.Styles.CurrentLineNumber.Font;
+                        col = Editor.Styles.CurrentLineNumber.ForeBrush;
                     }
 
                     g.DrawString(str, font, col, x + sc.X, y);

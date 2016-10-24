@@ -43,7 +43,6 @@
             // 
             // editor1
             // 
-            this.ed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.ed.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.ed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ed.Location = new System.Drawing.Point(0, 24);

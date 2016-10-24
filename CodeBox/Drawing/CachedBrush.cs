@@ -23,6 +23,17 @@ namespace CodeBox.Drawing
             cache.Clear();
         }
 
+        public void ResetBrush(Color color)
+        {
+            Brush b;
+
+            if (cache.TryGetValue(color, out b))
+            {
+                cache.Remove(color);
+                b.Dispose();
+            }
+        }
+
         public Brush Create(Color color)
         {
             Brush b;

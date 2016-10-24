@@ -30,37 +30,26 @@ namespace CodeBox.Test
             ed.BottomMargins.Add(new ScrollBarMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            ed.Styles.Register(StandardStyle.Default,
-                new StyleInfo(
-                    ColorTranslator.FromHtml("#DCDCDC"),
-                    ColorTranslator.FromHtml("#1E1E1E"),
-                    FontStyle.Regular
-                ));
-            ed.Styles.Register(StandardStyle.LineNumber,
-                new StyleInfo(
-                    ColorTranslator.FromHtml("#505050")
-                ));
-            ed.Styles.Register(StandardStyle.CurrentLineNumber,
-                new StyleInfo(
-                    ColorTranslator.FromHtml("#848484"),
-                    ColorTranslator.FromHtml("#262626")
-                ));
-            ed.Styles.Register(StandardStyle.SpecialSymbol,
-                new StyleInfo(
-                    ColorTranslator.FromHtml("#505050")
-                ));
-            ed.Styles.Register(10,
-                new StyleInfo(
-                    ColorTranslator.FromHtml("#8CDCDB")
-                ));
-            ed.Styles.Register(11,
-                new StyleInfo(
-                    ColorTranslator.FromHtml("#D69D85")
-                ));
-            ed.Styles.Register(12,
-                new StyleInfo(
-                    ColorTranslator.FromHtml("#579032")
-                ));
+            ed.Styles.Default.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
+            ed.Styles.Default.BackColor = ColorTranslator.FromHtml("#1E1E1E");
+            ed.Styles.LineNumber.ForeColor = ColorTranslator.FromHtml("#505050");
+            ed.Styles.LineNumber.BackColor = ColorTranslator.FromHtml("#1E1E1E");
+            ed.Styles.CurrentLineNumber.ForeColor = ColorTranslator.FromHtml("#848484");
+            ed.Styles.CurrentLineNumber.BackColor = ColorTranslator.FromHtml("#262626");
+            ed.Styles.SpecialSymbol.ForeColor = ColorTranslator.FromHtml("#505050");
+            ed.Styles.Selection.Color = ColorTranslator.FromHtml("#264F78");
+            ed.Styles.Register(110,
+                new TextStyle {
+                    ForeColor = ColorTranslator.FromHtml("#8CDCDB")
+                });
+            ed.Styles.Register(111,
+                new TextStyle {
+                    ForeColor = ColorTranslator.FromHtml("#D69D85")
+                });
+            ed.Styles.Register(112,
+                new TextStyle {
+                    ForeColor = ColorTranslator.FromHtml("#579032")
+                });
 
             ed.Text = File.ReadAllText(
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName,"test.json"));
@@ -149,7 +138,7 @@ namespace CodeBox.Test
                     var st = FindSemi(ei + 1, str);
                     //ed.Styles.StyleRange(st ? (byte)10 : (byte)11, 
                     //    new Range(new Pos(line, i), new Pos(line, ei)));
-                    ed.Styles.StyleRange(st ? 10 : 11, line, i, ei);
+                    ed.Styles.StyleRange(st ? 110 : 111, line, i, ei);
                     i = ei + 1;
                 }
                 else if (c == '/' && i < str.Length - 1 && str[i + 1] == '*')
@@ -158,7 +147,7 @@ namespace CodeBox.Test
                     var ei = ParseComment(i + 1, str, out end);
                     //ed.Styles.StyleRange(12,
                     //    new Range(new Pos(line, i), new Pos(line, ei)));
-                    ed.Styles.StyleRange(12, line, i, ei);
+                    ed.Styles.StyleRange(112, line, i, ei);
                     i = ei + 1;
                     if (!end)
                         state = 2;
@@ -172,7 +161,7 @@ namespace CodeBox.Test
         {
             bool end;
             var i = ParseComment(0, str, out end);
-            ed.Styles.StyleRange(12, line, 0, i);
+            ed.Styles.StyleRange(112, line, 0, i);
 
             if (!end)
                 return 2;

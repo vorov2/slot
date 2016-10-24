@@ -11,7 +11,7 @@ namespace CodeBox
 {
     public sealed class StyleManager
     {
-        private readonly Dictionary<int, StyleInfo> styles = new Dictionary<int, StyleInfo>();
+        private readonly Dictionary<int, Style> styleMap = new Dictionary<int, Style>();
         private readonly Editor editor;
         private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
         {
@@ -23,121 +23,48 @@ namespace CodeBox
         public StyleManager(Editor editor)
         {
             this.editor = editor;
-            styles.Add(0, Default = new StyleInfo(
-                Color.Black,
-                Color.Yellow,
-                FontStyle.Regular
-            ));
+            Register(StandardStyle.Default, new TextStyle());
+            Register(StandardStyle.Selection, new SelectionStyle());
+            Register(StandardStyle.LineNumber, new TextStyle());
+            Register(StandardStyle.CurrentLineNumber, new TextStyle());
+            Register(StandardStyle.SpecialSymbol, new TextStyle());
         }
 
-        public void Register(StandardStyle style, StyleInfo info)
+        public Style GetStyle(int styleId)
         {
-            Register((int)style, info);
+            return styleMap[styleId];
         }
 
-        public void Register(int code, StyleInfo info)
+        private void Register(StandardStyle styleId, Style style)
         {
-            if (code < 4)
-                info = PopulateStyle(code, info);
+            style.Editor = editor;
+            styleMap.Add((int)styleId, style);
 
-            styles.Remove(code);
-            styles.Add(code, info);
-        }
-
-        private StyleInfo PopulateStyle(int code, StyleInfo info)
-        {
-            var old = default(StyleInfo);
-
-            if (!styles.TryGetValue(code, out old))
-                return info;
-
-            info = new StyleInfo(
-                info.ForeColor ?? old.ForeColor,
-                info.BackColor ?? old.BackColor,
-                info.FontStyle ?? old.FontStyle
-            );
-
-            if (code == (int)StandardStyle.Default)
+            switch (styleId)
             {
-                Default = info;
-                editor.BackColor = info.BackColor.Value;
-                editor.ForeColor = info.ForeColor.Value;
-                editor.Font = editor.CachedFont.Create(info.FontStyle.Value);
+                case StandardStyle.Default:
+                    Default = (TextStyle)style;
+                    break;
+                case StandardStyle.SpecialSymbol:
+                    SpecialSymbol = (TextStyle)style;
+                    break;
+                case StandardStyle.LineNumber:
+                    LineNumber = (TextStyle)style;
+                    break;
+                case StandardStyle.CurrentLineNumber:
+                    CurrentLineNumber = (TextStyle)style;
+                    break;
+                case StandardStyle.Selection:
+                    Selection = (SelectionStyle)style;
+                    break;
             }
-
-            return info;
         }
 
-        public Font Font(StandardStyle style)
+        public void Register(StyleId styleId, Style style)
         {
-            return Font((int)style);
-        }
-
-        public Font Font(int style)
-        {
-            var st = styles[style];
-            var fs = default(FontStyle);
-
-            if (st.FontStyle != null)
-                fs = st.FontStyle.Value;
-            else
-                fs = Default.FontStyle.Value;
-
-            return editor.CachedFont.Create(fs);
-        }
-
-        public Brush BackBrush(StandardStyle style)
-        {
-            return BackBrush((int)style);
-        }
-
-        public Brush BackBrush(int style)
-        {
-            var st = styles[style];
-            var col = default(Color);
-
-            if (st.BackColor != null)
-                col = st.BackColor.Value;
-            else
-                col = Default.BackColor.Value;
-
-            return editor.CachedBrush.Create(col);
-        }
-
-        public Brush ForeBrush(StandardStyle style)
-        {
-            return ForeBrush((int)style);
-        }
-
-        public Brush ForeBrush(int style)
-        {
-            var st = styles[style];
-            var col = default(Color);
-
-            if (st.ForeColor != null)
-                col = st.ForeColor.Value;
-            else
-                col = Default.ForeColor.Value;
-
-            return editor.CachedBrush.Create(col);
-        }
-
-        internal void Draw(Graphics g, char c, int styleCode, RectangleF rec, bool selected)
-        {
-            var info = styles[styleCode];
-            var font = info.FontStyle != null
-                ? editor.CachedFont.Create(info.FontStyle.Value)
-                : editor.CachedFont.Create(Default.FontStyle.Value);
-            var fc = info.ForeColor != null
-                ? editor.CachedBrush.Create(info.ForeColor.Value)
-                : editor.CachedBrush.Create(Default.ForeColor.Value);
-
-            if (!selected && info.BackColor != null && styleCode != 0)
-                g.FillRectangle(editor.CachedBrush.Create(info.BackColor.Value), rec);
-            else if (selected)
-                g.FillRectangle(editor.CachedBrush.Create(editor.Settings.SelectionColor), rec);
-
-            g.DrawString(c.ToString(), font, fc, rec.Location, format);
+            style.Editor = editor;
+            styleMap.Remove(styleId);
+            styleMap.Add(styleId, style);
         }
 
         public void ClearStyles(int line)
@@ -163,12 +90,22 @@ namespace CodeBox
                     new Pos(lvl, editor.Lines[lvl].Length - 1)));
         }
 
-        public StyleInfo Default { get; private set; }
-
         public event EventHandler<StyleNeededEventArgs> StyleNeeded;
         private void OnStyleNeeded(Range range)
         {
             StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
         }
+
+        #region Standard styles
+        public TextStyle Default { get; private set; }
+
+        public SelectionStyle Selection { get; private set; }
+
+        public TextStyle SpecialSymbol { get; private set; }
+
+        public TextStyle LineNumber { get; private set; }
+
+        public TextStyle CurrentLineNumber { get; private set; }
+        #endregion
     }
 }

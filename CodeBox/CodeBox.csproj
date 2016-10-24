@@ -118,13 +118,15 @@
     <Compile Include="ObjectModel\Selections.cs" />
     <Compile Include="StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
+    <Compile Include="Styling\SelectionStyle.cs" />
     <Compile Include="Styling\StandardStyle.cs" />
     <Compile Include="Styling\Style.cs" />
-    <Compile Include="Styling\StyleInfo.cs" />
+    <Compile Include="Styling\StyleId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\CachedBrush.cs" />
     <Compile Include="ScrollingManager.cs" />
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
+    <Compile Include="Styling\TextStyle.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -26,7 +26,6 @@ namespace CodeBox
             LinePadding = .1;
             ShowWhitespace = true;
             Font = new Font("Consolas", 11f);
-            SelectionColor = ColorTranslator.FromHtml("#264F78");
             CaretColor = Color.White;
             ScrollThumbColor = ColorTranslator.FromHtml("#505050");
             ScrollActiveThumbColor = Color.White;
@@ -72,8 +71,6 @@ namespace CodeBox
                 }
             }
         }
-
-        public Color SelectionColor { get; set; }
 
         public Color CaretColor { get; set; }
 

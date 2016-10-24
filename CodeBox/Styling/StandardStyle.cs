@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace CodeBox.Styling
 {
-    public enum StandardStyle : byte
+    public enum StandardStyle
     {
         Default = 0,
 
-        SpecialSymbol = 1,
+        Selection = 1,
+        
+        SpecialSymbol = 2,
 
-        LineNumber = 2,
+        LineNumber = 3,
 
-        CurrentLineNumber = 3,
+        CurrentLineNumber = 4,
     }
 }

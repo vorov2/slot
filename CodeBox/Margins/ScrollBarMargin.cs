@@ -78,7 +78,7 @@ namespace CodeBox.Margins
 
             if (Horizontal())
             {
-                g.FillRectangle(Editor.Styles.BackBrush(StandardStyle.Default), bounds);
+                g.FillRectangle(Editor.Styles.Default.BackBrush, bounds);
                 var caretSize = ((double)bounds.Width / (bounds.Width + sc.Width)) * bounds.Width;
 
                 if (caretSize < Editor.Info.CharWidth*3)
@@ -94,7 +94,7 @@ namespace CodeBox.Margins
             }
             else
             {
-                g.FillRectangle(Editor.Styles.BackBrush(StandardStyle.Default), bounds);
+                g.FillRectangle(Editor.Styles.Default.BackBrush, bounds);
                 var caretSize = ((double)bounds.Height / (bounds.Height + sc.Height)) * bounds.Height;
 
                 if (caretSize < Editor.Info.LineHeight)
