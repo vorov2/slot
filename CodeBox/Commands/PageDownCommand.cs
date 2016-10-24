@@ -7,15 +7,15 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     internal sealed class PageDownCommand : CaretCommand
     {
-        protected override Pos GetPosition(EditorContext context, Pos caret)
+        protected override Pos GetPosition(Pos caret)
         {
-            return PageDown(context);
+            return PageDown(Context);
         }
 
-        internal static Pos PageDown(EditorContext ctx)
+        internal static Pos PageDown(IEditorContext ctx)
         {
-            var lines = ctx.Document.Lines;
-            var caret = ctx.Document.Selections.Main.Caret;
+            var lines = ctx.Buffer.Document.Lines;
+            var caret = ctx.Buffer.Selections.Main.Caret;
             var line = lines[caret.Line];
             var stripes = 0;
             var lastLine = default(Line);

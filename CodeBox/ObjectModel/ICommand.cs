@@ -9,12 +9,14 @@ namespace CodeBox.ObjectModel
 {
     public interface ICommand
     {
-        void Execute(EditorContext context, Selection sel);
+        void Execute(CommandArgument arg, Selection sel);
 
-        Pos Undo(EditorContext context);
+        Pos Undo();
 
-        Pos Redo(EditorContext context);
+        Pos Redo();
 
         ICommand Clone();
+
+        IEditorContext Context { get; set; }
     }
 }

@@ -11,9 +11,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     internal class EndCommand : CaretCommand
     {
-        protected override Pos GetPosition(EditorContext context, Pos pos)
+        protected override Pos GetPosition(Pos pos)
         {
-            return MoveEnd(context.Document, pos);
+            return MoveEnd(Document, pos);
         }
 
         internal static Pos MoveEnd(Document doc, Pos pos)

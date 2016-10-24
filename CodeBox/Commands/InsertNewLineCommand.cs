@@ -15,36 +15,36 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override void Execute(EditorContext context, Selection selection)
+        public override void Execute(CommandArgument arg, Selection selection)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
 
             if (!selection.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(context, selection);
+                @string = DeleteRangeCommand.DeleteRange(Context, selection);
 
-            var pos = InsertNewLine(context.Document, undoPos);
+            var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
         }
 
-        public override Pos Redo(EditorContext context)
+        public override Pos Redo()
         {
             @string = null;
             var sel = redoSel;
-            Execute(context, sel);
+            Execute(default(CommandArgument), sel);
             return sel.Caret;
         }
 
-        public override Pos Undo(EditorContext context)
+        public override Pos Undo()
         {
             var pos = undoPos;
 
             if (@string != null)
-                pos = InsertRangeCommand.InsertRange(context.Document, undoPos, @string);
+                pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
 
-            var line = context.Document.Lines[pos.Line];
-            var nextLine = context.Document.Lines[pos.Line + 1];
-            context.Document.Lines.Remove(nextLine);
+            var line = Document.Lines[pos.Line];
+            var nextLine = Document.Lines[pos.Line + 1];
+            Document.Lines.Remove(nextLine);
             line.Append(nextLine);
             return pos;
         }
@@ -60,7 +60,7 @@ namespace CodeBox.Commands
                 ln.RemoveRange(pos.Col, ln.Length - pos.Col);
             }
 
-            var newLn = new Line(str, ++doc.LineSequence);
+            var newLn = doc.NewLine(str);
             doc.Lines.Insert(pos.Line + 1, newLn);
             pos = new Pos(pos.Line + 1, 0);
             return pos;

@@ -24,7 +24,7 @@ namespace CodeBox.Margins
             var lines = Editor.Document.Lines;
             var info = Editor.Info;
             var len = lines.Count.ToString().Length;
-            var caret = Editor.Document.Selections.Main.Caret;
+            var caret = Editor.Buffer.Selections.Main.Caret;
             var backBrush = Editor.Styles.LineNumber.BackBrush;
 
             g.FillRectangle(backBrush, bounds);
@@ -33,9 +33,9 @@ namespace CodeBox.Margins
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var line = lines[i];
-                var y = line.Y + sc.Y + info.EditorTop;
+                var y = line.Y + sc.Y + info.TextTop;
 
-                if (line.Y >= info.EditorBottom - sc.Y)
+                if (line.Y >= info.TextBotom - sc.Y)
                     return true;
 
                 if (line.Y >= sc.Y && y >= bounds.Y)

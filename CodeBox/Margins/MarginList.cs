@@ -47,8 +47,6 @@ namespace CodeBox.Margins
 
         internal bool CallMarginMethod(MarginMethod method, Point loc)
         {
-            var ctx = editor.GetEditorContext();
-
             foreach (var m in margins)
             {
                 var sel = loc.X >= m.Bounds.X && loc.Y >= m.Bounds.Y

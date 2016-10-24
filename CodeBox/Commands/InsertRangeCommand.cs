@@ -16,36 +16,36 @@ namespace CodeBox.Commands
         private IEnumerable<Character> @string;
         private IEnumerable<Character> @redoString;
 
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
 
             if (!sel.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(context, sel);
+                @string = DeleteRangeCommand.DeleteRange(Context, sel);
 
-            @redoString = context.String.MakeCharacters();
-            var pos = InsertRange(context.Document, sel.Start, @redoString);
+            @redoString = arg.String.MakeCharacters();
+            var pos = InsertRange(Document, sel.Start, @redoString);
             undo = new Selection(sel.Start, pos);
             sel.Clear(pos);
         }
 
-        public override Pos Redo(EditorContext context)
+        public override Pos Redo()
         {
             @string = null;
             var sel = redoSel;
-            context.String = redoString.MakeString(context.Eol);
+            var arg = new CommandArgument('\0', redoString.MakeString(Context.Buffer.Eol));
             @redoString = null;
-            Execute(context, sel);
+            Execute(arg, sel);
             return sel.Caret;
         }
 
-        public override Pos Undo(EditorContext context)
+        public override Pos Undo()
         {
-            DeleteRangeCommand.DeleteRange(context, undo);
+            DeleteRangeCommand.DeleteRange(Context, undo);
             var pos = Pos.Empty;
 
             if (@string != null)
-                pos = InsertRange(context.Document, undo.End, @string);
+                pos = InsertRange(Document, undo.End, @string);
 
             if (pos.IsEmpty)
                 pos = undo.Caret;
@@ -85,14 +85,14 @@ namespace CodeBox.Commands
                         }
                         else if (last)
                         {
-                            var line = new Line(ln, ++doc.LineSequence);
+                            var line = doc.NewLine(ln);
                             line.Append(portion);
                             doc.Lines.Insert(pos.Line + i, line);
                             retPos = new Pos(pos.Line + i, ln.Count());
                         }
                         else
                         {
-                            var line = new Line(ln, ++doc.LineSequence);
+                            var line = doc.NewLine(ln);
                             doc.Lines.Insert(pos.Line + i, line);
                             retPos = new Pos(pos.Line + i, line.Length);
                         }

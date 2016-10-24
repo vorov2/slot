@@ -151,7 +151,7 @@ namespace CodeBox.Margins
             if (Horizontal())
                 return Editor.ClientSize.Width;
             else
-                return Editor.Info.EditorHeight;
+                return Editor.Info.TextHeight;
         }
 
         private int GetMaximum()

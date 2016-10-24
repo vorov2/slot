@@ -89,4 +89,18 @@ namespace CodeBox
 
         CrLf
     }
+
+    internal static class EolExtensions
+    {
+        public static string AsString(this Eol eol)
+        {
+            switch (eol)
+            {
+                case Eol.Cr: return "\r";
+                case Eol.Lf: return "\n";
+                case Eol.CrLf: return "\r\n";
+                default: return Environment.NewLine;
+            }
+        }
+    }
 }

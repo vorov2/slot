@@ -11,11 +11,11 @@ namespace CodeBox.Commands
     [CommandBehavior(ClearSelections)]
     internal sealed class SelectAllCommand : Command
     {
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
-            var idx = context.Document.Lines.Count - 1;
-            var ln = context.Document.Lines[idx];
-            sel.Start = new Pos(0, 0);
+            var idx = Document.Lines.Count - 1;
+            var ln = Document.Lines[idx];
+            sel.Start = default(Pos);
             sel.End = new Pos(idx, ln.Length);
         }
     }

@@ -7,9 +7,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     internal sealed class ExtendPageDownCommand : SelectionCommand
     {
-        protected override Pos Select(EditorContext context, Pos pos)
+        protected override Pos Select(Pos pos)
         {
-            return PageDownCommand.PageDown(context);
+            return PageDownCommand.PageDown(Context);
         }
     }
 }

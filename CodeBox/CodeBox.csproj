@@ -89,7 +89,7 @@
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Drawing\CachedFont.cs" />
     <Compile Include="Drawing\Renderer.cs" />
-    <Compile Include="EditorCaret.cs" />
+    <Compile Include="Drawing\CaretRenderer.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorSettings.cs" />
     <Compile Include="Margins\GutterMargin.cs" />
@@ -100,9 +100,11 @@
     <Compile Include="Margins\MarginMethod.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
     <Compile Include="Margins\TopMargin.cs" />
+    <Compile Include="ObjectModel\CommandArgument.cs" />
+    <Compile Include="ObjectModel\CommandInfo.cs" />
+    <Compile Include="ObjectModel\DocumentBuffer.cs" />
     <Compile Include="ObjectModel\Character.cs" />
     <Compile Include="ObjectModel\CommandBehaviorAttribute.cs" />
-    <Compile Include="EditorContext.cs" />
     <Compile Include="ObjectModel\ICommand.cs" />
     <Compile Include="Commands\LeftCommand.cs" />
     <Compile Include="Commands\UpCommand.cs" />
@@ -110,12 +112,13 @@
     <Compile Include="Editor.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ObjectModel\IEditorContext.cs" />
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />
     <Compile Include="ObjectModel\Pos.cs" />
     <Compile Include="ObjectModel\Range.cs" />
     <Compile Include="ObjectModel\Selection.cs" />
-    <Compile Include="ObjectModel\Selections.cs" />
+    <Compile Include="ObjectModel\SelectionList.cs" />
     <Compile Include="StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="Styling\SelectionStyle.cs" />

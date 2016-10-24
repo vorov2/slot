@@ -7,10 +7,10 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     internal sealed class ExtendDocumentEndCommand : SelectionCommand
     {
-        protected override Pos Select(EditorContext context, Pos pos)
+        protected override Pos Select(Pos pos)
         {
-            var idx = context.Document.Lines.Count - 1;
-            return new Pos(idx, context.Document.Lines[idx].Length);
+            var idx = Document.Lines.Count - 1;
+            return new Pos(idx, Document.Lines[idx].Length);
         }
     }
 }

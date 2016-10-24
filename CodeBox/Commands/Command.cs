@@ -4,20 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
 
 namespace CodeBox.Commands
 {
     public abstract class Command : ICommand
     {
-        public abstract void Execute(EditorContext context, Selection sel);
+        public abstract void Execute(CommandArgument arg, Selection sel);
 
-        public virtual Pos Undo(EditorContext context)
+        public virtual Pos Undo()
         {
             return Pos.Empty;
         }
 
-        public virtual Pos Redo(EditorContext context)
+        public virtual Pos Redo()
         {
             return Pos.Empty;
         }
@@ -25,6 +24,23 @@ namespace CodeBox.Commands
         public virtual ICommand Clone()
         {
             return (ICommand)MemberwiseClone();
+        }
+
+        public IEditorContext Context { get; set; }
+
+        protected DocumentBuffer Buffer
+        {
+            get { return Context.Buffer; }
+        }
+
+        protected Document Document
+        {
+            get { return Context.Buffer.Document; }
+        }
+
+        protected EditorSettings Settings
+        {
+            get { return Context.Settings; }
         }
     }
 }

@@ -7,32 +7,59 @@ using System.Threading.Tasks;
 
 namespace CodeBox.ObjectModel
 {
-    public sealed class Selections : IEnumerable<Selection>
+    public sealed class SelectionList : IEnumerable<Selection>
     {
         private readonly List<Selection> sels;
+        
+        internal SelectionList(IEnumerable<Selection> seq)
+        {
+            sels = seq.ToList();
 
-        internal Selections()
+            if (sels.Count == 0)
+                sels.Add(new Selection());
+        }
+
+        internal SelectionList()
         {
             sels = new List<Selection>();
             sels.Add(new Selection());
         }
 
-        internal Selections(IEnumerable<Selection> sels)
+        internal void ValidateCaret(Selection sel, Document doc)
         {
-            this.sels = sels.ToList();
+            var caret = sel.Caret;
+            var len = sels.Count;
+
+            if (caret.Col < 0 || caret.Line < 0
+                || (caret.Line == doc.Lines.Count - 1 && caret.Col > doc.Lines[caret.Line].Length))
+                Remove(sel);
+            else if (len > 1)
+            {
+                for (var i = 0; i < len; i++)
+                {
+                    var s = sels[i];
+
+                    if (s != sel && s.Caret.Line == caret.Line && s.Caret.Col == caret.Col)
+                    {
+                        Remove(s);
+                        len--;
+                        i--;
+                    }
+                }
+            }
         }
 
-        internal void Add(Selection sel)
+        public void Add(Selection sel)
         {
             sels.Add(sel);
         }
 
-        internal void Set(Pos caret)
+        public void Set(Pos caret)
         {
             Set(new Selection(caret));
         }
 
-        internal void Set(Selection sel)
+        public void Set(Selection sel)
         {
             if (sels.Count == 1)
                 sels[0] = sel;
@@ -43,12 +70,12 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        internal void ForceClear()
+        internal void Clear()
         {
             sels.Clear();
         }
 
-        internal void Clear()
+        public void Truncate()
         {
             if (sels.Count == 1)
                 sels[0].Clear();
@@ -60,19 +87,19 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        internal Selections Clone()
+        internal SelectionList Clone()
         {
-            return new Selections(sels.Select(s => s.Clone()));
+            return new SelectionList(sels.Select(s => s.Clone()));
         }
 
-        internal void Remove(Selection sel)
+        public void Remove(Selection sel)
         {
             if (sels.Count > 1)
                 sels.Remove(sel);
             else
-                sel.Clear(new Pos(0, 0));
+                sel.Clear(default(Pos));
         }
-        
+
         public IEnumerator<Selection> GetEnumerator()
         {
             return sels.GetEnumerator();
@@ -92,7 +119,7 @@ namespace CodeBox.ObjectModel
             return null;
         }
 
-        internal bool IsSelected(Pos pos)
+        public bool IsSelected(Pos pos)
         {
             foreach (var r in sels)
                 if (!r.IsEmpty && r.InRange(pos))
@@ -101,12 +128,12 @@ namespace CodeBox.ObjectModel
             return false;
         }
 
-        internal bool HasCaret(Pos pos)
+        public bool HasCaret(Pos pos)
         {
             return IndexOfCaret(pos) != -1;
         }
 
-        internal int IndexOfCaret(Pos pos)
+        public int IndexOfCaret(Pos pos)
         {
             for (var i = 0; i < sels.Count; i++)
                 if (sels[i].Caret == pos)
@@ -115,7 +142,7 @@ namespace CodeBox.ObjectModel
             return -1;
         }
 
-        internal bool Any()
+        public bool HasNonEmpty()
         {
             for (var i = 0; i < sels.Count; i++)
                 if (sels[i].IsEmpty)
@@ -123,10 +150,10 @@ namespace CodeBox.ObjectModel
 
             return true;
         }
-        
-        internal bool IsLineSelected(int lineIndex)
+
+        public bool IsLineSelected(int lineIndex)
         {
-            foreach (var s in this)
+            foreach (var s in sels)
             {
                 var start = s.Start;
                 var end = s.End;
@@ -144,17 +171,17 @@ namespace CodeBox.ObjectModel
             return false;
         }
 
-        internal Selection this[int index]
+        public Selection this[int index]
         {
             get { return sels[index]; }
         }
-        
+
         public Selection Main
         {
             get { return sels[sels.Count - 1]; }
         }
 
-        internal int TotalCount
+        public int Count
         {
             get { return sels.Count; }
         }

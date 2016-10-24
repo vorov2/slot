@@ -7,9 +7,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     internal sealed class ExtendUpCommand : SelectionCommand
     {
-        protected override Pos Select(EditorContext context, Pos pos)
+        protected override Pos Select(Pos pos)
         {
-            return UpCommand.MoveUp(context, pos);
+            return UpCommand.MoveUp(Context, pos);
         }
     }
 }

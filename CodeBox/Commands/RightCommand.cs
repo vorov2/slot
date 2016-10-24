@@ -11,14 +11,14 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     internal class RightCommand : CaretCommand
     {
-        protected override Pos GetPosition(EditorContext context, Pos caret)
+        protected override Pos GetPosition(Pos caret)
         {
-            return MoveRight(context, caret);
+            return MoveRight(Context, caret);
         }
 
-        internal static Pos MoveRight(EditorContext context, Pos pos)
+        internal static Pos MoveRight(IEditorContext ctx, Pos pos)
         {
-            var doc = context.Document;
+            var doc = ctx.Buffer.Document;
             pos = new Pos(pos.Line, pos.Col + 1);
             var line = doc.Lines[pos.Line];
 

@@ -6,13 +6,12 @@ namespace CodeBox.Commands
 {
     internal abstract class SelectionCommand : Command
     {
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
-            var doc = context.Document;
-            var pos = Select(context, sel.Caret);
+            var pos = Select(sel.Caret);
             sel.End = pos;
         }
 
-        protected abstract Pos Select(EditorContext context, Pos pos);
+        protected abstract Pos Select(Pos pos);
     }
 }

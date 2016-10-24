@@ -18,8 +18,8 @@ namespace CodeBox.Margins
 
         public override MarginEffects MouseDown(Point loc)
         {
-            Editor.Document.Selections.Clear();
-            var sel = Editor.Document.Selections.Main;
+            Editor.Buffer.Selections.Truncate();
+            var sel = Editor.Buffer.Selections.Main;
             var lineIndex = Editor.FindLineByLocation(loc.Y);
 
             if (lineIndex >= 0)

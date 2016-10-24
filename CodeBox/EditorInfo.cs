@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeBox
 {
@@ -16,54 +11,44 @@ namespace CodeBox
             this.editor = editor;
         }
 
-        public int EditorLeft
+        public int TextLeft
         {
             get { return editor.LeftMargins.TotalWidth; }
         }
 
-        public int EditorTop
+        public int TextTop
         {
             get { return editor.TopMargins.TotalWidth; }
         }
 
-        public int EditorRight
+        public int TextRight
         {
-            get { return editor.ClientSize.Width - RightMargin; }
+            get { return editor.ClientSize.Width - editor.RightMargins.TotalWidth; }
         }
 
-        public int EditorBottom
+        public int TextBotom
         {
-            get { return editor.ClientSize.Height - BottomMargin; }
+            get { return editor.ClientSize.Height - editor.BottomMargins.TotalWidth; }
+        }
+        
+        public int TextHeight
+        {
+            get { return TextBotom - TextTop; }
         }
 
-        public int RightMargin
+        public int TextWidth
         {
-            get { return editor.RightMargins.TotalWidth; }
+            get { return TextRight - TextLeft; }
         }
 
-        public int BottomMargin
+        public int TextIntegralHeight
         {
-            get { return editor.BottomMargins.TotalWidth; }
-        }
-
-        public int EditorHeight
-        {
-            get { return EditorBottom - EditorTop; }
-        }
-
-        public int EditorWidth
-        {
-            get { return EditorRight - EditorLeft; }
-        }
-
-        public int EditorIntegralHeight
-        {
-            get { return (EditorHeight / LineHeight) * LineHeight - editor.Scroll.Y; }
+            get { return (TextHeight / LineHeight) * LineHeight - editor.Scroll.Y; }
         }
 
         public int StripesPerScreen
         {
-            get { return EditorHeight / LineHeight; }
+            get { return TextHeight / LineHeight; }
         }
 
         public int CharWidth { get; internal set; }

@@ -48,7 +48,6 @@
             this.ed.Location = new System.Drawing.Point(0, 24);
             this.ed.Margin = new System.Windows.Forms.Padding(0);
             this.ed.Name = "editor1";
-            this.ed.Overtype = false;
             this.ed.Size = new System.Drawing.Size(1108, 578);
             this.ed.TabIndex = 0;
             this.ed.Text = "editor1";

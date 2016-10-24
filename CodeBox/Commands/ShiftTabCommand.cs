@@ -13,31 +13,31 @@ namespace CodeBox.Commands
     {
         private Selection redoSel;
 
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            TabCommand.Unindent(context, sel);
-            ShiftSel(context, sel);
+            TabCommand.Unindent(Context, sel);
+            ShiftSel(sel);
         }
 
-        public override Pos Redo(EditorContext context)
+        public override Pos Redo()
         {
             var sel = redoSel;
-            Execute(context, sel);
+            Execute(default(CommandArgument), sel);
             return sel.End;
         }
 
-        public override Pos Undo(EditorContext context)
+        public override Pos Undo()
         {
-            var indent = context.Settings.UseTabs ? "\t" : new string(' ', context.Settings.TabSize);
-            TabCommand.Indent(context, redoSel, indent.MakeCharacters());
-            ShiftSel(context, redoSel);
+            var indent = Settings.UseTabs ? "\t" : new string(' ', Settings.TabSize);
+            TabCommand.Indent(Context, redoSel, indent.MakeCharacters());
+            ShiftSel(redoSel);
             return redoSel.Caret;
         }
 
-        private void ShiftSel(EditorContext context, Selection sel)
+        private void ShiftSel(Selection sel)
         {
-            var indent = context.Settings.UseTabs ? 1 : context.Settings.TabSize;
+            var indent = Settings.UseTabs ? 1 : Settings.TabSize;
             sel.Start = new Pos(sel.Start.Line, sel.Start.Col - indent);
             sel.End = new Pos(sel.End.Line, sel.End.Col - indent);
         }

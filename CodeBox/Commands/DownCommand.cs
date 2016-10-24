@@ -11,16 +11,16 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     internal class DownCommand : CaretCommand
     {
-        protected override Pos GetPosition(EditorContext context, Pos pos)
+        protected override Pos GetPosition(Pos pos)
         {
-            return MoveDown(context, pos);
+            return MoveDown(Context, pos);
         }
 
-        internal static Pos MoveDown(EditorContext context, Pos pos)
+        internal static Pos MoveDown(IEditorContext ctx, Pos pos)
         {
-            var doc = context.Document;
+            var doc = ctx.Buffer.Document;
 
-            if (context.Settings.WordWrap)
+            if (ctx.Buffer.WordWrap)
             {
                 var ln = doc.Lines[pos.Line];
                 var stripe = ln.GetStripe(pos.Col);

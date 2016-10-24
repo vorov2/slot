@@ -18,13 +18,13 @@ namespace CodeBox.Commands
             Word
         }
         
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
-            var range = SelectWord(context);
+            var range = SelectWord(Context);
 
             if (range == null)
             {
-                var line = context.Document.Lines[sel.Caret.Line];
+                var line = Document.Lines[sel.Caret.Line];
 
                 if (line.Length > 0)
                     range = new Range(new Pos(sel.Caret.Line, line.Length - 1), 
@@ -32,14 +32,14 @@ namespace CodeBox.Commands
             }
 
             if (range != null)
-                context.Document.Selections.Set(Selection.FromRange(range));
+                Buffer.Selections.Set(Selection.FromRange(range));
         }
 
-        internal static Range SelectWord(EditorContext context)
+        internal static Range SelectWord(IEditorContext ctx)
         {
-            var doc = context.Document;
-            var seps = context.Settings.WordSeparators;
-            var caret = doc.Selections.Main.Caret;
+            var doc = ctx.Buffer.Document;
+            var seps = ctx.Settings.WordSeparators;
+            var caret = ctx.Buffer.Selections.Main.Caret;
             var line = doc.Lines[caret.Line];
 
             if (caret.Col == line.Length - 1)

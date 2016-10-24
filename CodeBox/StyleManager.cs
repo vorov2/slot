@@ -11,7 +11,7 @@ namespace CodeBox
 {
     public sealed class StyleManager
     {
-        private readonly Dictionary<int, Style> styleMap = new Dictionary<int, Style>();
+        private readonly Dictionary<int, Style> styles = new Dictionary<int, Style>();
         private readonly Editor editor;
         private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
         {
@@ -32,13 +32,13 @@ namespace CodeBox
 
         public Style GetStyle(int styleId)
         {
-            return styleMap[styleId];
+            return styles[styleId];
         }
 
         private void Register(StandardStyle styleId, Style style)
         {
             style.Editor = editor;
-            styleMap.Add((int)styleId, style);
+            styles.Add((int)styleId, style);
 
             switch (styleId)
             {
@@ -63,8 +63,8 @@ namespace CodeBox
         public void Register(StyleId styleId, Style style)
         {
             style.Editor = editor;
-            styleMap.Remove(styleId);
-            styleMap.Add(styleId, style);
+            styles.Remove(styleId);
+            styles.Add(styleId, style);
         }
 
         public void ClearStyles(int line)

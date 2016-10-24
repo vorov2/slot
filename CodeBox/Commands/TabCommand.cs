@@ -13,54 +13,54 @@ namespace CodeBox.Commands
     {
         private bool undoIndent;
 
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
-            var indent = context.Settings.UseTabs ? "\t" : new string(' ', context.Settings.TabSize);
+            var indent = Settings.UseTabs ? "\t" : new string(' ', Settings.TabSize);
             
             if (sel.Start.Line != sel.End.Line)
             {
                 undoIndent = true;
                 redoSel = sel.Clone();
                 var str = indent.MakeCharacters();
-                Indent(context, sel, str);
+                Indent(Context, sel, str);
             }
             else
             {
-                context.String = indent;
-                base.Execute(context, sel);
+                arg = new CommandArgument('\0', indent);
+                base.Execute(arg, sel);
             }
         }
 
-        public override Pos Redo(EditorContext context)
+        public override Pos Redo()
         {
             if (undoIndent)
             {
                 var sel = redoSel;
-                Execute(context, sel);
+                Execute(default(CommandArgument), sel);
                 return sel.End;
             }
-            return base.Redo(context);
+            return base.Redo();
         }
 
-        public override Pos Undo(EditorContext context)
+        public override Pos Undo()
         {
             if (undoIndent)
             {
-                Unindent(context, redoSel);
+                Unindent(Context, redoSel);
                 return redoSel.Caret;
             }
             else
-                return base.Undo(context);
+                return base.Undo();
         }
 
-        internal static void Unindent(EditorContext context, Selection sel)
+        internal static void Unindent(IEditorContext ctx, Selection sel)
         {
             var norm = sel.Normalize();
 
             for (var i = norm.Start.Line; i < norm.End.Line + 1; i++)
             {
-                var line = context.Document.Lines[i];
-                var pos = HomeCommand.MoveHome(context.Document, new Pos(i, line.Length));
+                var line = ctx.Buffer.Document.Lines[i];
+                var pos = HomeCommand.MoveHome(ctx.Buffer.Document, new Pos(i, line.Length));
 
                 if (pos.Col == 0)
                     continue;
@@ -68,21 +68,21 @@ namespace CodeBox.Commands
                     line.RemoveAt(pos.Col - 1);
                 else
                 {
-                    var st = pos.Col - context.Settings.TabSize;
+                    var st = pos.Col - ctx.Settings.TabSize;
                     st = st < 0 ? 0 : st;
                     line.RemoveRange(st, pos.Col - st);
                 }
             }
         }
 
-        internal static void Indent(EditorContext context, Selection sel, IEnumerable<Character> indent)
+        internal static void Indent(IEditorContext ctx, Selection sel, IEnumerable<Character> indent)
         {
             var norm = sel.Normalize();
 
             for (var i = norm.Start.Line; i < norm.End.Line + 1; i++)
             {
-                var line = context.Document.Lines[i];
-                var pos = HomeCommand.MoveHome(context.Document, new Pos(i, line.Length));
+                var line = ctx.Buffer.Document.Lines[i];
+                var pos = HomeCommand.MoveHome(ctx.Buffer.Document, new Pos(i, line.Length));
                 line.Insert(pos.Col, indent);
             }
 

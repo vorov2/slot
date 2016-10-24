@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using CodeBox.ObjectModel;
 
-namespace CodeBox
+namespace CodeBox.Drawing
 {
-    internal sealed class EditorCaret : IDisposable
+    internal sealed class CaretRenderer : IDisposable
     {
         private const int INTERVAL = 500;
         
@@ -21,7 +16,7 @@ namespace CodeBox
         private int caretX;
         private int caretY;
         
-        public EditorCaret(Editor editor)
+        public CaretRenderer(Editor editor)
         {
             this.editor = editor;
             this.timer = new Timer();
@@ -105,8 +100,8 @@ namespace CodeBox
             if (!main && BlockCaret)
                 h /= 2;
 
-            if (x >= editor.Info.EditorLeft - editor.Scroll.X
-                && x < editor.Info.EditorRight - editor.Scroll.X)
+            if (x >= editor.Info.TextLeft - editor.Scroll.X
+                && x < editor.Info.TextRight - editor.Scroll.X)
             {
                 if (main)
                 {

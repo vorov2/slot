@@ -17,43 +17,43 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
-            var line = context.Document.Lines[sel.Caret.Line];
+            var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
             redoSel = sel.Clone();
 
             if (!sel.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(context, sel);
-            else if (context.Overtype)
+                @string = DeleteRangeCommand.DeleteRange(Context, sel);
+            else if (Buffer.Overtype)
             {
                 @char = line[sel.Caret.Col];
                 line.RemoveAt(sel.Caret.Col);
             }
 
-            @redoChar = new Character(context.Char);
-            context.Document.Lines[sel.Caret.Line].Insert(sel.Caret.Col, @redoChar);
+            @redoChar = new Character(arg.Char);
+            Document.Lines[sel.Caret.Line].Insert(sel.Caret.Col, @redoChar);
             sel.Clear(new Pos(sel.Caret.Line, sel.Caret.Col + 1));
         }
 
-        public override Pos Redo(EditorContext context)
+        public override Pos Redo()
         {
             @string = null;
             @char = Character.Empty;
-            context.Char = @redoChar.Char;
+            var arg = new CommandArgument(redoChar.Char, null);
             redoChar = Character.Empty;
-            Execute(context, redoSel);
+            Execute(arg, redoSel);
             return new Pos(redoSel.Caret.Line, redoSel.Caret.Col + 1);
         }
 
-        public override Pos Undo(EditorContext context)
+        public override Pos Undo()
         {
-            var lines = context.Document.Lines;
+            var lines = Document.Lines;
             lines[undoPos.Line].RemoveAt(undoPos.Col);
             var pos = Pos.Empty;
 
             if (@string != null)
-                pos = InsertRangeCommand.InsertRange(context.Document, undoPos, @string);
+                pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
 
             if (!@char.IsEmpty)
                 lines[undoPos.Line].Insert(undoPos.Col, @char);
@@ -61,7 +61,7 @@ namespace CodeBox.Commands
             if (pos.IsEmpty)
                 pos = undoPos;
 
-            context.Document.Selections.Set(pos);
+            Buffer.Selections.Set(pos);
             return pos;
         }
     }

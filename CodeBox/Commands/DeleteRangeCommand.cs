@@ -12,30 +12,30 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            data = DeleteRange(context, sel);
+            data = DeleteRange(Context, sel);
             undoPos = sel.Caret;
         }
 
-        public override Pos Redo(EditorContext context)
+        public override Pos Redo()
         {
             data = null;
-            Execute(context, redoSel);
+            Execute(default(CommandArgument), redoSel);
             return undoPos;
         }
 
-        public override Pos Undo(EditorContext context)
+        public override Pos Undo()
         {
-            InsertRangeCommand.InsertRange(context.Document, undoPos, data);
-            context.Document.Selections.Set(undoPos);
+            InsertRangeCommand.InsertRange(Document, undoPos, data);
+            Buffer.Selections.Set(undoPos);
             return undoPos;
         }
 
-        internal static IEnumerable<Character> DeleteRange(EditorContext context, Selection selection)
+        internal static IEnumerable<Character> DeleteRange(IEditorContext ctx, Selection selection)
         {
-            var doc = context.Document;
+            var doc = ctx.Buffer.Document;
             var sel = selection.Normalize();
 
             if (sel.IsEmpty)

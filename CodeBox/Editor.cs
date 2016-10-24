@@ -18,7 +18,7 @@ using CodeBox.Styling;
 
 namespace CodeBox
 {
-    public class Editor : Control
+    public class Editor : Control, IEditorContext
     {
         public Editor()
         {
@@ -31,16 +31,15 @@ namespace CodeBox
             RightMargins = new MarginList(this);
             BottomMargins = new MarginList(this);
             Info = new EditorInfo(this);
-            Caret = new EditorCaret(this);
+            Caret = new CaretRenderer(this);
             CachedBrush = new CachedBrush();
-            context = new EditorContext(this);
             Scroll = new ScrollingManager(this);
             Styles = new StyleManager(this);
             Settings = new EditorSettings(this);
             Initialize();
             
         }
-        
+
         private volatile bool disposed;
         protected override void Dispose(bool disposing)
         {
@@ -56,10 +55,17 @@ namespace CodeBox
 
             disposed = true;
         }
-                
+
+        private void InitializeBuffer(DocumentBuffer buffer)
+        {
+            buffer.Eol = Settings.Eol;
+            buffer.WordWrap = Settings.WordWrap;
+        }
+
         private void Initialize()
         {
-            Document = new Document();
+            Buffer = new DocumentBuffer(Document.Read(""));
+            InitializeBuffer(Buffer);
             //Settings.WordWrap = true;
 
             CommandManager = new CommandManager(this);
@@ -110,7 +116,7 @@ namespace CodeBox
             var dt = DateTime.Now;
 
             e.Graphics.FillRectangle(Styles.Default.BackBrush,
-                new Rectangle(Info.EditorLeft, Info.EditorTop, Info.EditorWidth, Info.EditorHeight));
+                new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             DrawMargins(0, e.Graphics, TopMargins);
@@ -125,7 +131,7 @@ namespace CodeBox
 
 
             e.Graphics.ResetTransform();
-            DrawMargins(Info.EditorBottom, e.Graphics, BottomMargins);
+            DrawMargins(Info.TextBotom, e.Graphics, BottomMargins);
             DrawMargins(ClientSize.Width - Info.CharWidth, e.Graphics, RightMargins);
             base.OnPaint(e);
         }
@@ -140,29 +146,15 @@ namespace CodeBox
                 var bounds = default(Rectangle);
 
                 if (vertical)
-                    bounds = new Rectangle(start, Info.EditorTop, m.CalculateSize(), ClientSize.Height - Info.EditorTop);
+                    bounds = new Rectangle(start, Info.TextTop, m.CalculateSize(), ClientSize.Height - Info.TextTop);
                 else if (top)
                     bounds = new Rectangle(0, start, ClientSize.Width, m.CalculateSize());
                 else
-                    bounds = new Rectangle(Info.EditorLeft, start, Info.EditorWidth, m.CalculateSize());
+                    bounds = new Rectangle(Info.TextLeft, start, Info.TextWidth, m.CalculateSize());
 
                 m.Draw(g, bounds);
                 start += m.CalculateSize();
             }
-        }
-
-        private void BuildLines(string source)
-        {
-            OriginalEol = source.IndexOf("\r\n") != -1 ? Eol.CrLf
-                : source.IndexOf("\n") != -1 ? Eol.Lf
-                : Eol.Cr;
-            Document.Lines.Clear();
-            var txt = source.Replace("\r\n", "\n").Replace('\r', '\n');
-
-            foreach (var ln in txt.Split('\n'))
-                Document.Lines.Add(Line.FromString(ln, ++Document.LineSequence));
-
-            Scroll.FirstVisibleLine = Scroll.FirstVisibleLine;
         }
 
         protected override void OnResize(EventArgs eventargs)
@@ -184,7 +176,7 @@ namespace CodeBox
         
         public string GetTextRange(Range range)
         {
-            return CopyCommand.GetTextRange(GetEditorContext(), range);
+            return CopyCommand.GetTextRange(this, range);
         }
 
         
@@ -204,13 +196,13 @@ namespace CodeBox
 
         private void DrawLine(Graphics g, Line line, int lineIndex)
         {
-            var lmarg = Info.EditorLeft;
-            var tmarg = Info.EditorTop;
-            var cwidth = Info.EditorRight;
+            var lmarg = Info.TextLeft;
+            var tmarg = Info.TextTop;
+            var cwidth = Info.TextRight;
             var x = lmarg;
             var y = tmarg + line.Y;
             var oldcut = 0;
-            var sel = Document.Selections.IsLineSelected(lineIndex);
+            var sel = Buffer.Selections.IsLineSelected(lineIndex);
 
             for (var j = 0; j < line.Stripes; j++)
             {
@@ -231,7 +223,7 @@ namespace CodeBox
                         var style = default(Style);
                         var rect = new Rectangle(x, y, xw, Info.LineHeight);
                         var pos = new Pos(lineIndex, i);
-                        var high = sel && Document.Selections.IsSelected(pos);
+                        var high = sel && Buffer.Selections.IsSelected(pos);
 
                         if (c == '\0' || c == '\t' || c == ' ')
                         {
@@ -250,10 +242,10 @@ namespace CodeBox
 
                         style.DrawAll(g, rect, pos);
 
-                        if (Document.Selections.HasCaret(pos))
+                        if (Buffer.Selections.HasCaret(pos))
                         {
-                            var blink = Document.Selections.Main.Caret.Line == lineIndex
-                                && Document.Selections.Main.Caret.Col == i;
+                            var blink = Buffer.Selections.Main.Caret.Line == lineIndex
+                                && Buffer.Selections.Main.Caret.Col == i;
 
                             if (blink)
                             {
@@ -284,10 +276,8 @@ namespace CodeBox
 
         protected override void OnDoubleClick(EventArgs e)
         {
-            var ctx = GetEditorContext();
-            
-            if (Cursor.Position.X > Info.EditorLeft && Cursor.Position.X < ClientSize.Width - Info.RightMargin)
-                CommandManager.Run<SelectWordCommand>(ctx);
+            if (Cursor.Position.X > Info.TextLeft && Cursor.Position.X < Info.TextRight)
+                CommandManager.Run<SelectWordCommand>(default(CommandArgument));
         }
 
         //Range sel;
@@ -321,7 +311,7 @@ namespace CodeBox
                 var lineIndex = FindLineByLocation(e.Location.Y);
                 p = lineIndex != -1 ? FindTextLocation(lineIndex, e.Location) : Pos.Empty;
 
-                if (p.IsEmpty && e.Y - Scroll.Y > Info.EditorIntegralHeight)
+                if (p.IsEmpty && e.Y - Scroll.Y > Info.TextIntegralHeight)
                 {
                     lineIndex = Scroll.LastVisibleLine;
                     var ln = Document.Lines[lineIndex];
@@ -340,10 +330,10 @@ namespace CodeBox
                 if (lines[p.Line].Length == 0)
                     return;
 
-                var start = Document.Selections[0].Start;
+                var start = Buffer.Selections[0].Start;
                 var maxLen = 0;
 
-                foreach (var sel in Document.Selections)
+                foreach (var sel in Buffer.Selections)
                 {
                     var len = Math.Abs(sel.End.Col - sel.Start.Col);
 
@@ -356,7 +346,7 @@ namespace CodeBox
                 if (p.Col < lines[p.Line].Length - 1 || lastLen > maxLen)
                     maxLen = lastLen;
 
-                Document.Selections.ForceClear();
+                Buffer.Selections.Clear();
 
                 if (start > p)
                 {
@@ -372,14 +362,14 @@ namespace CodeBox
                             new Pos(i, start.Col + maxLen > ln.Length ? ln.Length : start.Col + maxLen));
 
                         if (i == start.Line)
-                            Document.Selections.Set(sel);
+                            Buffer.Selections.Set(sel);
                         else
                         {
-                            var osel = Document.Selections.GetSelection(p);
+                            var osel = Buffer.Selections.GetSelection(p);
                             if (osel != null)
-                                Document.Selections.Remove(osel);
+                                Buffer.Selections.Remove(osel);
 
-                            Document.Selections.Add(sel);
+                            Buffer.Selections.Add(sel);
                         }
                     }
                 }
@@ -398,16 +388,16 @@ namespace CodeBox
                         var sel = new Selection(new Pos(i, start.Col), new Pos(i, endCol));
 
                         if (i == start.Line)
-                            Document.Selections.Set(sel);
+                            Buffer.Selections.Set(sel);
                         else
                         {
-                            var osel = Document.Selections.GetSelection(p);
+                            var osel = Buffer.Selections.GetSelection(p);
 
                             if (osel != null)
-                                Document.Selections.Remove(osel);
+                                Buffer.Selections.Remove(osel);
 
                             //Console.WriteLine($"Start: {start};p: {p}");
-                            Document.Selections.Add(sel);
+                            Buffer.Selections.Add(sel);
                         }
                     }
                 }
@@ -418,12 +408,12 @@ namespace CodeBox
             #endregion
             else if (mouseDown && e.Button == MouseButtons.Left)
             {
-                var sel = Document.Selections.Main;
+                var sel = Buffer.Selections.Main;
                 sel.End = p;
-                var osel = Document.Selections.GetSelection(p, sel);
+                var osel = Buffer.Selections.GetSelection(p, sel);
 
                 if (osel != null)
-                    Document.Selections.Remove(osel);
+                    Buffer.Selections.Remove(osel);
 
                 Console.WriteLine(sel);
                 Scroll.UpdateVisibleRectangle();
@@ -451,13 +441,13 @@ namespace CodeBox
 
         private MarginList FindMargin(Point loc)
         {
-            if (loc.X < Info.EditorLeft)
+            if (loc.X < Info.TextLeft)
                 return LeftMargins;
-            else if (loc.X > ClientSize.Width - Info.RightMargin)
+            else if (loc.X > Info.TextRight)
                 return RightMargins;
-            else if (loc.Y < Info.EditorTop)
+            else if (loc.Y < Info.TextTop)
                 return TopMargins;
-            else if (loc.Y > ClientSize.Height - Info.BottomMargin)
+            else if (loc.Y > Info.TextBotom)
                 return BottomMargins;
             else
                 return null;
@@ -486,9 +476,9 @@ namespace CodeBox
                 var sel = new Selection(pos, pos);
 
                 if ((lastKeys & Keys.Control) == Keys.Control)
-                    Document.Selections.Add(sel);
+                    Buffer.Selections.Add(sel);
                 else
-                    Document.Selections.Set(sel);
+                    Buffer.Selections.Set(sel);
 
                 Redraw();
             }
@@ -510,10 +500,10 @@ namespace CodeBox
 
         private int FindColumnByLocation(Line line, Point loc)
         {
-            var stripe = (int)Math.Ceiling((loc.Y - Info.EditorTop - line.Y - Scroll.Y) / (double)Info.LineHeight) - 1;
+            var stripe = (int)Math.Ceiling((loc.Y - Info.TextTop - line.Y - Scroll.Y) / (double)Info.LineHeight) - 1;
             var cut = line.GetCut(stripe);
             var sc = stripe > 0 ? line.GetCut(stripe - 1) + 1 : 0;
-            var width = Info.EditorLeft;
+            var width = Info.TextLeft;
             var locX = loc.X - Scroll.X;
             var app = Info.CharWidth * .15;
 
@@ -558,9 +548,8 @@ namespace CodeBox
                     case '\u001b': //Esc
                         return true;
                     default:
-                        var ctx = GetEditorContext();
-                        ctx.Char = ch;
-                        CommandManager.Run<InsertCharCommand>(ctx);
+                        var arg = new CommandArgument(ch, null);
+                        CommandManager.Run<InsertCharCommand>(arg);
                         break;
                 }
 
@@ -617,8 +606,6 @@ namespace CodeBox
             return base.IsInputKey(keyData);
         }
 
-        private readonly EditorContext context;
-
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
@@ -627,15 +614,14 @@ namespace CodeBox
                 Overtype = !Overtype;
 
             lastKeys = e.Modifiers;
-            var ctx = GetEditorContext();
-            CommandManager.Run(lastKeys | e.KeyCode, ctx);
+            CommandManager.Run(lastKeys | e.KeyCode, default(CommandArgument));
         }
 
         internal int FindLineByLocation(int locY)
         {
             var line = Lines[Scroll.FirstVisibleLine];
             var lineIndex = 0;
-            var y = Info.EditorTop;
+            var y = Info.TextTop;
             locY = locY - Scroll.Y;
             //var maxHeight = Info.EditorIntegralHeight; //Round by line height
 
@@ -656,35 +642,40 @@ namespace CodeBox
 
         public void Copy()
         {
-            CommandManager.Run<CopyCommand>(GetEditorContext());
+            CommandManager.Run<CopyCommand>(default(CommandArgument));
         }
 
         public void Cut()
         {
-            CommandManager.Run<CutCommand>(GetEditorContext());
+            CommandManager.Run<CutCommand>(default(CommandArgument));
         }
 
         public void Paste()
         {
-            CommandManager.Run<PasteCommand>(GetEditorContext());
+            CommandManager.Run<PasteCommand>(default(CommandArgument));
         }
 
         public void Undo()
         {
-            CommandManager.Undo(GetEditorContext());
+            CommandManager.Undo();
         }
 
         public void Redo()
         {
-            CommandManager.Redo(GetEditorContext());
+            CommandManager.Redo();
         }
 
         public void SelectAll()
         {
-            CommandManager.Run<SelectAllCommand>(GetEditorContext());
+            CommandManager.Run<SelectAllCommand>(default(CommandArgument));
         }
 
-        public Document Document { get; private set; }
+        public DocumentBuffer Buffer { get; private set; }
+
+        public Document Document
+        {
+            get { return Buffer.Document; }
+        }
 
         internal List<Line> Lines
         {
@@ -693,30 +684,26 @@ namespace CodeBox
 
         public override string Text
         {
-            get { return base.Text; }
+            get { return Buffer.GetText(); }
             set
             {
                 base.Text = value;
-                BuildLines(Text);
+                var doc = Document.Read(value);
+                Buffer = new DocumentBuffer(doc);
+                InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();
                 Styles.Restyle();
             }
         }
 
-        internal EditorContext GetEditorContext()
-        {
-            return context;
-        }
-
-        private bool _overtype;
         public bool Overtype
         {
-            get { return _overtype; }
+            get { return Buffer.Overtype; }
             set
             {
-                if (value != _overtype)
+                if (value != Buffer.Overtype)
                 {
-                    _overtype = value;
+                    Buffer.Overtype = value;
                     Caret.BlockCaret = value;
                     Redraw();
                 }
@@ -739,14 +726,12 @@ namespace CodeBox
 
         internal CachedFont CachedFont { get; set; }
 
-        internal EditorCaret Caret { get; private set; }
+        internal CaretRenderer Caret { get; private set; }
         
         internal CommandManager CommandManager { get; private set; }
 
         public StyleManager Styles { get; private set; }
 
         public ScrollingManager Scroll { get; private set; }
-
-        internal Eol OriginalEol { get; private set; }
     }
 }

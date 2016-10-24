@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 
 namespace CodeBox
@@ -18,7 +14,7 @@ namespace CodeBox
 
         internal bool UpdateVisibleRectangle()
         {
-            var caret = editor.Document.Selections.Main.Caret;
+            var caret = editor.Buffer.Selections.Main.Caret;
 
             if (caret.Line >= editor.Document.Lines.Count)
                 return false;
@@ -38,7 +34,7 @@ namespace CodeBox
                 update = true;
             }
 
-            if (!editor.Settings.WordWrap)
+            if (!editor.Buffer.WordWrap)
             {
                 sv = IsColumnVisible(caret);
 
@@ -60,16 +56,16 @@ namespace CodeBox
         private int IsColumnVisible(Pos pos)
         {
             var tetras = editor.Lines[pos.Line].GetTetras(pos.Col, editor.Settings.TabSize);
-            var curpos = tetras * editor.Info.CharWidth + editor.Info.EditorLeft + X;
+            var curpos = tetras * editor.Info.CharWidth + editor.Info.TextLeft + X;
 
-            if (curpos > editor.Info.EditorRight)
+            if (curpos > editor.Info.TextRight)
             {
                 curpos += editor.Info.CharWidth;
-                var diff = curpos - editor.Info.EditorRight;
+                var diff = curpos - editor.Info.TextRight;
                 return -(int)(Math.Ceiling((double)diff / editor.Info.CharWidth));
             }
-            else if (curpos < editor.Info.EditorLeft)
-                return (int)Math.Ceiling((editor.Info.EditorLeft - curpos) / (double)editor.Info.CharWidth);
+            else if (curpos < editor.Info.TextLeft)
+                return (int)Math.Ceiling((editor.Info.TextLeft - curpos) / (double)editor.Info.CharWidth);
             else
                 return 0;
         }
@@ -78,12 +74,12 @@ namespace CodeBox
         {
             var ln = editor.Document.Lines[pos.Line];
             var stripe = ln.GetStripe(pos.Col);
-            var cy = editor.Info.EditorTop + ln.Y + stripe * editor.Info.LineHeight + Y;
+            var cy = editor.Info.TextTop + ln.Y + stripe * editor.Info.LineHeight + Y;
 
-            if (cy < editor.Info.EditorTop)
+            if (cy < editor.Info.TextTop)
                 return -(cy / editor.Info.LineHeight - 1);
-            else if (cy + editor.Info.LineHeight > editor.Info.EditorBottom)//editor.ClientSize.Height - editor.Info.BottomMargin - editor.Info.EditorTop)
-                return -((cy - editor.Info.EditorTop) / editor.Info.LineHeight);
+            else if (cy + editor.Info.LineHeight > editor.Info.TextBotom)
+                return -((cy - editor.Info.TextTop) / editor.Info.LineHeight);
             else
                 return 0;
         }
@@ -162,7 +158,7 @@ namespace CodeBox
         {
             var len = editor.Document.Lines.Count;
             var lh = editor.Info.LineHeight;
-            var maxh = editor.Info.EditorBottom - editor.Info.EditorTop - Y;
+            var maxh = editor.Info.TextBotom - editor.Info.TextTop - Y;
 
             for (var i = FirstVisibleLine; i < len; i++)
             {
@@ -178,9 +174,7 @@ namespace CodeBox
 
         public void InvalidateLines()
         {
-            var dt = DateTime.Now;
-
-            if (!editor.Settings.WordWrap)
+            if (!editor.Buffer.WordWrap)
             {
                 var maxWidth = 0;
                 var y = 0;
@@ -195,14 +189,14 @@ namespace CodeBox
                         maxWidth = w;
                 }
 
-                XMax = maxWidth - editor.Info.EditorWidth + editor.Info.CharWidth * 5;
+                XMax = maxWidth - editor.Info.TextWidth + editor.Info.CharWidth * 5;
                 XMax = XMax < 0 ? 0 : XMax;
                 YMax = editor.Document.Lines.Count * editor.Info.LineHeight;
             }
             else
             {
                 var maxHeight = 0;
-                var twidth = editor.Info.EditorWidth;
+                var twidth = editor.Info.TextWidth;
 
                 foreach (var ln in editor.Document.Lines)
                 {
@@ -215,11 +209,10 @@ namespace CodeBox
                 YMax = maxHeight;
             }
 
-            YMax = YMax - editor.Info.EditorHeight + editor.Info.LineHeight * 5;
+            YMax = YMax - editor.Info.TextHeight + editor.Info.LineHeight * 5;
             YMax = YMax < 0 ? 0 : YMax;
 
-            FirstVisibleLine = FirstVisibleLine; //HACKs
-            Console.WriteLine("Invalidate: " + (DateTime.Now - dt).TotalMilliseconds);
+            _lastVisibleLine = null;
         }
 
         private int _firstVisibleLine;

@@ -11,25 +11,14 @@ namespace CodeBox
     {
         private readonly Dictionary<Type, CommandInfo> commands;
         private readonly Dictionary<Keys, CommandInfo> commandsByKeys;
-        private readonly Stack<CommandInfo> undoStack;
-        private readonly Stack<CommandInfo> redoStack;
         private int counter;
         private bool undoGroup;
         private readonly Editor editor;
-
-        class CommandInfo
-        {
-            internal int Id;
-            internal ICommand Command;
-            internal ActionExponent Exponent;
-        }
 
         public CommandManager(Editor editor)
         {
             commands = new Dictionary<Type, CommandInfo>();
             commandsByKeys = new Dictionary<Keys, CommandInfo>();
-            undoStack = new Stack<CommandInfo>();
-            redoStack = new Stack<CommandInfo>();
             this.editor = editor;
         }
 
@@ -49,42 +38,44 @@ namespace CodeBox
             if (!undoGroup)
                 counter++;
 
-            undoStack.Push(new CommandInfo { Id = counter, Command = cmd, Exponent = exp });
+            editor.Buffer.UndoStack.Push(new CommandInfo { Id = counter, Command = cmd, Exponent = exp });
         }
 
-        public void Undo(EditorContext ctx)
+        public void Undo()
         {
-            if (undoStack.Count > 0)
+            if (editor.Buffer.UndoStack.Count > 0)
             {
                 Pos pos;
                 int count;
-                var exp = Undo(ctx, undoStack.Peek().Id, out count, out pos);
+                var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
 
-                SetCarets(ctx, count, pos);
+                SetCarets(count, pos);
                 DoAftermath(exp);
+                editor.Buffer.Edits--;
             }
         }
 
-        private ActionExponent Undo(EditorContext ctx, int id, out int count, out Pos pos)
+        private ActionExponent Undo(int id, out int count, out Pos pos)
         {
             var exp = default(ActionExponent);
             pos = Pos.Empty;
             count = 0;
 
-            while (undoStack.Count > 0)
+            while (editor.Buffer.UndoStack.Count > 0)
             {
-                var cmd = undoStack.Peek();
+                var cmd = editor.Buffer.UndoStack.Peek();
 
                 if (cmd.Id == id)
                 {
-                    var p = cmd.Command.Undo(ctx);
+                    cmd.Command.Context = editor;
+                    var p = cmd.Command.Undo();
 
                     if (pos.IsEmpty)
                         pos = p;
 
                     exp |= cmd.Exponent;
-                    AttachCaret(ctx, p);
-                    redoStack.Push(undoStack.Pop());
+                    AttachCaret(p);
+                    editor.Buffer.RedoStack.Push(editor.Buffer.UndoStack.Pop());
                     count++;
                 }
                 else
@@ -94,36 +85,38 @@ namespace CodeBox
             return exp;
         }
 
-        public void Redo(EditorContext ctx)
+        public void Redo()
         {
-            if (redoStack.Count > 0)
+            if (editor.Buffer.RedoStack.Count > 0)
             {
                 Pos pos;
                 int count;
-                var exp = Redo(ctx, redoStack.Peek().Id, out count, out pos);
+                var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
 
-                SetCarets(ctx, count, pos);
+                SetCarets(count, pos);
                 DoAftermath(exp);
+                editor.Buffer.Edits++;
             }
         }
 
-        private ActionExponent Redo(EditorContext ctx, int id, out int count, out Pos pos)
+        private ActionExponent Redo(int id, out int count, out Pos pos)
         {
             var exp = default(ActionExponent);
             pos = Pos.Empty;
             count = 0;
 
-            while (redoStack.Count > 0)
+            while (editor.Buffer.RedoStack.Count > 0)
             {
-                var cmd = redoStack.Peek();
+                var cmd = editor.Buffer.RedoStack.Peek();
 
                 if (cmd.Id == id)
                 {
-                    var p = cmd.Command.Redo(ctx);
+                    cmd.Command.Context = editor;
+                    var p = cmd.Command.Redo();
                     pos = p;
                     exp |= cmd.Exponent;
-                    AttachCaret(ctx, p);
-                    undoStack.Push(redoStack.Pop());
+                    AttachCaret(p);
+                    editor.Buffer.UndoStack.Push(editor.Buffer.RedoStack.Pop());
                     count++;
                 }
                 else
@@ -136,7 +129,8 @@ namespace CodeBox
         public void Register<T>(Keys keys = Keys.None) where T : ICommand, new()
         {
             var type = typeof(T);
-            var attr = Attribute.GetCustomAttribute(type, typeof(CommandBehaviorAttribute)) as CommandBehaviorAttribute;
+            var attr = Attribute.GetCustomAttribute(type,
+                typeof(CommandBehaviorAttribute)) as CommandBehaviorAttribute;
             var exp = attr != null ? attr.Exponent : ActionExponent.None;
 
             var ci = new CommandInfo
@@ -151,29 +145,29 @@ namespace CodeBox
                 commandsByKeys.Add(keys, ci);
         }
 
-        public void Run<T>(EditorContext ctx) where T : ICommand
+        public void Run<T>(CommandArgument arg) where T : ICommand
         {
             CommandInfo ci;
 
             if (commands.TryGetValue(typeof(T), out ci))
-                Run(ctx, ci);
+                Run(arg, ci);
         }
 
-        public void Run(Keys keys, EditorContext ctx)
+        public void Run(Keys keys, CommandArgument arg)
         {
             CommandInfo ci;
 
             if (commandsByKeys.TryGetValue(keys, out ci))
-                Run(ctx, ci);
+                Run(arg, ci);
         }
 
-        private void Run(EditorContext ctx, CommandInfo ci)
+        private void Run(CommandArgument arg, CommandInfo ci)
         {
-            var lines = ctx.Document.Lines;
+            var lines = editor.Lines;
             var exp = ci.Exponent;
-            var single = ctx.Document.Selections.TotalCount == 1;
-            var mainSel = ctx.Document.Selections.Main;
-            var qry = single ? null : editor.Document.Selections
+            var single = editor.Buffer.Selections.Count == 1;
+            var mainSel = editor.Buffer.Selections.Main;
+            var qry = single ? null : editor.Buffer.Selections
                 .OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
             var undo = (exp & ActionExponent.Undoable) == ActionExponent.Undoable;
             var restoreCaret = (exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret;
@@ -183,13 +177,13 @@ namespace CodeBox
                 BeginUndoAction();
 
             if ((exp & ActionExponent.SingleCursor) == ActionExponent.SingleCursor)
-                ctx.Document.Selections.Clear();
+                editor.Buffer.Selections.Truncate();
             else if ((exp & ActionExponent.ClearSelections) == ActionExponent.ClearSelections)
             {
                 if (single)
                     mainSel.Clear();
                 else
-                    foreach (var s in ctx.Document.Selections)
+                    foreach (var s in editor.Buffer.Selections)
                         s.Clear();
             }
 
@@ -203,10 +197,11 @@ namespace CodeBox
                     AddCommand(cmd, exp);
                 }
 
-                cmd.Execute(ctx, mainSel);
+                cmd.Context = editor;
+                cmd.Execute(arg, mainSel);
 
                 if (restoreCaret)
-                    AttachCaret(ctx, mainSel.Caret);
+                    AttachCaret(mainSel.Caret);
             }
             else
                 foreach (var sel in qry)
@@ -216,11 +211,12 @@ namespace CodeBox
                         cmd = cmd.Clone();
                         AddCommand(cmd, exp);
                     }
-                
-                    cmd.Execute(ctx, sel);
+
+                    cmd.Context = editor;
+                    cmd.Execute(arg, sel);
 
                     if (restoreCaret)
-                        AttachCaret(ctx, sel.Caret);
+                        AttachCaret(sel.Caret);
 
                     lastSel = sel;
                 }
@@ -229,14 +225,15 @@ namespace CodeBox
                 EndUndoAction();
 
             if (restoreCaret)
-                SetCarets(ctx, ctx.Document.Selections.TotalCount, lastSel.Caret);
+                SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
             DoAftermath(exp);
+            editor.Buffer.Edits++;
         }
 
-        private void AttachCaret(EditorContext ctx, Pos pos)
+        private void AttachCaret(Pos pos)
         {
-            var line = ctx.Document.Lines[pos.Line];
+            var line = editor.Document.Lines[pos.Line];
 
             if (line.Length > pos.Col)
             {
@@ -247,14 +244,14 @@ namespace CodeBox
                 line.TrailingCaret = true;
         }
 
-        private void SetCarets(EditorContext ctx, int count, Pos pos)
+        private void SetCarets(int count, Pos pos)
         {
-            var sels = ctx.Document.Selections;
-            sels.ForceClear();
+            var sels = editor.Buffer.Selections;
+            sels.Clear();
 
-            for (var i = pos.Line; i < ctx.Document.Lines.Count; i++)
+            for (var i = pos.Line; i < editor.Document.Lines.Count; i++)
             {
-                var line = ctx.Document.Lines[i];
+                var line = editor.Document.Lines[i];
 
                 if (line.TrailingCaret)
                 {

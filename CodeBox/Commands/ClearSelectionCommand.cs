@@ -10,9 +10,9 @@ namespace CodeBox.Commands
     [CommandBehavior(None)]
     internal sealed class ClearSelectionCommand : Command
     {
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
-            context.Document.Selections.Clear();
+            Buffer.Selections.Truncate();
         }
     }
 }

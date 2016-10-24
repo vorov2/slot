@@ -11,9 +11,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     internal class HomeCommand : CaretCommand
     {
-        protected override Pos GetPosition(EditorContext context, Pos pos)
+        protected override Pos GetPosition(Pos pos)
         {
-            return MoveHome(context.Document, pos);
+            return MoveHome(Document, pos);
         }
 
         internal static Pos MoveHome(Document doc, Pos pos)

@@ -16,15 +16,15 @@ namespace CodeBox.Commands
         private Selection redoSel;
         private Pos undoPos;
 
-        public override void Execute(EditorContext context, Selection sel)
+        public override void Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
 
             if (!sel.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(context, sel);
+                @string = DeleteRangeCommand.DeleteRange(Context, sel);
             else
             {
-                var lines = context.Document.Lines;
+                var lines = Document.Lines;
                 var caret = sel.Caret;
                 var ln = lines[caret.Line];
 
@@ -45,25 +45,25 @@ namespace CodeBox.Commands
             undoPos = sel.Caret;
         }
 
-        public override Pos Redo(EditorContext context)
+        public override Pos Redo()
         {
             @string = null;
             @char = Character.Empty;
-            Execute(context, redoSel);
+            Execute(default(CommandArgument), redoSel);
             return undoPos;
         }
 
-        public override Pos Undo(EditorContext context)
+        public override Pos Undo()
         {
             var pos = undoPos;
 
             if (@string != null)
-                pos = InsertRangeCommand.InsertRange(context.Document, undoPos, @string);
+                pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
             else if (@char == Character.NewLine)
-                InsertNewLineCommand.InsertNewLine(context.Document, undoPos);
+                InsertNewLineCommand.InsertNewLine(Document, undoPos);
             else
             {
-                var ln = context.Document.Lines[undoPos.Line];
+                var ln = Document.Lines[undoPos.Line];
                 ln.Insert(undoPos.Col, @char);
             }
 
