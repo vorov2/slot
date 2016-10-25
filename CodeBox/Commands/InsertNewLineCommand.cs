@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    internal sealed class InsertNewLineCommand : Command //Tested
+    public sealed class InsertNewLineCommand : Command //Tested
     {
         private IEnumerable<Character> @string;
         private Pos undoPos;

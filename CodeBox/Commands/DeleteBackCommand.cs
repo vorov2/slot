@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    internal sealed class DeleteBackCommand : Command //Tested
+    public sealed class DeleteBackCommand : Command //Tested
     {
         private IEnumerable<Character> @string;
         private Character @char;

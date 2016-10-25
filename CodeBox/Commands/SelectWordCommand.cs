@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Scroll | ClearSelections)]
-    internal class SelectWordCommand : Command
+    public class SelectWordCommand : Command
     {
         internal enum Strategy
         {

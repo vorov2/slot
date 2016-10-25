@@ -1,9 +1,12 @@
-﻿using System;
+﻿using CodeBox.ObjectModel;
+using System;
 
-namespace CodeBox.ObjectModel
+namespace CodeBox.Commands
 {
     public interface IEditorContext
     {
+        CommandManager CommandManager { get; }
+
         DocumentBuffer Buffer { get; }
 
         EditorInfo Info { get; }

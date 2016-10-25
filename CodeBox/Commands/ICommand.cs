@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 
-namespace CodeBox.ObjectModel
+namespace CodeBox.Commands
 {
     public interface ICommand
     {

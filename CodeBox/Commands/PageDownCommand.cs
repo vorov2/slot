@@ -1,11 +1,11 @@
 ﻿using System;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Scroll | ClearSelections)]
-    internal sealed class PageDownCommand : CaretCommand
+    public sealed class PageDownCommand : CaretCommand
     {
         protected override Pos GetPosition(Pos caret)
         {

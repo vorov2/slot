@@ -1,5 +1,4 @@
-﻿//#define BIG
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -23,7 +22,8 @@ namespace CodeBox
         public Editor()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
-                | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.Selectable, true);
+                | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw 
+                | ControlStyles.Selectable, true);
             Cursor = Cursors.IBeam;
             TabStop = true;
             TopMargins = new MarginList(this);
@@ -36,8 +36,11 @@ namespace CodeBox
             Scroll = new ScrollingManager(this);
             Styles = new StyleManager(this);
             Settings = new EditorSettings(this);
-            Initialize();
-            
+            CommandManager = new CommandManager(this);
+            Locations = new LocationManager(this);
+
+            Buffer = new DocumentBuffer(Document.Read(""));
+            InitializeBuffer(Buffer);
         }
 
         private volatile bool disposed;
@@ -62,53 +65,6 @@ namespace CodeBox
             buffer.WordWrap = Settings.WordWrap;
         }
 
-        private void Initialize()
-        {
-            Buffer = new DocumentBuffer(Document.Read(""));
-            InitializeBuffer(Buffer);
-            //Settings.WordWrap = true;
-
-            CommandManager = new CommandManager(this);
-
-            CommandManager.Register<InsertCharCommand>();
-            CommandManager.Register<SelectWordCommand>();
-            CommandManager.Register<CutCommand>();
-            CommandManager.Register<CopyCommand>();
-            CommandManager.Register<PasteCommand>();
-            CommandManager.Register<SelectAllCommand>();
-
-            CommandManager.Register<ShiftTabCommand>(Keys.Shift | Keys.Tab);
-            CommandManager.Register<TabCommand>(Keys.Tab);
-            CommandManager.Register<ClearSelectionCommand>(Keys.Escape);
-            CommandManager.Register<LeftCommand>(Keys.Left);
-            CommandManager.Register<RightCommand>(Keys.Right);
-            CommandManager.Register<UpCommand>(Keys.Up);
-            CommandManager.Register<DownCommand>(Keys.Down);
-            CommandManager.Register<HomeCommand>(Keys.Home);
-            CommandManager.Register<EndCommand>(Keys.End);
-            CommandManager.Register<InsertNewLineCommand>(Keys.Enter);
-            CommandManager.Register<DeleteBackCommand>(Keys.Back);
-            CommandManager.Register<DeleteCommand>(Keys.Delete);
-            CommandManager.Register<PageDownCommand>(Keys.PageDown);
-            CommandManager.Register<PageUpCommand>(Keys.PageUp);
-            CommandManager.Register<ExtendLeftCommand>(Keys.Shift | Keys.Left);
-            CommandManager.Register<ExtendRightCommand>(Keys.Shift | Keys.Right);
-            CommandManager.Register<ExtendUpCommand>(Keys.Shift | Keys.Up);
-            CommandManager.Register<ExtendDownCommand>(Keys.Shift | Keys.Down);
-            CommandManager.Register<ExtendEndCommand>(Keys.Shift | Keys.End);
-            CommandManager.Register<ExtendHomeCommand>(Keys.Shift | Keys.Home);
-            CommandManager.Register<WordLeftCommand>(Keys.Control | Keys.Left);
-            CommandManager.Register<WordRightCommand>(Keys.Control | Keys.Right);
-            CommandManager.Register<ExtendWordRightCommandCommand>(Keys.Control | Keys.Shift | Keys.Right);
-            CommandManager.Register<ExtendWordLeftCommandCommand>(Keys.Control | Keys.Shift | Keys.Left);
-            CommandManager.Register<ExtendPageDownCommand>(Keys.Control | Keys.PageDown);
-            CommandManager.Register<ExtendPageUpCommand>(Keys.Control | Keys.PageUp);
-            CommandManager.Register<DocumentHomeCommand>(Keys.Control | Keys.Home);
-            CommandManager.Register<DocumentEndCommand>(Keys.Control | Keys.End);
-            CommandManager.Register<ExtendDocumentHomeCommand>(Keys.Control | Keys.Shift | Keys.Home);
-            CommandManager.Register<ExtendDocumentEndCommand>(Keys.Control | Keys.Shift | Keys.End);
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             Caret.Suspend();
@@ -124,11 +80,7 @@ namespace CodeBox
 
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             DrawLines(e.Graphics);
-#if DEBUG
-            // Console.WriteLine($"OnPaint: {call++}; Selections: {Document.Selections.Count}");
             //Console.WriteLine("Time: " + (DateTime.Now - dt).TotalMilliseconds);
-#endif
-
 
             e.Graphics.ResetTransform();
             DrawMargins(Info.TextBotom, e.Graphics, BottomMargins);
@@ -170,22 +122,11 @@ namespace CodeBox
             base.OnMouseWheel(e);
             Scroll.ScrollY((e.Delta / 120) * 2);
         }
-        
-
-        
-        
-        public string GetTextRange(Range range)
-        {
-            return CopyCommand.GetTextRange(this, range);
-        }
-
-        
 
         private void DrawLines(Graphics g)
         {
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
-            Console.WriteLine($"FistLine {fvl} and LastLine {lvl}");
 
             for (var i = fvl; i < lvl + 1; i++)
             {
@@ -276,11 +217,9 @@ namespace CodeBox
 
         protected override void OnDoubleClick(EventArgs e)
         {
-            if (Cursor.Position.X > Info.TextLeft && Cursor.Position.X < Info.TextRight)
-                CommandManager.Run<SelectWordCommand>(default(CommandArgument));
+            CommandManager.Run(MouseEvents.DoubleClick, Keys.None, default(CommandArgument));
         }
 
-        //Range sel;
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -291,7 +230,7 @@ namespace CodeBox
                 return;
             }
 
-            var mlist = FindMargin(e.Location);
+            var mlist = Locations.FindMargin(e.Location);
 
             if (mlist != null)
             {
@@ -301,17 +240,19 @@ namespace CodeBox
             else
                 Cursor = Cursors.IBeam;
 
-            if (!mouseDown)
+            if (Mouse != MouseEvents.Click)
                 return;
 
+            var leftMouseDown = e.Button == MouseButtons.Left;
             var p = default(Pos);
 
-            if (mouseDown && e.Button == MouseButtons.Left)
+            if (leftMouseDown)
             {
-                var lineIndex = FindLineByLocation(e.Location.Y);
+                var lineIndex = Locations.FindLineByLocation(e.Location.Y);
                 p = lineIndex != -1 ? FindTextLocation(lineIndex, e.Location) : Pos.Empty;
 
-                if (p.IsEmpty && e.Y - Scroll.Y > Info.TextIntegralHeight)
+                if (p.IsEmpty && e.Y - Scroll.Y > Info.TextIntegralHeight
+                    && Scroll.LastVisibleLine < Lines.Count - 1)
                 {
                     lineIndex = Scroll.LastVisibleLine;
                     var ln = Document.Lines[lineIndex];
@@ -322,109 +263,15 @@ namespace CodeBox
             if (p.IsEmpty)
                 return;
 
-            #region Block selection
-            if (mouseDown && e.Button == MouseButtons.Left && ((lastKeys & Keys.Alt) == Keys.Alt))
-            {
-                var lines = Document.Lines;
-
-                if (lines[p.Line].Length == 0)
-                    return;
-
-                var start = Buffer.Selections[0].Start;
-                var maxLen = 0;
-
-                foreach (var sel in Buffer.Selections)
-                {
-                    var len = Math.Abs(sel.End.Col - sel.Start.Col);
-
-                    if (len > maxLen)
-                        maxLen = len;
-                }
-
-                var lastLen = Math.Abs(start.Col - p.Col);
-
-                if (p.Col < lines[p.Line].Length - 1 || lastLen > maxLen)
-                    maxLen = lastLen;
-
-                Buffer.Selections.Clear();
-
-                if (start > p)
-                {
-                    for (var i = start.Line; i > p.Line - 1; i--)
-                    {
-                        var ln = lines[i];
-
-                        if (ln.Length == 0)
-                            continue;
-
-                        var sel = new Selection(
-                            new Pos(i, start.Col),
-                            new Pos(i, start.Col + maxLen > ln.Length ? ln.Length : start.Col + maxLen));
-
-                        if (i == start.Line)
-                            Buffer.Selections.Set(sel);
-                        else
-                        {
-                            var osel = Buffer.Selections.GetSelection(p);
-                            if (osel != null)
-                                Buffer.Selections.Remove(osel);
-
-                            Buffer.Selections.Add(sel);
-                        }
-                    }
-                }
-                else
-                {
-                    for (var i = start.Line; i < p.Line + 1; i++)
-                    {
-                        var ln = lines[i];
-
-                        if (ln.Length == 0)
-                            continue;
-
-                        var endCol = p.Col < start.Col
-                            ? (start.Col - maxLen < 0 ? 0 : start.Col - maxLen)
-                            : (start.Col + maxLen > ln.Length ? ln.Length : start.Col + maxLen);
-                        var sel = new Selection(new Pos(i, start.Col), new Pos(i, endCol));
-
-                        if (i == start.Line)
-                            Buffer.Selections.Set(sel);
-                        else
-                        {
-                            var osel = Buffer.Selections.GetSelection(p);
-
-                            if (osel != null)
-                                Buffer.Selections.Remove(osel);
-
-                            //Console.WriteLine($"Start: {start};p: {p}");
-                            Buffer.Selections.Add(sel);
-                        }
-                    }
-                }
-
-                Scroll.UpdateVisibleRectangle();
-                Redraw();
-            }
-            #endregion
-            else if (mouseDown && e.Button == MouseButtons.Left)
-            {
-                var sel = Buffer.Selections.Main;
-                sel.End = p;
-                var osel = Buffer.Selections.GetSelection(p, sel);
-
-                if (osel != null)
-                    Buffer.Selections.Remove(osel);
-
-                Console.WriteLine(sel);
-                Scroll.UpdateVisibleRectangle();
-                Redraw();
-            }
+            var arg = new CommandArgument(p);
+            CommandManager.Run(Mouse | MouseEvents.Move, LastKeys, arg);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            mouseDown = false;
+            Mouse = MouseEvents.None;
+            LastKeys = Keys.None;
 
             if (mouseThief != null)
             {
@@ -433,54 +280,36 @@ namespace CodeBox
                 Redraw();
             }
 
-            var mlist = FindMargin(e.Location);
+            var mlist = Locations.FindMargin(e.Location);
 
             if (mlist != null)
                 mlist.CallMarginMethod(MarginMethod.MouseUp, e.Location);
         }
-
-        private MarginList FindMargin(Point loc)
-        {
-            if (loc.X < Info.TextLeft)
-                return LeftMargins;
-            else if (loc.X > Info.TextRight)
-                return RightMargins;
-            else if (loc.Y < Info.TextTop)
-                return TopMargins;
-            else if (loc.Y > Info.TextBotom)
-                return BottomMargins;
-            else
-                return null;
-        }
-
+        
         internal Margin mouseThief;
 
-        bool mouseDown;
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
 
-            if (e.Button != MouseButtons.Left)
-                return;
+            if (e.Button == MouseButtons.Left)
+                Mouse = MouseEvents.Click;
+            else if (e.Button == MouseButtons.Right)
+                Mouse = MouseEvents.RightClick;
 
-            mouseDown = true;
-            var mlist = FindMargin(e.Location);
-
-            if (mlist != null)
-                mlist.CallMarginMethod(MarginMethod.MouseDown, e.Location);
-            else
+            if (e.Button == MouseButtons.Left)
             {
-                var lineIndex = FindLineByLocation(e.Location.Y);
-                var pos = FindTextLocation(lineIndex, e.Location);
-                pos = pos.IsEmpty ? default(Pos) : pos;
-                var sel = new Selection(pos, pos);
+                var mlist = Locations.FindMargin(e.Location);
 
-                if ((lastKeys & Keys.Control) == Keys.Control)
-                    Buffer.Selections.Add(sel);
+                if (mlist != null)
+                    mlist.CallMarginMethod(MarginMethod.MouseDown, e.Location);
                 else
-                    Buffer.Selections.Set(sel);
-
-                Redraw();
+                {
+                    var lineIndex = Locations.FindLineByLocation(e.Location.Y);
+                    var pos = FindTextLocation(lineIndex, e.Location);
+                    pos = pos.IsEmpty ? default(Pos) : pos;
+                    CommandManager.Run(Mouse, LastKeys, new CommandArgument(pos));
+                }
             }
 
             if (!Focused)
@@ -491,39 +320,16 @@ namespace CodeBox
         {
             if (lineIndex != -1)
             {
-                var col = FindColumnByLocation(Lines[lineIndex], loc);
-                return col == -1 ? Pos.Empty : new Pos(lineIndex, col);
+                var col = Locations.FindColumnByLocation(Lines[lineIndex], loc);
+                return new Pos(lineIndex, col);
             }
 
             return Pos.Empty;
         }
-
-        private int FindColumnByLocation(Line line, Point loc)
-        {
-            var stripe = (int)Math.Ceiling((loc.Y - Info.TextTop - line.Y - Scroll.Y) / (double)Info.LineHeight) - 1;
-            var cut = line.GetCut(stripe);
-            var sc = stripe > 0 ? line.GetCut(stripe - 1) + 1 : 0;
-            var width = Info.TextLeft;
-            var locX = loc.X - Scroll.X;
-            var app = Info.CharWidth * .15;
-
-            for (var i = sc; i < cut + 1; i++)
-            {
-                var c = line.CharAt(i);
-                var cw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
-
-                if (locX >= width - app && locX <= width + cw - app)
-                    return i;
-
-                width += cw;
-            }
-
-            return locX > width ? line.Length : 0;
-        }
-
+        
         protected override bool ProcessMnemonic(char charCode)
         {
-            return ProcessKey(charCode, lastKeys) || base.ProcessMnemonic(charCode);
+            return ProcessKey(charCode, LastKeys) || base.ProcessMnemonic(charCode);
         }
 
         const int WM_CHAR = 0x102;
@@ -548,7 +354,7 @@ namespace CodeBox
                     case '\u001b': //Esc
                         return true;
                     default:
-                        var arg = new CommandArgument(ch, null);
+                        var arg = new CommandArgument(ch);
                         CommandManager.Run<InsertCharCommand>(arg);
                         break;
                 }
@@ -560,17 +366,10 @@ namespace CodeBox
             return false;
         }
 
-        private Keys lastKeys;
         protected override void OnKeyUp(KeyEventArgs e)
         {
             base.OnKeyUp(e);
-
-            if (e.KeyCode == Keys.ShiftKey)
-                lastKeys &= ~Keys.Shift;
-            if (e.KeyCode == Keys.Alt)
-                lastKeys &= ~Keys.Alt;
-            if (e.KeyCode == Keys.ControlKey)
-                lastKeys &= ~Keys.Control;
+            LastKeys = Keys.None;
         }
 
         internal void Redraw()
@@ -613,63 +412,10 @@ namespace CodeBox
             if (e.KeyData == Keys.Insert)
                 Overtype = !Overtype;
 
-            lastKeys = e.Modifiers;
-            CommandManager.Run(lastKeys | e.KeyCode, default(CommandArgument));
+            LastKeys = e.Modifiers;
+            CommandManager.Run(LastKeys | e.KeyCode, default(CommandArgument));
         }
-
-        internal int FindLineByLocation(int locY)
-        {
-            var line = Lines[Scroll.FirstVisibleLine];
-            var lineIndex = 0;
-            var y = Info.TextTop;
-            locY = locY - Scroll.Y;
-            //var maxHeight = Info.EditorIntegralHeight; //Round by line height
-
-            do
-            {
-                var lh = line.Stripes * Info.LineHeight;
-
-                if (locY >= y && locY <= y + lh)// && locY <= maxHeight)
-                    return lineIndex;
-
-                if (Lines.Count == lineIndex + 1)
-                    return -1;
-
-                y += lh;
-                line = Lines[++lineIndex];
-            } while (true);
-        }
-
-        public void Copy()
-        {
-            CommandManager.Run<CopyCommand>(default(CommandArgument));
-        }
-
-        public void Cut()
-        {
-            CommandManager.Run<CutCommand>(default(CommandArgument));
-        }
-
-        public void Paste()
-        {
-            CommandManager.Run<PasteCommand>(default(CommandArgument));
-        }
-
-        public void Undo()
-        {
-            CommandManager.Undo();
-        }
-
-        public void Redo()
-        {
-            CommandManager.Redo();
-        }
-
-        public void SelectAll()
-        {
-            CommandManager.Run<SelectAllCommand>(default(CommandArgument));
-        }
-
+        
         public DocumentBuffer Buffer { get; private set; }
 
         public Document Document
@@ -710,28 +456,34 @@ namespace CodeBox
             }
         }
 
-        public EditorInfo Info { get; private set; }
+        internal Keys LastKeys { get; private set; }
+
+        internal MouseEvents Mouse { get; private set; }
+
+        public EditorInfo Info { get; }
 
         public EditorSettings Settings { get; }
 
-        public MarginList TopMargins { get; private set; }
+        public MarginList TopMargins { get; }
 
-        public MarginList LeftMargins { get; private set; }
+        public MarginList LeftMargins { get; }
 
-        public MarginList RightMargins { get; private set; }
+        public MarginList RightMargins { get; }
 
-        public MarginList BottomMargins { get; private set; }
+        public MarginList BottomMargins { get; }
 
         internal CachedBrush CachedBrush { get; private set; }
 
         internal CachedFont CachedFont { get; set; }
 
-        internal CaretRenderer Caret { get; private set; }
+        internal CaretRenderer Caret { get; }
         
-        internal CommandManager CommandManager { get; private set; }
+        public CommandManager CommandManager { get; }
 
-        public StyleManager Styles { get; private set; }
+        public StyleManager Styles { get; }
 
-        public ScrollingManager Scroll { get; private set; }
+        public ScrollingManager Scroll { get; }
+
+        public LocationManager Locations { get; }
     }
 }

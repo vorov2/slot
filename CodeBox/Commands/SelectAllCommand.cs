@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(ClearSelections)]
-    internal sealed class SelectAllCommand : Command
+    public sealed class SelectAllCommand : Command
     {
         public override void Execute(CommandArgument arg, Selection sel)
         {

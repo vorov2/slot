@@ -1,10 +1,10 @@
 ﻿using System;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    internal abstract class SelectionCommand : Command
+    public abstract class SelectionCommand : Command
     {
         public override void Execute(CommandArgument arg, Selection sel)
         {

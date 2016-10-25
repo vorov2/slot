@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Silent)]
-    internal sealed class CopyCommand : Command
+    public sealed class CopyCommand : Command
     {
         public override void Execute(CommandArgument arg, Selection sel)
         {

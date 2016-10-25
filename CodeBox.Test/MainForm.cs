@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using CodeBox.Margins;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
+using CodeBox.Commands;
 
 namespace CodeBox.Test
 {
@@ -24,12 +25,13 @@ namespace CodeBox.Test
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            BindCommands();
+            ed.Styles.StyleNeeded += editor1_StyleNeeded;
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new GutterMargin(ed));
             ed.RightMargins.Add(new ScrollBarMargin(ed));
             ed.BottomMargins.Add(new ScrollBarMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
-
             ed.Styles.Default.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
             ed.Styles.Default.BackColor = ColorTranslator.FromHtml("#1E1E1E");
             ed.Styles.LineNumber.ForeColor = ColorTranslator.FromHtml("#505050");
@@ -50,9 +52,55 @@ namespace CodeBox.Test
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#579032")
                 });
-
             ed.Text = File.ReadAllText(
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName,"test.json"));
+        }
+
+
+        private void BindCommands()
+        {
+            ed.CommandManager.Bind<RedoCommand>(Keys.Control | Keys.Y);
+            ed.CommandManager.Bind<UndoCommand>(Keys.Control | Keys.Z);
+            ed.CommandManager.Bind<SelectAllCommand>(Keys.Control | Keys.A);
+            ed.CommandManager.Bind<PasteCommand>(Keys.Control | Keys.V);
+            ed.CommandManager.Bind<CutCommand>(Keys.Control | Keys.X);
+            ed.CommandManager.Bind<CopyCommand>(Keys.Control | Keys.C);
+            ed.CommandManager.Bind<SetSelectionCommand>(MouseEvents.Click, Keys.None);
+            ed.CommandManager.Bind<AddSelectionCommand>(MouseEvents.Click, Keys.Control);
+            ed.CommandManager.Bind<NormalSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.Control);
+            ed.CommandManager.Bind<NormalSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.None);
+            ed.CommandManager.Bind<BlockSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.Alt);
+            ed.CommandManager.Bind<SelectWordCommand>(MouseEvents.DoubleClick, Keys.None);
+            ed.CommandManager.Bind<ShiftTabCommand>(Keys.Shift | Keys.Tab);
+            ed.CommandManager.Bind<TabCommand>(Keys.Tab);
+            ed.CommandManager.Bind<ClearSelectionCommand>(Keys.Escape);
+            ed.CommandManager.Bind<LeftCommand>(Keys.Left);
+            ed.CommandManager.Bind<RightCommand>(Keys.Right);
+            ed.CommandManager.Bind<UpCommand>(Keys.Up);
+            ed.CommandManager.Bind<DownCommand>(Keys.Down);
+            ed.CommandManager.Bind<HomeCommand>(Keys.Home);
+            ed.CommandManager.Bind<EndCommand>(Keys.End);
+            ed.CommandManager.Bind<InsertNewLineCommand>(Keys.Enter);
+            ed.CommandManager.Bind<DeleteBackCommand>(Keys.Back);
+            ed.CommandManager.Bind<DeleteCommand>(Keys.Delete);
+            ed.CommandManager.Bind<PageDownCommand>(Keys.PageDown);
+            ed.CommandManager.Bind<PageUpCommand>(Keys.PageUp);
+            ed.CommandManager.Bind<ExtendLeftCommand>(Keys.Shift | Keys.Left);
+            ed.CommandManager.Bind<ExtendRightCommand>(Keys.Shift | Keys.Right);
+            ed.CommandManager.Bind<ExtendUpCommand>(Keys.Shift | Keys.Up);
+            ed.CommandManager.Bind<ExtendDownCommand>(Keys.Shift | Keys.Down);
+            ed.CommandManager.Bind<ExtendEndCommand>(Keys.Shift | Keys.End);
+            ed.CommandManager.Bind<ExtendHomeCommand>(Keys.Shift | Keys.Home);
+            ed.CommandManager.Bind<WordLeftCommand>(Keys.Control | Keys.Left);
+            ed.CommandManager.Bind<WordRightCommand>(Keys.Control | Keys.Right);
+            ed.CommandManager.Bind<ExtendWordRightCommandCommand>(Keys.Control | Keys.Shift | Keys.Right);
+            ed.CommandManager.Bind<ExtendWordLeftCommandCommand>(Keys.Control | Keys.Shift | Keys.Left);
+            ed.CommandManager.Bind<ExtendPageDownCommand>(Keys.Control | Keys.PageDown);
+            ed.CommandManager.Bind<ExtendPageUpCommand>(Keys.Control | Keys.PageUp);
+            ed.CommandManager.Bind<DocumentHomeCommand>(Keys.Control | Keys.Home);
+            ed.CommandManager.Bind<DocumentEndCommand>(Keys.Control | Keys.End);
+            ed.CommandManager.Bind<ExtendDocumentHomeCommand>(Keys.Control | Keys.Shift | Keys.Home);
+            ed.CommandManager.Bind<ExtendDocumentEndCommand>(Keys.Control | Keys.Shift | Keys.End);
         }
         
 
@@ -61,37 +109,7 @@ namespace CodeBox.Test
             ed.Focus();
         }
         
-
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ed.Undo();
-        }
-
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ed.Redo();
-        }
-
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ed.Cut();
-        }
-
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ed.Copy();
-        }
-
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ed.Paste();
-        }
-
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ed.SelectAll();
-        }
-
+        
         private void Form1_Shown(object sender, EventArgs e)
         {
             Focus();

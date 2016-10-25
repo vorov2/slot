@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.ObjectModel
+namespace CodeBox.Commands
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class CommandBehaviorAttribute : Attribute
@@ -15,25 +15,5 @@ namespace CodeBox.ObjectModel
         }
 
         public ActionExponent Exponent { get; private set; }
-    }
-
-	[Flags]
-    public enum ActionExponent
-    {
-        None = 0x00,
-
-        Silent = 0x01,
-
-        RestoreCaret = 0x02,
-
-        Scroll = 0x04,
-
-        SingleCursor = 0x08,
-
-        ClearSelections = 0x10,
-
-        Undoable = 0x20,
-
-        Modify = 0x40
     }
 }

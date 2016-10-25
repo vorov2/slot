@@ -3,7 +3,7 @@ using CodeBox.ObjectModel;
 
 namespace CodeBox.Commands
 {
-    internal abstract class CaretCommand : Command
+    public abstract class CaretCommand : Command
     {
         public override void Execute(CommandArgument arg, Selection sel)
         {

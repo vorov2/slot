@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Undoable | Scroll)]
-    internal class InsertRangeCommand : Command //Tested
+    public class InsertRangeCommand : Command //Tested
     {
         private Selection undo;
         protected Selection redoSel;
@@ -33,7 +33,7 @@ namespace CodeBox.Commands
         {
             @string = null;
             var sel = redoSel;
-            var arg = new CommandArgument('\0', redoString.MakeString(Context.Buffer.Eol));
+            var arg = new CommandArgument(redoString.MakeString(Context.Buffer.Eol));
             @redoString = null;
             Execute(arg, sel);
             return sel.Caret;

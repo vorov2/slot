@@ -20,7 +20,7 @@ namespace CodeBox.Margins
         {
             Editor.Buffer.Selections.Truncate();
             var sel = Editor.Buffer.Selections.Main;
-            var lineIndex = Editor.FindLineByLocation(loc.Y);
+            var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
 
             if (lineIndex >= 0)
             {

@@ -48,7 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandKeys.cs" />
     <Compile Include="CommandManager.cs" />
+    <Compile Include="Commands\ActionExponent.cs" />
+    <Compile Include="Commands\AddSelectionCommand.cs" />
+    <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CopyCommand.cs" />
@@ -76,22 +80,26 @@
     <Compile Include="Commands\HomeCommand.cs" />
     <Compile Include="Commands\InsertNewLineCommand.cs" />
     <Compile Include="Commands\InsertRangeCommand.cs" />
+    <Compile Include="Commands\NormalSelectCommand.cs" />
     <Compile Include="Commands\PageDownCommand.cs" />
     <Compile Include="Commands\PageUpCommand.cs" />
     <Compile Include="Commands\PasteCommand.cs" />
     <Compile Include="Commands\CaretCommand.cs" />
+    <Compile Include="Commands\RedoCommand.cs" />
     <Compile Include="Commands\SelectAllCommand.cs" />
     <Compile Include="Commands\SelectionCommand.cs" />
     <Compile Include="Commands\SelectWordCommand.cs" />
+    <Compile Include="Commands\SetSelectionCommand.cs" />
     <Compile Include="Commands\ShiftTabCommand.cs" />
     <Compile Include="Commands\TabCommand.cs" />
+    <Compile Include="Commands\UndoCommand.cs" />
     <Compile Include="Commands\WordLeftCommand.cs" />
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Drawing\CachedFont.cs" />
-    <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="Drawing\CaretRenderer.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorSettings.cs" />
+    <Compile Include="LocationManager.cs" />
     <Compile Include="Margins\GutterMargin.cs" />
     <Compile Include="Margins\LineNumberMargin.cs" />
     <Compile Include="Margins\Margin.cs" />
@@ -100,19 +108,20 @@
     <Compile Include="Margins\MarginMethod.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
     <Compile Include="Margins\TopMargin.cs" />
-    <Compile Include="ObjectModel\CommandArgument.cs" />
-    <Compile Include="ObjectModel\CommandInfo.cs" />
+    <Compile Include="Commands\MouseEvents.cs" />
+    <Compile Include="Commands\CommandArgument.cs" />
+    <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="ObjectModel\DocumentBuffer.cs" />
     <Compile Include="ObjectModel\Character.cs" />
-    <Compile Include="ObjectModel\CommandBehaviorAttribute.cs" />
-    <Compile Include="ObjectModel\ICommand.cs" />
+    <Compile Include="Commands\CommandBehaviorAttribute.cs" />
+    <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\LeftCommand.cs" />
     <Compile Include="Commands\UpCommand.cs" />
     <Compile Include="Commands\RightCommand.cs" />
     <Compile Include="Editor.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ObjectModel\IEditorContext.cs" />
+    <Compile Include="Commands\IEditorContext.cs" />
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />
     <Compile Include="ObjectModel\Pos.cs" />

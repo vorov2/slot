@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.ObjectModel
+namespace CodeBox.Commands
 {
     internal sealed class CommandInfo
     {

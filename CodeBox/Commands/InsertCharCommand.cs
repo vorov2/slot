@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    internal class InsertCharCommand : Command //Tested
+    public class InsertCharCommand : Command //Tested
     {
         private Character @char;
         private Character @redoChar;
@@ -40,7 +40,7 @@ namespace CodeBox.Commands
         {
             @string = null;
             @char = Character.Empty;
-            var arg = new CommandArgument(redoChar.Char, null);
+            var arg = new CommandArgument(redoChar.Char);
             redoChar = Character.Empty;
             Execute(arg, redoSel);
             return new Pos(redoSel.Caret.Line, redoSel.Caret.Col + 1);

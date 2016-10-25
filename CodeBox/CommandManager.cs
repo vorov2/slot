@@ -4,22 +4,70 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
+using CodeBox.Commands;
 
 namespace CodeBox
 {
-    internal sealed class CommandManager
+    public sealed class CommandManager
     {
         private readonly Dictionary<Type, CommandInfo> commands;
-        private readonly Dictionary<Keys, CommandInfo> commandsByKeys;
+        private readonly Dictionary<CommandKeys, CommandInfo> commandsByKeys;
         private int counter;
         private bool undoGroup;
         private readonly Editor editor;
 
-        public CommandManager(Editor editor)
+        internal CommandManager(Editor editor)
         {
             commands = new Dictionary<Type, CommandInfo>();
-            commandsByKeys = new Dictionary<Keys, CommandInfo>();
+            commandsByKeys = new Dictionary<CommandKeys, CommandInfo>();
             this.editor = editor;
+            RegisterCommands();
+        }
+
+        private void RegisterCommands()
+        {
+            Register<RedoCommand>();
+            Register<UndoCommand>();
+            Register<SetSelectionCommand>();
+            Register<AddSelectionCommand>();
+            Register<NormalSelectCommand>();
+            Register<BlockSelectCommand>();
+            Register<InsertCharCommand>();
+            Register<SelectWordCommand>();
+            Register<CutCommand>();
+            Register<CopyCommand>();
+            Register<PasteCommand>();
+            Register<SelectAllCommand>();
+            Register<ShiftTabCommand>();
+            Register<TabCommand>();
+            Register<ClearSelectionCommand>();
+            Register<LeftCommand>();
+            Register<RightCommand>();
+            Register<UpCommand>();
+            Register<DownCommand>();
+            Register<HomeCommand>();
+            Register<EndCommand>();
+            Register<InsertNewLineCommand>();
+            Register<DeleteBackCommand>();
+            Register<DeleteCommand>();
+            Register<PageDownCommand>();
+            Register<PageUpCommand>();
+            Register<ExtendLeftCommand>();
+            Register<ExtendRightCommand>();
+            Register<ExtendUpCommand>();
+            Register<ExtendDownCommand>();
+            Register<ExtendEndCommand>();
+            Register<ExtendHomeCommand>();
+            Register<WordLeftCommand>();
+            Register<WordRightCommand>();
+            Register<ExtendWordRightCommandCommand>();
+            Register<ExtendWordLeftCommandCommand>();
+            Register<ExtendPageDownCommand>();
+            Register<ExtendPageUpCommand>();
+            Register<DocumentHomeCommand>();
+            Register<DocumentEndCommand>();
+            Register<ExtendDocumentHomeCommand>();
+            Register<ExtendDocumentEndCommand>();
         }
 
         public void BeginUndoAction()
@@ -126,7 +174,7 @@ namespace CodeBox
             return exp;
         }
 
-        public void Register<T>(Keys keys = Keys.None) where T : ICommand, new()
+        public void Register<T>() where T : ICommand, new()
         {
             var type = typeof(T);
             var attr = Attribute.GetCustomAttribute(type,
@@ -140,9 +188,24 @@ namespace CodeBox
             };
 
             commands.Add(type, ci);
+        }
 
-            if (keys != Keys.None)
-                commandsByKeys.Add(keys, ci);
+        public bool Bind<T>(Keys keys) where T : ICommand
+        {
+            return Bind<T>(MouseEvents.None, keys);
+        }
+
+        public bool Bind<T>(MouseEvents mouse, Keys keys) where T : ICommand
+        {
+            var type = typeof(T);
+            CommandInfo ci;
+
+            if (!commands.TryGetValue(type, out ci))
+                return false;
+
+            var ck = new CommandKeys(mouse, keys);
+            commandsByKeys.Add(ck, ci);
+            return true;
         }
 
         public void Run<T>(CommandArgument arg) where T : ICommand
@@ -155,9 +218,14 @@ namespace CodeBox
 
         public void Run(Keys keys, CommandArgument arg)
         {
+            Run(MouseEvents.None, keys, arg);
+        }
+
+        public void Run(MouseEvents mouse, Keys keys, CommandArgument arg)
+        {
             CommandInfo ci;
 
-            if (commandsByKeys.TryGetValue(keys, out ci))
+            if (commandsByKeys.TryGetValue(new CommandKeys(mouse, keys), out ci))
                 Run(arg, ci);
         }
 

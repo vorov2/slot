@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
-using static CodeBox.ObjectModel.ActionExponent;
+using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    internal class DeleteRangeCommand : Command
+    public class DeleteRangeCommand : Command
     {
         protected IEnumerable<Character> data;
         private Pos undoPos;
