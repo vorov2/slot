@@ -59,6 +59,44 @@ namespace CodeBox
             disposed = true;
         }
 
+        Point pointer;
+        const int WM_POINTERDOWN = 0x0246;
+        const int WM_POINTERUP = 0x0247;
+        const int WM_POINTERUPDATE = 0x0245;
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_POINTERUPDATE)
+            {
+                int x = m.LParam.ToInt32() & 0x0000FFFF;
+                int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
+                var pos = PointToClient(new Point(x, y));
+                //Console.WriteLine(pos);
+
+                if (Math.Abs(pos.Y - pointer.Y)  < Info.LineHeight)
+                    return;
+
+                Scroll.ScrollY((pos.Y - pointer.Y) / Info.LineHeight);
+                Console.WriteLine($"Pos:{pos};pounter:{pointer};Scroll:{(pos.Y - pointer.Y) / Info.LineHeight}");
+                pointer = pos;
+                return;
+            }
+            else if (m.Msg == WM_POINTERDOWN)
+            {
+                int x = m.LParam.ToInt32() & 0x0000FFFF;
+                int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
+                var pos = PointToClient(new Point(x, y));
+                pointer = pos;
+                return;
+            }
+            else if (m.Msg == WM_POINTERUP)
+            {
+                pointer = default(Point);
+                return;
+            }
+
+            base.WndProc(ref m);
+        }
+
         private void InitializeBuffer(DocumentBuffer buffer)
         {
             buffer.Eol = Settings.Eol;
