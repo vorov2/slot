@@ -165,7 +165,7 @@ namespace CodeBox
         {
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
-
+            
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];

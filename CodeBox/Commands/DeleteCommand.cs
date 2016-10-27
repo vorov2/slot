@@ -33,7 +33,7 @@ namespace CodeBox.Commands
                     @char = ln.CharacterAt(caret.Col);
                     ln.RemoveAt(caret.Col);
                 }
-                else if (caret.Line < lines.Count)
+                else if (caret.Line < lines.Count - 1)
                 {
                     var nl = lines[caret.Line + 1];
                     @char = Character.NewLine;

@@ -52,7 +52,7 @@ namespace CodeBox.Test
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#579032")
                 });
-            ed.Text = File.ReadAllText(
+            ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName,"test.json"));
         }
 
