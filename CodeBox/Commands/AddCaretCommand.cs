@@ -3,12 +3,12 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(None)]
-    public sealed class SetSelectionCommand : Command
+    [CommandBehavior(SingleRun)]
+    public sealed class AddCaretCommand : Command
     {
         public override void Execute(CommandArgument arg, Selection sel)
         {
-            Buffer.Selections.Set(new Selection(arg.Pos));
+            Buffer.Selections.Add(new Selection(arg.Pos));
         }
     }
 }

@@ -28,8 +28,8 @@ namespace CodeBox
         {
             Register<RedoCommand>();
             Register<UndoCommand>();
-            Register<SetSelectionCommand>();
-            Register<AddSelectionCommand>();
+            Register<SetCaretCommand>();
+            Register<AddCaretCommand>();
             Register<NormalSelectCommand>();
             Register<BlockSelectCommand>();
             Register<InsertCharCommand>();
@@ -233,7 +233,8 @@ namespace CodeBox
         {
             var lines = editor.Lines;
             var exp = ci.Exponent;
-            var single = editor.Buffer.Selections.Count == 1;
+            var single = editor.Buffer.Selections.Count == 1
+                || (exp & ActionExponent.SingleRun) == ActionExponent.SingleRun;
             var mainSel = editor.Buffer.Selections.Main;
             var qry = single ? null : editor.Buffer.Selections
                 .OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
@@ -244,9 +245,7 @@ namespace CodeBox
             if (undo)
                 BeginUndoAction();
 
-            if ((exp & ActionExponent.SingleCursor) == ActionExponent.SingleCursor)
-                editor.Buffer.Selections.Truncate();
-            else if ((exp & ActionExponent.ClearSelections) == ActionExponent.ClearSelections)
+            if ((exp & ActionExponent.ClearSelections) == ActionExponent.ClearSelections)
             {
                 if (single)
                     mainSel.Clear();

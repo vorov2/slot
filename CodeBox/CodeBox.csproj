@@ -51,7 +51,7 @@
     <Compile Include="Commands\CommandKeys.cs" />
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\ActionExponent.cs" />
-    <Compile Include="Commands\AddSelectionCommand.cs" />
+    <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
     <Compile Include="Commands\Command.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Commands\SelectAllCommand.cs" />
     <Compile Include="Commands\SelectionCommand.cs" />
     <Compile Include="Commands\SelectWordCommand.cs" />
-    <Compile Include="Commands\SetSelectionCommand.cs" />
+    <Compile Include="Commands\SetCaretCommand.cs" />
     <Compile Include="Commands\ShiftTabCommand.cs" />
     <Compile Include="Commands\TabCommand.cs" />
     <Compile Include="Commands\UndoCommand.cs" />

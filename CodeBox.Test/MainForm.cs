@@ -65,8 +65,8 @@ namespace CodeBox.Test
             ed.CommandManager.Bind<PasteCommand>(Keys.Control | Keys.V);
             ed.CommandManager.Bind<CutCommand>(Keys.Control | Keys.X);
             ed.CommandManager.Bind<CopyCommand>(Keys.Control | Keys.C);
-            ed.CommandManager.Bind<SetSelectionCommand>(MouseEvents.Click, Keys.None);
-            ed.CommandManager.Bind<AddSelectionCommand>(MouseEvents.Click, Keys.Control);
+            ed.CommandManager.Bind<SetCaretCommand>(MouseEvents.Click, Keys.None);
+            ed.CommandManager.Bind<AddCaretCommand>(MouseEvents.Click, Keys.Control);
             ed.CommandManager.Bind<NormalSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.Control);
             ed.CommandManager.Bind<NormalSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.None);
             ed.CommandManager.Bind<BlockSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.Alt);

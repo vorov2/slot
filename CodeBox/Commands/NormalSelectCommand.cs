@@ -8,12 +8,11 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll)]
+    [CommandBehavior(Scroll | SingleRun)]
     public sealed class NormalSelectCommand : Command
     {
         public override void Execute(CommandArgument arg, Selection sel)
         {
-            Console.WriteLine("NornmalSelectCommand");
             DoSelection(arg.Pos);
         }
 

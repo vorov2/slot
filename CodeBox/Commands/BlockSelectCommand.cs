@@ -8,7 +8,7 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll)]
+    [CommandBehavior(Scroll | SingleRun)]
     public sealed class BlockSelectCommand : Command
     {
         public override void Execute(CommandArgument arg, Selection sel)

@@ -13,7 +13,7 @@ namespace CodeBox.Commands
 
         Scroll = 0x04,
 
-        SingleCursor = 0x08,
+        SingleRun = 0x08,
 
         ClearSelections = 0x10,
 
