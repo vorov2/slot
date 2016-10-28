@@ -26,14 +26,14 @@ namespace CodeBox
             get { return editor.ClientSize.Width - editor.RightMargins.TotalWidth; }
         }
 
-        public int TextBotom
+        public int TextBottom
         {
             get { return editor.ClientSize.Height - editor.BottomMargins.TotalWidth; }
         }
         
         public int TextHeight
         {
-            get { return TextBotom - TextTop; }
+            get { return TextBottom - TextTop; }
         }
 
         public int TextWidth

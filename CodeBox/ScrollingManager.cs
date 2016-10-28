@@ -1,11 +1,13 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using System.Drawing;
 
 namespace CodeBox
 {
     public sealed class ScrollingManager
     {
         private readonly Editor editor;
+        private Point pointer;
 
         internal ScrollingManager(Editor editor)
         {
@@ -69,19 +71,42 @@ namespace CodeBox
             else
                 return 0;
         }
-        
+
         private int IsLineStripeVisible(Pos pos)
         {
-            var ln = editor.Document.Lines[pos.Line];
-            var stripe = ln.GetStripe(pos.Col);
-            var cy = editor.Info.TextTop + ln.Y + stripe * editor.Info.LineHeight + Y;
+            var count = 0;
+            var stripe = editor.Lines[pos.Line].GetStripe(pos.Col);
 
-            if (cy < editor.Info.TextTop)
-                return -(cy / editor.Info.LineHeight - 1);
-            else if (cy + editor.Info.LineHeight > editor.Info.TextBotom)
-                return -((cy - editor.Info.TextTop) / editor.Info.LineHeight);
-            else
-                return 0;
+            if (pos.Line >= LastVisibleLine)
+            {
+                for (var i = LastVisibleLine; ; i++)
+                {
+                    var ln = editor.Lines[i];
+                    
+                    for (var j = 0; j < ln.Stripes; j++)
+                    {
+                        if (pos.Line == i && stripe == j)
+                            return count;
+                        count--;
+                    }
+                }
+            }
+            else if (pos.Line <= FirstVisibleLine)
+            {
+                for (var i = FirstVisibleLine; ; i--)
+                {
+                    var ln = editor.Lines[i];
+
+                    for (var j = 0; j < ln.Stripes; j++)
+                    {
+                        if (pos.Line == i && stripe == j)
+                            return count;
+                        count++;
+                    }
+                }
+            }
+
+            return count;
         }
 
         public void ScrollY(int times)
@@ -104,7 +129,8 @@ namespace CodeBox
 
             //scroll by whole lines
             var lines = (int)Math.Round((double)value / editor.Info.LineHeight);
-            var fvl = CalculateFirstVisibleLine(-lines);
+            var delta = Y / editor.Info.LineHeight - lines;
+            var fvl = CalculateFirstVisibleLine(delta);
 
             if (fvl >= editor.Lines.Count)
                 fvl = editor.Lines.Count - 1;
@@ -131,42 +157,62 @@ namespace CodeBox
             X = value;
             OnScroll();
         }
-        
+
         private void OnScroll()
         {
             editor.Styles.Restyle();
             editor.Redraw();
         }
 
-        private int CalculateFirstVisibleLine(int stripes)
+        private int CalculateFirstVisibleLine(int delta)
         {
-            var len = editor.Document.Lines.Count;
-            var cs = 0;
+            if (delta == 0)
+                return FirstVisibleLine;
 
-            for (var i = 0; i < len; i++)
+            var stripes = 0;
+            var sign = Math.Sign(delta);
+            var abs = Math.Abs(delta);
+            var ret = 0;
+            var max = delta > 0 ? FirstVisibleLine + delta + 1 : FirstVisibleLine + delta - 1;
+            max = max >= editor.Lines.Count ? editor.Lines.Count - 1
+                : max < 0 ? 0 : max;
+
+            for (var i = FirstVisibleLine + sign
+                ; delta > 0 ? i < max : i > max
+                ; i += sign)
             {
-                cs += editor.Lines[i].Stripes;
+                stripes += editor.Lines[i].Stripes;
 
-                if (cs >= stripes)
-                    return i;
+                if (stripes > abs)
+                {
+                    ret = i - 1;
+                    break;
+                }
+                else if (stripes == abs)
+                {
+                    ret = i;
+                    break;
+                }
             }
 
-            return len - 1;
+            return ret < 0 ? 0 : ret;
         }
 
         private int? CalculateLastVisibleLine()
         {
             var len = editor.Document.Lines.Count;
             var lh = editor.Info.LineHeight;
-            var maxh = editor.Info.TextBotom - editor.Info.TextTop - Y;
+            var maxh = editor.Info.TextBottom;
+            var y = editor.Info.TextTop;
 
             for (var i = FirstVisibleLine; i < len; i++)
             {
                 var ln = editor.Document.Lines[i];
-                var lnEnd = ln.Y + ln.Stripes * lh;
 
-                if (ln.Y >= maxh)
+                if (y >= maxh)
                     return i > FirstVisibleLine ? i - 1 : i;
+
+                y += ln.Stripes * editor.Info.LineHeight;
             }
 
             return len > FirstVisibleLine ? (int?)len - 1 : null;
@@ -181,7 +227,6 @@ namespace CodeBox
 
                 foreach (var ln in editor.Document.Lines)
                 {
-                    ln.Y = y;
                     var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth;
                     y += editor.Info.LineHeight;
 
@@ -201,7 +246,6 @@ namespace CodeBox
                 foreach (var ln in editor.Document.Lines)
                 {
                     ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
-                    ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
                 }
 
@@ -213,6 +257,32 @@ namespace CodeBox
             YMax = YMax < 0 ? 0 : YMax;
 
             _lastVisibleLine = null;
+        }
+
+        internal void OnPointerDown(Point loc)
+        {
+            pointer = loc;
+        }
+
+        internal void OnPointerUp(Point loc)
+        {
+            pointer = default(Point);
+        }
+
+        internal void OnPointerUpdate(Point loc)
+        {
+            var diffY = Math.Abs(loc.Y - pointer.Y);
+            var diffX = Math.Abs(loc.X - pointer.X);
+
+            if (diffY < editor.Info.LineHeight && diffX < editor.Info.CharWidth)
+                return;
+
+            if (diffY > diffX)
+                ScrollY((loc.Y - pointer.Y) / editor.Info.LineHeight);
+            else
+                ScrollX((loc.X - pointer.X) / editor.Info.CharWidth);
+
+            pointer = loc;
         }
 
         private int _firstVisibleLine;

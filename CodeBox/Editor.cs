@@ -19,6 +19,12 @@ namespace CodeBox
 {
     public class Editor : Control, IEditorContext
     {
+        private const int WM_POINTERDOWN = 0x0246;
+        private const int WM_POINTERUP = 0x0247;
+        private const int WM_POINTERUPDATE = 0x0245;
+        private const int WM_MOUSEHWHEEL = 0x020E;
+        private const int WM_CHAR = 0x102;
+
         public Editor()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
@@ -59,38 +65,35 @@ namespace CodeBox
             disposed = true;
         }
 
-        Point pointer;
-        const int WM_POINTERDOWN = 0x0246;
-        const int WM_POINTERUP = 0x0247;
-        const int WM_POINTERUPDATE = 0x0245;
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_POINTERUPDATE)
+            if (m.Msg == WM_POINTERUPDATE || m.Msg == WM_POINTERUP || m.Msg == WM_POINTERDOWN)
             {
-                int x = m.LParam.ToInt32() & 0x0000FFFF;
-                int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
+                var x = m.LParam.ToInt32() & 0x0000FFFF;
+                var y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
                 var pos = PointToClient(new Point(x, y));
-                //Console.WriteLine(pos);
 
-                if (Math.Abs(pos.Y - pointer.Y)  < Info.LineHeight)
+                if (m.Msg == WM_POINTERUPDATE)
+                {
+                    Scroll.OnPointerUpdate(pos);
                     return;
-
-                Scroll.ScrollY((pos.Y - pointer.Y) / Info.LineHeight);
-                Console.WriteLine($"Pos:{pos};pounter:{pointer};Scroll:{(pos.Y - pointer.Y) / Info.LineHeight}");
-                pointer = pos;
-                return;
+                }
+                else if (m.Msg == WM_POINTERDOWN)
+                {
+                    Scroll.OnPointerDown(pos);
+                    return;
+                }
+                else if (m.Msg == WM_POINTERUP)
+                {
+                    Scroll.OnPointerUp(pos);
+                    return;
+                }
             }
-            else if (m.Msg == WM_POINTERDOWN)
+            else if (m.Msg == WM_MOUSEHWHEEL)
             {
-                int x = m.LParam.ToInt32() & 0x0000FFFF;
-                int y = (int)((m.LParam.ToInt32() & 0xFFFF0000) >> 16);
-                var pos = PointToClient(new Point(x, y));
-                pointer = pos;
-                return;
-            }
-            else if (m.Msg == WM_POINTERUP)
-            {
-                pointer = default(Point);
+                var delta = (short)((m.WParam.ToInt32() >> 16) & 0xFFFF);
+                Scroll.ScrollX((delta / 120) * 2);
+                m.Result = (IntPtr)1;
                 return;
             }
 
@@ -116,12 +119,12 @@ namespace CodeBox
             DrawMargins(0, e.Graphics, TopMargins);
             DrawMargins(0, e.Graphics, LeftMargins);
 
-            e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
+            //e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             DrawLines(e.Graphics);
             //Console.WriteLine("Time: " + (DateTime.Now - dt).TotalMilliseconds);
 
-            e.Graphics.ResetTransform();
-            DrawMargins(Info.TextBotom, e.Graphics, BottomMargins);
+            //e.Graphics.ResetTransform();
+            DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
             DrawMargins(ClientSize.Width - Info.CharWidth, e.Graphics, RightMargins);
             base.OnPaint(e);
         }
@@ -165,21 +168,22 @@ namespace CodeBox
         {
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
+            var y = Info.TextTop;
 
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];
-                DrawLine(g, ln, i);
+                DrawLine(g, ln, i, y);
+                y += Info.LineHeight * ln.Stripes;
             }
         }
 
-        private void DrawLine(Graphics g, Line line, int lineIndex)
+        private void DrawLine(Graphics g, Line line, int lineIndex, int y)
         {
             var lmarg = Info.TextLeft;
             var tmarg = Info.TextTop;
             var cwidth = Info.TextRight;
-            var x = lmarg;
-            var y = tmarg + line.Y;
+            var x = lmarg + Scroll.X;
             var oldcut = 0;
             var sel = Buffer.Selections.IsLineSelected(lineIndex);
 
@@ -194,8 +198,7 @@ namespace CodeBox
                 {
                     var c = line.CharAt(i);
                     var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
-                    var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth
-                        && y + Scroll.Y >= tmarg;
+                    var visible = x >= lmarg && x + xw <= cwidth && y >= tmarg;
 
                     if (visible)
                     {
@@ -286,13 +289,12 @@ namespace CodeBox
 
             if (leftMouseDown)
             {
-                var lineIndex = Locations.FindLineByLocation(e.Location.Y);
-                p = lineIndex != -1 ? FindTextLocation(lineIndex, e.Location) : Pos.Empty;
+                p = Locations.LocationToPosition(e.Location);
 
                 if (p.IsEmpty && e.Y - Scroll.Y > Info.TextIntegralHeight
                     && Scroll.LastVisibleLine < Lines.Count - 1)
                 {
-                    lineIndex = Scroll.LastVisibleLine;
+                    var lineIndex = Scroll.LastVisibleLine;
                     var ln = Document.Lines[lineIndex];
                     p = new Pos(lineIndex + 1, ln.Length <= p.Col ? p.Col : ln.Length);
                 }
@@ -343,8 +345,7 @@ namespace CodeBox
                     mlist.CallMarginMethod(MarginMethod.MouseDown, e.Location);
                 else
                 {
-                    var lineIndex = Locations.FindLineByLocation(e.Location.Y);
-                    var pos = FindTextLocation(lineIndex, e.Location);
+                    var pos = Locations.LocationToPosition(e.Location);
                     pos = pos.IsEmpty ? default(Pos) : pos;
                     CommandManager.Run(Mouse, LastKeys, new CommandArgument(pos));
                 }
@@ -353,24 +354,11 @@ namespace CodeBox
             if (!Focused)
                 Focus();
         }
-
-        private Pos FindTextLocation(int lineIndex, Point loc)
-        {
-            if (lineIndex != -1)
-            {
-                var col = Locations.FindColumnByLocation(Lines[lineIndex], loc);
-                return new Pos(lineIndex, col);
-            }
-
-            return Pos.Empty;
-        }
         
         protected override bool ProcessMnemonic(char charCode)
         {
             return ProcessKey(charCode, LastKeys) || base.ProcessMnemonic(charCode);
         }
-
-        const int WM_CHAR = 0x102;
 
         protected override bool ProcessKeyMessage(ref Message m)
         {

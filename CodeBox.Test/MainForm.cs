@@ -22,7 +22,6 @@ namespace CodeBox.Test
             InitializeComponent();
         }
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
             BindCommands();
@@ -55,7 +54,6 @@ namespace CodeBox.Test
             ed.Text = File.ReadAllText(
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName,"test.json"));
         }
-
 
         private void BindCommands()
         {
@@ -102,19 +100,17 @@ namespace CodeBox.Test
             ed.CommandManager.Bind<ExtendDocumentHomeCommand>(Keys.Control | Keys.Shift | Keys.Home);
             ed.CommandManager.Bind<ExtendDocumentEndCommand>(Keys.Control | Keys.Shift | Keys.End);
         }
-        
 
         private void Form1_Activated(object sender, EventArgs e)
         {
             ed.Focus();
         }
-        
-        
+
         private void Form1_Shown(object sender, EventArgs e)
         {
             Focus();
         }
-        
+
         private void editor1_StyleNeeded(object sender, StyleNeededEventArgs e)
         {
             //Console.WriteLine("StyleNeeded:"+count++);

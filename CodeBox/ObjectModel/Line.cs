@@ -30,8 +30,6 @@ namespace CodeBox.ObjectModel
             return string.IsNullOrEmpty(line) ? new Line(new char[0], id) : new Line(line.ToCharArray(), id);
         }
 
-        internal int Y { get; set; }
-
         internal bool TrailingCaret { get; set; }
 
         public int Id { get; private set; }
