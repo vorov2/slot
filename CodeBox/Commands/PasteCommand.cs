@@ -12,11 +12,11 @@ namespace CodeBox.Commands
     [CommandBehavior(Modify | RestoreCaret | Undoable | Scroll)]
     public sealed class PasteCommand : InsertRangeCommand
     {
-        public override void Execute(CommandArgument arg, Selection sel)
+        public override bool Execute(CommandArgument arg, Selection sel)
         {
             var str = Clipboard.GetText();
             arg = new CommandArgument(str);
-            base.Execute(arg, sel);
+            return base.Execute(arg, sel);
         }
     }
 }

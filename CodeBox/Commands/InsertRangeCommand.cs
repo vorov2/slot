@@ -16,7 +16,7 @@ namespace CodeBox.Commands
         private IEnumerable<Character> @string;
         private IEnumerable<Character> @redoString;
 
-        public override void Execute(CommandArgument arg, Selection sel)
+        public override bool Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
 
@@ -27,6 +27,7 @@ namespace CodeBox.Commands
             var pos = InsertRange(Document, sel.Start, @redoString);
             undo = new Selection(sel.Start, pos);
             sel.Clear(pos);
+            return true;
         }
 
         public override Pos Redo()

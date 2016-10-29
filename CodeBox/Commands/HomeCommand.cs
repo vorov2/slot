@@ -19,8 +19,9 @@ namespace CodeBox.Commands
         internal static Pos MoveHome(Document doc, Pos pos)
         {
             var ln = doc.Lines[pos.Line];
+            var ch = '\0';
 
-            if (pos.Col > 0 && ln.CharAt(pos.Col - 1) == ' ')
+            if (pos.Col > 0 && ((ch = ln.CharAt(pos.Col - 1)) == ' ' || ch == '\t'))
                 return new Pos(pos.Line, 0);
 
             for (var i = 0; i < ln.Length; i++)

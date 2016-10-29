@@ -70,10 +70,16 @@ namespace CodeBox
             Register<ExtendDocumentEndCommand>();
         }
 
-        public void BeginUndoAction()
+        public bool BeginUndoAction()
         {
-            counter++;
-            undoGroup = true;
+            if (!undoGroup)
+            {
+                counter++;
+                undoGroup = true;
+                return true;
+            }
+
+            return false;
         }
 
         public void EndUndoAction()
@@ -83,9 +89,6 @@ namespace CodeBox
 
         private void AddCommand(ICommand cmd, ActionExponent exp)
         {
-            if (!undoGroup)
-                counter++;
-
             editor.Buffer.UndoStack.Push(new CommandInfo { Id = counter, Command = cmd, Exponent = exp });
         }
 
@@ -241,9 +244,10 @@ namespace CodeBox
             var undo = (exp & ActionExponent.Undoable) == ActionExponent.Undoable;
             var restoreCaret = (exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret;
             var cmd = ci.Command;
+            var thisUndo = false;
 
             if (undo)
-                BeginUndoAction();
+                thisUndo = BeginUndoAction();
 
             if ((exp & ActionExponent.ClearSelections) == ActionExponent.ClearSelections)
             {
@@ -265,7 +269,9 @@ namespace CodeBox
                 }
 
                 cmd.Context = editor;
-                cmd.Execute(arg, mainSel);
+
+                if (!cmd.Execute(arg, mainSel) && undo)
+                    editor.Buffer.UndoStack.Pop();
 
                 if (restoreCaret)
                     AttachCaret(mainSel.Caret);
@@ -280,7 +286,9 @@ namespace CodeBox
                     }
 
                     cmd.Context = editor;
-                    cmd.Execute(arg, sel);
+
+                    if (!cmd.Execute(arg, sel) && undo)
+                        editor.Buffer.UndoStack.Pop();
 
                     if (restoreCaret)
                         AttachCaret(sel.Caret);
@@ -288,7 +296,7 @@ namespace CodeBox
                     lastSel = sel;
                 }
 
-            if (undo)
+            if (thisUndo)
                 EndUndoAction();
 
             if (restoreCaret)

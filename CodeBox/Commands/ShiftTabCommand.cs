@@ -13,11 +13,12 @@ namespace CodeBox.Commands
     {
         private Selection redoSel;
 
-        public override void Execute(CommandArgument arg, Selection sel)
+        public override bool Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
             TabCommand.Unindent(Context, sel);
             ShiftSel(sel);
+            return true;
         }
 
         public override Pos Redo()

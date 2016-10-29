@@ -129,8 +129,7 @@ namespace CodeBox
 
             //scroll by whole lines
             var lines = (int)Math.Round((double)value / editor.Info.LineHeight);
-            var delta = Y / editor.Info.LineHeight - lines;
-            var fvl = CalculateFirstVisibleLine(delta);
+            var fvl = CalculateFirstVisibleLine(-lines);
 
             if (fvl >= editor.Lines.Count)
                 fvl = editor.Lines.Count - 1;
@@ -164,38 +163,56 @@ namespace CodeBox
             editor.Redraw();
         }
 
-        private int CalculateFirstVisibleLine(int delta)
+        public int FirstVisibleStripe;
+        private int CalculateFirstVisibleLine(int stripes)
         {
-            if (delta == 0)
-                return FirstVisibleLine;
+            var len = editor.Document.Lines.Count;
+            var cs = 0;
 
-            var stripes = 0;
-            var sign = Math.Sign(delta);
-            var abs = Math.Abs(delta);
-            var ret = 0;
-            var max = delta > 0 ? FirstVisibleLine + delta + 1 : FirstVisibleLine + delta - 1;
-            max = max >= editor.Lines.Count ? editor.Lines.Count - 1
-                : max < 0 ? 0 : max;
-
-            for (var i = FirstVisibleLine + sign
-                ; delta > 0 ? i < max : i > max
-                ; i += sign)
+            for (var i = 0; i < len; i++)
             {
-                stripes += editor.Lines[i].Stripes;
+                var ln = editor.Lines[i];
 
-                if (stripes > abs)
+                for (var j = 0; j < ln.Stripes; j++)
                 {
-                    ret = i - 1;
-                    break;
-                }
-                else if (stripes == abs)
-                {
-                    ret = i;
-                    break;
+                    if (cs == stripes)
+                    {
+                        FirstVisibleStripe = j;
+                        return i;
+                    }
+
+                    cs++;
                 }
             }
 
-            return ret < 0 ? 0 : ret;
+            return len - 1;
+            
+
+            //if (delta == 0)
+            //    return FirstVisibleLine;
+
+            //var stripes = 0;
+            //var sign = Math.Sign(delta);
+            //var abs = Math.Abs(delta);
+            //var ret = 0;
+            //var max = delta > 0 ? FirstVisibleLine + delta + 2 : FirstVisibleLine + delta - 2;
+            //max = max >= editor.Lines.Count ? editor.Lines.Count - 1
+            //    : max < 0 ? 0 : max;
+
+            //for (var i = FirstVisibleLine + sign
+            //    ; delta > 0 ? i < max : i > max
+            //    ; i += sign)
+            //{
+            //    stripes += editor.Lines[i].Stripes;
+
+            //    if (stripes >= abs)
+            //    {
+            //        ret = i;
+            //        break;
+            //    }
+            //}
+
+            //return ret < 0 ? 0 : ret;
         }
 
         private int? CalculateLastVisibleLine()
@@ -220,13 +237,16 @@ namespace CodeBox
 
         public void InvalidateLines()
         {
+            var dt = DateTime.Now;
             if (!editor.Buffer.WordWrap)
             {
                 var maxWidth = 0;
                 var y = 0;
 
                 foreach (var ln in editor.Document.Lines)
+                //for (var i = FirstVisibleLine; i < LastVisibleLine + 1; i++)
                 {
+                    //var ln = editor.Lines[i];
                     var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth;
                     y += editor.Info.LineHeight;
 
@@ -255,8 +275,8 @@ namespace CodeBox
 
             YMax = YMax - editor.Info.TextHeight + editor.Info.LineHeight * 5;
             YMax = YMax < 0 ? 0 : YMax;
-
             _lastVisibleLine = null;
+            Console.WriteLine(DateTime.Now - dt);
         }
 
         internal void OnPointerDown(Point loc)
@@ -308,7 +328,15 @@ namespace CodeBox
             }
         }
 
-        public int Y { get; private set; }
+        private int _y;
+        public int Y
+        {
+            get { return _y; }
+            set
+            {
+                _y = value;
+            }
+        }
 
         public int X { get; private set; }
 

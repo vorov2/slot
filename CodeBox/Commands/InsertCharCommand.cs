@@ -17,7 +17,7 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override void Execute(CommandArgument arg, Selection sel)
+        public override bool Execute(CommandArgument arg, Selection sel)
         {
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
@@ -34,6 +34,7 @@ namespace CodeBox.Commands
             @redoChar = new Character(arg.Char);
             Document.Lines[sel.Caret.Line].Insert(sel.Caret.Col, @redoChar);
             sel.Clear(new Pos(sel.Caret.Line, sel.Caret.Col + 1));
+            return true;
         }
 
         public override Pos Redo()

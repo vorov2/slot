@@ -169,16 +169,16 @@ namespace CodeBox
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
             var y = Info.TextTop;
+            Console.WriteLine($"Draw {fvl} and {lvl}");
 
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];
-                DrawLine(g, ln, i, y);
-                y += Info.LineHeight * ln.Stripes;
+                y = DrawLine(g, ln, i, y);
             }
         }
 
-        private void DrawLine(Graphics g, Line line, int lineIndex, int y)
+        private int DrawLine(Graphics g, Line line, int lineIndex, int y)
         {
             var lmarg = Info.TextLeft;
             var tmarg = Info.TextTop;
@@ -194,60 +194,66 @@ namespace CodeBox
                 if (cut == line.Length)
                     cut++;
 
-                for (var i = oldcut; i < cut; i++)
+                if (lineIndex != Scroll.FirstVisibleLine || j >= Scroll.FirstVisibleStripe)
                 {
-                    var c = line.CharAt(i);
-                    var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
-                    var visible = x >= lmarg && x + xw <= cwidth && y >= tmarg;
-
-                    if (visible)
+                    for (var i = oldcut; i < cut; i++)
                     {
-                        var style = default(Style);
-                        var rect = new Rectangle(x, y, xw, Info.LineHeight);
-                        var pos = new Pos(lineIndex, i);
-                        var high = sel && Buffer.Selections.IsSelected(pos);
+                        var c = line.CharAt(i);
+                        var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
+                        var visible = x >= lmarg && x + xw <= cwidth;
 
-                        if (c == '\0' || c == '\t' || c == ' ')
+                        if (visible)
                         {
-                            style = Styles.GetStyle((int)StandardStyle.SpecialSymbol);
-                            style.NextStyle = null;
-                        }
-                        else
-                            style = line.GetStyle(i, Styles);
+                            var style = default(Style);
+                            var rect = new Rectangle(x, y, xw, Info.LineHeight);
+                            var pos = new Pos(lineIndex, i);
+                            var high = sel && Buffer.Selections.IsSelected(pos);
 
-                        if (high)
-                        {
-                            var sstyle = Styles.GetStyle((int)StandardStyle.Selection);
-                            sstyle.NextStyle = style;
-                            style = sstyle;
-                        }
-
-                        style.DrawAll(g, rect, pos);
-
-                        if (Buffer.Selections.HasCaret(pos))
-                        {
-                            var blink = Buffer.Selections.Main.Caret.Line == lineIndex
-                                && Buffer.Selections.Main.Caret.Col == i;
-
-                            if (blink)
+                            if (c == '\0' || c == '\t' || c == ' ')
                             {
-                                var cg = Caret.GetDrawingSurface();
-                                cg.Clear(high ? Styles.Selection.Color : Styles.Default.BackColor);
-                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
-                                Caret.Resume();
+                                style = Styles.GetStyle((int)StandardStyle.SpecialSymbol);
+                                style.NextStyle = null;
+                            }
+                            else
+                                style = line.GetStyle(i, Styles);
+
+                            if (high)
+                            {
+                                var sstyle = Styles.GetStyle((int)StandardStyle.Selection);
+                                sstyle.NextStyle = style;
+                                style = sstyle;
                             }
 
-                            Caret.DrawCaret(g, x, y, blink);
+                            style.DrawAll(g, rect, pos);
+
+                            if (Buffer.Selections.HasCaret(pos))
+                            {
+                                var blink = Buffer.Selections.Main.Caret.Line == lineIndex
+                                    && Buffer.Selections.Main.Caret.Col == i;
+
+                                if (blink)
+                                {
+                                    var cg = Caret.GetDrawingSurface();
+                                    cg.Clear(high ? Styles.Selection.Color : Styles.Default.BackColor);
+                                    style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
+                                    Caret.Resume();
+                                }
+
+                                Caret.DrawCaret(g, x, y, blink);
+                            }
                         }
+
+                        x += xw;
                     }
 
-                    x += xw;
+                    y += Info.LineHeight;
                 }
 
                 oldcut = cut;
-                y += Info.LineHeight;
                 x = lmarg;
             }
+
+            return y;
         }
 
         public override Color BackColor

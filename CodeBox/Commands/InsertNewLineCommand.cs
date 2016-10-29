@@ -15,7 +15,7 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override void Execute(CommandArgument arg, Selection selection)
+        public override bool Execute(CommandArgument arg, Selection selection)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
@@ -25,6 +25,7 @@ namespace CodeBox.Commands
 
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
+            return true;
         }
 
         public override Pos Redo()

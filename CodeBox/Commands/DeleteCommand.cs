@@ -16,12 +16,16 @@ namespace CodeBox.Commands
         private Selection redoSel;
         private Pos undoPos;
 
-        public override void Execute(CommandArgument arg, Selection sel)
+        public override bool Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
+            var res = false;
 
             if (!sel.IsEmpty)
+            {
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
+                res = true;
+            }
             else
             {
                 var lines = Document.Lines;
@@ -32,6 +36,7 @@ namespace CodeBox.Commands
                 {
                     @char = ln.CharacterAt(caret.Col);
                     ln.RemoveAt(caret.Col);
+                    return res;
                 }
                 else if (caret.Line < lines.Count - 1)
                 {
@@ -39,10 +44,12 @@ namespace CodeBox.Commands
                     @char = Character.NewLine;
                     lines.Remove(nl);
                     ln.Append(nl);
+                    return res;
                 }
             }
 
             undoPos = sel.Caret;
+            return res;
         }
 
         public override Pos Redo()

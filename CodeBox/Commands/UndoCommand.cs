@@ -11,9 +11,10 @@ namespace CodeBox.Commands
     [CommandBehavior(SingleRun)]
     public sealed class UndoCommand : Command
     {
-        public override void Execute(CommandArgument arg, Selection sel)
+        public override bool Execute(CommandArgument arg, Selection sel)
         {
             Context.CommandManager.Undo();
+            return true;
         }
     }
 }

@@ -11,12 +11,13 @@ namespace CodeBox.Commands
     [CommandBehavior(ClearSelections)]
     public sealed class SelectAllCommand : Command
     {
-        public override void Execute(CommandArgument arg, Selection sel)
+        public override bool Execute(CommandArgument arg, Selection sel)
         {
             var idx = Document.Lines.Count - 1;
             var ln = Document.Lines[idx];
             sel.Start = default(Pos);
             sel.End = new Pos(idx, ln.Length);
+            return true;
         }
     }
 }
