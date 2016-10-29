@@ -17,23 +17,16 @@ namespace CodeBox
 
         public int FindLineByLocation(int locY)
         {
-            int y;
-            return FindLineByLocation(locY, out y);
-        }
-
-        private int FindLineByLocation(int locY, out int lineY)
-        {
-            lineY = editor.Info.TextTop;
+            locY = locY - editor.Scroll.Y;
 
             for (var i = editor.Scroll.FirstVisibleLine; i < editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var line = editor.Lines[i];
                 var lh = line.Stripes * editor.Info.LineHeight;
+                var lineY = line.Y + editor.Info.TextTop;
 
                 if (locY >= lineY && locY <= lineY + lh)
                     return i;
-
-                lineY += lh;
             }
 
             return -1;
@@ -41,19 +34,19 @@ namespace CodeBox
 
         public Pos LocationToPosition(Point loc)
         {
-            int lineY;
-            var line = FindLineByLocation(loc.Y, out lineY);
+            var line = FindLineByLocation(loc.Y);
 
             if (line == -1)
                 return Pos.Empty;
 
-            var col = FindColumnByLocation(editor.Lines[line], lineY, loc);
+            var col = FindColumnByLocation(editor.Lines[line], loc);
             return new Pos(line, col);
         }
 
-        private int FindColumnByLocation(Line line, int lineY, Point loc)
+        private int FindColumnByLocation(Line line, Point loc)
         {
-            var stripe = (int)Math.Ceiling((loc.Y - lineY) / (double)editor.Info.LineHeight) - 1;
+            var stripe = (int)Math.Ceiling((loc.Y - editor.Info.TextTop - line.Y - editor.Scroll.Y)
+                / (double)editor.Info.LineHeight) - 1;
             var cut = line.GetCut(stripe);
             var sc = stripe > 0 ? line.GetCut(stripe - 1) + 1 : 0;
             var width = editor.Info.TextLeft;

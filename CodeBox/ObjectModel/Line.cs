@@ -33,6 +33,8 @@ namespace CodeBox.ObjectModel
         internal bool TrailingCaret { get; set; }
 
         public int Id { get; private set; }
+
+        internal int Y { get; set; }
         
         public int Length
         {
@@ -250,7 +252,7 @@ namespace CodeBox.ObjectModel
                     return i;
             }
 
-            return Length;
+            return Stripes - 1;
         }
 
         internal int GetStripeCol(int col, int stripe)

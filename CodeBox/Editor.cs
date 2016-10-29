@@ -119,11 +119,11 @@ namespace CodeBox
             DrawMargins(0, e.Graphics, TopMargins);
             DrawMargins(0, e.Graphics, LeftMargins);
 
-            //e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
+            e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             DrawLines(e.Graphics);
             //Console.WriteLine("Time: " + (DateTime.Now - dt).TotalMilliseconds);
 
-            //e.Graphics.ResetTransform();
+            e.Graphics.ResetTransform();
             DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
             DrawMargins(ClientSize.Width - Info.CharWidth, e.Graphics, RightMargins);
             base.OnPaint(e);
@@ -168,22 +168,21 @@ namespace CodeBox
         {
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
-            var y = Info.TextTop;
-            Console.WriteLine($"Draw {fvl} and {lvl}");
 
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];
-                y = DrawLine(g, ln, i, y);
+                DrawLine(g, ln, i);
             }
         }
 
-        private int DrawLine(Graphics g, Line line, int lineIndex, int y)
+        private void DrawLine(Graphics g, Line line, int lineIndex)
         {
             var lmarg = Info.TextLeft;
             var tmarg = Info.TextTop;
             var cwidth = Info.TextRight;
-            var x = lmarg + Scroll.X;
+            var x = lmarg;
+            var y = tmarg + line.Y;
             var oldcut = 0;
             var sel = Buffer.Selections.IsLineSelected(lineIndex);
 
@@ -194,66 +193,61 @@ namespace CodeBox
                 if (cut == line.Length)
                     cut++;
 
-                if (lineIndex != Scroll.FirstVisibleLine || j >= Scroll.FirstVisibleStripe)
+                for (var i = oldcut; i < cut; i++)
                 {
-                    for (var i = oldcut; i < cut; i++)
+                    var c = line.CharAt(i);
+                    var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
+                    var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth
+                        && y + Scroll.Y >= tmarg;
+
+                    if (visible)
                     {
-                        var c = line.CharAt(i);
-                        var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
-                        var visible = x >= lmarg && x + xw <= cwidth;
+                        var style = default(Style);
+                        var rect = new Rectangle(x, y, xw, Info.LineHeight);
+                        var pos = new Pos(lineIndex, i);
+                        var high = sel && Buffer.Selections.IsSelected(pos);
 
-                        if (visible)
+                        if (c == '\0' || c == '\t' || c == ' ')
                         {
-                            var style = default(Style);
-                            var rect = new Rectangle(x, y, xw, Info.LineHeight);
-                            var pos = new Pos(lineIndex, i);
-                            var high = sel && Buffer.Selections.IsSelected(pos);
+                            style = Styles.GetStyle((int)StandardStyle.SpecialSymbol);
+                            style.NextStyle = null;
+                        }
+                        else
+                            style = line.GetStyle(i, Styles);
 
-                            if (c == '\0' || c == '\t' || c == ' ')
-                            {
-                                style = Styles.GetStyle((int)StandardStyle.SpecialSymbol);
-                                style.NextStyle = null;
-                            }
-                            else
-                                style = line.GetStyle(i, Styles);
-
-                            if (high)
-                            {
-                                var sstyle = Styles.GetStyle((int)StandardStyle.Selection);
-                                sstyle.NextStyle = style;
-                                style = sstyle;
-                            }
-
-                            style.DrawAll(g, rect, pos);
-
-                            if (Buffer.Selections.HasCaret(pos))
-                            {
-                                var blink = Buffer.Selections.Main.Caret.Line == lineIndex
-                                    && Buffer.Selections.Main.Caret.Col == i;
-
-                                if (blink)
-                                {
-                                    var cg = Caret.GetDrawingSurface();
-                                    cg.Clear(high ? Styles.Selection.Color : Styles.Default.BackColor);
-                                    style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
-                                    Caret.Resume();
-                                }
-
-                                Caret.DrawCaret(g, x, y, blink);
-                            }
+                        if (high)
+                        {
+                            var sstyle = Styles.GetStyle((int)StandardStyle.Selection);
+                            sstyle.NextStyle = style;
+                            style = sstyle;
                         }
 
-                        x += xw;
+                        style.DrawAll(g, rect, pos);
+
+                        if (Buffer.Selections.HasCaret(pos))
+                        {
+                            var blink = Buffer.Selections.Main.Caret.Line == lineIndex
+                                && Buffer.Selections.Main.Caret.Col == i;
+
+                            if (blink)
+                            {
+                                var cg = Caret.GetDrawingSurface();
+                                cg.Clear(high ? Styles.Selection.Color : Styles.Default.BackColor);
+                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
+                                Caret.Resume();
+                            }
+
+                            Caret.DrawCaret(g, x, y, blink);
+                        }
                     }
 
-                    y += Info.LineHeight;
+                    x += xw;
                 }
 
                 oldcut = cut;
+                y += Info.LineHeight;
                 x = lmarg;
             }
-
-            return y;
         }
 
         public override Color BackColor

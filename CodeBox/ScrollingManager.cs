@@ -76,10 +76,15 @@ namespace CodeBox
         {
             var count = 0;
             var stripe = editor.Lines[pos.Line].GetStripe(pos.Col);
+            var last = editor.Lines[LastVisibleLine];
+            var lastIndex = LastVisibleLine;
 
-            if (pos.Line >= LastVisibleLine)
+            if (last.Y + editor.Info.LineHeight > editor.Info.TextHeight)
+                lastIndex--;
+
+            if (pos.Line >= lastIndex)
             {
-                for (var i = LastVisibleLine; ; i++)
+                for (var i = lastIndex; ; i++)
                 {
                     var ln = editor.Lines[i];
                     
@@ -129,15 +134,9 @@ namespace CodeBox
 
             //scroll by whole lines
             var lines = (int)Math.Round((double)value / editor.Info.LineHeight);
-            var fvl = CalculateFirstVisibleLine(-lines);
-
-            if (fvl >= editor.Lines.Count)
-                fvl = editor.Lines.Count - 1;
-
-            FirstVisibleLine = fvl;
             value = lines * editor.Info.LineHeight;
-
             Y = value;
+            ResetFirstLast();
             OnScroll();
         }
 
@@ -163,73 +162,40 @@ namespace CodeBox
             editor.Redraw();
         }
 
-        public int FirstVisibleStripe;
-        private int CalculateFirstVisibleLine(int stripes)
+        private int CalculateFirstVisibleLine()
         {
+            var stripes = Math.Abs(Y / editor.Info.LineHeight);
+
+            if (stripes == 0)
+                return -1;
+
             var len = editor.Document.Lines.Count;
             var cs = 0;
 
             for (var i = 0; i < len; i++)
             {
-                var ln = editor.Lines[i];
+                cs += editor.Lines[i].Stripes;
 
-                for (var j = 0; j < ln.Stripes; j++)
-                {
-                    if (cs == stripes)
-                    {
-                        FirstVisibleStripe = j;
-                        return i;
-                    }
-
-                    cs++;
-                }
+                if (cs >= stripes)
+                    return i;
             }
 
             return len - 1;
-            
-
-            //if (delta == 0)
-            //    return FirstVisibleLine;
-
-            //var stripes = 0;
-            //var sign = Math.Sign(delta);
-            //var abs = Math.Abs(delta);
-            //var ret = 0;
-            //var max = delta > 0 ? FirstVisibleLine + delta + 2 : FirstVisibleLine + delta - 2;
-            //max = max >= editor.Lines.Count ? editor.Lines.Count - 1
-            //    : max < 0 ? 0 : max;
-
-            //for (var i = FirstVisibleLine + sign
-            //    ; delta > 0 ? i < max : i > max
-            //    ; i += sign)
-            //{
-            //    stripes += editor.Lines[i].Stripes;
-
-            //    if (stripes >= abs)
-            //    {
-            //        ret = i;
-            //        break;
-            //    }
-            //}
-
-            //return ret < 0 ? 0 : ret;
         }
 
         private int? CalculateLastVisibleLine()
         {
             var len = editor.Document.Lines.Count;
             var lh = editor.Info.LineHeight;
-            var maxh = editor.Info.TextBottom;
-            var y = editor.Info.TextTop;
+            var maxh = editor.Info.TextBottom - editor.Info.TextTop - Y;
 
             for (var i = FirstVisibleLine; i < len; i++)
             {
                 var ln = editor.Document.Lines[i];
+                var lnEnd = ln.Y + ln.Stripes * lh;
 
-                if (y >= maxh)
+                if (ln.Y >= maxh)
                     return i > FirstVisibleLine ? i - 1 : i;
-
-                y += ln.Stripes * editor.Info.LineHeight;
             }
 
             return len > FirstVisibleLine ? (int?)len - 1 : null;
@@ -244,9 +210,8 @@ namespace CodeBox
                 var y = 0;
 
                 foreach (var ln in editor.Document.Lines)
-                //for (var i = FirstVisibleLine; i < LastVisibleLine + 1; i++)
                 {
-                    //var ln = editor.Lines[i];
+                    ln.Y = y;
                     var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth;
                     y += editor.Info.LineHeight;
 
@@ -266,17 +231,26 @@ namespace CodeBox
                 foreach (var ln in editor.Document.Lines)
                 {
                     ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
+                    ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
                 }
 
                 XMax = 0;
                 YMax = maxHeight;
+                ResetFirstLast();
             }
 
             YMax = YMax - editor.Info.TextHeight + editor.Info.LineHeight * 5;
             YMax = YMax < 0 ? 0 : YMax;
+
             _lastVisibleLine = null;
-            Console.WriteLine(DateTime.Now - dt);
+            Console.WriteLine($"InvalidateLines: {DateTime.Now - dt}");
+        }
+
+        private void ResetFirstLast()
+        {
+            _firstVisibleLine = null;
+            _lastVisibleLine = null;
         }
 
         internal void OnPointerDown(Point loc)
@@ -305,14 +279,15 @@ namespace CodeBox
             pointer = loc;
         }
 
-        private int _firstVisibleLine;
+        private int? _firstVisibleLine;
         public int FirstVisibleLine
         {
-            get { return _firstVisibleLine; }
-            set
+            get
             {
-                _firstVisibleLine = value;
-                _lastVisibleLine = null;
+                if (_firstVisibleLine == null)
+                    _firstVisibleLine = CalculateFirstVisibleLine() + 1;
+
+                return _firstVisibleLine.Value;
             }
         }
 

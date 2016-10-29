@@ -29,30 +29,36 @@ namespace CodeBox.Margins
 
             g.FillRectangle(backBrush, bounds);
             var sb = new StringBuilder();
-            var y = info.TextTop;
-            
+
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var line = lines[i];
-                var str = (i + 1).ToString().PadLeft(len);
-                var x = bounds.X + info.CharWidth - sc.X;
-                var font = Editor.Styles.LineNumber.Font;
-                var col = Editor.Styles.LineNumber.ForeBrush;
+                var y = line.Y + sc.Y + info.TextTop;
 
-                if (i == caret.Line && MarkCurrentLine)
+                if (line.Y >= info.TextBottom - sc.Y)
+                    return true;
+
+                if (line.Y >= sc.Y && y >= bounds.Y)
                 {
-                    var selBrush = Editor.Styles.CurrentLineNumber.BackBrush;
+                    var str = (i + 1).ToString().PadLeft(len);
+                    var x = bounds.X + info.CharWidth - sc.X;
+                    var font = Editor.Styles.LineNumber.Font;
+                    var col = Editor.Styles.LineNumber.ForeBrush;
 
-                    if (selBrush != backBrush)
-                        g.FillRectangle(selBrush, new RectangleF(x + sc.X, y, bounds.Width, info.LineHeight));
+                    if (i == caret.Line && MarkCurrentLine)
+                    {
+                        var selBrush = Editor.Styles.CurrentLineNumber.BackBrush;
 
-                    font = Editor.Styles.CurrentLineNumber.Font;
-                    col = Editor.Styles.CurrentLineNumber.ForeBrush;
+                        if (selBrush != backBrush)
+                            g.FillRectangle(selBrush, new Rectangle(x + sc.X, y, bounds.Width, info.LineHeight));
+
+                        font = Editor.Styles.CurrentLineNumber.Font;
+                        col = Editor.Styles.CurrentLineNumber.ForeBrush;
+                    }
+
+                    g.DrawString(str, font, col, x + sc.X, y);
+                    sb.Append(str);
                 }
-
-                g.DrawString(str, font, col, x + sc.X, y);
-                sb.Append(str);
-                y += line.Stripes * info.LineHeight;
             }
 
             return true;
