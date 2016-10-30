@@ -19,8 +19,6 @@ namespace CodeBox.Commands
 
         Undoable = 0x20,
 
-        Modify = 0x40,
-
-        AtomModify = 0x80
+        Modify = 0x40
     }
 }

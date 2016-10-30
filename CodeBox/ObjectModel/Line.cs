@@ -91,6 +91,8 @@ namespace CodeBox.ObjectModel
         public void Append(IEnumerable<Character> str)
         {
             chars.AddRange(str);
+            Invalidated = false;
+            _tetras = -1;
         }
 
         public void Insert(int index, Character ch)
@@ -99,6 +101,8 @@ namespace CodeBox.ObjectModel
                 chars.Add(ch);
             else if (index >= 0)
                 chars.Insert(index, ch);
+            _tetras = -1;
+            Invalidated = false;
         }
 
         public void Insert(int index, IEnumerable<Character> str)
@@ -107,6 +111,8 @@ namespace CodeBox.ObjectModel
                 Append(str);
             else if (index >= 0)
                 chars.InsertRange(index, str);
+            _tetras = -1;
+            Invalidated = false;
         }
 
         public void RemoveRange(int index, int count)
@@ -115,6 +121,8 @@ namespace CodeBox.ObjectModel
                 count = Length - index;
 
             chars.RemoveRange(index, count);
+            _tetras = -1;
+            Invalidated = false;
         }
 
         public List<Character> GetRange(int index, int count)
@@ -125,6 +133,8 @@ namespace CodeBox.ObjectModel
         public void RemoveAt(int index)
         {
             chars.RemoveAt(index);
+            _tetras = -1;
+            Invalidated = false;
         }
 
         public Character this[int index]
@@ -136,6 +146,8 @@ namespace CodeBox.ObjectModel
                     chars[index] = value;
                 else
                     chars.Add(value);
+                _tetras = -1;
+                Invalidated = false;
             }
         }
         #endregion
@@ -195,6 +207,8 @@ namespace CodeBox.ObjectModel
 
         internal void ClearCuts()
         {
+            Invalidated = false;
+            _tetras = -1;
             cuts = null;
         }
 
@@ -223,6 +237,8 @@ namespace CodeBox.ObjectModel
                     }
                 }
             }
+
+            Invalidated = true;
         }
 
         private int GetNextWordTetras(int index, int tabSize)
@@ -266,18 +282,22 @@ namespace CodeBox.ObjectModel
             return col - start;
         }
 
+        private int _tetras = -1;
         internal int GetTetras(int tabSize)
         {
+            if (_tetras != -1)
+                return _tetras;
+
             var c = 0;
 
             for (var i = 0; i < chars.Count; i++)
                 if (chars[i].Char == '\t')
                     c++;
 
-            return chars.Count - c + c * tabSize;
+            return _tetras = chars.Count - c + c * tabSize;
         }
         
-        internal void AddCut(int cut)
+        private void AddCut(int cut)
         {
             if (cuts == null)
                 cuts = new List<int>();
@@ -294,6 +314,8 @@ namespace CodeBox.ObjectModel
         {
             get { return cuts == null ? 1 : cuts.Count + 1; }
         }
-        #endregion        
+
+        internal bool Invalidated { get; private set; }
+        #endregion
     }
 }

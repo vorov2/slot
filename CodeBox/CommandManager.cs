@@ -376,8 +376,7 @@ namespace CodeBox
                 editor.Redraw();
 
             if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
-                || (exp & ActionExponent.Modify) == ActionExponent.Modify
-                || (exp & ActionExponent.AtomModify) == ActionExponent.AtomModify)
+                || (exp & ActionExponent.Modify) == ActionExponent.Modify)
                 editor.Styles.Restyle();
         }
     }

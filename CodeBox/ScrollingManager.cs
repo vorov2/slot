@@ -246,7 +246,8 @@ namespace CodeBox
 
                 foreach (var ln in editor.Document.Lines)
                 {
-                    ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
+                    if (!ln.Invalidated)
+                        ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
                     ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
                 }

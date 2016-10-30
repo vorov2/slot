@@ -104,9 +104,14 @@ namespace CodeBox.Margins
                 var curpos = sc.Height != 0 ? (int)Math.Floor(Math.Floor(sc.Y / (sc.Height / 100d)) * perc) : 0;
 
                 lastCaretSize = (int)Math.Floor(caretSize);
+                var pos = bounds.Y + Math.Abs(curpos);
+
+                if (pos + lastCaretSize > Editor.ClientSize.Height)
+                    pos = Editor.ClientSize.Height - lastCaretSize;
+
                 g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
-                    new Rectangle(bounds.X, bounds.Y + Math.Abs(curpos), bounds.Width, lastCaretSize));
-                lastCaretPos = bounds.Y + Math.Abs(curpos);
+                    new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
+                lastCaretPos = pos;
             }
 
             return true;
