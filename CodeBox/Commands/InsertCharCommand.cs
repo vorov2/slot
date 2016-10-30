@@ -25,10 +25,15 @@ namespace CodeBox.Commands
 
             if (!sel.IsEmpty)
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
-            else if (Buffer.Overtype)
+            else
             {
-                @char = line[sel.Caret.Col];
-                line.RemoveAt(sel.Caret.Col);
+                Context.AtomicChange = true;
+
+                if (Buffer.Overtype)
+                {
+                    @char = line[sel.Caret.Col];
+                    line.RemoveAt(sel.Caret.Col);
+                }
             }
 
             @redoChar = new Character(arg.Char);

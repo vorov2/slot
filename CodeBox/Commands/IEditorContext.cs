@@ -5,12 +5,14 @@ namespace CodeBox.Commands
 {
     public interface IEditorContext
     {
-        CommandManager CommandManager { get; }
+        CommandManager Commands { get; }
 
         DocumentBuffer Buffer { get; }
 
         EditorInfo Info { get; }
 
         EditorSettings Settings { get; }
+
+        bool AtomicChange { get; set; }
     }
 }

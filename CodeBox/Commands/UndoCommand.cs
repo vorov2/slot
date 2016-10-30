@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     {
         public override bool Execute(CommandArgument arg, Selection sel)
         {
-            Context.CommandManager.Undo();
+            Context.Commands.Undo();
             return true;
         }
     }

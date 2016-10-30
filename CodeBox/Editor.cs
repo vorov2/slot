@@ -17,13 +17,47 @@ using CodeBox.Styling;
 
 namespace CodeBox
 {
-    public class Editor : Control, IEditorContext
+    public class Editor : Control
     {
         private const int WM_POINTERDOWN = 0x0246;
         private const int WM_POINTERUP = 0x0247;
         private const int WM_POINTERUPDATE = 0x0245;
         private const int WM_MOUSEHWHEEL = 0x020E;
         private const int WM_CHAR = 0x102;
+
+        private sealed class EditorContext : IEditorContext
+        {
+            private readonly Editor editor;
+
+            internal EditorContext(Editor editor)
+            {
+                this.editor = editor;
+            }
+
+            public CommandManager Commands
+            {
+                get { return editor.Commands; }
+            }
+
+            public DocumentBuffer Buffer
+            {
+                get { return editor.Buffer; }
+            }
+
+            public EditorInfo Info
+            {
+                get { return editor.Info; }
+            }
+
+            public EditorSettings Settings
+            {
+                get { return editor.Settings; }
+            }
+
+            public bool AtomicChange { get; set; }
+        }
+
+        private readonly EditorContext context;
 
         public Editor()
         {
@@ -42,9 +76,9 @@ namespace CodeBox
             Scroll = new ScrollingManager(this);
             Styles = new StyleManager(this);
             Settings = new EditorSettings(this);
-            CommandManager = new CommandManager(this);
+            Commands = new CommandManager(this);
             Locations = new LocationManager(this);
-
+            context = new EditorContext(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
         }
@@ -258,7 +292,7 @@ namespace CodeBox
 
         protected override void OnDoubleClick(EventArgs e)
         {
-            CommandManager.Run(MouseEvents.DoubleClick, Keys.None, default(CommandArgument));
+            Commands.Run(MouseEvents.DoubleClick, Keys.None, default(CommandArgument));
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -304,7 +338,7 @@ namespace CodeBox
                 return;
 
             var arg = new CommandArgument(p);
-            CommandManager.Run(Mouse | MouseEvents.Move, LastKeys, arg);
+            Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -347,7 +381,7 @@ namespace CodeBox
                 {
                     var pos = Locations.LocationToPosition(e.Location);
                     pos = pos.IsEmpty ? default(Pos) : pos;
-                    CommandManager.Run(Mouse, LastKeys, new CommandArgument(pos));
+                    Commands.Run(Mouse, LastKeys, new CommandArgument(pos));
                 }
             }
 
@@ -381,11 +415,10 @@ namespace CodeBox
                         return true;
                     default:
                         var arg = new CommandArgument(ch);
-                        CommandManager.Run<InsertCharCommand>(arg);
+                        Commands.Run<InsertCharCommand>(arg);
                         break;
                 }
 
-                Redraw();
                 return true;
             }
 
@@ -439,7 +472,7 @@ namespace CodeBox
                 Overtype = !Overtype;
 
             LastKeys = e.Modifiers;
-            CommandManager.Run(LastKeys | e.KeyCode, default(CommandArgument));
+            Commands.Run(LastKeys | e.KeyCode, default(CommandArgument));
         }
         
         public DocumentBuffer Buffer { get; private set; }
@@ -482,6 +515,17 @@ namespace CodeBox
             }
         }
 
+        internal bool AtomicChange
+        {
+            get { return context.AtomicChange; }
+            set { context.AtomicChange = value; }
+        }
+
+        internal IEditorContext Context
+        {
+            get { return context; }
+        }
+
         internal Keys LastKeys { get; private set; }
 
         internal MouseEvents Mouse { get; private set; }
@@ -504,7 +548,7 @@ namespace CodeBox
 
         internal CaretRenderer Caret { get; }
         
-        public CommandManager CommandManager { get; }
+        public CommandManager Commands { get; }
 
         public StyleManager Styles { get; }
 

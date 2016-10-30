@@ -193,6 +193,11 @@ namespace CodeBox.ObjectModel
             return tetra;
         }
 
+        internal void ClearCuts()
+        {
+            cuts = null;
+        }
+
         internal void RecalculateCuts(int limit, int charWidth, int tabSize)
         {
             if (cuts != null)
@@ -271,13 +276,7 @@ namespace CodeBox.ObjectModel
 
             return chars.Count - c + c * tabSize;
         }
-
-        internal void ClearCuts()
-        {
-            if (cuts != null)
-                cuts.Clear();
-        }
-
+        
         internal void AddCut(int cut)
         {
             if (cuts == null)

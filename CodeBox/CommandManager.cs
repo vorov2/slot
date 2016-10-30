@@ -118,7 +118,7 @@ namespace CodeBox
 
                 if (cmd.Id == id)
                 {
-                    cmd.Command.Context = editor;
+                    cmd.Command.Context = editor.Context;
                     var p = cmd.Command.Undo();
 
                     if (pos.IsEmpty)
@@ -162,7 +162,7 @@ namespace CodeBox
 
                 if (cmd.Id == id)
                 {
-                    cmd.Command.Context = editor;
+                    cmd.Command.Context = editor.Context;
                     var p = cmd.Command.Redo();
                     pos = p;
                     exp |= cmd.Exponent;
@@ -245,6 +245,7 @@ namespace CodeBox
             var restoreCaret = (exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret;
             var cmd = ci.Command;
             var thisUndo = false;
+            editor.AtomicChange = false;
 
             if (undo)
                 thisUndo = BeginUndoAction();
@@ -268,7 +269,7 @@ namespace CodeBox
                     AddCommand(cmd, exp);
                 }
 
-                cmd.Context = editor;
+                cmd.Context = editor.Context;
 
                 if (!cmd.Execute(arg, mainSel) && undo)
                     editor.Buffer.UndoStack.Pop();
@@ -277,6 +278,7 @@ namespace CodeBox
                     AttachCaret(mainSel.Caret);
             }
             else
+            {
                 foreach (var sel in qry)
                 {
                     if (undo)
@@ -285,7 +287,7 @@ namespace CodeBox
                         AddCommand(cmd, exp);
                     }
 
-                    cmd.Context = editor;
+                    cmd.Context = editor.Context;
 
                     if (!cmd.Execute(arg, sel) && undo)
                         editor.Buffer.UndoStack.Pop();
@@ -295,6 +297,9 @@ namespace CodeBox
 
                     lastSel = sel;
                 }
+
+                editor.AtomicChange = false;
+            }
 
             if (thisUndo)
                 EndUndoAction();
@@ -371,7 +376,8 @@ namespace CodeBox
                 editor.Redraw();
 
             if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
-                || (exp & ActionExponent.Modify) == ActionExponent.Modify)
+                || (exp & ActionExponent.Modify) == ActionExponent.Modify
+                || (exp & ActionExponent.AtomModify) == ActionExponent.AtomModify)
                 editor.Styles.Restyle();
         }
     }

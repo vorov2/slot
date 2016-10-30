@@ -19,9 +19,11 @@ namespace CodeBox.Commands
         public override bool Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-
+            
             if (!sel.IsEmpty)
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
+            else
+                Context.AtomicChange = sel.Start.Line == sel.End.Line;
 
             @redoString = arg.String.MakeCharacters();
             var pos = InsertRange(Document, sel.Start, @redoString);

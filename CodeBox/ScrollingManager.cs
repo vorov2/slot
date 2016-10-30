@@ -201,11 +201,27 @@ namespace CodeBox
             return len > FirstVisibleLine ? (int?)len - 1 : null;
         }
 
+        public void FastInvalidateLines()
+        {
+            var ln = editor.Lines[editor.Buffer.Selections.Main.Caret.Line];
+            var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth
+                - editor.Info.TextWidth + editor.Info.CharWidth * 5;
+
+            if (w > YMax)
+                YMax = w;
+        }
+
         public void InvalidateLines()
         {
             var dt = DateTime.Now;
             if (!editor.Buffer.WordWrap)
             {
+                if (editor.AtomicChange)
+                {
+                    FastInvalidateLines();
+                    return;
+                }
+
                 var maxWidth = 0;
                 var y = 0;
 
