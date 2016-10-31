@@ -26,6 +26,10 @@ namespace CodeBox
 
         private void RegisterCommands()
         {
+            Register<DeleteWordBackCommand>();
+            Register<DeleteWordCommand>();
+            Register<ScrollLineUpCommand>();
+            Register<ScrollLineDownCommand>();
             Register<RedoCommand>();
             Register<UndoCommand>();
             Register<SetCaretCommand>();

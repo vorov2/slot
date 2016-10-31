@@ -9,7 +9,7 @@ using static CodeBox.Commands.ActionExponent;
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public sealed class DeleteCommand : Command //Tested
+    public class DeleteCommand : Command //Tested
     {
         private IEnumerable<Character> @string;
         private Character @char;
@@ -36,7 +36,7 @@ namespace CodeBox.Commands
                 {
                     @char = ln.CharacterAt(caret.Col);
                     ln.RemoveAt(caret.Col);
-                    return res;
+                    res = true;
                 }
                 else if (caret.Line < lines.Count - 1)
                 {
@@ -44,7 +44,7 @@ namespace CodeBox.Commands
                     @char = Character.NewLine;
                     lines.Remove(nl);
                     ln.Append(nl);
-                    return res;
+                    res = true;
                 }
             }
 
@@ -65,7 +65,7 @@ namespace CodeBox.Commands
             var pos = undoPos;
 
             if (@string != null)
-                pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
+                InsertRangeCommand.InsertRange(Document, undoPos, @string);
             else if (@char == Character.NewLine)
                 InsertNewLineCommand.InsertNewLine(Document, undoPos);
             else

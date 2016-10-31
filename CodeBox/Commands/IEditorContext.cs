@@ -5,6 +5,8 @@ namespace CodeBox.Commands
 {
     public interface IEditorContext
     {
+        ScrollingManager Scroll { get; }
+
         CommandManager Commands { get; }
 
         DocumentBuffer Buffer { get; }

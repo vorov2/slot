@@ -1,4 +1,5 @@
-﻿using CodeBox.Margins;
+﻿using CodeBox.Folding;
+using CodeBox.Margins;
 using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace CodeBox
             {
                 var line = editor.Lines[i];
 
-                if (line.Visible.Has(VisibleStates.Invisible))
+                if (line.Visible.Has(FoldingStates.Invisible))
                     continue;
 
                 var lh = line.Stripes * editor.Info.LineHeight;

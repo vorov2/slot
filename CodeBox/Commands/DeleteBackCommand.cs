@@ -9,7 +9,7 @@ using static CodeBox.Commands.ActionExponent;
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public sealed class DeleteBackCommand : Command //Tested
+    public class DeleteBackCommand : Command //Tested
     {
         private IEnumerable<Character> @string;
         private Character @char;

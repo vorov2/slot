@@ -18,6 +18,8 @@ namespace CodeBox.Styling
 
         CurrentLineNumber = 4,
 
-        FoldingMarker = 5
+        FoldingMarker = 5,
+
+        ActiveFoldingMarker = 6
     }
 }

@@ -1,4 +1,5 @@
-﻿using CodeBox.Styling;
+﻿using CodeBox.Folding;
+using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -319,27 +320,7 @@ namespace CodeBox.ObjectModel
         #endregion
 
         #region Folding
-        public VisibleStates Visible { get; set; } = VisibleStates.None;
+        public FoldingStates Visible { get; set; } = FoldingStates.None;
         #endregion
-    }
-
-    [Flags]
-    public enum VisibleStates : byte
-    {
-        None = 0x00,
-
-        Invisible = 0x01,
-
-        Header = 0x04,
-
-        Footer = 0x08
-    }
-
-    public static class VisibleStatesExtensions
-    {
-        public static bool Has(this VisibleStates enu, VisibleStates flag)
-        {
-            return (enu & flag) == flag;
-        }
     }
 }

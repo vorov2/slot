@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
+using CodeBox.Folding;
 
 namespace CodeBox.Margins
 {
@@ -36,7 +37,7 @@ namespace CodeBox.Margins
                 //if (line.Y >= info.TextBottom - sc.Y)
                 //    return true;
 
-                if (line.Visible.Has(VisibleStates.Invisible))
+                if (line.Visible.Has(FoldingStates.Invisible))
                     continue;
 
                 if (line.Y >= sc.Y && y >= bounds.Y)

@@ -12,6 +12,7 @@ using CodeBox.Margins;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Commands;
+using CodeBox.Folding;
 
 namespace CodeBox.Test
 {
@@ -42,6 +43,8 @@ namespace CodeBox.Test
             ed.Styles.SpecialSymbol.ForeColor = ColorTranslator.FromHtml("#505050");
             ed.Styles.FoldingMarker.ForeColor = ColorTranslator.FromHtml("#505050");
             ed.Styles.FoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
+            ed.Styles.ActiveFoldingMarker.ForeColor = ColorTranslator.FromHtml("#C0AAF7");
+            ed.Styles.ActiveFoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
             ed.Styles.Selection.Color = ColorTranslator.FromHtml("#264F78");
             ed.Styles.Register(110,
                 new TextStyle {
@@ -64,7 +67,7 @@ namespace CodeBox.Test
             Console.WriteLine("Folding...");
             var li = e.Range.Start.Line;
 
-            while (li > -1 && !ed.Document.Lines[li].Visible.Has(VisibleStates.Header))
+            while (li > -1 && !ed.Document.Lines[li].Visible.Has(FoldingStates.Header))
                 li--;
 
             li = li < 0 ? 0 : li;
@@ -108,21 +111,21 @@ namespace CodeBox.Test
                 if (indent > prevIndent && i > 0)
                 {
                     var ln = ed.Document.Lines[i - 1];
-                    ed.Document.Lines[i - 1].Visible = VisibleStates.Header
-                        | (ln.Visible.Has(VisibleStates.Invisible) ? VisibleStates.Invisible : VisibleStates.None);
-                    line.Visible &= ~VisibleStates.Header;
-                    line.Visible &= ~VisibleStates.Footer;
+                    ed.Document.Lines[i - 1].Visible = FoldingStates.Header
+                        | (ln.Visible.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
+                    line.Visible &= ~FoldingStates.Header;
+                    line.Visible &= ~FoldingStates.Footer;
                 }
                 else if (indent == prevIndent)
                 {
-                    line.Visible &= ~VisibleStates.Header;
-                    line.Visible &= ~VisibleStates.Footer;
+                    line.Visible &= ~FoldingStates.Header;
+                    line.Visible &= ~FoldingStates.Footer;
                     //line.Visible = VisibleState.Invisible;
                 }
                 else if (prevIndent > indent)
                 {
-                    line.Visible = VisibleStates.Footer
-                        | (line.Visible.Has(VisibleStates.Invisible) ? VisibleStates.Invisible : VisibleStates.None);
+                    line.Visible = FoldingStates.Footer
+                        | (line.Visible.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
                 }
                 //else
                 //    line.Visible |= VisibleStates.Visible;
@@ -136,6 +139,10 @@ namespace CodeBox.Test
 
         private void BindCommands()
         {
+            ed.Commands.Bind<DeleteWordBackCommand>(Keys.Control | Keys.Back);
+            ed.Commands.Bind<DeleteWordCommand>(Keys.Control | Keys.Delete);
+            ed.Commands.Bind<ScrollLineUpCommand>(Keys.Control | Keys.Up);
+            ed.Commands.Bind<ScrollLineDownCommand>(Keys.Control | Keys.Down);
             ed.Commands.Bind<RedoCommand>(Keys.Control | Keys.Y);
             ed.Commands.Bind<UndoCommand>(Keys.Control | Keys.Z);
             ed.Commands.Bind<SelectAllCommand>(Keys.Control | Keys.A);

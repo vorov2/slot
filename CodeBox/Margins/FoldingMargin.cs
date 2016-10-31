@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
+using CodeBox.Folding;
 
 namespace CodeBox.Margins
 {
@@ -24,9 +25,9 @@ namespace CodeBox.Margins
             {
                 var ln = Editor.Lines[lineIndex];
                 var vis = lineIndex < Editor.Lines.Count 
-                    ? Editor.Lines[lineIndex + 1].Visible.Has(VisibleStates.Invisible) : true;
+                    ? Editor.Lines[lineIndex + 1].Visible.Has(FoldingStates.Invisible) : true;
 
-                if (ln.Visible.Has(VisibleStates.Header))
+                if (ln.Visible.Has(FoldingStates.Header))
                 {
                     var sw = 0;
                     var selPos = new Pos(lineIndex, ln.Length);
@@ -35,20 +36,20 @@ namespace CodeBox.Margins
                     {
                         var cln = Editor.Lines[i];
 
-                        if (cln.Visible.Has(VisibleStates.Header))
+                        if (cln.Visible.Has(FoldingStates.Header))
                             sw++;
-                        else if (cln.Visible.Has(VisibleStates.Footer) && sw != 0)
+                        else if (cln.Visible.Has(FoldingStates.Footer) && sw != 0)
                             sw--;
-                        else if (cln.Visible.Has(VisibleStates.Footer) && sw == 0)
+                        else if (cln.Visible.Has(FoldingStates.Footer) && sw == 0)
                             break;
 
                         if (vis)
                         {
-                            cln.Visible &= ~VisibleStates.Invisible;
+                            cln.Visible &= ~FoldingStates.Invisible;
                         }
                         else
                         {
-                            cln.Visible |= VisibleStates.Invisible;
+                            cln.Visible |= FoldingStates.Invisible;
 
                             foreach (var s in Editor.Buffer.Selections)
                             {
@@ -78,20 +79,12 @@ namespace CodeBox.Margins
                 var y = ln.Y + Editor.Info.TextTop + Editor.Scroll.Y;
                 y += (h - side) / 2;
 
-                if (ln.Visible.Has(VisibleStates.Header) && !ln.Visible.Has(VisibleStates.Invisible))
+                if (ln.Visible.Has(FoldingStates.Header) && !ln.Visible.Has(FoldingStates.Invisible))
                 {
                     var arrow = default(Point[]);
+                    var b = Editor.Styles.FoldingMarker.ForeBrush;
 
-                    if (!Editor.Lines[i + 1].Visible.Has(VisibleStates.Invisible))
-                    {
-                        arrow = new Point[]
-                        {
-                            new Point(x, y),
-                            new Point(x + side/2, y + side/2),
-                            new Point(x, y + side)
-                        };
-                    }
-                    else
+                    if (!Editor.Lines[i + 1].Visible.Has(FoldingStates.Invisible))
                     {
                         arrow = new Point[]
                         {
@@ -100,8 +93,18 @@ namespace CodeBox.Margins
                             new Point(x + side/2, y + side)
                         };
                     }
+                    else
+                    {
+                        b = Editor.Styles.ActiveFoldingMarker.ForeBrush;
+                        arrow = new Point[]
+                        {
+                            new Point(x, y),
+                            new Point(x + side/2, y + side/2),
+                            new Point(x, y + side)
+                        }; 
+                    }
 
-                    g.FillPolygon(Editor.Styles.FoldingMarker.ForeBrush, arrow);
+                    g.FillPolygon(b, arrow);
                 }
             }
 
@@ -110,7 +113,7 @@ namespace CodeBox.Margins
 
         public override int CalculateSize()
         {
-            return (int)Math.Round(Editor.Info.CharWidth * 2.5, MidpointRounding.AwayFromZero);
+            return (int)Math.Round(Editor.Info.CharWidth * 2.0, MidpointRounding.AwayFromZero);
         }
     }
 }

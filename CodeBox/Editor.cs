@@ -14,6 +14,7 @@ using CodeBox.Margins;
 using CodeBox.ObjectModel;
 using CodeBox.Drawing;
 using CodeBox.Styling;
+using CodeBox.Folding;
 
 namespace CodeBox
 {
@@ -32,6 +33,11 @@ namespace CodeBox
             internal EditorContext(Editor editor)
             {
                 this.editor = editor;
+            }
+
+            public ScrollingManager Scroll
+            {
+                get { return editor.Scroll; }
             }
 
             public CommandManager Commands
@@ -57,7 +63,7 @@ namespace CodeBox
             public bool AtomicChange { get; set; }
         }
 
-        private readonly EditorContext context;
+        private readonly IEditorContext context;
 
         public Editor()
         {
@@ -207,7 +213,7 @@ namespace CodeBox
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];
-                if (!ln.Visible.Has(VisibleStates.Invisible))
+                if (!ln.Visible.Has(FoldingStates.Invisible))
                     DrawLine(g, ln, i);
             }
         }
@@ -280,12 +286,10 @@ namespace CodeBox
                     x += xw;
                 }
 
-                if (line.Visible.Has(VisibleStates.Header) && lineIndex < Lines.Count &&
-                    Lines[lineIndex + 1].Visible.Has(VisibleStates.Invisible))
+                if (line.Visible.Has(FoldingStates.Header) && lineIndex < Lines.Count &&
+                    Lines[lineIndex + 1].Visible.Has(FoldingStates.Invisible))
                 {
-                    g.FillRectangle(CachedBrush.Create(Styles.Selection.Color),
-                        new Rectangle(x, y+Info.LineHeight/4, Info.CharWidth*3, Info.LineHeight/2));
-                    g.DrawString("···", Styles.Default.Font, Styles.Default.ForeBrush, new Point(x, y), TextStyle.Format);
+                    Folding.DrawFoldingIndicator(g, x, y);
                 }
 
                 oldcut = cut;
