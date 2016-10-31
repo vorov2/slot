@@ -317,5 +317,29 @@ namespace CodeBox.ObjectModel
 
         internal bool Invalidated { get; private set; }
         #endregion
+
+        #region Folding
+        public VisibleStates Visible { get; set; } = VisibleStates.None;
+        #endregion
+    }
+
+    [Flags]
+    public enum VisibleStates : byte
+    {
+        None = 0x00,
+
+        Invisible = 0x01,
+
+        Header = 0x04,
+
+        Footer = 0x08
+    }
+
+    public static class VisibleStatesExtensions
+    {
+        public static bool Has(this VisibleStates enu, VisibleStates flag)
+        {
+            return (enu & flag) == flag;
+        }
     }
 }

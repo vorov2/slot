@@ -11,20 +11,22 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public class DownCommand : CaretCommand
     {
-        protected override Pos GetPosition(Pos pos)
+        protected override Pos GetPosition(Selection sel)
         {
-            return MoveDown(Context, pos);
+            return MoveDown(Context, sel);
         }
 
-        internal static Pos MoveDown(IEditorContext ctx, Pos pos)
+        internal static Pos MoveDown(IEditorContext ctx, Selection sel)
         {
             var doc = ctx.Buffer.Document;
+            var pos = sel.Caret;
 
             if (ctx.Buffer.WordWrap)
             {
                 var ln = doc.Lines[pos.Line];
                 var stripe = ln.GetStripe(pos.Col);
                 var tetra = ln.GetStripeCol(pos.Col, stripe);
+                tetra = tetra > sel.RestoreCaretCol ? tetra : sel.RestoreCaretCol;
 
                 if (stripe == ln.Stripes - 1)
                 {
@@ -48,7 +50,8 @@ namespace CodeBox.Commands
             else if (pos.Line + 1 < doc.Lines.Count)
             {
                 var ln = doc.Lines[pos.Line + 1];
-                return new Pos(pos.Line + 1, ln.Length < pos.Col ? ln.Length : pos.Col);
+                var col = pos.Col > sel.RestoreCaretCol ? pos.Col : sel.RestoreCaretCol;
+                return new Pos(pos.Line + 1, ln.Length < col ? ln.Length : col);
             }
             else
                 return pos;

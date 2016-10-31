@@ -30,7 +30,17 @@ namespace CodeBox.ObjectModel
 
         internal void Clear()
         {
-            Start = End;
+            Clear(End);
+        }
+
+        internal void SetToRestore()
+        {
+            RestoreCaretCol = Caret.Col;
+        }
+
+        internal void SetToRestore(Pos caret)
+        {
+            RestoreCaretCol = caret.Col;
         }
 
         internal void Clear(Pos pos)
@@ -53,5 +63,7 @@ namespace CodeBox.ObjectModel
         {
             get { return End; }
         }
+
+        public int RestoreCaretCol { get; private set; }
     }
 }

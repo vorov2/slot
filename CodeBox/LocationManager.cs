@@ -22,6 +22,10 @@ namespace CodeBox
             for (var i = editor.Scroll.FirstVisibleLine; i < editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var line = editor.Lines[i];
+
+                if (line.Visible.Has(VisibleStates.Invisible))
+                    continue;
+
                 var lh = line.Stripes * editor.Info.LineHeight;
                 var lineY = line.Y + editor.Info.TextTop;
 

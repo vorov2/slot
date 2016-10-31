@@ -74,44 +74,16 @@ namespace CodeBox
 
         private int IsLineStripeVisible(Pos pos)
         {
-            var count = 0;
-            var stripe = editor.Lines[pos.Line].GetStripe(pos.Col);
-            var last = editor.Lines[LastVisibleLine];
-            var lastIndex = LastVisibleLine;
+            var ln = editor.Document.Lines[pos.Line];
+            var stripe = ln.GetStripe(pos.Col);
+            var cy = editor.Info.TextTop + ln.Y + stripe * editor.Info.LineHeight + Y;
 
-            if (last.Y + editor.Info.LineHeight > editor.Info.TextHeight)
-                lastIndex--;
-
-            if (pos.Line >= lastIndex)
-            {
-                for (var i = lastIndex; ; i++)
-                {
-                    var ln = editor.Lines[i];
-                    
-                    for (var j = 0; j < ln.Stripes; j++)
-                    {
-                        if (pos.Line == i && stripe == j)
-                            return count;
-                        count--;
-                    }
-                }
-            }
-            else if (pos.Line <= FirstVisibleLine)
-            {
-                for (var i = FirstVisibleLine; ; i--)
-                {
-                    var ln = editor.Lines[i];
-
-                    for (var j = 0; j < ln.Stripes; j++)
-                    {
-                        if (pos.Line == i && stripe == j)
-                            return count;
-                        count++;
-                    }
-                }
-            }
-
-            return count;
+            if (cy < editor.Info.TextTop)
+                return -(cy / editor.Info.LineHeight - 1);
+            else if (cy + editor.Info.LineHeight > editor.Info.TextBottom)
+                return -((cy - editor.Info.TextTop) / editor.Info.LineHeight);
+            else
+                return 0;
         }
 
         public void ScrollY(int times)
@@ -174,10 +146,17 @@ namespace CodeBox
 
             for (var i = 0; i < len; i++)
             {
-                cs += editor.Lines[i].Stripes;
+                var ln = editor.Lines[i];
 
-                if (cs >= stripes)
+                if (ln.Visible.Has(VisibleStates.Invisible))
+                    continue;
+
+                cs += ln.Stripes;
+
+                if (cs == stripes)
                     return i;
+                else if (cs > stripes)
+                    return i - 1;
             }
 
             return len - 1;
@@ -192,6 +171,10 @@ namespace CodeBox
             for (var i = FirstVisibleLine; i < len; i++)
             {
                 var ln = editor.Document.Lines[i];
+
+                if (ln.Visible.Has(VisibleStates.Invisible))
+                    continue;
+
                 var lnEnd = ln.Y + ln.Stripes * lh;
 
                 if (ln.Y >= maxh)
@@ -211,12 +194,12 @@ namespace CodeBox
                 YMax = w;
         }
 
-        public void InvalidateLines()
+        public void InvalidateLines(bool force = false)
         {
             var dt = DateTime.Now;
             if (!editor.Buffer.WordWrap)
             {
-                if (editor.AtomicChange)
+                if (editor.AtomicChange && !force)
                 {
                     FastInvalidateLines();
                     return;
@@ -227,6 +210,9 @@ namespace CodeBox
 
                 foreach (var ln in editor.Document.Lines)
                 {
+                    if (ln.Visible.Has(VisibleStates.Invisible))
+                        continue;
+
                     ln.Y = y;
                     var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth;
                     y += editor.Info.LineHeight;
@@ -246,7 +232,10 @@ namespace CodeBox
 
                 foreach (var ln in editor.Document.Lines)
                 {
-                    if (!ln.Invalidated)
+                    if (ln.Visible.Has(VisibleStates.Invisible))
+                        continue;
+
+                    if (!ln.Invalidated || force)
                         ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
                     ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
@@ -261,7 +250,7 @@ namespace CodeBox
             YMax = YMax < 0 ? 0 : YMax;
 
             _lastVisibleLine = null;
-            Console.WriteLine($"InvalidateLines: {DateTime.Now - dt}");
+            Console.WriteLine($"FirstVisible: {FirstVisibleLine}; LastVisible: {LastVisibleLine}; InvalidateLines: {DateTime.Now - dt}");
         }
 
         private void ResetFirstLast()

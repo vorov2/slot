@@ -28,6 +28,7 @@ namespace CodeBox
             Register(StandardStyle.LineNumber, new TextStyle());
             Register(StandardStyle.CurrentLineNumber, new TextStyle());
             Register(StandardStyle.SpecialSymbol, new TextStyle());
+            Register(StandardStyle.FoldingMarker, new MarkerStyle());
         }
 
         public Style GetStyle(int styleId)
@@ -56,6 +57,9 @@ namespace CodeBox
                     break;
                 case StandardStyle.Selection:
                     Selection = (SelectionStyle)style;
+                    break;
+                case StandardStyle.FoldingMarker:
+                    FoldingMarker = (MarkerStyle)style;
                     break;
             }
         }
@@ -102,6 +106,8 @@ namespace CodeBox
         public SelectionStyle Selection { get; private set; }
 
         public TextStyle SpecialSymbol { get; private set; }
+
+        public MarkerStyle FoldingMarker { get; private set; }
 
         public TextStyle LineNumber { get; private set; }
 

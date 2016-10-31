@@ -78,6 +78,7 @@ namespace CodeBox
             Settings = new EditorSettings(this);
             Commands = new CommandManager(this);
             Locations = new LocationManager(this);
+            Folding = new FoldingManager(this);
             context = new EditorContext(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
@@ -186,7 +187,7 @@ namespace CodeBox
 
         protected override void OnResize(EventArgs eventargs)
         {
-            Scroll.InvalidateLines();
+            Scroll.InvalidateLines(force: true);
             Styles.Restyle();
             Invalidate();
             base.OnResize(eventargs);
@@ -206,7 +207,8 @@ namespace CodeBox
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];
-                DrawLine(g, ln, i);
+                if (!ln.Visible.Has(VisibleStates.Invisible))
+                    DrawLine(g, ln, i);
             }
         }
 
@@ -278,6 +280,14 @@ namespace CodeBox
                     x += xw;
                 }
 
+                if (line.Visible.Has(VisibleStates.Header) && lineIndex < Lines.Count &&
+                    Lines[lineIndex + 1].Visible.Has(VisibleStates.Invisible))
+                {
+                    g.FillRectangle(CachedBrush.Create(Styles.Selection.Color),
+                        new Rectangle(x, y+Info.LineHeight/4, Info.CharWidth*3, Info.LineHeight/2));
+                    g.DrawString("···", Styles.Default.Font, Styles.Default.ForeBrush, new Point(x, y), TextStyle.Format);
+                }
+
                 oldcut = cut;
                 y += Info.LineHeight;
                 x = lmarg;
@@ -292,7 +302,12 @@ namespace CodeBox
 
         protected override void OnDoubleClick(EventArgs e)
         {
-            Commands.Run(MouseEvents.DoubleClick, Keys.None, default(CommandArgument));
+            var pos = PointToClient(Cursor.Position);
+            if (pos.X >= Info.TextLeft
+                && pos.X <= Info.TextRight
+                && pos.Y >= Info.TextTop
+                && pos.Y <= Info.TextBottom)
+                Commands.Run(MouseEvents.DoubleClick, Keys.None, default(CommandArgument));
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -382,6 +397,9 @@ namespace CodeBox
                     var pos = Locations.LocationToPosition(e.Location);
                     pos = pos.IsEmpty ? default(Pos) : pos;
                     Commands.Run(Mouse, LastKeys, new CommandArgument(pos));
+                    var idx = Buffer.Selections.IndexOfCaret(pos);
+                    if (idx != -1)
+                        Buffer.Selections[idx].SetToRestore();
                 }
             }
 
@@ -498,6 +516,7 @@ namespace CodeBox
                 InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();
                 Styles.Restyle();
+                Folding.RebuildFolding();
             }
         }
 
@@ -555,5 +574,7 @@ namespace CodeBox
         public ScrollingManager Scroll { get; }
 
         public LocationManager Locations { get; }
+
+        public FoldingManager Folding { get; }
     }
 }

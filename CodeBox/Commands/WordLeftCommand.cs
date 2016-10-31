@@ -11,13 +11,14 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public sealed class WordLeftCommand : CaretCommand
     {
-        protected override Pos GetPosition(Pos caret)
+        protected override Pos GetPosition(Selection sel)
         {
-            return WordLeft(Context, caret);
+            return WordLeft(Context, sel);
         }
 
-        internal static Pos WordLeft(IEditorContext ctx, Pos caret)
+        internal static Pos WordLeft(IEditorContext ctx, Selection sel)
         {
+            var caret = sel.Caret;
             var line = ctx.Buffer.Document.Lines[caret.Line];
 
             if (caret.Col > 0)
@@ -33,7 +34,7 @@ namespace CodeBox.Commands
                 return new Pos(caret.Line, pos);
             }
             else
-                return LeftCommand.MoveLeft(ctx.Buffer.Document, caret);
+                return LeftCommand.MoveLeft(ctx.Buffer.Document, sel);
         }
     }
 }

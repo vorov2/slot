@@ -11,7 +11,7 @@ namespace CodeBox.Styling
 
     public sealed class TextStyle : Style
     {
-        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
+        internal static readonly StringFormat Format = new StringFormat(StringFormat.GenericTypographic)
         {
             LineAlignment = StringAlignment.Near,
             Alignment = StringAlignment.Near,
@@ -37,7 +37,7 @@ namespace CodeBox.Styling
             g.DrawString(ch.ToString(),
                 Editor.CachedFont.Create(FontStyle),
                 Editor.CachedBrush.Create(ForeColor),
-                rect.Location, format);
+                rect.Location, Format);
         }
 
         public Color ForeColor { get; set; }

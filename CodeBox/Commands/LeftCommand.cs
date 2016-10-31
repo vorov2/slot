@@ -11,14 +11,14 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public class LeftCommand : CaretCommand
     {
-        protected override Pos GetPosition(Pos pos)
+        protected override Pos GetPosition(Selection sel)
         {
-            return MoveLeft(Document, pos);
+            return MoveLeft(Document, sel);
         }
 
-        internal static Pos MoveLeft(Document doc, Pos pos)
+        internal static Pos MoveLeft(Document doc, Selection sel)
         {
-            pos = new Pos(pos.Line, pos.Col - 1);
+            var pos = new Pos(sel.Caret.Line, sel.Caret.Col - 1);
 
             if (pos.Col < 0 && pos.Line > 0)
             {
@@ -26,6 +26,7 @@ namespace CodeBox.Commands
                 pos = new Pos(pos.Line - 1, line.Length);
             }
 
+            sel.SetToRestore(pos);
             return pos;
         }
     }

@@ -99,7 +99,10 @@
     <Compile Include="Drawing\CaretRenderer.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorSettings.cs" />
+    <Compile Include="FoldingManager.cs" />
+    <Compile Include="Folding\FoldingNeededEventArgs.cs" />
     <Compile Include="LocationManager.cs" />
+    <Compile Include="Margins\FoldingMargin.cs" />
     <Compile Include="Margins\GutterMargin.cs" />
     <Compile Include="Margins\LineNumberMargin.cs" />
     <Compile Include="Margins\Margin.cs" />
@@ -130,6 +133,7 @@
     <Compile Include="ObjectModel\SelectionList.cs" />
     <Compile Include="StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
+    <Compile Include="Styling\MarkerStyle.cs" />
     <Compile Include="Styling\SelectionStyle.cs" />
     <Compile Include="Styling\StandardStyle.cs" />
     <Compile Include="Styling\Style.cs" />

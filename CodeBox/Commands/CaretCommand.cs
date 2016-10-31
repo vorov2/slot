@@ -7,12 +7,12 @@ namespace CodeBox.Commands
     {
         public override bool Execute(CommandArgument arg, Selection sel)
         {
-            var pos = GetPosition(sel.Caret);
+            var pos = GetPosition(sel);
             sel.Clear(pos);
             Buffer.Selections.ValidateCaret(sel, Document);
             return true;
         }
 
-        protected abstract Pos GetPosition(Pos caret);
+        protected abstract Pos GetPosition(Selection sel);
     }
 }

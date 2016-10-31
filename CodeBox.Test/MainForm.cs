@@ -26,8 +26,10 @@ namespace CodeBox.Test
         {
             BindCommands();
             ed.Styles.StyleNeeded += editor1_StyleNeeded;
+            ed.Folding.FoldingNeeded += Folding_FoldingNeeded;
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
-            ed.LeftMargins.Add(new GutterMargin(ed));
+            ed.LeftMargins.Add(new FoldingMargin(ed));
+           // ed.LeftMargins.Add(new GutterMargin(ed));
             ed.RightMargins.Add(new ScrollBarMargin(ed));
             ed.BottomMargins.Add(new ScrollBarMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
@@ -38,6 +40,8 @@ namespace CodeBox.Test
             ed.Styles.CurrentLineNumber.ForeColor = ColorTranslator.FromHtml("#848484");
             ed.Styles.CurrentLineNumber.BackColor = ColorTranslator.FromHtml("#262626");
             ed.Styles.SpecialSymbol.ForeColor = ColorTranslator.FromHtml("#505050");
+            ed.Styles.FoldingMarker.ForeColor = ColorTranslator.FromHtml("#505050");
+            ed.Styles.FoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
             ed.Styles.Selection.Color = ColorTranslator.FromHtml("#264F78");
             ed.Styles.Register(110,
                 new TextStyle {
@@ -53,6 +57,81 @@ namespace CodeBox.Test
                 });
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, "test.json"));
+        }
+
+        private void Folding_FoldingNeeded(object sender, Folding.FoldingNeededEventArgs e)
+        {
+            Console.WriteLine("Folding...");
+            var li = e.Range.Start.Line;
+
+            while (li > -1 && !ed.Document.Lines[li].Visible.Has(VisibleStates.Header))
+                li--;
+
+            li = li < 0 ? 0 : li;
+            var prevIndent = 0;
+
+            if (li > 0)
+            {
+                var ln = ed.Document.Lines[li - 1];
+
+                for (var i = 0; ; i++)
+                {
+                    var c = ln.CharAt(i);
+
+                    if (c == ' ' || c == '\t')
+                        prevIndent++;
+                    else
+                        break;
+                }
+            }
+
+            var initIndent = prevIndent;
+
+            for (var i = li; i < ed.Document.Lines.Count; i++)
+            {
+                var line = ed.Document.Lines[i];
+                var txt = line.Text;
+                var indent = 0;
+
+                foreach (var c in txt)
+                {
+                    if (c == ' ')
+                        indent++;
+                    else if (c == '\t')
+                        indent += ed.Settings.TabSize;
+                    else
+                        break;
+                }
+
+                indent /= ed.Settings.TabSize;
+
+                if (indent > prevIndent && i > 0)
+                {
+                    var ln = ed.Document.Lines[i - 1];
+                    ed.Document.Lines[i - 1].Visible = VisibleStates.Header
+                        | (ln.Visible.Has(VisibleStates.Invisible) ? VisibleStates.Invisible : VisibleStates.None);
+                    line.Visible &= ~VisibleStates.Header;
+                    line.Visible &= ~VisibleStates.Footer;
+                }
+                else if (indent == prevIndent)
+                {
+                    line.Visible &= ~VisibleStates.Header;
+                    line.Visible &= ~VisibleStates.Footer;
+                    //line.Visible = VisibleState.Invisible;
+                }
+                else if (prevIndent > indent)
+                {
+                    line.Visible = VisibleStates.Footer
+                        | (line.Visible.Has(VisibleStates.Invisible) ? VisibleStates.Invisible : VisibleStates.None);
+                }
+                //else
+                //    line.Visible |= VisibleStates.Visible;
+
+                if (i >= e.Range.End.Line && indent == initIndent)
+                    break;
+
+                prevIndent = indent;
+            }
         }
 
         private void BindCommands()
@@ -110,7 +189,7 @@ namespace CodeBox.Test
         {
             Focus();
         }
-
+        
         private void editor1_StyleNeeded(object sender, StyleNeededEventArgs e)
         {
             //Console.WriteLine("StyleNeeded:"+count++);
@@ -121,26 +200,25 @@ namespace CodeBox.Test
             while (li > -1 && (state = ed.Document.Lines[li].State) == 0)
                 li--;
 
+            li = li < 0 ? 0 : li;
 
-            for (var i = e.Range.Start.Line; i < e.Range.End.Line + 1; i++)
+            for (var i = li; i < e.Range.End.Line + 1; i++)
             {
                 ed.Styles.ClearStyles(i);
-                var txt = ed.Document.Lines[i].Text;
+                var line = ed.Document.Lines[i];
+                var txt = line.Text;
 
                 if (state == 2)
                     state = ed.Document.Lines[i].State = ParseComment(i, txt);
                 else
-                    state = ed.Document.Lines[i].State = Parse(i, txt);
-
+                    state = ed.Document.Lines[i].State = Parse(i, txt, 0);
             }
-
-
         }
 
-
-        private byte Parse(int line, string str, int pos = 0)
+        private byte Parse(int line, string str, int pos)
         {
             byte state = 1;
+            var nonempty = pos != 0;
 
             for (var i = pos; i < str.Length; i++)
             {

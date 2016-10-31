@@ -7,7 +7,7 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public sealed class DocumentEndCommand : CaretCommand
     {
-        protected override Pos GetPosition(Pos caret)
+        protected override Pos GetPosition(Selection sel)
         {
             var idx = Document.Lines.Count - 1;
             return new Pos(idx, Document.Lines[idx].Length);

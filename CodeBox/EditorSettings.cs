@@ -11,7 +11,7 @@ namespace CodeBox
     public sealed class EditorSettings
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
-        private const int TABSIZE = 4;
+        private const int TABSIZE = 2;
         private readonly Editor editor;
 
         public EditorSettings(Editor editor)
@@ -22,7 +22,7 @@ namespace CodeBox
             WordSeparators = SEPS;
             WordWrap = true;
             UseTabs = true;
-            TabSize = 4;
+            TabSize = TABSIZE;
             LinePadding = .1;
             ShowWhitespace = true;
             Font = new Font("Consolas", 11f);

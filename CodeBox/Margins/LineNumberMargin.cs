@@ -26,17 +26,18 @@ namespace CodeBox.Margins
             var len = lines.Count.ToString().Length;
             var caret = Editor.Buffer.Selections.Main.Caret;
             var backBrush = Editor.Styles.LineNumber.BackBrush;
-
             g.FillRectangle(backBrush, bounds);
-            var sb = new StringBuilder();
 
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var line = lines[i];
                 var y = line.Y + sc.Y + info.TextTop;
 
-                if (line.Y >= info.TextBottom - sc.Y)
-                    return true;
+                //if (line.Y >= info.TextBottom - sc.Y)
+                //    return true;
+
+                if (line.Visible.Has(VisibleStates.Invisible))
+                    continue;
 
                 if (line.Y >= sc.Y && y >= bounds.Y)
                 {
@@ -57,7 +58,6 @@ namespace CodeBox.Margins
                     }
 
                     g.DrawString(str, font, col, x + sc.X, y);
-                    sb.Append(str);
                 }
             }
 

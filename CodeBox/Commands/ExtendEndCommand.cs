@@ -7,9 +7,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     public sealed class ExtendEndCommand : SelectionCommand
     {
-        protected override Pos Select(Pos pos)
+        protected override Pos Select(Selection sel)
         {
-            return EndCommand.MoveEnd(Document, pos);
+            return EndCommand.MoveEnd(Document, sel.Caret);
         }
     }
 }

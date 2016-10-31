@@ -8,11 +8,11 @@ namespace CodeBox.Commands
     {
         public override bool Execute(CommandArgument arg, Selection sel)
         {
-            var pos = Select(sel.Caret);
+            var pos = Select(sel);
             sel.End = pos;
             return true;
         }
 
-        protected abstract Pos Select(Pos pos);
+        protected abstract Pos Select(Selection sel);
     }
 }

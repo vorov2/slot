@@ -63,7 +63,10 @@ namespace CodeBox.Margins
                     if ((effect & MarginEffects.Invalidate) == MarginEffects.Invalidate)
                         editor.Scroll.InvalidateLines();
                     if ((effect & MarginEffects.Redraw) == MarginEffects.Redraw)
+                    {
                         editor.Redraw();
+                        editor.Styles.Restyle();
+                    }
                     if ((effect & MarginEffects.Scroll) == MarginEffects.Scroll)
                         editor.Scroll.UpdateVisibleRectangle();
                     if ((effect & MarginEffects.CaptureMouse) == MarginEffects.CaptureMouse)

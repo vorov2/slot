@@ -7,9 +7,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     public sealed class ExtendLeftCommand : SelectionCommand
     {
-        protected override Pos Select(Pos pos)
+        protected override Pos Select(Selection sel)
         {
-            return LeftCommand.MoveLeft(Document, pos);
+            return LeftCommand.MoveLeft(Document, sel);
         }
     }
 }

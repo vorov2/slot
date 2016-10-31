@@ -7,9 +7,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     public sealed class ExtendDownCommand : SelectionCommand
     {
-        protected override Pos Select(Pos pos)
+        protected override Pos Select(Selection sel)
         {
-            return DownCommand.MoveDown(Context, pos);
+            return DownCommand.MoveDown(Context, sel);
         }
     }
 }

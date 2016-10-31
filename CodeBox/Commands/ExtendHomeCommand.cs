@@ -7,9 +7,9 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     public sealed class ExtendHomeCommand : SelectionCommand
     {
-        protected override Pos Select(Pos pos)
+        protected override Pos Select(Selection sel)
         {
-            return HomeCommand.MoveHome(Document, pos);
+            return HomeCommand.MoveHome(Document, sel.Caret);
         }
     }
 }
