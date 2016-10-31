@@ -320,7 +320,7 @@ namespace CodeBox.ObjectModel
         #endregion
 
         #region Folding
-        public FoldingStates Visible { get; set; } = FoldingStates.None;
+        public FoldingStates Folding { get; set; } = FoldingStates.None;
         #endregion
     }
 }

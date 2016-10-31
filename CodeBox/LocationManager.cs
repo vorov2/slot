@@ -24,7 +24,7 @@ namespace CodeBox
             {
                 var line = editor.Lines[i];
 
-                if (line.Visible.Has(FoldingStates.Invisible))
+                if (line.Folding.Has(FoldingStates.Invisible))
                     continue;
 
                 var lh = line.Stripes * editor.Info.LineHeight;

@@ -213,7 +213,7 @@ namespace CodeBox
             for (var i = fvl; i < lvl + 1; i++)
             {
                 var ln = Document.Lines[i];
-                if (!ln.Visible.Has(FoldingStates.Invisible))
+                if (!ln.Folding.Has(FoldingStates.Invisible))
                     DrawLine(g, ln, i);
             }
         }
@@ -286,8 +286,8 @@ namespace CodeBox
                     x += xw;
                 }
 
-                if (line.Visible.Has(FoldingStates.Header) && lineIndex < Lines.Count &&
-                    Lines[lineIndex + 1].Visible.Has(FoldingStates.Invisible))
+                if (line.Folding.Has(FoldingStates.Header) && lineIndex < Lines.Count &&
+                    Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
                 {
                     Folding.DrawFoldingIndicator(g, x, y);
                 }
@@ -331,33 +331,28 @@ namespace CodeBox
                 mlist.CallMarginMethod(MarginMethod.MouseMove, e.Location);
                 Cursor = Cursors.Arrow;
             }
-            else
-                Cursor = Cursors.IBeam;
-
-            if (Mouse != MouseEvents.Click)
-                return;
 
             var leftMouseDown = e.Button == MouseButtons.Left;
-            var p = default(Pos);
+            var p = Locations.LocationToPosition(e.Location);
 
-            if (leftMouseDown)
+            if (leftMouseDown && p.IsEmpty)
             {
-                p = Locations.LocationToPosition(e.Location);
-
-                if (p.IsEmpty && e.Y - Scroll.Y > Info.TextIntegralHeight
-                    && Scroll.LastVisibleLine < Lines.Count - 1)
-                {
-                    var lineIndex = Scroll.LastVisibleLine;
-                    var ln = Document.Lines[lineIndex];
-                    p = new Pos(lineIndex + 1, ln.Length <= p.Col ? p.Col : ln.Length);
-                }
+                if (e.Y - Scroll.Y > Info.TextIntegralHeight && Scroll.LastVisibleLine < Lines.Count - 1)
+                    p = new Pos(Scroll.LastVisibleLine + 1, Lines[Scroll.LastVisibleLine].Length);
+                else if (e.Y < Info.TextTop && Scroll.FirstVisibleLine > 0)
+                    p = new Pos(Scroll.FirstVisibleLine - 1, 0);
             }
 
-            if (p.IsEmpty)
-                return;
+            if (!p.IsEmpty && Lines[p.Line].Length == p.Col && Folding.IsCollapsedHeader(p.Line))
+                Cursor = Cursors.Arrow;
+            else if (mlist == null)
+                Cursor = Cursors.IBeam;
 
-            var arg = new CommandArgument(p);
-            Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
+            if (!p.IsEmpty)
+            {
+                var arg = new CommandArgument(p);
+                Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
+            }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -402,8 +397,16 @@ namespace CodeBox
                     pos = pos.IsEmpty ? default(Pos) : pos;
                     Commands.Run(Mouse, LastKeys, new CommandArgument(pos));
                     var idx = Buffer.Selections.IndexOfCaret(pos);
+
                     if (idx != -1)
                         Buffer.Selections[idx].SetToRestore();
+
+                    if (Lines[pos.Line].Length == pos.Col && Folding.IsCollapsedHeader(pos.Line))
+                    {
+                        Folding.ToggleExpand(pos.Line);
+                        Scroll.InvalidateLines();
+                        Redraw();
+                    }
                 }
             }
 

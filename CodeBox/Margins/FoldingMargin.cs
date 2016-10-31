@@ -22,44 +22,7 @@ namespace CodeBox.Margins
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
 
             if (lineIndex > -1)
-            {
-                var ln = Editor.Lines[lineIndex];
-                var vis = lineIndex < Editor.Lines.Count 
-                    ? Editor.Lines[lineIndex + 1].Visible.Has(FoldingStates.Invisible) : true;
-
-                if (ln.Visible.Has(FoldingStates.Header))
-                {
-                    var sw = 0;
-                    var selPos = new Pos(lineIndex, ln.Length);
-
-                    for (var i = lineIndex + 1; i < Editor.Lines.Count; i++)
-                    {
-                        var cln = Editor.Lines[i];
-
-                        if (cln.Visible.Has(FoldingStates.Header))
-                            sw++;
-                        else if (cln.Visible.Has(FoldingStates.Footer) && sw != 0)
-                            sw--;
-                        else if (cln.Visible.Has(FoldingStates.Footer) && sw == 0)
-                            break;
-
-                        if (vis)
-                        {
-                            cln.Visible &= ~FoldingStates.Invisible;
-                        }
-                        else
-                        {
-                            cln.Visible |= FoldingStates.Invisible;
-
-                            foreach (var s in Editor.Buffer.Selections)
-                            {
-                                if (s.Start.Line == i || s.End.Line == i)
-                                    s.Clear(selPos);
-                            }
-                        }
-                    }
-                }
-            }
+                Editor.Folding.ToggleExpand(lineIndex);
 
             return MarginEffects.Redraw | MarginEffects.Invalidate | MarginEffects.CaptureMouse;
         }
@@ -79,12 +42,12 @@ namespace CodeBox.Margins
                 var y = ln.Y + Editor.Info.TextTop + Editor.Scroll.Y;
                 y += (h - side) / 2;
 
-                if (ln.Visible.Has(FoldingStates.Header) && !ln.Visible.Has(FoldingStates.Invisible))
+                if (ln.Folding.Has(FoldingStates.Header) && !ln.Folding.Has(FoldingStates.Invisible))
                 {
                     var arrow = default(Point[]);
                     var b = Editor.Styles.FoldingMarker.ForeBrush;
 
-                    if (!Editor.Lines[i + 1].Visible.Has(FoldingStates.Invisible))
+                    if (!Editor.Lines[i + 1].Folding.Has(FoldingStates.Invisible))
                     {
                         arrow = new Point[]
                         {

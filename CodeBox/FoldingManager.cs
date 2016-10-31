@@ -22,14 +22,61 @@ namespace CodeBox
         public void ExpandAll()
         {
             foreach (var ln in editor.Lines)
-                ln.Visible &= ~FoldingStates.Invisible;
+                ln.Folding &= ~FoldingStates.Invisible;
         }
 
         public void CollapseAll()
         {
             foreach (var ln in editor.Lines)
-                if (!ln.Visible.Has(FoldingStates.Header))
-                    ln.Visible |= FoldingStates.Invisible;
+                if (!ln.Folding.Has(FoldingStates.Header))
+                    ln.Folding |= FoldingStates.Invisible;
+        }
+
+        public bool IsCollapsedHeader(int lineIndex)
+        {
+            var ln = editor.Lines[lineIndex];
+            return ln.Folding.Has(FoldingStates.Header) && lineIndex < editor.Lines.Count
+                && editor.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible);
+        }
+
+        public void ToggleExpand(int lineIndex)
+        {
+            var ln = editor.Lines[lineIndex];
+            var vis = lineIndex < editor.Lines.Count
+                ? editor.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible) : true;
+
+            if (ln.Folding.Has(FoldingStates.Header))
+            {
+                var sw = 0;
+                var selPos = new Pos(lineIndex, ln.Length);
+
+                for (var i = lineIndex + 1; i < editor.Lines.Count; i++)
+                {
+                    var cln = editor.Lines[i];
+
+                    if (cln.Folding.Has(FoldingStates.Header))
+                        sw++;
+                    else if (cln.Folding.Has(FoldingStates.Footer) && sw != 0)
+                        sw--;
+                    else if (cln.Folding.Has(FoldingStates.Footer) && sw == 0)
+                        break;
+
+                    if (vis)
+                    {
+                        cln.Folding &= ~FoldingStates.Invisible;
+                    }
+                    else
+                    {
+                        cln.Folding |= FoldingStates.Invisible;
+
+                        foreach (var s in editor.Buffer.Selections)
+                        {
+                            if (s.Start.Line == i || s.End.Line == i)
+                                s.Clear(selPos);
+                        }
+                    }
+                }
+            }
         }
 
         internal void RebuildFolding()

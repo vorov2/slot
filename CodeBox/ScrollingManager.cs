@@ -149,7 +149,7 @@ namespace CodeBox
             {
                 var ln = editor.Lines[i];
 
-                if (ln.Visible.Has(FoldingStates.Invisible))
+                if (ln.Folding.Has(FoldingStates.Invisible))
                     continue;
 
                 cs += ln.Stripes;
@@ -173,7 +173,7 @@ namespace CodeBox
             {
                 var ln = editor.Document.Lines[i];
 
-                if (ln.Visible.Has(FoldingStates.Invisible))
+                if (ln.Folding.Has(FoldingStates.Invisible))
                     continue;
 
                 var lnEnd = ln.Y + ln.Stripes * lh;
@@ -211,7 +211,7 @@ namespace CodeBox
 
                 foreach (var ln in editor.Document.Lines)
                 {
-                    if (ln.Visible.Has(FoldingStates.Invisible))
+                    if (ln.Folding.Has(FoldingStates.Invisible))
                         continue;
 
                     ln.Y = y;
@@ -233,7 +233,7 @@ namespace CodeBox
 
                 foreach (var ln in editor.Document.Lines)
                 {
-                    if (ln.Visible.Has(FoldingStates.Invisible))
+                    if (ln.Folding.Has(FoldingStates.Invisible))
                         continue;
 
                     if (!ln.Invalidated || force)

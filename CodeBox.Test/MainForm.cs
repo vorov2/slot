@@ -67,7 +67,7 @@ namespace CodeBox.Test
             Console.WriteLine("Folding...");
             var li = e.Range.Start.Line;
 
-            while (li > -1 && !ed.Document.Lines[li].Visible.Has(FoldingStates.Header))
+            while (li > -1 && !ed.Document.Lines[li].Folding.Has(FoldingStates.Header))
                 li--;
 
             li = li < 0 ? 0 : li;
@@ -111,21 +111,21 @@ namespace CodeBox.Test
                 if (indent > prevIndent && i > 0)
                 {
                     var ln = ed.Document.Lines[i - 1];
-                    ed.Document.Lines[i - 1].Visible = FoldingStates.Header
-                        | (ln.Visible.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
-                    line.Visible &= ~FoldingStates.Header;
-                    line.Visible &= ~FoldingStates.Footer;
+                    ed.Document.Lines[i - 1].Folding = FoldingStates.Header
+                        | (ln.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
+                    line.Folding &= ~FoldingStates.Header;
+                    line.Folding &= ~FoldingStates.Footer;
                 }
                 else if (indent == prevIndent)
                 {
-                    line.Visible &= ~FoldingStates.Header;
-                    line.Visible &= ~FoldingStates.Footer;
+                    line.Folding &= ~FoldingStates.Header;
+                    line.Folding &= ~FoldingStates.Footer;
                     //line.Visible = VisibleState.Invisible;
                 }
                 else if (prevIndent > indent)
                 {
-                    line.Visible = FoldingStates.Footer
-                        | (line.Visible.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
+                    line.Folding = FoldingStates.Footer
+                        | (line.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
                 }
                 //else
                 //    line.Visible |= VisibleStates.Visible;
@@ -149,6 +149,7 @@ namespace CodeBox.Test
             ed.Commands.Bind<PasteCommand>(Keys.Control | Keys.V);
             ed.Commands.Bind<CutCommand>(Keys.Control | Keys.X);
             ed.Commands.Bind<CopyCommand>(Keys.Control | Keys.C);
+            ed.Commands.Bind<SetCaretCommand>(MouseEvents.Click, Keys.Alt);
             ed.Commands.Bind<SetCaretCommand>(MouseEvents.Click, Keys.None);
             ed.Commands.Bind<AddCaretCommand>(MouseEvents.Click, Keys.Control);
             ed.Commands.Bind<NormalSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.Control);

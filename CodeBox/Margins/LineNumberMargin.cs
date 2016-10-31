@@ -37,7 +37,7 @@ namespace CodeBox.Margins
                 //if (line.Y >= info.TextBottom - sc.Y)
                 //    return true;
 
-                if (line.Visible.Has(FoldingStates.Invisible))
+                if (line.Folding.Has(FoldingStates.Invisible))
                     continue;
 
                 if (line.Y >= sc.Y && y >= bounds.Y)
