@@ -30,3 +30,5 @@ Features:
 * [ ] Zooming
 * [ ] Changes line indication
 * [ ] Printing
+* [ ] Wrap by a wrap column
+* [ ] Long line indicators
