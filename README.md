@@ -9,6 +9,7 @@ Features:
 * [X] Basic editing and text navigation commands
 * [X] Configurable hotkeys (including mouse)
 * [X] Multiple selections and multiple carets
+* [X] Rectangular selection
 * [X] Extendable syntax highlighting
 * [X] Multi level undo and redo
 * [X] Word wrapping
