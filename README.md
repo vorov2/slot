@@ -28,7 +28,7 @@ Features:
 * [ ] Popups for autocompletion
 * [ ] Split editing
 * [X] Hyperlinks
-* [ ] Line indenting
+* [X] Line indenting
 * [ ] Read-only mode
 * [ ] Match parens
 * [ ] Search including regex search
