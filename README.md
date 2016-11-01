@@ -14,6 +14,7 @@ Features:
 * [X] Multiple selections and multiple carets
 * [X] Rectangular selection
 * [X] Extendable syntax highlighting
+* [X] Combination of styles
 * [ ] Configurable lexer for syntax highlighting
 * [X] Multi level undo and redo
 * [X] Word wrapping
