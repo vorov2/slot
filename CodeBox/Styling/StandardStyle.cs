@@ -20,6 +20,8 @@ namespace CodeBox.Styling
 
         FoldingMarker = 5,
 
-        ActiveFoldingMarker = 6
+        ActiveFoldingMarker = 6,
+
+        CallTip = 7
     }
 }

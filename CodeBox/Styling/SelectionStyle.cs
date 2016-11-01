@@ -10,12 +10,18 @@ namespace CodeBox.Styling
 {
     public sealed class SelectionStyle : Style
     {
-        public override void Draw(Graphics g, Rectangle rect, Pos pos)
+        public override void DrawBackground(Graphics g, Rectangle rect, Pos pos)
         {
-            if (!Color.IsEmpty)
-                g.FillRectangle(Editor.CachedBrush.Create(Color), rect);
+            g.FillRectangle(Editor.CachedBrush.Create(BackColor), rect);
         }
 
-        public Color Color { get; set; }
+        internal override Style Combine(Style other)
+        {
+            var hidden = other.Clone();
+            hidden.ForeColor = other.ForeColor;
+            hidden.BackColor = BackColor;
+            hidden.FontStyle = other.FontStyle;
+            return hidden;
+        }
     }
 }

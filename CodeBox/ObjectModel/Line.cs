@@ -156,17 +156,6 @@ namespace CodeBox.ObjectModel
         #region Styles
         internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
 
-        internal int GetStyle(int index)
-        {
-            foreach (var a in AppliedStyles)
-            {
-                if (index >= a.Start && index <= a.End)
-                    return a.StyleId;
-            }
-
-            return (int)StandardStyle.Default;
-        }
-
         internal Style GetStyle(int index, StyleManager man)
         {
             var ret = default(Style);
@@ -179,14 +168,13 @@ namespace CodeBox.ObjectModel
                         ret = man.GetStyle(a.StyleId);
                     else
                     {
-                        ret.NextStyle = man.GetStyle(a.StyleId);
-                        ret = ret.NextStyle;
+                        var next = man.GetStyle(a.StyleId);
+                        ret = ret.Combine(next);
                     }
                 }
             }
 
             ret = ret ?? man.GetStyle((int)StandardStyle.Default);
-            ret.NextStyle = null;
             return ret;
         }
         #endregion

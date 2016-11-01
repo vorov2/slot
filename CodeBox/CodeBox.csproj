@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CallTipManager.cs" />
     <Compile Include="Commands\CommandKeys.cs" />
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\ActionExponent.cs" />

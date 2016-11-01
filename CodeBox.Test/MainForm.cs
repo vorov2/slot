@@ -45,7 +45,7 @@ namespace CodeBox.Test
             ed.Styles.FoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
             ed.Styles.ActiveFoldingMarker.ForeColor = ColorTranslator.FromHtml("#C0AAF7");
             ed.Styles.ActiveFoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
-            ed.Styles.Selection.Color = ColorTranslator.FromHtml("#264F78");
+            ed.Styles.Selection.BackColor = ColorTranslator.FromHtml("#264F78");
             ed.Styles.Register(110,
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#8CDCDB")
@@ -58,13 +58,16 @@ namespace CodeBox.Test
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#579032")
                 });
+            ed.Styles.Register(200,
+                new TextStyle { FontStyle = FontStyle.Underline });
+            ed.Styles.Register(210,
+                new TextStyle { BackColor = ColorTranslator.FromHtml("#2D2D30") });
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, "test.json"));
         }
 
         private void Folding_FoldingNeeded(object sender, Folding.FoldingNeededEventArgs e)
         {
-            Console.WriteLine("Folding...");
             var li = e.Range.Start.Line;
 
             while (li > -1 && !ed.Document.Lines[li].Folding.Has(FoldingStates.Header))
@@ -239,6 +242,11 @@ namespace CodeBox.Test
                     //ed.Styles.StyleRange(st ? (byte)10 : (byte)11, 
                     //    new Range(new Pos(line, i), new Pos(line, ei)));
                     ed.Styles.StyleRange(st ? 110 : 111, line, i, ei);
+                    if (st)
+                    {
+                        ed.Styles.StyleRange(200, line, i, ei);
+                        ed.Styles.StyleRange(210, line, i, ei);
+                    }
                     i = ei + 1;
                 }
                 else if (c == '/' && i < str.Length - 1 && str[i + 1] == '*')

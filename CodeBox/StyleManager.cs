@@ -19,10 +19,12 @@ namespace CodeBox
             Alignment = StringAlignment.Near,
             Trimming = StringTrimming.None
         };
+        internal readonly TextStyle hiddenStyle = new TextStyle();
 
         public StyleManager(Editor editor)
         {
             this.editor = editor;
+            hiddenStyle.Editor = editor;
             Register(StandardStyle.Default, new TextStyle());
             Register(StandardStyle.Selection, new SelectionStyle());
             Register(StandardStyle.LineNumber, new TextStyle());
@@ -40,6 +42,8 @@ namespace CodeBox
         private void Register(StandardStyle styleId, Style style)
         {
             style.Editor = editor;
+            style.Cloned = style.FullClone();
+            style.Cloned.Editor = editor;
             styles.Add((int)styleId, style);
 
             switch (styleId)
@@ -71,6 +75,8 @@ namespace CodeBox
         public void Register(StyleId styleId, Style style)
         {
             style.Editor = editor;
+            style.Cloned = style.FullClone();
+            style.Cloned.Editor = editor;
             styles.Remove(styleId);
             styles.Add(styleId, style);
         }

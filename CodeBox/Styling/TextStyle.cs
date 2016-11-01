@@ -8,57 +8,22 @@ using System.Threading.Tasks;
 
 namespace CodeBox.Styling
 {
-
     public sealed class TextStyle : Style
     {
-        internal static readonly StringFormat Format = new StringFormat(StringFormat.GenericTypographic)
-        {
-            LineAlignment = StringAlignment.Near,
-            Alignment = StringAlignment.Near,
-            Trimming = StringTrimming.None
-        };
+        private static readonly TextStyle hidden = new TextStyle();
 
         public TextStyle()
         {
-
+            
         }
 
-        public override void Draw(Graphics g, Rectangle rect, Pos pos)
+        internal override Style Combine(Style other)
         {
-            var ch = Editor.Lines[pos.Line].CharAt(pos.Col);
-
-            if (ch == '\0' && Editor.Settings.ShowEol) ch = '\u00B6';
-            else if (ch == '\t' && Editor.Settings.ShowWhitespace) ch = '\u2192';
-            else if (ch == ' ' && Editor.Settings.ShowWhitespace) ch = '·';
-
-            if (BackColor != Editor.Styles.Default.BackColor && !BackColor.IsEmpty)
-                g.FillRectangle(Editor.CachedBrush.Create(BackColor), rect);
-
-            g.DrawString(ch.ToString(),
-                Editor.CachedFont.Create(FontStyle),
-                Editor.CachedBrush.Create(ForeColor),
-                rect.Location, Format);
-        }
-
-        public Color ForeColor { get; set; }
-
-        public Color BackColor { get; set; }
-
-        public FontStyle FontStyle { get; set; }
-
-        internal Brush ForeBrush
-        {
-            get { return Editor.CachedBrush.Create(ForeColor); }
-        }
-
-        internal Brush BackBrush
-        {
-            get { return Editor.CachedBrush.Create(BackColor); }
-        }
-
-        internal Font Font
-        {
-            get { return Editor.CachedFont.Create(FontStyle); }
+            var hidden = other.Clone();
+            hidden.ForeColor = ForeColor.IsEmpty ? other.ForeColor : ForeColor;
+            hidden.BackColor = BackColor.IsEmpty ? other.BackColor : BackColor;
+            hidden.FontStyle = FontStyle == FontStyle.Regular ? other.FontStyle : FontStyle;
+            return hidden;
         }
     }
 }

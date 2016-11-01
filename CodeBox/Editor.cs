@@ -85,6 +85,7 @@ namespace CodeBox
             Commands = new CommandManager(this);
             Locations = new LocationManager(this);
             Folding = new FoldingManager(this);
+            CallTips = new CallTipManager(this);
             context = new EditorContext(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
@@ -250,18 +251,14 @@ namespace CodeBox
                         var high = sel && Buffer.Selections.IsSelected(pos);
 
                         if (c == '\0' || c == '\t' || c == ' ')
-                        {
                             style = Styles.GetStyle((int)StandardStyle.SpecialSymbol);
-                            style.NextStyle = null;
-                        }
                         else
                             style = line.GetStyle(i, Styles);
 
                         if (high)
                         {
                             var sstyle = Styles.GetStyle((int)StandardStyle.Selection);
-                            sstyle.NextStyle = style;
-                            style = sstyle;
+                            style = sstyle.Combine(style);
                         }
 
                         style.DrawAll(g, rect, pos);
@@ -274,7 +271,7 @@ namespace CodeBox
                             if (blink)
                             {
                                 var cg = Caret.GetDrawingSurface();
-                                cg.Clear(high ? Styles.Selection.Color : Styles.Default.BackColor);
+                                cg.Clear(high ? Styles.Selection.BackColor : Styles.Default.BackColor);
                                 style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
                                 Caret.Resume();
                             }
@@ -344,9 +341,17 @@ namespace CodeBox
             }
 
             if (!p.IsEmpty && Lines[p.Line].Length == p.Col && Folding.IsCollapsedHeader(p.Line))
+            {
                 Cursor = Cursors.Arrow;
+                CallTips.ShowCallTip(p, new Size(100, 100));
+            }
             else if (mlist == null)
+            {
                 Cursor = Cursors.IBeam;
+                CallTips.HideCallTip();
+            }
+            else
+                CallTips.HideCallTip();
 
             if (!p.IsEmpty)
             {
@@ -583,5 +588,7 @@ namespace CodeBox
         public LocationManager Locations { get; }
 
         public FoldingManager Folding { get; }
+
+        public CallTipManager CallTips { get; }
     }
 }
