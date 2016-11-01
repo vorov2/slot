@@ -11,7 +11,7 @@ namespace CodeBox
     public sealed class CommandManager
     {
         private readonly Dictionary<Type, CommandInfo> commands;
-        private readonly Dictionary<CommandKeys, CommandInfo> commandsByKeys;
+        private readonly Dictionary<CommandKeys, List<CommandInfo>> commandsByKeys;
         private int counter;
         private bool undoGroup;
         private readonly Editor editor;
@@ -19,13 +19,14 @@ namespace CodeBox
         internal CommandManager(Editor editor)
         {
             commands = new Dictionary<Type, CommandInfo>();
-            commandsByKeys = new Dictionary<CommandKeys, CommandInfo>();
+            commandsByKeys = new Dictionary<CommandKeys, List<CommandInfo>>();
             this.editor = editor;
             RegisterCommands();
         }
 
         private void RegisterCommands()
         {
+            Register<FollowLinkCommand>();
             Register<DeleteWordBackCommand>();
             Register<DeleteWordCommand>();
             Register<ScrollLineUpCommand>();
@@ -211,7 +212,15 @@ namespace CodeBox
                 return false;
 
             var ck = new CommandKeys(mouse, keys);
-            commandsByKeys.Add(ck, ci);
+            List<CommandInfo> cilist;
+
+            if (!commandsByKeys.TryGetValue(ck, out cilist))
+            {
+                cilist = new List<CommandInfo>();
+                commandsByKeys.Add(ck, cilist);
+            }
+
+            cilist.Add(ci);
             return true;
         }
 
@@ -230,10 +239,11 @@ namespace CodeBox
 
         public void Run(MouseEvents mouse, Keys keys, CommandArgument arg)
         {
-            CommandInfo ci;
+            List<CommandInfo> seq;
 
-            if (commandsByKeys.TryGetValue(new CommandKeys(mouse, keys), out ci))
-                Run(arg, ci);
+            if (commandsByKeys.TryGetValue(new CommandKeys(mouse, keys), out seq))
+                foreach (var ci in seq)
+                    Run(arg, ci);
         }
 
         private void Run(CommandArgument arg, CommandInfo ci)
@@ -250,6 +260,7 @@ namespace CodeBox
             var cmd = ci.Command;
             var thisUndo = false;
             editor.AtomicChange = false;
+            var exec = false;
 
             if (undo)
                 thisUndo = BeginUndoAction();
@@ -275,7 +286,7 @@ namespace CodeBox
 
                 cmd.Context = editor.Context;
 
-                if (!cmd.Execute(arg, mainSel) && undo)
+                if (!(exec = cmd.Execute(arg, mainSel)) && undo)
                     editor.Buffer.UndoStack.Pop();
 
                 if (restoreCaret)
@@ -292,8 +303,12 @@ namespace CodeBox
                     }
 
                     cmd.Context = editor.Context;
+                    var e = cmd.Execute(arg, sel);
 
-                    if (!cmd.Execute(arg, sel) && undo)
+                    if (!exec)
+                        exec = e;
+
+                    if (!e && undo)
                         editor.Buffer.UndoStack.Pop();
 
                     if (restoreCaret)
@@ -311,7 +326,8 @@ namespace CodeBox
             if (restoreCaret)
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
-            DoAftermath(exp);
+            if (exec)
+                DoAftermath(exp);
             editor.Buffer.Edits++;
         }
 
@@ -385,6 +401,13 @@ namespace CodeBox
             
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
                 editor.Folding.RebuildFolding();
+
+            if ((exp & ActionExponent.LeaveEditor) == ActionExponent.LeaveEditor)
+            {
+                editor.LastKeys = Keys.None;
+                editor.Mouse = MouseEvents.None;
+                editor.Buffer.Selections.Truncate();
+            }
         }
     }
 }

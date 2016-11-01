@@ -71,7 +71,10 @@ namespace CodeBox
 
                         foreach (var s in editor.Buffer.Selections)
                         {
-                            if (s.Start.Line == i || s.End.Line == i)
+                            var start = s.Start > s.End ? s.End : s.Start;
+                            var end = s.Start > s.End ? s.Start : s.End;
+
+                            if (i >= start.Line && i <= s.End.Line)
                                 s.Clear(selPos);
                         }
                     }

@@ -156,6 +156,17 @@ namespace CodeBox.ObjectModel
         #region Styles
         internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
 
+        public AppliedStyle FindHyperlink(int col)
+        {
+            foreach (var a in AppliedStyles)
+            {
+                if (col >= a.Start && col <= a.End && a.StyleId == (int)StandardStyle.Hyperlink)
+                    return a;
+            }
+
+            return AppliedStyle.Empty;
+        }
+
         internal Style GetStyle(int index, StyleManager man)
         {
             var ret = default(Style);

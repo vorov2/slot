@@ -2,8 +2,10 @@
 
 namespace CodeBox.Styling
 {
-    internal struct AppliedStyle
+    public struct AppliedStyle : IEquatable<AppliedStyle>
     {
+        public static readonly AppliedStyle Empty = new AppliedStyle(-1, -1, -1);
+
         public AppliedStyle(int styleId, int start, int end)
         {
             StyleId = styleId;
@@ -16,5 +18,47 @@ namespace CodeBox.Styling
         public readonly int Start;
 
         public readonly int End;
+
+        public override string ToString()
+        {
+            return $"{{StyleId={StyleId};Start={Start};End={End}}}";
+        }
+
+        public static bool Equals(AppliedStyle fst, AppliedStyle snd)
+        {
+            return fst.StyleId == snd.StyleId && fst.Start == snd.Start && fst.End == snd.End;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is AppliedStyle ? Equals(this, (AppliedStyle)obj) : false;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + StyleId.GetHashCode();
+                hash = hash * 23 + Start.GetHashCode();
+                hash = hash * 23 + End.GetHashCode();
+                return hash;
+            }
+        }
+
+        public bool Equals(AppliedStyle obj)
+        {
+            return Equals(this, obj);
+        }
+
+        public static bool operator ==(AppliedStyle fst, AppliedStyle snd)
+        {
+            return Equals(fst, snd);
+        }
+
+        public static bool operator !=(AppliedStyle fst, AppliedStyle snd)
+        {
+            return !Equals(fst, snd);
+        }
     }
 }

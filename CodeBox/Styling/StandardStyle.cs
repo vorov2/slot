@@ -22,6 +22,8 @@ namespace CodeBox.Styling
 
         ActiveFoldingMarker = 6,
 
-        CallTip = 7
+        CallTip = 7,
+
+        Hyperlink = 8
     }
 }

@@ -32,6 +32,8 @@ namespace CodeBox
             Register(StandardStyle.SpecialSymbol, new TextStyle());
             Register(StandardStyle.FoldingMarker, new MarkerStyle());
             Register(StandardStyle.ActiveFoldingMarker, new MarkerStyle());
+            Register(StandardStyle.CallTip, new TextStyle());
+            Register(StandardStyle.Hyperlink, new TextStyle { FontStyle = FontStyle.Underline });
         }
 
         public Style GetStyle(int styleId)
@@ -68,6 +70,12 @@ namespace CodeBox
                     break;
                 case StandardStyle.ActiveFoldingMarker:
                     ActiveFoldingMarker = (MarkerStyle)style;
+                    break;
+                case StandardStyle.CallTip:
+                    CallTip = (TextStyle)style;
+                    break;
+                case StandardStyle.Hyperlink:
+                    Hyperlink = (TextStyle)style;
                     break;
             }
         }
@@ -124,6 +132,10 @@ namespace CodeBox
         public TextStyle LineNumber { get; private set; }
 
         public TextStyle CurrentLineNumber { get; private set; }
+
+        public TextStyle CallTip { get; private set; }
+
+        public TextStyle Hyperlink { get; private set; }
         #endregion
     }
 }

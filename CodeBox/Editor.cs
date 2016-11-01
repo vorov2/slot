@@ -26,6 +26,10 @@ namespace CodeBox
         private const int WM_MOUSEHWHEEL = 0x020E;
         private const int WM_CHAR = 0x102;
 
+        private readonly Timer timer = new Timer { Interval = 500 };
+        private Pos movePosition;
+        private Point mousePosition;
+
         private sealed class EditorContext : IEditorContext
         {
             private readonly Editor editor;
@@ -89,6 +93,7 @@ namespace CodeBox
             context = new EditorContext(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
+            timer.Tick += Tick;
         }
 
         private volatile bool disposed;
@@ -150,6 +155,7 @@ namespace CodeBox
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            Console.WriteLine("Onpaint");
             Caret.Suspend();
 
             var dt = DateTime.Now;
@@ -341,23 +347,33 @@ namespace CodeBox
             }
 
             if (!p.IsEmpty && Lines[p.Line].Length == p.Col && Folding.IsCollapsedHeader(p.Line))
-            {
                 Cursor = Cursors.Arrow;
-                CallTips.ShowCallTip(p, new Size(100, 100));
-            }
             else if (mlist == null)
-            {
                 Cursor = Cursors.IBeam;
-                CallTips.HideCallTip();
-            }
-            else
-                CallTips.HideCallTip();
+
+            mousePosition = e.Location;
+            movePosition = p;
 
             if (!p.IsEmpty)
             {
-                var arg = new CommandArgument(p);
-                Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
+                if (Mouse != MouseEvents.None || LastKeys != Keys.None)
+                {
+                    var arg = new CommandArgument(p);
+                    Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
+                }
+
+                timer.Start();
             }
+        }
+        
+        private void Tick(object sender, EventArgs e)
+        {
+            if (PointToClient(Cursor.Position) == mousePosition && !movePosition.IsEmpty)
+                CallTips.MouseDwell(movePosition);
+            else
+                CallTips.HideCallTip();
+
+            timer.Stop();
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -557,9 +573,9 @@ namespace CodeBox
             get { return context; }
         }
 
-        internal Keys LastKeys { get; private set; }
+        internal Keys LastKeys { get; set; }
 
-        internal MouseEvents Mouse { get; private set; }
+        internal MouseEvents Mouse { get; set; }
 
         public EditorInfo Info { get; }
 

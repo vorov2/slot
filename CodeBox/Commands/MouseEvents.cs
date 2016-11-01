@@ -13,6 +13,8 @@ namespace CodeBox.Commands
 
         DoubleClick = 0x04,
 
-        Move = 0x08
+        Move = 0x08,
+
+        Hover = 0x10
     }
 }

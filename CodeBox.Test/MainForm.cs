@@ -58,10 +58,6 @@ namespace CodeBox.Test
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#579032")
                 });
-            ed.Styles.Register(200,
-                new TextStyle { FontStyle = FontStyle.Underline });
-            ed.Styles.Register(210,
-                new TextStyle { BackColor = ColorTranslator.FromHtml("#2D2D30") });
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, "test.json"));
         }
@@ -142,6 +138,7 @@ namespace CodeBox.Test
 
         private void BindCommands()
         {
+            ed.Commands.Bind<FollowLinkCommand>(MouseEvents.Click, Keys.Control);
             ed.Commands.Bind<DeleteWordBackCommand>(Keys.Control | Keys.Back);
             ed.Commands.Bind<DeleteWordCommand>(Keys.Control | Keys.Delete);
             ed.Commands.Bind<ScrollLineUpCommand>(Keys.Control | Keys.Up);
@@ -237,24 +234,15 @@ namespace CodeBox.Test
 
                 if (c == '"')
                 {
-                    var ei = ParseString(i + 1, str);
+                    var ei = ParseString(line, i + 1, str);
                     var st = FindSemi(ei + 1, str);
-                    //ed.Styles.StyleRange(st ? (byte)10 : (byte)11, 
-                    //    new Range(new Pos(line, i), new Pos(line, ei)));
                     ed.Styles.StyleRange(st ? 110 : 111, line, i, ei);
-                    if (st)
-                    {
-                        ed.Styles.StyleRange(200, line, i, ei);
-                        ed.Styles.StyleRange(210, line, i, ei);
-                    }
                     i = ei + 1;
                 }
                 else if (c == '/' && i < str.Length - 1 && str[i + 1] == '*')
                 {
                     bool end;
                     var ei = ParseComment(i + 1, str, out end);
-                    //ed.Styles.StyleRange(12,
-                    //    new Range(new Pos(line, i), new Pos(line, ei)));
                     ed.Styles.StyleRange(112, line, i, ei);
                     i = ei + 1;
                     if (!end)
@@ -308,15 +296,45 @@ namespace CodeBox.Test
             return false;
         }
 
-        private int ParseString(int i, string str)
+        private int ParseString(int line, int i, string str)
         {
+            var init = i;
+            
             for (; i < str.Length; i++)
             {
-                if (str[i] == '"' && (str[i - 1] != '\\' || (i > 1 && str[i - 2] == '\\')))
+                var c = str[i];
+
+                if (c == '"' && (str[i - 1] != '\\' || (i > 1 && str[i - 2] == '\\')))
                     return i;
+                else if (c == ':' && i > init && i < str.Length - 3 && str[i + 1] == '/' && str[i + 2] == '/')
+                {
+                    var i1 = LookBackForSpace(i, str);
+                    var i2 = LookUpForSpace(i, str);
+
+                    if (i1 != -1 && i2 != -1)
+                        ed.Styles.StyleRange((int)StandardStyle.Hyperlink, line, i1, i2);
+                }
             }
 
             return str.Length - 1;
+        }
+
+        private int LookUpForSpace(int i, string str)
+        {
+            for (var j = i; i < str.Length; i++)
+                if (str[i] == ' ' || str[i] == '"')
+                    return i - 1;
+
+            return -1;
+        }
+
+        private int LookBackForSpace(int i, string str)
+        {
+            for (var j = i; i > -1; i--)
+                if (str[i] == ' ' || str[i] == '"')
+                    return i + 1;
+
+            return -1;
         }
     }
 }
