@@ -15,6 +15,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Drawing;
 using CodeBox.Styling;
 using CodeBox.Folding;
+using CodeBox.Indentation;
 
 namespace CodeBox
 {
@@ -37,6 +38,11 @@ namespace CodeBox
             internal EditorContext(Editor editor)
             {
                 this.editor = editor;
+            }
+
+            public IndentManager Indents
+            {
+                get { return editor.Indents; }
             }
 
             public ScrollingManager Scroll
@@ -83,6 +89,7 @@ namespace CodeBox
             Info = new EditorInfo(this);
             Caret = new CaretRenderer(this);
             CachedBrush = new CachedBrush();
+            CachedPen = new CachedPen();
             Scroll = new ScrollingManager(this);
             Styles = new StyleManager(this);
             Settings = new EditorSettings(this);
@@ -90,6 +97,7 @@ namespace CodeBox
             Locations = new LocationManager(this);
             Folding = new FoldingManager(this);
             CallTips = new CallTipManager(this);
+            Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
             context = new EditorContext(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
@@ -314,7 +322,10 @@ namespace CodeBox
                 && pos.X <= Info.TextRight
                 && pos.Y >= Info.TextTop
                 && pos.Y <= Info.TextBottom)
-                Commands.Run(MouseEvents.DoubleClick, Keys.None, default(CommandArgument));
+            {
+                var p = Locations.LocationToPosition(pos);
+                Commands.Run(MouseEvents.DoubleClick, Keys.None, new CommandArgument(p));
+            }
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -591,7 +602,11 @@ namespace CodeBox
 
         internal CachedBrush CachedBrush { get; private set; }
 
+        internal CachedPen CachedPen { get; private set; }
+
         internal CachedFont CachedFont { get; set; }
+
+        internal CachedFont CachedSmallFont { get; set; }
 
         internal CaretRenderer Caret { get; }
         
@@ -606,5 +621,7 @@ namespace CodeBox
         public FoldingManager Folding { get; }
 
         public CallTipManager CallTips { get; }
+
+        public IndentManager Indents { get; }
     }
 }

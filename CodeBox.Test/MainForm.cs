@@ -46,6 +46,8 @@ namespace CodeBox.Test
             ed.Styles.ActiveFoldingMarker.ForeColor = ColorTranslator.FromHtml("#C0AAF7");
             ed.Styles.ActiveFoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
             ed.Styles.Selection.BackColor = ColorTranslator.FromHtml("#264F78");
+            ed.Styles.CallTip.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
+            ed.Styles.CallTip.BackColor = ColorTranslator.FromHtml("#2D2D30");
             ed.Styles.Register(110,
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#8CDCDB")
@@ -92,6 +94,10 @@ namespace CodeBox.Test
             for (var i = li; i < ed.Document.Lines.Count; i++)
             {
                 var line = ed.Document.Lines[i];
+
+                if (line.IsEmpty())
+                    continue;
+
                 var txt = line.Text;
                 var indent = 0;
 
@@ -110,24 +116,21 @@ namespace CodeBox.Test
                 if (indent > prevIndent && i > 0)
                 {
                     var ln = ed.Document.Lines[i - 1];
-                    ed.Document.Lines[i - 1].Folding = FoldingStates.Header
+
+                    ln.Folding = FoldingStates.Header
                         | (ln.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
                     line.Folding &= ~FoldingStates.Header;
-                    line.Folding &= ~FoldingStates.Footer;
+
+                    line.FoldingLevel = (byte)(indent + 1);
+
                 }
                 else if (indent == prevIndent)
                 {
                     line.Folding &= ~FoldingStates.Header;
-                    line.Folding &= ~FoldingStates.Footer;
-                    //line.Visible = VisibleState.Invisible;
+                    line.FoldingLevel = (byte)(indent + 1);
                 }
-                else if (prevIndent > indent)
-                {
-                    line.Folding = FoldingStates.Footer
-                        | (line.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
-                }
-                //else
-                //    line.Visible |= VisibleStates.Visible;
+                else
+                    line.FoldingLevel = (byte)(indent + 1);
 
                 if (i >= e.Range.End.Line && indent == initIndent)
                     break;
@@ -312,7 +315,10 @@ namespace CodeBox.Test
                     var i2 = LookUpForSpace(i, str);
 
                     if (i1 != -1 && i2 != -1)
+                    {
                         ed.Styles.StyleRange((int)StandardStyle.Hyperlink, line, i1, i2);
+                        ed.CallTips.BindCallTip("Ctrl + Click to follow link", new Pos(line, i1), new Pos(line, i2));
+                    }
                 }
             }
 

@@ -5,6 +5,8 @@ namespace CodeBox.Commands
 {
     public interface IEditorContext
     {
+        IndentManager Indents { get; }
+
         ScrollingManager Scroll { get; }
 
         CommandManager Commands { get; }

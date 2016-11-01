@@ -110,7 +110,7 @@ namespace CodeBox.ObjectModel
 
         public static IEnumerable<Character> MakeCharacters(this string str)
         {
-            return str.Select(c => new Character(c));
+            return str.Where(c => c != '\r').Select(c => new Character(c));
         }
 
         public static IEnumerable<IEnumerable<Character>> MakeLines(this IEnumerable<Character> chars)

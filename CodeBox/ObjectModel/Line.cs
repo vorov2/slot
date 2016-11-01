@@ -79,6 +79,18 @@ namespace CodeBox.ObjectModel
         }
 
         #region Text Modification
+        public bool IsEmpty()
+        {
+            if (chars.Count == 0)
+                return true;
+
+            foreach (var c in chars)
+                if (c.Char != ' ' && c.Char != '\t')
+                    return false;
+
+            return true;
+        }
+
         public char CharAt(int index)
         {
             return chars.Count > index ? chars[index].Char : '\0';
@@ -320,6 +332,8 @@ namespace CodeBox.ObjectModel
 
         #region Folding
         public FoldingStates Folding { get; set; } = FoldingStates.None;
+
+        public byte FoldingLevel { get; set; }
         #endregion
     }
 }

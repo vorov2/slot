@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(LeaveEditor)]
+    [CommandBehavior(LeaveEditor | SingleRun)]
     public sealed class FollowLinkCommand : Command
     {
         public override bool Execute(CommandArgument arg, Selection sel)

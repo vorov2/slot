@@ -47,18 +47,14 @@ namespace CodeBox
 
             if (ln.Folding.Has(FoldingStates.Header))
             {
-                var sw = 0;
+                var foldLevel = ln.FoldingLevel;
                 var selPos = new Pos(lineIndex, ln.Length);
 
                 for (var i = lineIndex + 1; i < editor.Lines.Count; i++)
                 {
                     var cln = editor.Lines[i];
 
-                    if (cln.Folding.Has(FoldingStates.Header))
-                        sw++;
-                    else if (cln.Folding.Has(FoldingStates.Footer) && sw != 0)
-                        sw--;
-                    else if (cln.Folding.Has(FoldingStates.Footer) && sw == 0)
+                    if (cln.FoldingLevel <= foldLevel && cln.FoldingLevel != 0)
                         break;
 
                     if (vis)

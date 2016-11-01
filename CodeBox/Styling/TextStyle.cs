@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace CodeBox.Styling
 {
-    public sealed class TextStyle : Style
+    public class TextStyle : Style
     {
-        private static readonly TextStyle hidden = new TextStyle();
-
         public TextStyle()
         {
             

@@ -19,12 +19,10 @@ namespace CodeBox
             Alignment = StringAlignment.Near,
             Trimming = StringTrimming.None
         };
-        internal readonly TextStyle hiddenStyle = new TextStyle();
-
+        
         public StyleManager(Editor editor)
         {
             this.editor = editor;
-            hiddenStyle.Editor = editor;
             Register(StandardStyle.Default, new TextStyle());
             Register(StandardStyle.Selection, new SelectionStyle());
             Register(StandardStyle.LineNumber, new TextStyle());
@@ -32,7 +30,7 @@ namespace CodeBox
             Register(StandardStyle.SpecialSymbol, new TextStyle());
             Register(StandardStyle.FoldingMarker, new MarkerStyle());
             Register(StandardStyle.ActiveFoldingMarker, new MarkerStyle());
-            Register(StandardStyle.CallTip, new TextStyle());
+            Register(StandardStyle.CallTip, new PopupStyle());
             Register(StandardStyle.Hyperlink, new TextStyle { FontStyle = FontStyle.Underline });
         }
 
@@ -72,7 +70,7 @@ namespace CodeBox
                     ActiveFoldingMarker = (MarkerStyle)style;
                     break;
                 case StandardStyle.CallTip:
-                    CallTip = (TextStyle)style;
+                    CallTip = (PopupStyle)style;
                     break;
                 case StandardStyle.Hyperlink:
                     Hyperlink = (TextStyle)style;
@@ -133,7 +131,7 @@ namespace CodeBox
 
         public TextStyle CurrentLineNumber { get; private set; }
 
-        public TextStyle CallTip { get; private set; }
+        public PopupStyle CallTip { get; private set; }
 
         public TextStyle Hyperlink { get; private set; }
         #endregion

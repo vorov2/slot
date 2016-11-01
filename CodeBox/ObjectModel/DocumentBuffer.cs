@@ -1,4 +1,5 @@
 ﻿using CodeBox.Commands;
+using CodeBox.Styling;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,12 +17,15 @@ namespace CodeBox.ObjectModel
             Selections = new SelectionList();
             UndoStack = new Stack<CommandInfo>();
             RedoStack = new Stack<CommandInfo>();
+            Tips = new List<CallTip>();
         }
 
         public string GetText()
         {
             return string.Join(Eol.AsString(), Document.Lines.Select(ln => ln.Text));
         }
+
+        internal List<CallTip> Tips { get; }
 
         internal Stack<CommandInfo> UndoStack { get; }
 

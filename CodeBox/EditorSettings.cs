@@ -20,8 +20,8 @@ namespace CodeBox
 
             //Defaults
             WordSeparators = SEPS;
-            WordWrap = true;
-            UseTabs = true;
+            //WordWrap = true;
+            //UseTabs = true;
             TabSize = TABSIZE;
             LinePadding = .1;
             ShowWhitespace = true;
@@ -60,6 +60,7 @@ namespace CodeBox
                         editor.CachedFont.Dispose();
 
                     editor.CachedFont = new CachedFont(value);
+                    SmallFont = new Font(value.Name, value.Size - 1, value.Style);
 
                     using (var g = editor.CreateGraphics())
                     {
@@ -68,6 +69,24 @@ namespace CodeBox
                         editor.Info.CharWidth = (int)(size1.Width - size2.Width);
                         editor.Info.CharHeight = (int)value.GetHeight(g);
                     }
+                }
+            }
+        }
+
+        private Font _smallFont;
+        internal Font SmallFont
+        {
+            get { return _smallFont; }
+            private set
+            {
+                if (value != _smallFont)
+                {
+                    _smallFont = value;
+
+                    if (editor.CachedSmallFont != null)
+                        editor.CachedSmallFont.Dispose();
+
+                    editor.CachedSmallFont = new CachedFont(value);
                 }
             }
         }

@@ -13,7 +13,13 @@ namespace CodeBox
     {
         private readonly Editor editor;
         private Pos shownTip = Pos.Empty;
-        private AppliedStyle lastHint;
+        private CallTip lastTip;
+        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
+        {
+            LineAlignment = StringAlignment.Center,
+            Alignment = StringAlignment.Center,
+            Trimming = StringTrimming.None
+        };
 
         internal CallTipManager(Editor editor)
         {
@@ -24,9 +30,14 @@ namespace CodeBox
         {
             using (var g = editor.CreateGraphics())
             {
-                var size = g.MeasureString(text, editor.Font);
-                ShowCallTip(g, pos, size.ToSize(), (gr,pt) => gr.DrawString(text, editor.Font,
-                    editor.Styles.Default.ForeBrush, pt));
+                var size = g.MeasureString(text + "__", editor.Styles.CallTip.Font);
+                size = new SizeF(size.Width, size.Height * 1.5f);
+                ShowCallTip(g, pos, size.ToSize(), (gr,pt) => gr.DrawString(
+                    text,
+                    editor.Styles.CallTip.Font,
+                    editor.Styles.CallTip.ForeBrush,
+                    new Rectangle(pt, size.ToSize()),
+                    format));
             }
         }
 
@@ -67,8 +78,9 @@ namespace CodeBox
                     x -= size.Width;
 
                 var pt = new Point(x, y);
-                g.FillRectangle(editor.CachedBrush.Create(ColorTranslator.FromHtml("#2D2D30")),
-                    new Rectangle(pt, size));
+                var rect = new Rectangle(pt, size);
+                g.FillRectangle(editor.Styles.CallTip.BackBrush, rect);
+                g.DrawRectangle(editor.CachedPen.Create(editor.Styles.CallTip.BorderColor), rect);
                 draw(g, pt);
                 shownTip = pos;
             }
@@ -83,18 +95,37 @@ namespace CodeBox
             }
         }
 
+        public void ClearCallTips()
+        {
+            editor.Buffer.Tips.Clear();
+        }
+
+        public void BindCallTip(string data, Pos start, Pos end)
+        {
+            editor.Buffer.Tips.Add(new CallTip(data, start, end));
+        }
+
+        public CallTip FindCallTip(Pos pos)
+        {
+            foreach (var c in editor.Buffer.Tips)
+                if (pos >= c.Start && pos <= c.End)
+                    return c;
+
+            return CallTip.Empty;
+        }
+
         internal void MouseDwell(Pos p)
         {
             var ln = editor.Lines[p.Line];
             var tip = false;
-            var a = ln.FindHyperlink(p.Col);
+            var ct = FindCallTip(p);
 
-            if (a != AppliedStyle.Empty)
+            if (ct != CallTip.Empty)
             {
-                if (a.Start != lastHint.Start || a.End != lastHint.End)
+                if (ct.Start != lastTip.Start || ct.End != lastTip.End)
                 {
-                    ShowCallTip(p, "Ctrl + Click to follow link");
-                    lastHint = a;
+                    ShowCallTip(p, ct.Data);
+                    lastTip = ct;
                 }
 
                 tip = true;
@@ -103,7 +134,7 @@ namespace CodeBox
             if (!tip)
             {
                 HideCallTip();
-                lastHint = default(AppliedStyle);
+                lastTip = CallTip.Empty;
             }
         }
     }

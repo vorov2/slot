@@ -84,7 +84,7 @@ namespace CodeBox.Styling
             get { return Editor.CachedBrush.Create(BackColor); }
         }
 
-        internal Font Font
+        internal virtual Font Font
         {
             get { return Editor.CachedFont.Create(FontStyle); }
         }

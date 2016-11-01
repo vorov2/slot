@@ -13,9 +13,7 @@ namespace CodeBox.Folding
 
         Invisible = 0x01,
 
-        Header = 0x04,
-
-        Footer = 0x08
+        Header = 0x02
     }
 
     public static class VisibleStatesExtensions
