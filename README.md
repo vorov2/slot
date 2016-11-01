@@ -24,16 +24,16 @@ Features:
 * [X] Line numbers margin
 * [ ] Indicators (such as error indicators)
 * [ ] Markers (such as bookmarks)
-* [ ] Tool tips (or call tips)
+* [X] Tool tips (or call tips)
 * [ ] Popups for autocompletion
 * [ ] Split editing
-* [ ] Hyperlinks
+* [X] Hyperlinks
 * [ ] Line indenting
 * [ ] Read-only mode
-* [ ] Match braces
+* [ ] Match parens
 * [ ] Search including regex search
 * [ ] Macros
 * [ ] Zooming
-* [ ] Changes line indication
+* [ ] Changed line indicators
 * [ ] Printing
 * [ ] Long line indicators
