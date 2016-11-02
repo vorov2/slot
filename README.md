@@ -3,7 +3,7 @@ CodeBox is a source code editing component for .NET/Mono which aims to be a fast
 fully configurable, crossplatform and feature rich basis for a text editor. It is currently in the
 early stage of development; however, it is already usable and functional.
 
-![](http://files.rsdn.org/16070/codebox.png)
+![](http://files.rsdn.org/16070/Untitled.png)
 
 Features:
 * [X] Basic editing and text navigation commands
@@ -30,10 +30,10 @@ Features:
 * [X] Hyperlinks
 * [X] Line indenting
 * [ ] Read-only mode
-* [ ] Match parens
+* [X] Match parens
 * [ ] Search including regex search
 * [ ] Macros
 * [ ] Zooming
 * [ ] Changed line indicators
 * [ ] Printing
-* [ ] Long line indicators
+* [X] Long line indicators
