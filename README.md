@@ -6,6 +6,7 @@ early stage of development; however, it is already usable and functional.
 ![](http://files.rsdn.org/16070/Untitled.png)
 
 Features:
+* [X] High DPI friendly
 * [X] Basic editing and text navigation commands
 * [ ] Advanced editing commands (sort lines, etc.)
 * [X] Theme friendly scroll bars
@@ -18,7 +19,7 @@ Features:
 * [ ] Configurable lexer for syntax highlighting
 * [X] Multi level undo and redo
 * [X] Word wrapping
-* [ ] Wrap by a wrap column
+* [X] Wrap by a wrap column
 * [X] Soft tabs and real tabs
 * [X] Extendable folding
 * [X] Line numbers margin
