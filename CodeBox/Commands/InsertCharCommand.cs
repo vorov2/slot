@@ -17,16 +17,16 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override ActionChange Execute(CommandArgument arg, Selection sel)
+        public override ActionResult Execute(CommandArgument arg, Selection sel)
         {
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
             redoSel = sel.Clone();
-            var res = ActionChange.Atomic;
+            var res = ActionResult.Atomic;
 
             if (!sel.IsEmpty)
             {
-                res = ActionChange.Mixed;
+                res = ActionResult.Mixed;
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
             }
             else if (Buffer.Overtype)

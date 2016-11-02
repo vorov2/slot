@@ -109,7 +109,7 @@ namespace CodeBox
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
 
                 SetCarets(count, pos);
-                DoAftermath(exp, ActionChange.Mixed);
+                DoAftermath(exp, ActionResult.Mixed);
                 editor.Buffer.Edits--;
             }
         }
@@ -153,7 +153,7 @@ namespace CodeBox
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
 
                 SetCarets(count, pos);
-                DoAftermath(exp, ActionChange.Mixed);
+                DoAftermath(exp, ActionResult.Mixed);
                 editor.Buffer.Edits++;
             }
         }
@@ -264,7 +264,7 @@ namespace CodeBox
             var restoreCaret = (exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret;
             var cmd = ci.Command;
             var thisUndo = false;
-            var exec = ActionChange.None;
+            var exec = ActionResult.None;
 
             if (undo)
                 thisUndo = BeginUndoAction();
@@ -292,7 +292,7 @@ namespace CodeBox
                 LastEditLine = mainSel.GetLastLine();
                 cmd.Context = editor.Context;
 
-                if ((exec = cmd.Execute(arg, mainSel)) == ActionChange.None && undo)
+                if ((exec = cmd.Execute(arg, mainSel)) == ActionResult.None && undo)
                     editor.Buffer.UndoStack.Pop();
 
                 if (restoreCaret)
@@ -314,10 +314,10 @@ namespace CodeBox
                     cmd.Context = editor.Context;
                     var e = cmd.Execute(arg, sel);
 
-                    if (e != ActionChange.None)
-                        exec = ActionChange.Mixed;
+                    if (e != ActionResult.None)
+                        exec = ActionResult.Mixed;
 
-                    if (e == ActionChange.None && undo)
+                    if (e == ActionResult.None && undo)
                         editor.Buffer.UndoStack.Pop();
 
                     if (restoreCaret)
@@ -333,9 +333,11 @@ namespace CodeBox
             if (restoreCaret)
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
-            DoAftermath(exp, exec);
-            editor.MatchParens.Match();
-            editor.Buffer.Edits++;
+            if (exec != ActionResult.None)
+            {
+                DoAftermath(exp, exec);
+                editor.MatchParens.Match();
+            }
         }
 
         private void AttachCaret(Pos pos)
@@ -389,16 +391,16 @@ namespace CodeBox
             }
         }
 
-        private void DoAftermath(ActionExponent exp, ActionChange exec)
+        private void DoAftermath(ActionExponent exp, ActionResult exec)
         {
             var scrolled = false;
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify
                 || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
                 editor.Scroll.InvalidateLines(
-                    exec == ActionChange.Atomic ? ScrollingManager.InvalidateFlags.Atomic
-                    : exec == ActionChange.Backward ? ScrollingManager.InvalidateFlags.Backward
-                    : exec == ActionChange.Forward ? ScrollingManager.InvalidateFlags.Forward
+                    exec == ActionResult.Atomic ? ScrollingManager.InvalidateFlags.Atomic
+                    : exec == ActionResult.Backward ? ScrollingManager.InvalidateFlags.Backward
+                    : exec == ActionResult.Forward ? ScrollingManager.InvalidateFlags.Forward
                     : ScrollingManager.InvalidateFlags.None
                     );
 
@@ -413,7 +415,10 @@ namespace CodeBox
                 editor.Styles.Restyle();
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
+            {
                 editor.Folding.RebuildFolding();
+                editor.Buffer.Edits++;
+            }
 
             if ((exp & ActionExponent.LeaveEditor) == ActionExponent.LeaveEditor)
             {

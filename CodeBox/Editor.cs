@@ -231,6 +231,15 @@ namespace CodeBox
 
             for (var j = 0; j < line.Stripes; j++)
             {
+                var curline = Settings.CurrentLineIndicator && Buffer.Selections.Main.IsEmpty
+                    && lineIndex == Buffer.Selections.Main.Caret.Line;
+
+                if (curline)
+                {
+                    g.FillRectangle(CachedBrush.Create(Settings.CurrentLineIndicatorColor),
+                          new Rectangle(lmarg, y, Info.TextWidth, Info.LineHeight));
+                }
+
                 var cut = line.GetCut(j);
 
                 if (cut == line.Length)
@@ -271,10 +280,11 @@ namespace CodeBox
                             if (blink)
                             {
                                 var cg = Caret.GetDrawingSurface();
-                                cg.Clear(high ? Styles.Selection.BackColor : Styles.Default.BackColor);
+                                cg.Clear(high ? Styles.Selection.BackColor 
+                                    : curline ? Settings.CurrentLineIndicatorColor : Styles.Default.BackColor);
                                 style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
 
-                                if (Settings.LongLineIndicators.Any(ind => ind == i))
+                                if (Settings.LongLineIndicators.Any(ind => ind == i) || (WordWrap && WordWrapColumn == i))
                                 {
                                     cg.DrawLine(CachedPen.Create(Styles.SpecialSymbol.ForeColor),
                                         0, 0, 0, rect.Size.Height);

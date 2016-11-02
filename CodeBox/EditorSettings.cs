@@ -23,6 +23,8 @@ namespace CodeBox
             //WordWrap = true;
             WordWrapColumn = 80;
             //UseTabs = true;
+            CurrentLineIndicator = true;
+            CurrentLineIndicatorColor = ColorTranslator.FromHtml("#262626");//161616
             TabSize = TABSIZE;
             LinePadding = .1;
             ShowWhitespace = true;
@@ -51,6 +53,10 @@ namespace CodeBox
         public bool ShowEol { get; set; }
 
         public bool ShowWhitespace { get; set; }
+
+        public bool CurrentLineIndicator { get; set; }
+
+        public Color CurrentLineIndicatorColor { get; set; }
 
         public Font Font
         {

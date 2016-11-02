@@ -16,15 +16,15 @@ namespace CodeBox.Commands
         private Selection redoSel;
         private int indent;
 
-        public override ActionChange Execute(CommandArgument arg, Selection selection)
+        public override ActionResult Execute(CommandArgument arg, Selection selection)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
-            var res = ActionChange.Forward;
+            var res = ActionResult.Forward;
 
             if (!selection.IsEmpty)
             {
-                res = ActionChange.Mixed;
+                res = ActionResult.Mixed;
                 @string = DeleteRangeCommand.DeleteRange(Context, selection);
             }
 

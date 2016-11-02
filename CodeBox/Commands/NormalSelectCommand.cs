@@ -11,10 +11,10 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | SingleRun)]
     public sealed class NormalSelectCommand : Command
     {
-        public override ActionChange Execute(CommandArgument arg, Selection sel)
+        public override ActionResult Execute(CommandArgument arg, Selection sel)
         {
             DoSelection(arg.Pos);
-            return ActionChange.None;
+            return ActionResult.Standard;
         }
 
         private void DoSelection(Pos p)

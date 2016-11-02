@@ -16,15 +16,15 @@ namespace CodeBox.Commands
         private IEnumerable<Character> @string;
         private IEnumerable<Character> @redoString;
 
-        public override ActionChange Execute(CommandArgument arg, Selection sel)
+        public override ActionResult Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            var res = ActionChange.Forward;
+            var res = ActionResult.Forward;
 
             if (!sel.IsEmpty)
             {
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
-                res = ActionChange.Mixed;
+                res = ActionResult.Mixed;
             }
 
             @redoString = arg.String.MakeCharacters();

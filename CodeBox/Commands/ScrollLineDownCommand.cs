@@ -11,10 +11,10 @@ namespace CodeBox.Commands
     [CommandBehavior(None)]
     public sealed class ScrollLineDownCommand : Command
     {
-        public override ActionChange Execute(CommandArgument arg, Selection sel)
+        public override ActionResult Execute(CommandArgument arg, Selection sel)
         {
             Context.Scroll.ScrollY(-1);
-            return ActionChange.None;
+            return ActionResult.Standard;
         }
     }
 }

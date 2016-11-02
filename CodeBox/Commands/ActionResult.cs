@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace CodeBox.Commands
 {
-    public enum ActionChange
+    public enum ActionResult
     {
         None,
+
+        Standard,
 
         Mixed,
 

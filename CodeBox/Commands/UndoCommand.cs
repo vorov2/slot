@@ -11,10 +11,10 @@ namespace CodeBox.Commands
     [CommandBehavior(SingleRun)]
     public sealed class UndoCommand : Command
     {
-        public override ActionChange Execute(CommandArgument arg, Selection sel)
+        public override ActionResult Execute(CommandArgument arg, Selection sel)
         {
             Context.Commands.Undo();
-            return ActionChange.None;
+            return ActionResult.Standard;
         }
     }
 }

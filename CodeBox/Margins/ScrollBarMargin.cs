@@ -137,7 +137,7 @@ namespace CodeBox.Margins
                 if (Editor.Scroll.YMax == 0)
                     return 0;
                 else
-                    return (int)(Editor.Info.CharWidth*1);
+                    return (int)(Editor.Info.CharWidth*1.5);
             }
         }
 

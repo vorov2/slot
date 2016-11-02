@@ -5,12 +5,12 @@ namespace CodeBox.Commands
 {
     public abstract class CaretCommand : Command
     {
-        public override ActionChange Execute(CommandArgument arg, Selection sel)
+        public override ActionResult Execute(CommandArgument arg, Selection sel)
         {
             var pos = GetPosition(sel);
             sel.Clear(pos);
             Buffer.Selections.ValidateCaret(sel, Document);
-            return ActionChange.None;
+            return ActionResult.Standard;
         }
 
         protected abstract Pos GetPosition(Selection sel);

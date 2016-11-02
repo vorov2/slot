@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     {
         private bool undoIndent;
 
-        public override ActionChange Execute(CommandArgument arg, Selection sel)
+        public override ActionResult Execute(CommandArgument arg, Selection sel)
         {
             var indent = Settings.UseTabs ? "\t" : new string(' ', Settings.TabSize);
             
@@ -23,7 +23,7 @@ namespace CodeBox.Commands
                 redoSel = sel.Clone();
                 var str = indent.MakeCharacters();
                 Indent(Context, sel, str);
-                return ActionChange.Forward;
+                return ActionResult.Forward;
             }
             else
             {
