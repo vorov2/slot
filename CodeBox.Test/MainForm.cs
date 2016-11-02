@@ -27,7 +27,6 @@ namespace CodeBox.Test
         {
             BindCommands();
             ed.Styles.StyleNeeded += editor1_StyleNeeded;
-            ed.Folding.FoldingNeeded += Folding_FoldingNeeded;
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new FoldingMargin(ed));
            // ed.LeftMargins.Add(new GutterMargin(ed));
@@ -48,6 +47,8 @@ namespace CodeBox.Test
             ed.Styles.Selection.BackColor = ColorTranslator.FromHtml("#264F78");
             ed.Styles.CallTip.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
             ed.Styles.CallTip.BackColor = ColorTranslator.FromHtml("#2D2D30");
+            ed.Styles.MatchBrace.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
+            ed.Styles.MatchBrace.BackColor = ColorTranslator.FromHtml("#264F78");
             ed.Styles.Register(110,
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#8CDCDB")
@@ -62,81 +63,6 @@ namespace CodeBox.Test
                 });
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, "test.json"));
-        }
-
-        private void Folding_FoldingNeeded(object sender, Folding.FoldingNeededEventArgs e)
-        {
-            var li = e.Range.Start.Line;
-
-            while (li > -1 && !ed.Document.Lines[li].Folding.Has(FoldingStates.Header))
-                li--;
-
-            li = li < 0 ? 0 : li;
-            var prevIndent = 0;
-
-            if (li > 0)
-            {
-                var ln = ed.Document.Lines[li - 1];
-
-                for (var i = 0; ; i++)
-                {
-                    var c = ln.CharAt(i);
-
-                    if (c == ' ' || c == '\t')
-                        prevIndent++;
-                    else
-                        break;
-                }
-            }
-
-            var initIndent = prevIndent;
-
-            for (var i = li; i < ed.Document.Lines.Count; i++)
-            {
-                var line = ed.Document.Lines[i];
-
-                if (line.IsEmpty())
-                    continue;
-
-                var txt = line.Text;
-                var indent = 0;
-
-                foreach (var c in txt)
-                {
-                    if (c == ' ')
-                        indent++;
-                    else if (c == '\t')
-                        indent += ed.Settings.TabSize;
-                    else
-                        break;
-                }
-
-                indent /= ed.Settings.TabSize;
-
-                if (indent > prevIndent && i > 0)
-                {
-                    var ln = ed.Document.Lines[i - 1];
-
-                    ln.Folding = FoldingStates.Header
-                        | (ln.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
-                    line.Folding &= ~FoldingStates.Header;
-
-                    line.FoldingLevel = (byte)(indent + 1);
-
-                }
-                else if (indent == prevIndent)
-                {
-                    line.Folding &= ~FoldingStates.Header;
-                    line.FoldingLevel = (byte)(indent + 1);
-                }
-                else
-                    line.FoldingLevel = (byte)(indent + 1);
-
-                if (i >= e.Range.End.Line && indent == initIndent)
-                    break;
-
-                prevIndent = indent;
-            }
         }
 
         private void BindCommands()

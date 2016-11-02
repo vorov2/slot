@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CodeBox.Drawing
 {
@@ -39,7 +40,13 @@ namespace CodeBox.Drawing
             Pen p;
 
             if (!cache.TryGetValue(color, out p))
-                cache.Add(color, p = new Pen(color));
+            {
+                p = new Pen(color);
+                using (var c = new Control())
+                using (var g = c.CreateGraphics())
+                    p.Width = (g.DpiY / 96f);
+                cache.Add(color, p);
+            }
 
             return p;
         }

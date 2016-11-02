@@ -34,9 +34,6 @@ namespace CodeBox.Margins
                 var line = lines[i];
                 var y = line.Y + sc.Y + info.TextTop;
 
-                //if (line.Y >= info.TextBottom - sc.Y)
-                //    return true;
-
                 if (line.Folding.Has(FoldingStates.Invisible))
                     continue;
 

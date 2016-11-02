@@ -29,6 +29,8 @@ namespace CodeBox
             CaretColor = Color.White;
             ScrollThumbColor = ColorTranslator.FromHtml("#505050");
             ScrollActiveThumbColor = Color.White;
+            LongLineIndicators = new List<int>();
+            LongLineIndicators.AddRange(new int[] { 25, 80, 100 });
         }
 
         public string WordSeparators { get; set; }
@@ -96,6 +98,8 @@ namespace CodeBox
         public Color ScrollThumbColor { get; set; }
 
         public Color ScrollActiveThumbColor { get; set; }
+
+        public List<int> LongLineIndicators { get; }
     }
 
     public enum Eol

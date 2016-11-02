@@ -85,10 +85,22 @@ namespace CodeBox
 
             var fvl = editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
-            OnFoldingNeeded(
-                new Range(
+
+            while (fvl > -1 && !IsFoldingHeader(fvl))
+                fvl--;
+
+            fvl = fvl < 0 ? 0 : fvl;
+            lvl = lvl < fvl ? fvl : lvl;
+
+            var range = new Range(
                     new Pos(fvl, 0),
-                    new Pos(lvl, editor.Lines[lvl].Length - 1)));
+                    new Pos(lvl, editor.Lines[lvl].Length - 1));
+            var fp = Provider;
+
+            if (fp == null)
+                OnFoldingNeeded(range);
+            else
+                fp.Fold(editor.Context, range);
         }
 
         internal void DrawFoldingIndicator(Graphics g, int x, int y)
@@ -99,11 +111,32 @@ namespace CodeBox
                 new Point(x, y), TextStyle.Format);
         }
 
+        public void SetFoldingLevel(int line, int level)
+        {
+            var ln = editor.Lines[line];
+            ln.Folding &= ~FoldingStates.Header;
+            ln.FoldingLevel = (byte)(level + 1);
+        }
+
+        public void SetFoldingHeader(int line)
+        {
+            var ln = editor.Lines[line];
+            ln.Folding = FoldingStates.Header
+                | (ln.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
+        }
+
+        public bool IsFoldingHeader(int line)
+        {
+            return editor.Lines[line].Folding.Has(FoldingStates.Header);
+        }
+
         public event EventHandler<FoldingNeededEventArgs> FoldingNeeded;
         private void OnFoldingNeeded(Range range)
         {
             Task.Run(() =>
                 FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range)));
         }
+
+        public IFoldingProvider Provider { get; set; }
     }
 }

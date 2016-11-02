@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Folding;
+using CodeBox.Commands;
 
 namespace CodeBox.Margins
 {
@@ -22,7 +23,7 @@ namespace CodeBox.Margins
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
 
             if (lineIndex > -1)
-                Editor.Folding.ToggleExpand(lineIndex);
+                Editor.Commands.Run<ToggleFoldingCommand>(new CommandArgument(new Pos(lineIndex, 0)));
 
             return MarginEffects.Redraw | MarginEffects.Invalidate | MarginEffects.CaptureMouse;
         }

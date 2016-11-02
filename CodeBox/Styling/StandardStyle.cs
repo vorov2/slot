@@ -24,6 +24,8 @@ namespace CodeBox.Styling
 
         CallTip = 7,
 
-        Hyperlink = 8
+        Hyperlink = 8,
+
+        MatchBrace = 9
     }
 }

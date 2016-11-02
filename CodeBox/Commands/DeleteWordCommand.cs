@@ -8,7 +8,7 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable | Forward)]
     public sealed class DeleteWordCommand : DeleteCommand
     {
         public override bool Execute(CommandArgument arg, Selection sel)

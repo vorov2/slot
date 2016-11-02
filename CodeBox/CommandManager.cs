@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
 using CodeBox.Commands;
+using CodeBox.Styling;
 
 namespace CodeBox
 {
@@ -26,6 +27,8 @@ namespace CodeBox
 
         private void RegisterCommands()
         {
+            Register<SelectLineCommand>();
+            Register<ToggleFoldingCommand>();
             Register<FollowLinkCommand>();
             Register<DeleteWordBackCommand>();
             Register<DeleteWordCommand>();
@@ -327,7 +330,11 @@ namespace CodeBox
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
             if (exec)
+            {
                 DoAftermath(exp);
+                editor.MatchParens.Match();
+            }
+
             editor.Buffer.Edits++;
         }
 
@@ -386,8 +393,11 @@ namespace CodeBox
         {
             var scrolled = false;
 
-            if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
-                editor.Scroll.InvalidateLines();
+            if ((exp & ActionExponent.Modify) == ActionExponent.Modify
+                || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
+                editor.Scroll.InvalidateLines(
+                    force:false, 
+                    forward: (exp & ActionExponent.Forward) == ActionExponent.Forward);
 
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
                 scrolled = editor.Scroll.UpdateVisibleRectangle();
@@ -409,5 +419,7 @@ namespace CodeBox
                 editor.Buffer.Selections.Truncate();
             }
         }
+
+        
     }
 }

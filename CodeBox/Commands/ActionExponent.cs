@@ -21,6 +21,10 @@ namespace CodeBox.Commands
 
         Modify = 0x40,
 
-        LeaveEditor = 0x80
+        LeaveEditor = 0x80,
+
+        Forward = 0x100,
+
+        Invalidate = 0x200
     }
 }

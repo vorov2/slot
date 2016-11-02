@@ -179,6 +179,15 @@ namespace CodeBox.ObjectModel
             return AppliedStyle.Empty;
         }
 
+        internal bool IsDefaultStyle(int col)
+        {
+            foreach (var a in AppliedStyles)
+                if (col >= a.Start && col <= a.End)
+                    return a.StyleId == (int)StandardStyle.Default;
+
+            return true;
+        }
+
         internal Style GetStyle(int index, StyleManager man)
         {
             var ret = default(Style);
@@ -331,9 +340,9 @@ namespace CodeBox.ObjectModel
         #endregion
 
         #region Folding
-        public FoldingStates Folding { get; set; } = FoldingStates.None;
+        internal FoldingStates Folding { get; set; } = FoldingStates.None;
 
-        public byte FoldingLevel { get; set; }
+        internal byte FoldingLevel { get; set; }
         #endregion
     }
 }

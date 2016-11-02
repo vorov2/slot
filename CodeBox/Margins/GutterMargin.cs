@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
+using CodeBox.Commands;
 
 namespace CodeBox.Margins
 {
@@ -18,16 +19,9 @@ namespace CodeBox.Margins
 
         public override MarginEffects MouseDown(Point loc)
         {
-            Editor.Buffer.Selections.Truncate();
             var sel = Editor.Buffer.Selections.Main;
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
-
-            if (lineIndex >= 0)
-            {
-                sel.Start = new Pos(lineIndex, 0);
-                sel.End = new Pos(lineIndex, Editor.Document.Lines[lineIndex].Length);
-            }
-
+            Editor.Commands.Run<SelectLineCommand>(new CommandArgument(new Pos(lineIndex, 0)));
             return MarginEffects.Redraw;
         }
 

@@ -8,8 +8,8 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public class DeleteCommand : Command //Tested
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable | Forward)]
+    public class DeleteCommand : Command
     {
         private IEnumerable<Character> @string;
         private Character @char;

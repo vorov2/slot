@@ -40,6 +40,11 @@ namespace CodeBox
                 this.editor = editor;
             }
 
+            public FoldingManager Folding
+            {
+                get { return editor.Folding; }
+            }
+
             public IndentManager Indents
             {
                 get { return editor.Indents; }
@@ -95,9 +100,10 @@ namespace CodeBox
             Settings = new EditorSettings(this);
             Commands = new CommandManager(this);
             Locations = new LocationManager(this);
-            Folding = new FoldingManager(this);
+            Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
             CallTips = new CallTipManager(this);
             Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
+            MatchParens = new MatchParensManager(this);
             context = new EditorContext(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
@@ -176,12 +182,34 @@ namespace CodeBox
             DrawMargins(0, e.Graphics, LeftMargins);
 
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
-            DrawLines(e.Graphics);
+
+            var carets = new List<CaretData>();
+            DrawLines(e.Graphics, carets);
             //Console.WriteLine("Time: " + (DateTime.Now - dt).TotalMilliseconds);
 
             e.Graphics.ResetTransform();
             DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
-            DrawMargins(ClientSize.Width - Info.CharWidth, e.Graphics, RightMargins);
+            if (RightMargins.Count > 0)
+                DrawMargins(ClientSize.Width - RightMargins.First().CalculateSize(), e.Graphics, RightMargins);
+
+            if (!Buffer.WordWrap)
+            {
+                foreach (var i in Settings.LongLineIndicators)
+                {
+                    var x = Info.TextLeft + i * Info.CharWidth + Scroll.X;
+
+                    if (x <= Info.TextLeft)
+                        continue;
+
+                    e.Graphics.DrawLine(CachedPen.Create(Styles.SpecialSymbol.ForeColor),
+                        x, Info.TextTop, x, Info.TextBottom);
+                }
+            }
+
+            e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
+            foreach (var c in carets)
+                Caret.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
+
             base.OnPaint(e);
         }
 
@@ -220,7 +248,7 @@ namespace CodeBox
             Scroll.ScrollY((e.Delta / 120) * 2);
         }
 
-        private void DrawLines(Graphics g)
+        private void DrawLines(Graphics g, List<CaretData> carets)
         {
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
@@ -229,11 +257,11 @@ namespace CodeBox
             {
                 var ln = Document.Lines[i];
                 if (!ln.Folding.Has(FoldingStates.Invisible))
-                    DrawLine(g, ln, i);
+                    DrawLine(g, ln, i, carets);
             }
         }
 
-        private void DrawLine(Graphics g, Line line, int lineIndex)
+        private void DrawLine(Graphics g, Line line, int lineIndex, List<CaretData> carets)
         {
             var lmarg = Info.TextLeft;
             var tmarg = Info.TextTop;
@@ -287,10 +315,17 @@ namespace CodeBox
                                 var cg = Caret.GetDrawingSurface();
                                 cg.Clear(high ? Styles.Selection.BackColor : Styles.Default.BackColor);
                                 style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
+
+                                if (Settings.LongLineIndicators.Any(ind => ind == i))
+                                {
+                                    cg.DrawLine(CachedPen.Create(Styles.SpecialSymbol.ForeColor),
+                                        0, 0, 0, rect.Size.Height);
+                                }
+
                                 Caret.Resume();
                             }
 
-                            Caret.DrawCaret(g, x, y, blink);
+                            carets.Add(new CaretData(x, y, blink));
                         }
                     }
 
@@ -376,7 +411,7 @@ namespace CodeBox
                 timer.Start();
             }
         }
-        
+
         private void Tick(object sender, EventArgs e)
         {
             if (PointToClient(Cursor.Position) == mousePosition && !movePosition.IsEmpty)
@@ -405,7 +440,7 @@ namespace CodeBox
             if (mlist != null)
                 mlist.CallMarginMethod(MarginMethod.MouseUp, e.Location);
         }
-        
+
         internal Margin mouseThief;
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -623,5 +658,7 @@ namespace CodeBox
         public CallTipManager CallTips { get; }
 
         public IndentManager Indents { get; }
+
+        internal MatchParensManager MatchParens { get; }
     }
 }

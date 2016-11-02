@@ -32,6 +32,7 @@ namespace CodeBox
             Register(StandardStyle.ActiveFoldingMarker, new MarkerStyle());
             Register(StandardStyle.CallTip, new PopupStyle());
             Register(StandardStyle.Hyperlink, new TextStyle { FontStyle = FontStyle.Underline });
+            Register(StandardStyle.MatchBrace, new TextStyle());
         }
 
         public Style GetStyle(int styleId)
@@ -75,6 +76,9 @@ namespace CodeBox
                 case StandardStyle.Hyperlink:
                     Hyperlink = (TextStyle)style;
                     break;
+                case StandardStyle.MatchBrace:
+                    MatchBrace = (TextStyle)style;
+                    break;
             }
         }
 
@@ -104,10 +108,12 @@ namespace CodeBox
 
             var fvl = editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
-            OnStyleNeeded(
-                new Range(
-                    new Pos(fvl, 0),
-                    new Pos(lvl, editor.Lines[lvl].Length - 1)));
+            fvl = fvl < 0 ? 0 : fvl;
+            lvl = lvl < fvl ? fvl : lvl;
+
+            var range = new Range(new Pos(fvl, 0),
+                new Pos(lvl, editor.Lines[lvl].Length - 1));
+            OnStyleNeeded(range);
         }
 
         public event EventHandler<StyleNeededEventArgs> StyleNeeded;
@@ -134,6 +140,8 @@ namespace CodeBox
         public PopupStyle CallTip { get; private set; }
 
         public TextStyle Hyperlink { get; private set; }
+
+        public TextStyle MatchBrace { get; private set; }
         #endregion
     }
 }

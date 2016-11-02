@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CodeBox.Folding
 {
     [Flags]
-    public enum FoldingStates : byte
+    internal enum FoldingStates : byte
     {
         None = 0x00,
 
@@ -16,7 +16,7 @@ namespace CodeBox.Folding
         Header = 0x02
     }
 
-    public static class VisibleStatesExtensions
+    internal static class VisibleStatesExtensions
     {
         public static bool Has(this FoldingStates enu, FoldingStates flag)
         {

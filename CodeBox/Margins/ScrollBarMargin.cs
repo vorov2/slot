@@ -73,12 +73,11 @@ namespace CodeBox.Margins
             if (!Enabled)
                 return false;
 
-            var sc = new Rectangle(Editor.Scroll.X, Editor.Scroll.Y,
-                Editor.Scroll.XMax, Editor.Scroll.YMax);
+            var sc = new Rectangle(Editor.Scroll.X, Editor.Scroll.Y, Editor.Scroll.XMax, Editor.Scroll.YMax);
+            g.FillRectangle(Editor.Styles.Default.BackBrush, bounds);
 
             if (Horizontal())
             {
-                g.FillRectangle(Editor.Styles.Default.BackBrush, bounds);
                 var caretSize = ((double)bounds.Width / (bounds.Width + sc.Width)) * bounds.Width;
 
                 if (caretSize < Editor.Info.CharWidth*3)
@@ -94,7 +93,6 @@ namespace CodeBox.Margins
             }
             else
             {
-                g.FillRectangle(Editor.Styles.Default.BackBrush, bounds);
                 var caretSize = ((double)bounds.Height / (bounds.Height + sc.Height)) * bounds.Height;
 
                 if (caretSize < Editor.Info.LineHeight)
@@ -109,9 +107,17 @@ namespace CodeBox.Margins
                 if (pos + lastCaretSize > Editor.ClientSize.Height)
                     pos = Editor.ClientSize.Height - lastCaretSize;
 
-                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
+                g.FillRectangle(Editor.CachedBrush.Create(
+                    mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
                     new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
                 lastCaretPos = pos;
+
+                var caretLine = Editor.Buffer.Selections.Main.Caret.Line;
+                var linePos = caretLine / (Editor.Lines.Count / 100d);
+                var caretY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
+
+                g.FillRectangle(Editor.Styles.Default.ForeBrush, new Rectangle(bounds.X, (int)caretY, bounds.Width,
+                    (int)Math.Round(g.DpiY / 96f) * 2));
             }
 
             return true;
@@ -131,7 +137,7 @@ namespace CodeBox.Margins
                 if (Editor.Scroll.YMax == 0)
                     return 0;
                 else
-                    return Editor.Info.CharWidth;
+                    return (int)(Editor.Info.CharWidth*1);
             }
         }
 

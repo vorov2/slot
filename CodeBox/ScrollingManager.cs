@@ -133,6 +133,7 @@ namespace CodeBox
         {
             editor.Styles.Restyle();
             editor.Redraw();
+            editor.MatchParens.Match();
         }
 
         private int CalculateFirstVisibleLine()
@@ -195,7 +196,7 @@ namespace CodeBox
                 YMax = w;
         }
 
-        public void InvalidateLines(bool force = false)
+        public void InvalidateLines(bool force = false, bool forward = false)
         {
             var dt = DateTime.Now;
             if (!editor.Buffer.WordWrap)
@@ -206,11 +207,14 @@ namespace CodeBox
                     return;
                 }
 
+                var maxHeight = 0;
                 var maxWidth = 0;
                 var y = 0;
 
-                foreach (var ln in editor.Document.Lines)
+                for (var i = forward ? FirstVisibleLine : 0; i < editor.Lines.Count; i++)
                 {
+                    var ln = editor.Lines[i];
+
                     if (ln.Folding.Has(FoldingStates.Invisible))
                         continue;
 
@@ -220,19 +224,23 @@ namespace CodeBox
 
                     if (w > maxWidth)
                         maxWidth = w;
+
+                    maxHeight += editor.Info.LineHeight;
                 }
 
                 XMax = maxWidth - editor.Info.TextWidth + editor.Info.CharWidth * 5;
                 XMax = XMax < 0 ? 0 : XMax;
-                YMax = editor.Document.Lines.Count * editor.Info.LineHeight;
+                YMax = maxHeight;
             }
             else
             {
                 var maxHeight = 0;
                 var twidth = editor.Info.TextWidth;
 
-                foreach (var ln in editor.Document.Lines)
+                for (var i = forward ? FirstVisibleLine : 0; i < editor.Lines.Count; i++)
                 {
+                    var ln = editor.Lines[i];
+
                     if (ln.Folding.Has(FoldingStates.Invisible))
                         continue;
 
@@ -292,7 +300,12 @@ namespace CodeBox
             get
             {
                 if (_firstVisibleLine == null)
+                {
                     _firstVisibleLine = CalculateFirstVisibleLine() + 1;
+
+                    if (_firstVisibleLine.Value >= editor.Lines.Count)
+                        _firstVisibleLine = editor.Lines.Count - 1;
+                }
 
                 return _firstVisibleLine.Value;
             }
@@ -304,7 +317,12 @@ namespace CodeBox
             get
             {
                 if (_lastVisibleLine == null)
+                {
                     _lastVisibleLine = CalculateLastVisibleLine();
+
+                    if (_lastVisibleLine.Value < _firstVisibleLine.Value)
+                        _lastVisibleLine = _firstVisibleLine;
+                }
 
                 return _lastVisibleLine != null ? _lastVisibleLine.Value : 0;
             }

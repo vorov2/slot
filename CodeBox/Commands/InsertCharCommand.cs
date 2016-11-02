@@ -8,8 +8,8 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public class InsertCharCommand : Command //Tested
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable | Forward)]
+    public class InsertCharCommand : Command
     {
         private Character @char;
         private Character @redoChar;
