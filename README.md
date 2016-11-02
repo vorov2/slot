@@ -37,4 +37,5 @@ Features:
 * [ ] Zooming
 * [ ] Changed line indicators
 * [ ] Printing
+* [X] Current line indicator
 * [X] Long line indicators
