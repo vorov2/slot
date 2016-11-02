@@ -11,10 +11,10 @@ namespace CodeBox.Commands
     [CommandBehavior(SingleRun)]
     public sealed class RedoCommand : Command
     {
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             Context.Commands.Redo();
-            return true;
+            return ActionChange.None;
         }
     }
 }

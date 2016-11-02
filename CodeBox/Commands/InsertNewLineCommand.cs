@@ -9,20 +9,24 @@ using static CodeBox.Commands.ActionExponent;
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public sealed class InsertNewLineCommand : Command //Tested
+    public sealed class InsertNewLineCommand : Command
     {
         private IEnumerable<Character> @string;
         private Pos undoPos;
         private Selection redoSel;
         private int indent;
 
-        public override bool Execute(CommandArgument arg, Selection selection)
+        public override ActionChange Execute(CommandArgument arg, Selection selection)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
+            var res = ActionChange.Forward;
 
             if (!selection.IsEmpty)
+            {
+                res = ActionChange.Mixed;
                 @string = DeleteRangeCommand.DeleteRange(Context, selection);
+            }
 
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
@@ -36,7 +40,7 @@ namespace CodeBox.Commands
                 selection.Clear(new Pos(pos.Line, pos.Col + str.Length));
             }
 
-            return true;
+            return res;
         }
 
         public override Pos Redo()

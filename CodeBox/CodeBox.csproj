@@ -56,6 +56,7 @@
     <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\ActionChange.cs" />
     <Compile Include="Commands\CopyCommand.cs" />
     <Compile Include="Commands\CutCommand.cs" />
     <Compile Include="Commands\DeleteBackCommand.cs" />

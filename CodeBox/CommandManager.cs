@@ -109,7 +109,7 @@ namespace CodeBox
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
 
                 SetCarets(count, pos);
-                DoAftermath(exp);
+                DoAftermath(exp, ActionChange.Mixed);
                 editor.Buffer.Edits--;
             }
         }
@@ -153,7 +153,7 @@ namespace CodeBox
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
 
                 SetCarets(count, pos);
-                DoAftermath(exp);
+                DoAftermath(exp, ActionChange.Mixed);
                 editor.Buffer.Edits++;
             }
         }
@@ -251,6 +251,8 @@ namespace CodeBox
 
         private void Run(CommandArgument arg, CommandInfo ci)
         {
+            FirstEditLine = -1;
+            LastEditLine = -1;
             var lines = editor.Lines;
             var exp = ci.Exponent;
             var single = editor.Buffer.Selections.Count == 1
@@ -262,8 +264,7 @@ namespace CodeBox
             var restoreCaret = (exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret;
             var cmd = ci.Command;
             var thisUndo = false;
-            editor.AtomicChange = false;
-            var exec = false;
+            var exec = ActionChange.None;
 
             if (undo)
                 thisUndo = BeginUndoAction();
@@ -287,9 +288,11 @@ namespace CodeBox
                     AddCommand(cmd, exp);
                 }
 
+                FirstEditLine = mainSel.GetFirstLine();
+                LastEditLine = mainSel.GetLastLine();
                 cmd.Context = editor.Context;
 
-                if (!(exec = cmd.Execute(arg, mainSel)) && undo)
+                if ((exec = cmd.Execute(arg, mainSel)) == ActionChange.None && undo)
                     editor.Buffer.UndoStack.Pop();
 
                 if (restoreCaret)
@@ -305,13 +308,16 @@ namespace CodeBox
                         AddCommand(cmd, exp);
                     }
 
+                    FirstEditLine = sel.GetFirstLine();
+                    LastEditLine = sel.GetLastLine();
+
                     cmd.Context = editor.Context;
                     var e = cmd.Execute(arg, sel);
 
-                    if (!exec)
-                        exec = e;
+                    if (e != ActionChange.None)
+                        exec = ActionChange.Mixed;
 
-                    if (!e && undo)
+                    if (e == ActionChange.None && undo)
                         editor.Buffer.UndoStack.Pop();
 
                     if (restoreCaret)
@@ -319,8 +325,6 @@ namespace CodeBox
 
                     lastSel = sel;
                 }
-
-                editor.AtomicChange = false;
             }
 
             if (thisUndo)
@@ -329,12 +333,8 @@ namespace CodeBox
             if (restoreCaret)
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
-            if (exec)
-            {
-                DoAftermath(exp);
-                editor.MatchParens.Match();
-            }
-
+            DoAftermath(exp, exec);
+            editor.MatchParens.Match();
             editor.Buffer.Edits++;
         }
 
@@ -389,15 +389,18 @@ namespace CodeBox
             }
         }
 
-        private void DoAftermath(ActionExponent exp)
+        private void DoAftermath(ActionExponent exp, ActionChange exec)
         {
             var scrolled = false;
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify
                 || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
                 editor.Scroll.InvalidateLines(
-                    force:false, 
-                    forward: (exp & ActionExponent.Forward) == ActionExponent.Forward);
+                    exec == ActionChange.Atomic ? ScrollingManager.InvalidateFlags.Atomic
+                    : exec == ActionChange.Backward ? ScrollingManager.InvalidateFlags.Backward
+                    : exec == ActionChange.Forward ? ScrollingManager.InvalidateFlags.Forward
+                    : ScrollingManager.InvalidateFlags.None
+                    );
 
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
                 scrolled = editor.Scroll.UpdateVisibleRectangle();
@@ -408,7 +411,7 @@ namespace CodeBox
             if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
                 || (exp & ActionExponent.Modify) == ActionExponent.Modify)
                 editor.Styles.Restyle();
-            
+
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
                 editor.Folding.RebuildFolding();
 
@@ -420,6 +423,8 @@ namespace CodeBox
             }
         }
 
-        
+        internal int FirstEditLine { get; private set; }
+
+        internal int LastEditLine { get; private set; }
     }
 }

@@ -39,7 +39,9 @@ namespace CodeBox.ObjectModel
 
         public bool Overtype { get; set; }
 
-        public bool WordWrap { get; set; }
+        public bool? WordWrap { get; set; }
+
+        public int? WordWrapColumn { get; set; }
 
         private Eol _eol;
         public Eol Eol

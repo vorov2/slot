@@ -8,7 +8,7 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable | Forward)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     public class DeleteCommand : Command
     {
         private IEnumerable<Character> @string;
@@ -16,15 +16,15 @@ namespace CodeBox.Commands
         private Selection redoSel;
         private Pos undoPos;
 
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            var res = false;
+            var res = ActionChange.None;
 
             if (!sel.IsEmpty)
             {
+                res = ActionChange.Mixed;
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
-                res = true;
             }
             else
             {
@@ -36,7 +36,7 @@ namespace CodeBox.Commands
                 {
                     @char = ln.CharacterAt(caret.Col);
                     ln.RemoveAt(caret.Col);
-                    res = true;
+                    res = ActionChange.Forward;
                 }
                 else if (caret.Line < lines.Count - 1)
                 {
@@ -44,7 +44,7 @@ namespace CodeBox.Commands
                     @char = Character.NewLine;
                     lines.Remove(nl);
                     ln.Append(nl);
-                    res = true;
+                    res = ActionChange.Forward;
                 }
             }
 

@@ -9,7 +9,7 @@ namespace CodeBox.Commands
 {
     public interface ICommand
     {
-        bool Execute(CommandArgument arg, Selection sel);
+        ActionChange Execute(CommandArgument arg, Selection sel);
 
         Pos Undo();
 

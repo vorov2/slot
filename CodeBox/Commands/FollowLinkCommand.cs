@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     [CommandBehavior(LeaveEditor | SingleRun)]
     public sealed class FollowLinkCommand : Command
     {
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             var ln = Document.Lines[arg.Pos.Line];
             var a = ln.FindHyperlink(arg.Pos.Col);
@@ -22,10 +22,9 @@ namespace CodeBox.Commands
             {
                 var link = ln.GetRange(a.Start, a.End - a.Start + 1).MakeString();
                 Process.Start(link);
-                return true;
             }
 
-            return false;
+            return ActionChange.None;
         }
     }
 }

@@ -12,12 +12,12 @@ namespace CodeBox.Commands
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     public sealed class CutCommand : DeleteRangeCommand
     {
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
-            base.Execute(arg, sel);
+            var res = base.Execute(arg, sel);
             var str = data.MakeString(Buffer.Eol);
             Clipboard.SetText(str, TextDataFormat.UnicodeText);
-            return true;
+            return res;
         }
     }
 }

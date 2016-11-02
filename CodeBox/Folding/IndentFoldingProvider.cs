@@ -37,7 +37,10 @@ namespace CodeBox.Folding
                 var line = ctx.Buffer.Document.Lines[i];
 
                 if (line.IsEmpty())
+                {
+                    line.Folding &= ~FoldingStates.Header;
                     continue;
+                }
 
                 var txt = line.Text;
                 var indent = 0;

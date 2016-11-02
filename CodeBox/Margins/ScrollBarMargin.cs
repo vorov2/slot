@@ -54,7 +54,7 @@ namespace CodeBox.Margins
 
         private int GetScrollValue(Point loc)
         {
-            var max = GetMaximum();
+            long max = GetMaximum();
             var v = Horizontal() ? loc.X : loc.Y;
             var ret = -(max * (v - lastCaretSize / 2) / (GetScrollSize() - lastCaretSize));
 
@@ -62,8 +62,8 @@ namespace CodeBox.Margins
                 ret = 0;
             else if (ret < -max)
                 ret = -max;
-
-            return ret;
+            
+            return (int)ret;
         }
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)

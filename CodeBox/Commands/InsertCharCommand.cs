@@ -8,7 +8,7 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable | Forward)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     public class InsertCharCommand : Command
     {
         private Character @char;
@@ -17,29 +17,28 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
             redoSel = sel.Clone();
+            var res = ActionChange.Atomic;
 
             if (!sel.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(Context, sel);
-            else
             {
-                Context.AtomicChange = true;
-
-                if (Buffer.Overtype)
-                {
-                    @char = line[sel.Caret.Col];
-                    line.RemoveAt(sel.Caret.Col);
-                }
+                res = ActionChange.Mixed;
+                @string = DeleteRangeCommand.DeleteRange(Context, sel);
+            }
+            else if (Buffer.Overtype)
+            {
+                @char = line[sel.Caret.Col];
+                line.RemoveAt(sel.Caret.Col);
             }
 
             @redoChar = new Character(arg.Char);
             Document.Lines[sel.Caret.Line].Insert(sel.Caret.Col, @redoChar);
             sel.Clear(new Pos(sel.Caret.Line, sel.Caret.Col + 1));
-            return true;
+            return res;
         }
 
         public override Pos Redo()

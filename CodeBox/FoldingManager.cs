@@ -34,6 +34,9 @@ namespace CodeBox
 
         public bool IsCollapsedHeader(int lineIndex)
         {
+            if (lineIndex + 1 >= editor.Lines.Count)
+                return false;
+
             var ln = editor.Lines[lineIndex];
             return ln.Folding.Has(FoldingStates.Header) && lineIndex < editor.Lines.Count
                 && editor.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible);
@@ -83,24 +86,27 @@ namespace CodeBox
             if (editor.Lines.Count == 0)
                 return;
 
-            var fvl = editor.Scroll.FirstVisibleLine;
-            var lvl = editor.Scroll.LastVisibleLine;
+            Task.Run(() =>
+            {
+                var fvl = editor.Scroll.FirstVisibleLine;
+                var lvl = editor.Scroll.LastVisibleLine;
 
-            while (fvl > -1 && !IsFoldingHeader(fvl))
-                fvl--;
+                while (fvl > -1 && !IsFoldingHeader(fvl))
+                    fvl--;
 
-            fvl = fvl < 0 ? 0 : fvl;
-            lvl = lvl < fvl ? fvl : lvl;
+                fvl = fvl < 0 ? 0 : fvl;
+                lvl = lvl < fvl ? fvl : lvl;
 
-            var range = new Range(
-                    new Pos(fvl, 0),
-                    new Pos(lvl, editor.Lines[lvl].Length - 1));
-            var fp = Provider;
+                var range = new Range(
+                        new Pos(fvl, 0),
+                        new Pos(lvl, editor.Lines[lvl].Length - 1));
+                var fp = Provider;
 
-            if (fp == null)
-                OnFoldingNeeded(range);
-            else
-                fp.Fold(editor.Context, range);
+                if (fp == null)
+                    OnFoldingNeeded(range);
+                else
+                    fp.Fold(editor.Context, range);
+            });
         }
 
         internal void DrawFoldingIndicator(Graphics g, int x, int y)
@@ -133,8 +139,7 @@ namespace CodeBox
         public event EventHandler<FoldingNeededEventArgs> FoldingNeeded;
         private void OnFoldingNeeded(Range range)
         {
-            Task.Run(() =>
-                FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range)));
+            FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range));
         }
 
         public IFoldingProvider Provider { get; set; }

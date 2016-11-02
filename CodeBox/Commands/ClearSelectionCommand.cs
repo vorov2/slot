@@ -10,10 +10,10 @@ namespace CodeBox.Commands
     [CommandBehavior(None)]
     public sealed class ClearSelectionCommand : Command
     {
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             Buffer.Selections.Truncate();
-            return true;
+            return ActionChange.None;
         }
     }
 }

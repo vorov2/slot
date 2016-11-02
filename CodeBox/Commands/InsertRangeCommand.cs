@@ -16,20 +16,22 @@ namespace CodeBox.Commands
         private IEnumerable<Character> @string;
         private IEnumerable<Character> @redoString;
 
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            
+            var res = ActionChange.Forward;
+
             if (!sel.IsEmpty)
+            {
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
-            else
-                Context.AtomicChange = sel.Start.Line == sel.End.Line;
+                res = ActionChange.Mixed;
+            }
 
             @redoString = arg.String.MakeCharacters();
             var pos = InsertRange(Document, sel.Start, @redoString);
             undo = new Selection(sel.Start, pos);
             sel.Clear(pos);
-            return true;
+            return res;
         }
 
         public override Pos Redo()

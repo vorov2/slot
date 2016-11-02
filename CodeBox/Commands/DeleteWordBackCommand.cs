@@ -11,7 +11,7 @@ namespace CodeBox.Commands
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     public sealed class DeleteWordBackCommand : DeleteBackCommand
     {
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             var ln = Document.Lines[sel.Caret.Line];
 

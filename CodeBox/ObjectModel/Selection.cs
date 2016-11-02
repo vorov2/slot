@@ -59,6 +59,16 @@ namespace CodeBox.ObjectModel
             return (Selection)MemberwiseClone();
         }
 
+        internal int GetFirstLine()
+        {
+            return Start > End ? End.Line : Start.Line;
+        }
+
+        internal int GetLastLine()
+        {
+            return Start > End ? Start.Line : End.Line;
+        }
+
         public Pos Caret
         {
             get { return End; }

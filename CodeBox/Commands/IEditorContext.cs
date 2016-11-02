@@ -19,6 +19,10 @@ namespace CodeBox.Commands
 
         EditorSettings Settings { get; }
 
-        bool AtomicChange { get; set; }
+        bool WordWrap { get; }
+
+        int WordWrapColumn { get; }
+
+        bool Overtype { get; }
     }
 }

@@ -22,6 +22,11 @@ namespace CodeBox
 
         public void Match()
         {
+            Task.Run(() => InternalMatch());
+        }
+
+        private void InternalMatch()
+        {
             if (markedParent)
             {
                 editor.Styles.Restyle();

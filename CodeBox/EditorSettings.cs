@@ -21,6 +21,7 @@ namespace CodeBox
             //Defaults
             WordSeparators = SEPS;
             //WordWrap = true;
+            WordWrapColumn = 80;
             //UseTabs = true;
             TabSize = TABSIZE;
             LinePadding = .1;
@@ -36,6 +37,8 @@ namespace CodeBox
         public string WordSeparators { get; set; }
 
         public bool WordWrap { get; set; }
+
+        public int WordWrapColumn { get; set; }
 
         public Eol Eol { get; set; }
 

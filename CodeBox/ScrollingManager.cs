@@ -2,6 +2,7 @@
 using CodeBox.ObjectModel;
 using System.Drawing;
 using CodeBox.Folding;
+using CodeBox.Commands;
 
 namespace CodeBox
 {
@@ -9,6 +10,16 @@ namespace CodeBox
     {
         private readonly Editor editor;
         private Point pointer;
+
+        [Flags]
+        internal enum InvalidateFlags
+        {
+            None = 0x00,
+            Atomic = 0x01,
+            Forward = 0x02,
+            Backward = 0x04,
+            Force = 0x08
+        }
 
         internal ScrollingManager(Editor editor)
         {
@@ -37,7 +48,7 @@ namespace CodeBox
                 update = true;
             }
 
-            if (!editor.Buffer.WordWrap)
+            if (!editor.WordWrap)
             {
                 sv = IsColumnVisible(caret);
 
@@ -196,12 +207,19 @@ namespace CodeBox
                 YMax = w;
         }
 
-        public void InvalidateLines(bool force = false, bool forward = false)
+        internal void InvalidateLines(InvalidateFlags flags = InvalidateFlags.None)
         {
             var dt = DateTime.Now;
-            if (!editor.Buffer.WordWrap)
+
+            var startLine = (flags & InvalidateFlags.Forward) == InvalidateFlags.Forward
+                ? editor.Commands.FirstEditLine : 0;
+            var endLine = (flags & InvalidateFlags.Backward) == InvalidateFlags.Backward
+                ? editor.Commands.LastEditLine + 1 : editor.Lines.Count;
+            var forced = (flags & InvalidateFlags.Force) == InvalidateFlags.Force;
+
+            if (!editor.WordWrap)
             {
-                if (editor.AtomicChange && !force)
+                if ((flags & InvalidateFlags.Atomic) == InvalidateFlags.Atomic)
                 {
                     FastInvalidateLines();
                     return;
@@ -211,7 +229,7 @@ namespace CodeBox
                 var maxWidth = 0;
                 var y = 0;
 
-                for (var i = forward ? FirstVisibleLine : 0; i < editor.Lines.Count; i++)
+                for (var i =  startLine; i < endLine; i++)
                 {
                     var ln = editor.Lines[i];
 
@@ -235,16 +253,17 @@ namespace CodeBox
             else
             {
                 var maxHeight = 0;
-                var twidth = editor.Info.TextWidth;
+                var twidth = editor.WordWrapColumn > 0 ? editor.WordWrapColumn * editor.Info.CharWidth
+                    : editor.Info.TextWidth;
 
-                for (var i = forward ? FirstVisibleLine : 0; i < editor.Lines.Count; i++)
+                for (var i = startLine; i < endLine; i++)
                 {
                     var ln = editor.Lines[i];
 
                     if (ln.Folding.Has(FoldingStates.Invisible))
                         continue;
 
-                    if (!ln.Invalidated || force)
+                    if (!ln.Invalidated || forced)
                         ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
                     ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
@@ -257,9 +276,8 @@ namespace CodeBox
 
             YMax = YMax - editor.Info.TextHeight + editor.Info.LineHeight * 5;
             YMax = YMax < 0 ? 0 : YMax;
-
             _lastVisibleLine = null;
-            Console.WriteLine($"FirstVisible: {FirstVisibleLine}; LastVisible: {LastVisibleLine}; InvalidateLines: {DateTime.Now - dt}");
+            //Console.WriteLine($"FirstVisible: {FirstVisibleLine}; LastVisible: {LastVisibleLine}; InvalidateLines: {DateTime.Now - dt}");
         }
 
         private void ResetFirstLast()

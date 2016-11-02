@@ -18,7 +18,7 @@ namespace CodeBox.Commands
             Word
         }
         
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             var range = SelectWord(Context);
 
@@ -32,12 +32,9 @@ namespace CodeBox.Commands
             }
 
             if (range != null)
-            {
                 Buffer.Selections.Set(Selection.FromRange(range));
-                return true;
-            }
 
-            return false;
+            return ActionChange.None;
         }
 
         internal static Range SelectWord(IEditorContext ctx)

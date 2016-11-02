@@ -33,7 +33,7 @@ namespace CodeBox.Margins
             g.FillRectangle(Editor.Styles.FoldingMarker.BackBrush, bounds);
             var lp = (int)(Editor.Info.CharWidth * .5);
             var h = (Editor.Info.LineHeight / 2) * 2;
-            var w = ((bounds.Width - lp) / 2) * 2;
+            var w = ((bounds.Width - lp*2) / 2) * 2;
             var side = w > h ? h : w;
             var x = bounds.X + lp + (w - side) / 2;
 
@@ -48,7 +48,7 @@ namespace CodeBox.Margins
                     var arrow = default(Point[]);
                     var b = Editor.Styles.FoldingMarker.ForeBrush;
 
-                    if (!Editor.Lines[i + 1].Folding.Has(FoldingStates.Invisible))
+                    if (Editor.Lines.Count > i + 1 && !Editor.Lines[i + 1].Folding.Has(FoldingStates.Invisible))
                     {
                         arrow = new Point[]
                         {
@@ -77,7 +77,7 @@ namespace CodeBox.Margins
 
         public override int CalculateSize()
         {
-            return (int)Math.Round(Editor.Info.CharWidth * 2.0, MidpointRounding.AwayFromZero);
+            return (int)Math.Round(Editor.Info.CharWidth * 2.5, MidpointRounding.AwayFromZero);
         }
     }
 }

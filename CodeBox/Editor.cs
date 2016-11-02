@@ -19,7 +19,7 @@ using CodeBox.Indentation;
 
 namespace CodeBox
 {
-    public class Editor : Control
+    public class Editor : Control, IEditorContext
     {
         private const int WM_POINTERDOWN = 0x0246;
         private const int WM_POINTERUP = 0x0247;
@@ -30,55 +30,6 @@ namespace CodeBox
         private readonly Timer timer = new Timer { Interval = 500 };
         private Pos movePosition;
         private Point mousePosition;
-
-        private sealed class EditorContext : IEditorContext
-        {
-            private readonly Editor editor;
-
-            internal EditorContext(Editor editor)
-            {
-                this.editor = editor;
-            }
-
-            public FoldingManager Folding
-            {
-                get { return editor.Folding; }
-            }
-
-            public IndentManager Indents
-            {
-                get { return editor.Indents; }
-            }
-
-            public ScrollingManager Scroll
-            {
-                get { return editor.Scroll; }
-            }
-
-            public CommandManager Commands
-            {
-                get { return editor.Commands; }
-            }
-
-            public DocumentBuffer Buffer
-            {
-                get { return editor.Buffer; }
-            }
-
-            public EditorInfo Info
-            {
-                get { return editor.Info; }
-            }
-
-            public EditorSettings Settings
-            {
-                get { return editor.Settings; }
-            }
-
-            public bool AtomicChange { get; set; }
-        }
-
-        private readonly IEditorContext context;
 
         public Editor()
         {
@@ -104,7 +55,6 @@ namespace CodeBox
             CallTips = new CallTipManager(this);
             Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
             MatchParens = new MatchParensManager(this);
-            context = new EditorContext(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
             timer.Tick += Tick;
@@ -169,7 +119,6 @@ namespace CodeBox
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Console.WriteLine("Onpaint");
             Caret.Suspend();
 
             var dt = DateTime.Now;
@@ -185,14 +134,13 @@ namespace CodeBox
 
             var carets = new List<CaretData>();
             DrawLines(e.Graphics, carets);
-            //Console.WriteLine("Time: " + (DateTime.Now - dt).TotalMilliseconds);
-
+            
             e.Graphics.ResetTransform();
             DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
             if (RightMargins.Count > 0)
                 DrawMargins(ClientSize.Width - RightMargins.First().CalculateSize(), e.Graphics, RightMargins);
 
-            if (!Buffer.WordWrap)
+            if (!WordWrap)
             {
                 foreach (var i in Settings.LongLineIndicators)
                 {
@@ -205,11 +153,21 @@ namespace CodeBox
                         x, Info.TextTop, x, Info.TextBottom);
                 }
             }
+            else if (WordWrapColumn > 0)
+            {
+                var x = Info.TextLeft + WordWrapColumn * Info.CharWidth + Scroll.X;
+
+                if (x > Info.TextLeft)
+                    e.Graphics.DrawLine(CachedPen.Create(Styles.SpecialSymbol.ForeColor),
+                        x, Info.TextTop, x, Info.TextBottom);
+            }
+
 
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             foreach (var c in carets)
                 Caret.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
 
+            Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
         }
 
@@ -236,7 +194,7 @@ namespace CodeBox
 
         protected override void OnResize(EventArgs eventargs)
         {
-            Scroll.InvalidateLines(force: true);
+            Scroll.InvalidateLines(ScrollingManager.InvalidateFlags.Force);
             Styles.Restyle();
             Invalidate();
             base.OnResize(eventargs);
@@ -332,7 +290,7 @@ namespace CodeBox
                     x += xw;
                 }
 
-                if (line.Folding.Has(FoldingStates.Header) && lineIndex < Lines.Count &&
+                if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < Lines.Count &&
                     Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
                 {
                     Folding.DrawFoldingIndicator(g, x, y);
@@ -608,15 +566,31 @@ namespace CodeBox
             }
         }
 
-        internal bool AtomicChange
+        public bool WordWrap
         {
-            get { return context.AtomicChange; }
-            set { context.AtomicChange = value; }
+            get
+            {
+                if (Buffer.WordWrap != null)
+                    return Buffer.WordWrap.Value;
+                else
+                    return Settings.WordWrap;
+            }
+        }
+
+        public int WordWrapColumn
+        {
+            get
+            {
+                if (Buffer.WordWrapColumn != null)
+                    return Buffer.WordWrapColumn.Value;
+                else
+                    return Settings.WordWrapColumn;
+            }
         }
 
         internal IEditorContext Context
         {
-            get { return context; }
+            get { return this; }
         }
 
         internal Keys LastKeys { get; set; }

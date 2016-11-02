@@ -8,10 +8,10 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable | Forward)]
+    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
     public sealed class DeleteWordCommand : DeleteCommand
     {
-        public override bool Execute(CommandArgument arg, Selection sel)
+        public override ActionChange Execute(CommandArgument arg, Selection sel)
         {
             var ln = Document.Lines[sel.Caret.Line];
 

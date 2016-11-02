@@ -21,7 +21,7 @@ namespace CodeBox.Commands
             var doc = ctx.Buffer.Document;
             var pos = sel.Caret;
 
-            if (ctx.Buffer.WordWrap)
+            if (ctx.WordWrap)
             {
                 var ln = doc.Lines[pos.Line];
                 var stripe = ln.GetStripe(pos.Col);
