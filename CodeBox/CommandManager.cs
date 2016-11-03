@@ -27,6 +27,7 @@ namespace CodeBox
 
         private void RegisterCommands()
         {
+            Register<AutocompleteCommand>();
             Register<SelectLineCommand>();
             Register<ToggleFoldingCommand>();
             Register<FollowLinkCommand>();
@@ -76,6 +77,9 @@ namespace CodeBox
             Register<DocumentEndCommand>();
             Register<ExtendDocumentHomeCommand>();
             Register<ExtendDocumentEndCommand>();
+            Register<OvertypeCommand>();
+            Register<InsertRangeCommand>();
+            Register<DeleteRangeCommand>();
         }
 
         public bool BeginUndoAction()
@@ -109,7 +113,7 @@ namespace CodeBox
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
 
                 SetCarets(count, pos);
-                DoAftermath(exp, ActionResult.Mixed);
+                DoAftermath(exp, ActionResults.Change);
                 editor.Buffer.Edits--;
             }
         }
@@ -153,7 +157,7 @@ namespace CodeBox
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
 
                 SetCarets(count, pos);
-                DoAftermath(exp, ActionResult.Mixed);
+                DoAftermath(exp, ActionResults.Change);
                 editor.Buffer.Edits++;
             }
         }
@@ -264,7 +268,7 @@ namespace CodeBox
             var restoreCaret = (exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret;
             var cmd = ci.Command;
             var thisUndo = false;
-            var exec = ActionResult.None;
+            var exec = ActionResults.None;
 
             if (undo)
                 thisUndo = BeginUndoAction();
@@ -292,7 +296,7 @@ namespace CodeBox
                 LastEditLine = mainSel.GetLastLine();
                 cmd.Context = editor.Context;
 
-                if ((exec = cmd.Execute(arg, mainSel)) == ActionResult.None && undo)
+                if ((exec = cmd.Execute(arg, mainSel)) == ActionResults.None && undo)
                     editor.Buffer.UndoStack.Pop();
 
                 if (restoreCaret)
@@ -314,10 +318,10 @@ namespace CodeBox
                     cmd.Context = editor.Context;
                     var e = cmd.Execute(arg, sel);
 
-                    if (e != ActionResult.None)
-                        exec = ActionResult.Mixed;
+                    if (e != ActionResults.None)
+                        exec = ActionResults.Change;
 
-                    if (e == ActionResult.None && undo)
+                    if (e == ActionResults.None && undo)
                         editor.Buffer.UndoStack.Pop();
 
                     if (restoreCaret)
@@ -333,11 +337,16 @@ namespace CodeBox
             if (restoreCaret)
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
-            if (exec != ActionResult.None)
+            if (exec != ActionResults.None)
             {
                 DoAftermath(exp, exec);
                 editor.MatchParens.Match();
             }
+
+            if (exec.Has(ActionResults.AutocompleteKeep) && editor.Autocomplete.WindowShown)
+                editor.Autocomplete.UpdateAutocomplete();
+            else if (!exec.Has(ActionResults.AutocompleteShow))
+                editor.Autocomplete.HideAutocomplete();
         }
 
         private void AttachCaret(Pos pos)
@@ -391,16 +400,14 @@ namespace CodeBox
             }
         }
 
-        private void DoAftermath(ActionExponent exp, ActionResult exec)
+        private void DoAftermath(ActionExponent exp, ActionResults exec)
         {
             var scrolled = false;
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify
                 || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
                 editor.Scroll.InvalidateLines(
-                    exec == ActionResult.Atomic ? ScrollingManager.InvalidateFlags.Atomic
-                    : exec == ActionResult.Backward ? ScrollingManager.InvalidateFlags.Backward
-                    : exec == ActionResult.Forward ? ScrollingManager.InvalidateFlags.Forward
+                    exec.Has(ActionResults.AtomicChange) ? ScrollingManager.InvalidateFlags.Atomic
                     : ScrollingManager.InvalidateFlags.None
                     );
 

@@ -12,12 +12,12 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
             data = DeleteRange(Context, sel);
             undoPos = sel.Caret;
-            return ActionResult.Mixed;
+            return ActionResults.Change;
         }
 
         public override Pos Redo()

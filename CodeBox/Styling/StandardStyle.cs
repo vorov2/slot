@@ -26,6 +26,6 @@ namespace CodeBox.Styling
 
         Hyperlink = 8,
 
-        MatchBrace = 9
+        MatchBrace = 9,
     }
 }

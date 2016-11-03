@@ -11,7 +11,7 @@ namespace CodeBox.Commands
     [CommandBehavior(SingleRun)]
     public sealed class SelectLineCommand : Command
     {
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             if (arg.Pos.Line > -1)
             {
@@ -19,7 +19,7 @@ namespace CodeBox.Commands
                 sel.End = new Pos(arg.Pos.Line, Document.Lines[arg.Pos.Line].Length);
             }
 
-            return ActionResult.Standard;
+            return ActionResults.Clean;
         }
     }
 }

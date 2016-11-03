@@ -16,18 +16,14 @@ namespace CodeBox.Commands
         private Selection redoSel;
         private int indent;
 
-        public override ActionResult Execute(CommandArgument arg, Selection selection)
+        public override ActionResults Execute(CommandArgument arg, Selection selection)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
-            var res = ActionResult.Forward;
 
             if (!selection.IsEmpty)
-            {
-                res = ActionResult.Mixed;
                 @string = DeleteRangeCommand.DeleteRange(Context, selection);
-            }
-
+            
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
             indent = Context.Indents.CalculateIndentation(pos.Line);
@@ -40,7 +36,7 @@ namespace CodeBox.Commands
                 selection.Clear(new Pos(pos.Line, pos.Col + str.Length));
             }
 
-            return res;
+            return ActionResults.Change;
         }
 
         public override Pos Redo()

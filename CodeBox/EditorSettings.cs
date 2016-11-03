@@ -109,6 +109,18 @@ namespace CodeBox
         public Color ScrollActiveThumbColor { get; set; }
 
         public List<int> LongLineIndicators { get; }
+
+        #region Autocomplete
+        public Color AutocompleteBackColor { get; set; }
+
+        public Color AutocompleteBorderColor { get; set; }
+
+        public Color AutocompleteForeColor { get; set; }
+
+        public Color AutocompleteHoverColor { get; set; }
+
+        public Color AutocompleteSelectedColor { get; set; }
+        #endregion
     }
 
     public enum Eol

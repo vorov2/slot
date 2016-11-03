@@ -14,12 +14,12 @@ namespace CodeBox.Commands
         private int undoLine;
         private Pos undoCaret;
 
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             undoLine = arg.Pos.Line;
             undoCaret = sel.Caret;
             Context.Folding.ToggleExpand(undoLine);
-            return ActionResult.Standard;
+            return ActionResults.Clean;
         }
 
         public override Pos Undo()

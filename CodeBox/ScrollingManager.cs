@@ -16,9 +16,7 @@ namespace CodeBox
         {
             None = 0x00,
             Atomic = 0x01,
-            Forward = 0x02,
-            Backward = 0x04,
-            Force = 0x08
+            Force = 0x02
         }
 
         internal ScrollingManager(Editor editor)
@@ -119,9 +117,10 @@ namespace CodeBox
             //scroll by whole lines
             var lines = (int)Math.Round((double)value / editor.Info.LineHeight);
             value = lines * editor.Info.LineHeight;
+            var change = Y - value;
             Y = value;
             ResetFirstLast();
-            OnScroll();
+            OnScroll(0, change);
         }
 
         public void SetScrollPositionX(int value)
@@ -135,16 +134,19 @@ namespace CodeBox
             //scroll by whole chars
             var chars = (int)Math.Round((double)value / editor.Info.CharWidth);
             value = chars * editor.Info.CharWidth;
-
+            var change = X - value;
             X = value;
-            OnScroll();
+            OnScroll(change, 0);
         }
 
-        private void OnScroll()
+        private void OnScroll(int xChange, int yChange)
         {
             editor.Styles.Restyle();
             editor.Redraw();
             editor.MatchParens.Match();
+
+            if (editor.Autocomplete.WindowShown)
+                editor.Autocomplete.ShiftLocation(xChange, yChange);
         }
 
         private int CalculateFirstVisibleLine()
@@ -211,10 +213,8 @@ namespace CodeBox
         {
             var dt = DateTime.Now;
 
-            var startLine = (flags & InvalidateFlags.Forward) == InvalidateFlags.Forward
-                ? editor.Commands.FirstEditLine : 0;
-            var endLine = (flags & InvalidateFlags.Backward) == InvalidateFlags.Backward
-                ? editor.Commands.LastEditLine + 1 : editor.Lines.Count;
+            var startLine = 0;
+            var endLine = editor.Lines.Count;
             var forced = (flags & InvalidateFlags.Force) == InvalidateFlags.Force;
 
             if (!editor.WordWrap)

@@ -1,18 +1,19 @@
-﻿using CodeBox.ObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(None)]
-    public sealed class ClearSelectionCommand : Command
+    [CommandBehavior(SingleRun)]
+    public sealed class OvertypeCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            Buffer.Selections.Truncate();
+            Context.Overtype = !Context.Overtype;
             return ActionResults.Clean;
         }
     }

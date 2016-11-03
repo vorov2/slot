@@ -6,10 +6,10 @@ namespace CodeBox.Commands
     [CommandBehavior(SingleRun)]
     public sealed class AddCaretCommand : Command
     {
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             Buffer.Selections.Add(new Selection(arg.Pos));
-            return ActionResult.Standard;
+            return ActionResults.Clean;
         }
     }
 }

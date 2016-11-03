@@ -11,10 +11,10 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | SingleRun)]
     public sealed class BlockSelectCommand : Command
     {
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             DoSelection(arg.Pos);
-            return ActionResult.Standard;
+            return ActionResults.Clean;
         }
 
         private void DoSelection(Pos p)

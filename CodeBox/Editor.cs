@@ -55,6 +55,7 @@ namespace CodeBox
             CallTips = new CallTipManager(this);
             Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
             MatchParens = new MatchParensManager(this);
+            Autocomplete = new AutocompleteManager(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
             timer.Tick += Tick;
@@ -197,11 +198,15 @@ namespace CodeBox
             Scroll.InvalidateLines(ScrollingManager.InvalidateFlags.Force);
             Styles.Restyle();
             Invalidate();
+            Autocomplete.HideAutocomplete();
             base.OnResize(eventargs);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            if (Autocomplete.WindowShown && Autocomplete.InWindowLocation(e.Location))
+                return;
+
             base.OnMouseWheel(e);
             Scroll.ScrollY((e.Delta / 120) * 2);
         }
@@ -237,7 +242,7 @@ namespace CodeBox
                 if (curline)
                 {
                     g.FillRectangle(CachedBrush.Create(Settings.CurrentLineIndicatorColor),
-                          new Rectangle(lmarg, y, Info.TextWidth, Info.LineHeight));
+                          new Rectangle(lmarg - Scroll.X, y, Info.TextWidth, Info.LineHeight));
                 }
 
                 var cut = line.GetCut(j);
@@ -528,8 +533,8 @@ namespace CodeBox
         {
             base.OnKeyDown(e);
 
-            if (e.KeyData == Keys.Insert)
-                Overtype = !Overtype;
+            if (Autocomplete.WindowShown && Autocomplete.ListenKeys(e.KeyData))
+                return;
 
             LastKeys = e.Modifiers;
             Commands.Run(LastKeys | e.KeyCode, default(CommandArgument));
@@ -644,5 +649,7 @@ namespace CodeBox
         public IndentManager Indents { get; }
 
         internal MatchParensManager MatchParens { get; }
+
+        public AutocompleteManager Autocomplete { get; }
     }
 }

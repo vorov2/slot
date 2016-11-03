@@ -9,21 +9,21 @@ using static CodeBox.Commands.ActionExponent;
 namespace CodeBox.Commands
 {
     [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public class DeleteBackCommand : Command //Tested
+    public class DeleteBackCommand : Command
     {
         private IEnumerable<Character> @string;
         private Character @char;
         private Pos undoPos;
         private Selection redoSel;
 
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            var res = ActionResult.None;
+            var res = ActionResults.None;
 
             if (!sel.IsEmpty)
             {
-                res = ActionResult.Mixed;
+                res = ActionResults.Change;
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
             }
             else
@@ -37,7 +37,7 @@ namespace CodeBox.Commands
                     @char = ln.CharacterAt(caret.Col - 1);
                     ln.RemoveAt(caret.Col - 1);
                     sel.Clear(new Pos(caret.Line, caret.Col - 1));
-                    res = ActionResult.Backward;
+                    res = ActionResults.Change | ActionResults.AutocompleteKeep;
                 }
                 else if (caret.Line > 0)
                 {
@@ -48,7 +48,7 @@ namespace CodeBox.Commands
                     lines.RemoveAt(caret.Line);
                     ln.Append(txt);
                     sel.Clear(new Pos(caret.Line - 1, col));
-                    res = ActionResult.Backward;
+                    res = ActionResults.Change;
                 }
             }
 

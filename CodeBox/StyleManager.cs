@@ -138,7 +138,7 @@ namespace CodeBox
         public TextStyle CurrentLineNumber { get; private set; }
 
         public PopupStyle CallTip { get; private set; }
-
+        
         public TextStyle Hyperlink { get; private set; }
 
         public TextStyle MatchBrace { get; private set; }

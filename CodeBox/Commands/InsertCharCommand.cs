@@ -17,23 +17,25 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
             redoSel = sel.Clone();
-            var res = ActionResult.Atomic;
+            var res = ActionResults.AtomicChange;
 
             if (!sel.IsEmpty)
             {
-                res = ActionResult.Mixed;
+                res = ActionResults.Change;
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
             }
-            else if (Buffer.Overtype)
+            else if (Buffer.Overtype && sel.Caret.Col < line.Length)
             {
                 @char = line[sel.Caret.Col];
                 line.RemoveAt(sel.Caret.Col);
             }
+            else
+                res |= ActionResults.AutocompleteKeep;
 
             @redoChar = new Character(arg.Char);
             Document.Lines[sel.Caret.Line].Insert(sel.Caret.Col, @redoChar);

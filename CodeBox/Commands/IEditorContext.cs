@@ -5,6 +5,10 @@ namespace CodeBox.Commands
 {
     public interface IEditorContext
     {
+        AutocompleteManager Autocomplete { get; }
+
+        LocationManager Locations { get; }
+
         FoldingManager Folding { get; }
 
         IndentManager Indents { get; }
@@ -23,6 +27,6 @@ namespace CodeBox.Commands
 
         int WordWrapColumn { get; }
 
-        bool Overtype { get; }
+        bool Overtype { get; set; }
     }
 }

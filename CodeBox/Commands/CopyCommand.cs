@@ -12,11 +12,11 @@ namespace CodeBox.Commands
     [CommandBehavior(Silent)]
     public sealed class CopyCommand : Command
     {
-        public override ActionResult Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             var str = GetTextRange(Context, sel);
             Clipboard.SetText(str, TextDataFormat.UnicodeText);
-            return ActionResult.Standard;
+            return ActionResults.Clean;
         }
 
         internal static string GetTextRange(IEditorContext ctx, Range rangesr)

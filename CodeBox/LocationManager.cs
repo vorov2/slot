@@ -48,6 +48,16 @@ namespace CodeBox
             return new Pos(line, col);
         }
 
+        public Point PositionToLocation(Pos pos)
+        {
+            var line = editor.Lines[pos.Line];
+            var y = line.Y + line.GetStripe(pos.Col) * editor.Info.LineHeight + editor.Info.LineHeight
+                + editor.Info.TextTop;
+            var x = line.GetTetras(pos.Col, editor.Settings.TabSize) * editor.Info.CharWidth
+                + editor.Info.TextLeft;
+            return new Point(x, y);
+        }
+
         private int FindColumnByLocation(Line line, Point loc)
         {
             var stripe = (int)Math.Ceiling((loc.Y - editor.Info.TextTop - line.Y - editor.Scroll.Y)

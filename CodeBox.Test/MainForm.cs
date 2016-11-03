@@ -61,12 +61,24 @@ namespace CodeBox.Test
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#579032")
                 });
+
+
+            ed.Settings.AutocompleteForeColor = ColorTranslator.FromHtml("#DCDCDC");
+            ed.Settings.AutocompleteBackColor = ColorTranslator.FromHtml("#2D2D30");
+            ed.Settings.AutocompleteHoverColor = ColorTranslator.FromHtml("#3E3E42");
+            ed.Settings.AutocompleteSelectedColor = ColorTranslator.FromHtml("#264F78");
+            ed.Settings.AutocompleteBorderColor = ColorTranslator.FromHtml("#5F5F66");
+
+
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, "test.json"));
+
+
         }
 
         private void BindCommands()
         {
+            ed.Commands.Bind<AutocompleteCommand>(Keys.Control | Keys.Space);
             ed.Commands.Bind<FollowLinkCommand>(MouseEvents.Click, Keys.Control);
             ed.Commands.Bind<DeleteWordBackCommand>(Keys.Control | Keys.Back);
             ed.Commands.Bind<DeleteWordCommand>(Keys.Control | Keys.Delete);
@@ -115,6 +127,7 @@ namespace CodeBox.Test
             ed.Commands.Bind<DocumentEndCommand>(Keys.Control | Keys.End);
             ed.Commands.Bind<ExtendDocumentHomeCommand>(Keys.Control | Keys.Shift | Keys.Home);
             ed.Commands.Bind<ExtendDocumentEndCommand>(Keys.Control | Keys.Shift | Keys.End);
+            ed.Commands.Bind<OvertypeCommand>(Keys.Insert);
         }
 
         private void Form1_Activated(object sender, EventArgs e)
