@@ -55,7 +55,7 @@ namespace CodeBox
                 + editor.Info.TextTop;
             var x = line.GetTetras(pos.Col, editor.Settings.TabSize) * editor.Info.CharWidth
                 + editor.Info.TextLeft;
-            return new Point(x, y);
+            return new Point(x + editor.Scroll.X, y + editor.Scroll.Y);
         }
 
         private int FindColumnByLocation(Line line, Point loc)

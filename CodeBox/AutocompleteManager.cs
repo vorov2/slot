@@ -30,8 +30,21 @@ namespace CodeBox
             {
                 window = new AutocompleteWindow(editor);
                 window.Visible = false;
+                window.MouseDown += WindowMouseDown;
                 editor.Controls.Add(window);
             }
+        }
+
+        private void WindowMouseDown(object sender, MouseEventArgs e)
+        {
+            InsertCompleteString();
+        }
+
+        private void InsertCompleteString()
+        {
+            var str = window.SelectedItem.Substring(completeString.Length);
+            editor.Commands.Run<InsertRangeCommand>(new CommandArgument(str));
+            HideAutocomplete();
         }
 
         public void ShowAutocomplete(Pos pos, IEnumerable<string> items)
@@ -39,6 +52,7 @@ namespace CodeBox
             this.items = items;
 
             InitializeWindow();
+            window.SetScrollPositionY(0);
             FindCompleteString();
             var prefix = completeString.ToString();
             window.SetItems(items.Where(i => i.StartsWith(prefix)));
@@ -77,7 +91,7 @@ namespace CodeBox
                 ? pt.Y - editor.Info.LineHeight - window.Height : pt.Y;
             var x = pt.X + window.Width > editor.Info.TextRight
                 ? pt.X - window.Width : pt.X;
-            window.Location = new Point(x + editor.Scroll.X, y + editor.Scroll.Y);
+            window.Location = new Point(x, y);
         }
 
         public void HideAutocomplete()
@@ -158,9 +172,7 @@ namespace CodeBox
             }
             else if (keys == Keys.Tab || keys == Keys.Return)
             {
-                var str = window.SelectedItem.Substring(completeString.Length);
-                editor.Commands.Run<InsertRangeCommand>(new CommandArgument(str));
-                HideAutocomplete();
+                InsertCompleteString();
                 return true;
             }
 
