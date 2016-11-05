@@ -70,7 +70,7 @@ namespace CodeBox.Test
 
 
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
-                Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, "test.json"));
+                Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, @"..\..\..\CodeBox\Editor.cs"));
 
 
         }
@@ -141,17 +141,9 @@ namespace CodeBox.Test
         
         private void editor1_StyleNeeded(object sender, StyleNeededEventArgs e)
         {
-            //Console.WriteLine("StyleNeeded:"+count++);
-            //var txt = editor1.GetTextRange(e.Range);
-            var state = 0;// e.Range.Start.Line > 0 ? editor1.Document.Lines[e.Range.Start.Line - 1].State : 0;
-            var li = e.Range.Start.Line;
+            var state = ed.Document.Lines[e.Range.Start.Line].State;
 
-            while (li > -1 && (state = ed.Document.Lines[li].State) == 0)
-                li--;
-
-            li = li < 0 ? 0 : li;
-
-            for (var i = li; i < e.Range.End.Line + 1; i++)
+            for (var i = e.Range.Start.Line; i < e.Range.End.Line + 1; i++)
             {
                 ed.Styles.ClearStyles(i);
                 var line = ed.Document.Lines[i];

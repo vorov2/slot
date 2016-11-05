@@ -37,7 +37,7 @@ namespace CodeBox.ObjectModel
         
         public int Length => chars.Count;
 
-        public byte State { get; set; }
+        public int State { get; set; }
 
         public string Text => chars.MakeString();
 

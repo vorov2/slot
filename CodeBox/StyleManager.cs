@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CodeBox.Styling;
 using System.Drawing;
 using CodeBox.ObjectModel;
+using CodeBox.Lexing;
 
 namespace CodeBox
 {
@@ -28,6 +29,7 @@ namespace CodeBox
             Register(StandardStyle.SpecialSymbol, new TextStyle());
             Register(StandardStyle.Hyperlink, new TextStyle { FontStyle = FontStyle.Underline });
             Register(StandardStyle.MatchedBracket, new TextStyle());
+            Provider = new ConfigurableLexer();
         }
 
         public Style GetStyle(int styleId) => styles[styleId];
@@ -80,17 +82,27 @@ namespace CodeBox
 
             var fvl = editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
+            var state = 0;
+
+            while (fvl > -1 && (state = editor.Lines[fvl].State) != 0)
+                fvl--;
+
             fvl = fvl < 0 ? 0 : fvl;
             lvl = lvl < fvl ? fvl : lvl;
-
             var range = new Range(new Pos(fvl, 0),
                 new Pos(lvl, editor.Lines[lvl].Length - 1));
-            OnStyleNeeded(range);
+
+            if (Provider != null)
+                Provider.Style(editor.Context, range);
+            else
+                OnStyleNeeded(range);
         }
 
         public event EventHandler<StyleNeededEventArgs> StyleNeeded;
         private void OnStyleNeeded(Range range) =>
             StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
+
+        public IStylingProvider Provider { get; set; }
 
         #region Standard styles
         public TextStyle Default { get; private set; }
