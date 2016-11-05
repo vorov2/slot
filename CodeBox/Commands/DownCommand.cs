@@ -11,10 +11,7 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public class DownCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel)
-        {
-            return MoveDown(Context, sel);
-        }
+        protected override Pos GetPosition(Selection sel) => MoveDown(Context, sel);
 
         internal static Pos MoveDown(IEditorContext ctx, Selection sel)
         {

@@ -24,9 +24,6 @@ namespace CodeBox.Commands
 
     public static class ActionResultsExtensions
     {
-        public static bool Has(this ActionResults obj, ActionResults flag)
-        {
-            return (obj & flag) == flag;
-        }
+        public static bool Has(this ActionResults obj, ActionResults flag) => (obj & flag) == flag;
     }
 }

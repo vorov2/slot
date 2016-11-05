@@ -96,15 +96,9 @@ namespace CodeBox
                 return 0;
         }
 
-        public void ScrollY(int times)
-        {
-            SetScrollPositionY(Y + times * editor.Info.LineHeight);
-        }
+        public void ScrollY(int times) => SetScrollPositionY(Y + times * editor.Info.LineHeight);
 
-        public void ScrollX(int times)
-        {
-            SetScrollPositionX(X + times * editor.Info.CharWidth);
-        }
+        public void ScrollX(int times) => SetScrollPositionX(X + times * editor.Info.CharWidth);
 
         public void SetScrollPositionY(int value)
         {
@@ -143,7 +137,7 @@ namespace CodeBox
         {
             editor.Styles.Restyle();
             editor.Redraw();
-            editor.MatchParens.Match();
+            editor.MatchBraket.Match();
 
             if (editor.Autocomplete.WindowShown)
                 editor.Autocomplete.ShiftLocation(xChange, yChange);
@@ -277,7 +271,6 @@ namespace CodeBox
             YMax = YMax - editor.Info.TextHeight + editor.Info.LineHeight * 5;
             YMax = YMax < 0 ? 0 : YMax;
             _lastVisibleLine = null;
-            //Console.WriteLine($"FirstVisible: {FirstVisibleLine}; LastVisible: {LastVisibleLine}; InvalidateLines: {DateTime.Now - dt}");
         }
 
         private void ResetFirstLast()
@@ -286,15 +279,9 @@ namespace CodeBox
             _lastVisibleLine = null;
         }
 
-        internal void OnPointerDown(Point loc)
-        {
-            pointer = loc;
-        }
+        internal void OnPointerDown(Point loc) => pointer = loc;
 
-        internal void OnPointerUp(Point loc)
-        {
-            pointer = default(Point);
-        }
+        internal void OnPointerUp(Point loc) => pointer = default(Point);
 
         internal void OnPointerUpdate(Point loc)
         {
@@ -346,15 +333,7 @@ namespace CodeBox
             }
         }
 
-        private int _y;
-        public int Y
-        {
-            get { return _y; }
-            set
-            {
-                _y = value;
-            }
-        }
+        public int Y { get; private set; }
 
         public int X { get; private set; }
 

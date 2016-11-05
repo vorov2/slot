@@ -54,7 +54,7 @@ namespace CodeBox
             Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
             CallTips = new CallTipManager(this);
             Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
-            MatchParens = new MatchParensManager(this);
+            MatchBraket = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
@@ -317,11 +317,7 @@ namespace CodeBox
             }
         }
 
-        public override Color BackColor
-        {
-            get { return Styles.Default.BackColor; }
-            set { Styles.Default.BackColor = value; }
-        }
+        public override Color BackColor => Styles.Default.BackColor;
 
         protected override void OnDoubleClick(EventArgs e)
         {
@@ -454,10 +450,8 @@ namespace CodeBox
                 Focus();
         }
         
-        protected override bool ProcessMnemonic(char charCode)
-        {
-            return ProcessKey(charCode, LastKeys) || base.ProcessMnemonic(charCode);
-        }
+        protected override bool ProcessMnemonic(char charCode) =>
+            ProcessKey(charCode, LastKeys) || base.ProcessMnemonic(charCode);
 
         protected override bool ProcessKeyMessage(ref Message m)
         {
@@ -496,10 +490,7 @@ namespace CodeBox
             LastKeys = Keys.None;
         }
 
-        internal void Redraw()
-        {
-            Invalidate();
-        }
+        internal void Redraw() => Invalidate();
 
         protected override bool IsInputKey(Keys keyData)
         {
@@ -542,15 +533,9 @@ namespace CodeBox
         
         public DocumentBuffer Buffer { get; private set; }
 
-        public Document Document
-        {
-            get { return Buffer.Document; }
-        }
+        public Document Document => Buffer.Document;
 
-        internal List<Line> Lines
-        {
-            get { return Document.Lines; }
-        }
+        internal List<Line> Lines => Document.Lines;
 
         public override string Text
         {
@@ -603,10 +588,7 @@ namespace CodeBox
             }
         }
 
-        internal IEditorContext Context
-        {
-            get { return this; }
-        }
+        internal IEditorContext Context => this;
 
         internal Keys LastKeys { get; set; }
 
@@ -648,7 +630,7 @@ namespace CodeBox
 
         public IndentManager Indents { get; }
 
-        internal MatchParensManager MatchParens { get; }
+        internal MatchBracketManager MatchBraket { get; }
 
         public AutocompleteManager Autocomplete { get; }
     }

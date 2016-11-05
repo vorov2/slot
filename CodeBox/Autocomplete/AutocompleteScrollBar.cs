@@ -34,10 +34,7 @@ namespace CodeBox.Autocomplete
             }
         }
 
-        public void MouseUp(Point loc)
-        {
-            mouseDown = false;
-        }
+        public void MouseUp(Point loc) => mouseDown = false;
 
         public void MouseMove(Point loc)
         {
@@ -91,10 +88,8 @@ namespace CodeBox.Autocomplete
             lastCaretPos = pos;
         }
 
-        private bool IsCaretInLocation(Point loc)
-        {
-            return loc.Y >= lastCaretPos && loc.Y < lastCaretPos + lastCaretSize;
-        }
+        private bool IsCaretInLocation(Point loc) =>
+            loc.Y >= lastCaretPos && loc.Y < lastCaretPos + lastCaretSize;
 
         public int Size { get; set; }
     }

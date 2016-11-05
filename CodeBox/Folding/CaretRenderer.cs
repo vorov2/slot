@@ -70,10 +70,7 @@ namespace CodeBox.Drawing
             timerDraw = true;
         }
 
-        public void Resume()
-        {
-            timer.Enabled = true;
-        }
+        public void Resume() => timer.Enabled = true;
 
         public Graphics GetDrawingSurface()
         {
@@ -128,11 +125,7 @@ namespace CodeBox.Drawing
                 editor.Info.LineHeight;
         }
 
-        public int BlinkInterval
-        {
-            get { return timer.Interval; }
-            set { timer.Interval = value; }
-        }
+        public int BlinkInterval => timer.Interval;
 
         private bool _blockCaret;
         public bool BlockCaret

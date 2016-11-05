@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CodeBox.Margins
 {
@@ -14,9 +15,9 @@ namespace CodeBox.Margins
         private int lastCaretPos;
         private int lastCaretSize;
 
-        public ScrollBarMargin(Editor editor) : base(editor)
+        public ScrollBarMargin(Editor editor, Orientation orientation) : base(editor)
         {
-
+            Orientation = orientation;
         }
 
         public override MarginEffects MouseDown(Point loc)
@@ -55,7 +56,7 @@ namespace CodeBox.Margins
         private int GetScrollValue(Point loc)
         {
             long max = GetMaximum();
-            var v = Horizontal() ? loc.X : loc.Y;
+            var v = Orientation == Orientation.Horizontal ? loc.X : loc.Y;
             var ret = -(max * (v - lastCaretSize / 2) / (GetScrollSize() - lastCaretSize));
 
             if (ret > 0)
@@ -76,7 +77,7 @@ namespace CodeBox.Margins
             var sc = new Rectangle(Editor.Scroll.X, Editor.Scroll.Y, Editor.Scroll.XMax, Editor.Scroll.YMax);
             g.FillRectangle(Editor.Styles.Default.BackBrush, bounds);
 
-            if (Horizontal())
+            if (Orientation == Orientation.Horizontal)
             {
                 var caretSize = ((double)bounds.Width / (bounds.Width + sc.Width)) * bounds.Width;
 
@@ -125,7 +126,7 @@ namespace CodeBox.Margins
 
         public override int CalculateSize()
         {
-            if (Horizontal())
+            if (Orientation == Orientation.Horizontal)
             {
                 if (Editor.Scroll.XMax == 0)
                     return 0;
@@ -143,7 +144,7 @@ namespace CodeBox.Margins
 
         private bool IsCaretInLocation(Point loc)
         {
-            if (Horizontal())
+            if (Orientation == Orientation.Horizontal)
                 return loc.X >= lastCaretPos && loc.X < lastCaretPos + lastCaretSize;
             else
                 return loc.Y >= lastCaretPos && loc.Y < lastCaretPos + lastCaretSize;
@@ -151,7 +152,7 @@ namespace CodeBox.Margins
 
         private void SetScrollPosition(int value)
         {
-            if (Horizontal())
+            if (Orientation == Orientation.Horizontal)
                 Editor.Scroll.SetScrollPositionX(value);
             else
                 Editor.Scroll.SetScrollPositionY(value);
@@ -159,7 +160,7 @@ namespace CodeBox.Margins
 
         private int GetScrollSize()
         {
-            if (Horizontal())
+            if (Orientation == Orientation.Horizontal)
                 return Editor.ClientSize.Width;
             else
                 return Editor.Info.TextHeight;
@@ -167,16 +168,13 @@ namespace CodeBox.Margins
 
         private int GetMaximum()
         {
-            if (Horizontal())
+            if (Orientation == Orientation.Horizontal)
                 return Editor.Scroll.XMax;
             else
                 return Editor.Scroll.YMax;
         }
 
-        private bool Horizontal()
-        {
-            return Editor.BottomMargins.Any(b => b == this);
-        }
+        public Orientation Orientation { get; set; }
 
         private bool _enabled;
         public bool Enabled

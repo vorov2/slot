@@ -30,7 +30,7 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(Editor.Styles.FoldingMarker.BackBrush, bounds);
+            g.FillRectangle(Editor.CachedBrush.Create(Editor.Settings.FoldingBackColor), bounds);
             var lp = (int)(Editor.Info.CharWidth * .5);
             var h = (Editor.Info.LineHeight / 2) * 2;
             var w = ((bounds.Width - lp*2) / 2) * 2;
@@ -46,7 +46,7 @@ namespace CodeBox.Margins
                 if (ln.Folding.Has(FoldingStates.Header) && !ln.Folding.Has(FoldingStates.Invisible))
                 {
                     var arrow = default(Point[]);
-                    var b = Editor.Styles.FoldingMarker.ForeBrush;
+                    var b = Editor.CachedBrush.Create(Editor.Settings.FoldingForeColor);
 
                     if (Editor.Lines.Count > i + 1 && !Editor.Lines[i + 1].Folding.Has(FoldingStates.Invisible))
                     {
@@ -59,7 +59,7 @@ namespace CodeBox.Margins
                     }
                     else
                     {
-                        b = Editor.Styles.ActiveFoldingMarker.ForeBrush;
+                        b = Editor.CachedBrush.Create(Editor.Settings.FoldingActiveForeColor);
                         arrow = new Point[]
                         {
                             new Point(x, y),
@@ -75,9 +75,7 @@ namespace CodeBox.Margins
             return true;
         }
 
-        public override int CalculateSize()
-        {
-            return (int)Math.Round(Editor.Info.CharWidth * 2.5, MidpointRounding.AwayFromZero);
-        }
+        public override int CalculateSize() =>
+            (int)Math.Round(Editor.Info.CharWidth * 2.5, MidpointRounding.AwayFromZero);
     }
 }

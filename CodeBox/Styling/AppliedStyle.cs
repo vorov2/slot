@@ -19,20 +19,12 @@ namespace CodeBox.Styling
 
         public readonly int End;
 
-        public override string ToString()
-        {
-            return $"{{StyleId={StyleId};Start={Start};End={End}}}";
-        }
+        public override string ToString() => $"{{StyleId={StyleId};Start={Start};End={End}}}";
 
-        public static bool Equals(AppliedStyle fst, AppliedStyle snd)
-        {
-            return fst.StyleId == snd.StyleId && fst.Start == snd.Start && fst.End == snd.End;
-        }
+        public static bool Equals(AppliedStyle fst, AppliedStyle snd) =>
+            fst.StyleId == snd.StyleId && fst.Start == snd.Start && fst.End == snd.End;
 
-        public override bool Equals(object obj)
-        {
-            return obj is AppliedStyle ? Equals(this, (AppliedStyle)obj) : false;
-        }
+        public override bool Equals(object obj) => obj is AppliedStyle ? Equals(this, (AppliedStyle)obj) : false;
 
         public override int GetHashCode()
         {
@@ -46,19 +38,10 @@ namespace CodeBox.Styling
             }
         }
 
-        public bool Equals(AppliedStyle obj)
-        {
-            return Equals(this, obj);
-        }
+        public bool Equals(AppliedStyle obj) => Equals(this, obj);
 
-        public static bool operator ==(AppliedStyle fst, AppliedStyle snd)
-        {
-            return Equals(fst, snd);
-        }
+        public static bool operator ==(AppliedStyle fst, AppliedStyle snd) => Equals(fst, snd);
 
-        public static bool operator !=(AppliedStyle fst, AppliedStyle snd)
-        {
-            return !Equals(fst, snd);
-        }
+        public static bool operator !=(AppliedStyle fst, AppliedStyle snd) => !Equals(fst, snd);
     }
 }

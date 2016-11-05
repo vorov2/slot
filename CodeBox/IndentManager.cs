@@ -16,15 +16,8 @@ namespace CodeBox
             this.editor = editor;
         }
 
-        public int CalculateIndentation(int lineIndex)
-        {
-            var p = Provider;
-
-            if (p != null)
-                return p.Calculate(lineIndex, editor.Context);
-            else
-                return 0;
-        }
+        public int CalculateIndentation(int lineIndex) =>
+            Provider != null ? Provider.Calculate(lineIndex, editor.Context) : 0;
 
         public IDentProvider Provider { get; set; }
     }

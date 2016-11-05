@@ -22,9 +22,6 @@ namespace CodeBox.Margins
             return true;
         }
 
-        public override int CalculateSize()
-        {
-            return Editor.Info.LineHeight;
-        }
+        public override int CalculateSize() => Editor.Info.LineHeight;
     }
 }

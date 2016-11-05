@@ -14,18 +14,8 @@ namespace CodeBox.Styling
         
         SpecialSymbol = 2,
 
-        LineNumber = 3,
+        Hyperlink = 3,
 
-        CurrentLineNumber = 4,
-
-        FoldingMarker = 5,
-
-        ActiveFoldingMarker = 6,
-
-        CallTip = 7,
-
-        Hyperlink = 8,
-
-        MatchBrace = 9,
+        MatchedBracket = 4,
     }
 }

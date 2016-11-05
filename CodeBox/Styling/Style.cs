@@ -49,20 +49,11 @@ namespace CodeBox.Styling
                 g.FillRectangle(Editor.CachedBrush.Create(BackColor), rect);
         }
 
-        internal virtual Style Combine(Style other)
-        {
-            return this;
-        }
+        internal virtual Style Combine(Style other) => this;
 
-        internal virtual Style Clone()
-        {
-            return Cloned != null ? Cloned : this;
-        }
+        internal virtual Style Clone() => Cloned != null ? Cloned : this;
 
-        internal virtual Style FullClone()
-        {
-            return (Style)MemberwiseClone();
-        }
+        internal virtual Style FullClone() => (Style)MemberwiseClone();
 
         internal Editor Editor { get; set; }
 
@@ -74,19 +65,10 @@ namespace CodeBox.Styling
 
         public FontStyle FontStyle { get; set; }
 
-        internal Brush ForeBrush
-        {
-            get { return Editor.CachedBrush.Create(ForeColor); }
-        }
+        internal Brush ForeBrush => Editor.CachedBrush.Create(ForeColor);
 
-        internal Brush BackBrush
-        {
-            get { return Editor.CachedBrush.Create(BackColor); }
-        }
+        internal Brush BackBrush => Editor.CachedBrush.Create(BackColor);
 
-        internal virtual Font Font
-        {
-            get { return Editor.CachedFont.Create(FontStyle); }
-        }
+        internal Font Font => Editor.CachedFont.Create(FontStyle);
     }
 }

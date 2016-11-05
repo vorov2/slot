@@ -79,20 +79,11 @@ namespace CodeBox.Margins
             return false;
         }
 
-        public IEnumerator<Margin> GetEnumerator()
-        {
-            return margins.GetEnumerator();
-        }
+        public IEnumerator<Margin> GetEnumerator() => margins.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return margins.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => margins.GetEnumerator();
 
-        public int Count
-        {
-            get { return margins.Count; }
-        }
+        public int Count => margins.Count;
 
         private int? _totalWidth;
         public int TotalWidth

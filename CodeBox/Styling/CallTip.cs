@@ -20,20 +20,12 @@ namespace CodeBox.Styling
 
         public readonly Pos End;
 
-        public override string ToString()
-        {
-            return $"{{Data={Data};Start={Start};End={End}}}";
-        }
+        public override string ToString() => $"{{Data={Data};Start={Start};End={End}}}";
 
-        public static bool Equals(CallTip fst, CallTip snd)
-        {
-            return fst.Data == snd.Data && fst.Start == snd.Start && fst.End == snd.End;
-        }
+        public static bool Equals(CallTip fst, CallTip snd) =>
+            fst.Data == snd.Data && fst.Start == snd.Start && fst.End == snd.End;
 
-        public override bool Equals(object obj)
-        {
-            return obj is CallTip ? Equals(this, (CallTip)obj) : false;
-        }
+        public override bool Equals(object obj) => obj is CallTip ? Equals(this, (CallTip)obj) : false;
 
         public override int GetHashCode()
         {
@@ -47,19 +39,10 @@ namespace CodeBox.Styling
             }
         }
 
-        public bool Equals(CallTip obj)
-        {
-            return Equals(this, obj);
-        }
+        public bool Equals(CallTip obj) => Equals(this, obj);
 
-        public static bool operator ==(CallTip fst, CallTip snd)
-        {
-            return Equals(fst, snd);
-        }
+        public static bool operator ==(CallTip fst, CallTip snd) => Equals(fst, snd);
 
-        public static bool operator !=(CallTip fst, CallTip snd)
-        {
-            return !Equals(fst, snd);
-        }
+        public static bool operator !=(CallTip fst, CallTip snd) => !Equals(fst, snd);
     }
 }

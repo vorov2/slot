@@ -31,9 +31,6 @@ namespace CodeBox.Margins
             return true;
         }
 
-        public override int CalculateSize()
-        {
-            return Editor.Info.CharWidth;
-        }
+        public override int CalculateSize() => Editor.Info.CharWidth;
     }
 }

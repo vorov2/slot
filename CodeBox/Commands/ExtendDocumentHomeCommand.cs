@@ -7,9 +7,6 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     public sealed class ExtendDocumentHomeCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel)
-        {
-            return default(Pos);
-        }
+        protected override Pos Select(Selection sel) => default(Pos);
     }
 }

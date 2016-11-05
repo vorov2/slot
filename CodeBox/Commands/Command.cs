@@ -11,36 +11,18 @@ namespace CodeBox.Commands
     {
         public abstract ActionResults Execute(CommandArgument arg, Selection sel);
 
-        public virtual Pos Undo()
-        {
-            return Pos.Empty;
-        }
+        public virtual Pos Undo() => Pos.Empty;
 
-        public virtual Pos Redo()
-        {
-            return Pos.Empty;
-        }
+        public virtual Pos Redo() => Pos.Empty;
 
-        public virtual ICommand Clone()
-        {
-            return (ICommand)MemberwiseClone();
-        }
+        public virtual ICommand Clone() => (ICommand)MemberwiseClone();
 
         public IEditorContext Context { get; set; }
 
-        protected DocumentBuffer Buffer
-        {
-            get { return Context.Buffer; }
-        }
+        protected DocumentBuffer Buffer => Context.Buffer;
 
-        protected Document Document
-        {
-            get { return Context.Buffer.Document; }
-        }
+        protected Document Document => Context.Buffer.Document;
 
-        protected EditorSettings Settings
-        {
-            get { return Context.Settings; }
-        }
+        protected EditorSettings Settings => Context.Settings;
     }
 }

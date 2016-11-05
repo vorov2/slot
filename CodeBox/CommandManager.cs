@@ -94,15 +94,10 @@ namespace CodeBox
             return false;
         }
 
-        public void EndUndoAction()
-        {
-            undoGroup = false;
-        }
+        public void EndUndoAction() => undoGroup = false;
 
-        private void AddCommand(ICommand cmd, ActionExponent exp)
-        {
+        private void AddCommand(ICommand cmd, ActionExponent exp) =>
             editor.Buffer.UndoStack.Push(new CommandInfo { Id = counter, Command = cmd, Exponent = exp });
-        }
 
         public void Undo()
         {
@@ -205,10 +200,8 @@ namespace CodeBox
             commands.Add(type, ci);
         }
 
-        public bool Bind<T>(Keys keys) where T : ICommand
-        {
-            return Bind<T>(MouseEvents.None, keys);
-        }
+        public bool Bind<T>(Keys keys) where T : ICommand =>
+            Bind<T>(MouseEvents.None, keys);
 
         public bool Bind<T>(MouseEvents mouse, Keys keys) where T : ICommand
         {
@@ -239,10 +232,7 @@ namespace CodeBox
                 Run(arg, ci);
         }
 
-        public void Run(Keys keys, CommandArgument arg)
-        {
-            Run(MouseEvents.None, keys, arg);
-        }
+        public void Run(Keys keys, CommandArgument arg) => Run(MouseEvents.None, keys, arg);
 
         public void Run(MouseEvents mouse, Keys keys, CommandArgument arg)
         {
@@ -340,7 +330,7 @@ namespace CodeBox
             if (exec != ActionResults.None)
             {
                 DoAftermath(exp, exec);
-                editor.MatchParens.Match();
+                editor.MatchBraket.Match();
             }
 
             if (exec.Has(ActionResults.AutocompleteKeep) && editor.Autocomplete.WindowShown)

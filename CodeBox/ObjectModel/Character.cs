@@ -22,54 +22,27 @@ namespace CodeBox.ObjectModel
 
         }
 
-        public bool IsEmpty
-        {
-            get { return Char == '\0'; }
-        }
+        public bool IsEmpty => Char == '\0';
 
-        public bool IsNewLine
-        {
-            get { return Char == '\n'; }
-        }
+        public bool IsNewLine => Char == '\n';
 
-        public Character WithCaret()
-        {
-            return new Character(Char, true);
-        }
+        public Character WithCaret() => new Character(Char, true);
 
-        public Character WithoutCaret()
-        {
-            return new Character(Char, false);
-        }
+        public Character WithoutCaret() => new Character(Char, false);
 
         public readonly bool HasCaret;
 
         public readonly char Char;
 
-        public static bool operator == (Character fst, Character snd)
-        {
-            return Equals(fst, snd);
-        }
+        public static bool operator == (Character fst, Character snd) => Equals(fst, snd);
 
-        public static bool operator !=(Character fst, Character snd)
-        {
-            return !Equals(fst, snd);
-        }
+        public static bool operator !=(Character fst, Character snd) => !Equals(fst, snd);
 
-        public static bool Equals(Character fst, Character snd)
-        {
-            return fst.Char == snd.Char;
-        }
+        public static bool Equals(Character fst, Character snd) => fst.Char == snd.Char;
 
-        public override string ToString()
-        {
-            return Char.ToString();
-        }
+        public override string ToString() => Char.ToString();
 
-        public bool Equals(Character other)
-        {
-            return Char == other.Char;
-        }
+        public bool Equals(Character other) => Char == other.Char;
 
         public override bool Equals(object obj)
         {
@@ -78,10 +51,7 @@ namespace CodeBox.ObjectModel
                 : false;
         }
 
-        public override int GetHashCode()
-        {
-            return Char.GetHashCode();
-        }
+        public override int GetHashCode() => Char.GetHashCode();
     }
 
     public static class CharacterExtensions

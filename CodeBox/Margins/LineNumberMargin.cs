@@ -26,7 +26,8 @@ namespace CodeBox.Margins
             var info = Editor.Info;
             var len = lines.Count.ToString().Length;
             var caret = Editor.Buffer.Selections.Main.Caret;
-            var backBrush = Editor.Styles.LineNumber.BackBrush;
+            var backBrush = Editor.CachedBrush.Create(Editor.Settings.LineNumbersBackColor);
+            var font = Editor.Settings.Font;
             g.FillRectangle(backBrush, bounds);
 
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
@@ -41,18 +42,16 @@ namespace CodeBox.Margins
                 {
                     var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth - sc.X;
-                    var font = Editor.Styles.LineNumber.Font;
-                    var col = Editor.Styles.LineNumber.ForeBrush;
+                    var col = Editor.CachedBrush.Create(Editor.Settings.LineNumbersForeColor);
 
                     if (i == caret.Line && MarkCurrentLine)
                     {
-                        var selBrush = Editor.Styles.CurrentLineNumber.BackBrush;
+                        var selBrush = Editor.CachedBrush.Create(Editor.Settings.LineNumbersCurrentBackColor);
 
                         if (selBrush != backBrush)
                             g.FillRectangle(selBrush, new Rectangle(x + sc.X, y, bounds.Width, info.LineHeight));
 
-                        font = Editor.Styles.CurrentLineNumber.Font;
-                        col = Editor.Styles.CurrentLineNumber.ForeBrush;
+                        col = Editor.CachedBrush.Create(Editor.Settings.LineNumbersCurrentForeColor);
                     }
 
                     g.DrawString(str, font, col, x + sc.X, y);
@@ -62,10 +61,8 @@ namespace CodeBox.Margins
             return true;
         }
 
-        public override int CalculateSize()
-        {
-            return (Editor.Document.Lines.Count.ToString().Length + 3) * Editor.Info.CharWidth;
-        }
+        public override int CalculateSize() =>
+            (Editor.Document.Lines.Count.ToString().Length + 3) * Editor.Info.CharWidth;
 
         public bool MarkCurrentLine { get; set; }
     }

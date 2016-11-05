@@ -11,10 +11,7 @@ namespace CodeBox.Drawing
     {
         private readonly Dictionary<Color, Brush> cache = new Dictionary<Color, Brush>();
 
-        public void Dispose()
-        {
-            Reset();
-        }
+        public void Dispose() => Reset();
 
         public void Reset()
         {

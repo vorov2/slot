@@ -30,15 +30,9 @@ namespace CodeBox.ObjectModel
             return doc;
         }
 
-        public Line NewLine(string str)
-        {
-            return Line.FromString(str, ++lineSequence);
-        }
+        public Line NewLine(string str) => Line.FromString(str, ++lineSequence);
 
-        public Line NewLine(IEnumerable<Character> chars)
-        {
-            return new Line(chars, ++lineSequence);
-        }
+        public Line NewLine(IEnumerable<Character> chars) => new Line(chars, ++lineSequence);
 
         public Guid Id { get; private set; }
 

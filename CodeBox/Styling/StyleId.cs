@@ -20,15 +20,9 @@ namespace CodeBox.Styling
             Value = value;
         }
 
-        public static implicit operator int(StyleId obj)
-        {
-            return obj.Value;
-        }
+        public static implicit operator int(StyleId obj) => obj.Value;
 
-        public static implicit operator StyleId(int i)
-        {
-            return new StyleId(i);
-        }
+        public static implicit operator StyleId(int i) => new StyleId(i);
 
         public override bool Equals(object obj)
         {
@@ -37,26 +31,14 @@ namespace CodeBox.Styling
                 : false;
         }
 
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() => Value.GetHashCode();
 
-        public override string ToString()
-        {
-            return Value.ToString();
-        }
+        public override string ToString() => Value.ToString();
 
-        public bool Equals(StyleId other)
-        {
-            return Value == other.Value;
-        }
+        public bool Equals(StyleId other) => Value == other.Value;
 
-        public bool Equals(int other)
-        {
-            return Value == other;
-        }
-        
+        public bool Equals(int other) => Value == other;
+
         public int Value { get; }
     }
 }

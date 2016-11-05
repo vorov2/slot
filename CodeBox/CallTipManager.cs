@@ -30,12 +30,12 @@ namespace CodeBox
         {
             using (var g = editor.CreateGraphics())
             {
-                var size = g.MeasureString(text + "__", editor.Styles.CallTip.Font);
+                var size = g.MeasureString(text + "__", editor.Settings.SmallFont);
                 size = new SizeF(size.Width, size.Height * 1.5f);
                 ShowCallTip(g, pos, size.ToSize(), (gr,pt) => gr.DrawString(
                     text,
-                    editor.Styles.CallTip.Font,
-                    editor.Styles.CallTip.ForeBrush,
+                    editor.Settings.SmallFont,
+                    editor.CachedBrush.Create(editor.Settings.PopupForeColor),
                     new Rectangle(pt, size.ToSize()),
                     format));
             }
@@ -44,9 +44,7 @@ namespace CodeBox
         public void ShowCallTip(Pos pos, Size size, Action<Graphics,Point> draw)
         {
             using (var g = editor.CreateGraphics())
-            {
                 ShowCallTip(g, pos, size, draw);
-            }
         }
 
         public void ShowCallTip(Graphics g, Pos pos, Size size, Action<Graphics,Point> draw)
@@ -79,8 +77,8 @@ namespace CodeBox
 
                 var pt = new Point(x, y);
                 var rect = new Rectangle(pt, size);
-                g.FillRectangle(editor.Styles.CallTip.BackBrush, rect);
-                g.DrawRectangle(editor.CachedPen.Create(editor.Styles.CallTip.BorderColor), rect);
+                g.FillRectangle(editor.CachedBrush.Create(editor.Settings.PopupBackColor), rect);
+                g.DrawRectangle(editor.CachedPen.Create(editor.Settings.PopupBorderColor), rect);
                 draw(g, pt);
                 shownTip = pos;
             }
@@ -95,15 +93,10 @@ namespace CodeBox
             }
         }
 
-        public void ClearCallTips()
-        {
-            editor.Buffer.Tips.Clear();
-        }
+        public void ClearCallTips() => editor.Buffer.Tips.Clear();
 
-        public void BindCallTip(string data, Pos start, Pos end)
-        {
+        public void BindCallTip(string data, Pos start, Pos end) =>
             editor.Buffer.Tips.Add(new CallTip(data, start, end));
-        }
 
         public CallTip FindCallTip(Pos pos)
         {

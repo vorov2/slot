@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace CodeBox
 {
-    internal sealed class MatchParensManager
+    internal sealed class MatchBracketManager
     {
         private readonly Editor editor;
         private const string START_PARENS = "([{";
         private const string END_PARENS = ")]}";
         private bool markedParent;
 
-        public MatchParensManager(Editor editor)
+        public MatchBracketManager(Editor editor)
         {
             this.editor = editor;
         }
 
         public void Match()
         {
-            Task.Run(() => InternalMatch());
+            InternalMatch();
         }
 
         private void InternalMatch()
@@ -67,19 +67,16 @@ namespace CodeBox
 
                 for (var i = lni == sel.Caret.Line ? sel.Caret.Col + 1 : 0; i < line.Length; i++)
                 {
-                    if (!line.IsDefaultStyle(i))
-                        continue;
-
-                    if (line[i].Char == START_PARENS[pi])
+                    if (line[i].Char == START_PARENS[pi] && line.IsDefaultStyle(i))
                         cc++;
-                    else if (line[i].Char == END_PARENS[pi])
+                    else if (line[i].Char == END_PARENS[pi] && line.IsDefaultStyle(i))
                     {
                         if (cc > 0)
                             cc--;
                         else
                         {
-                            editor.Styles.StyleRange((int)StandardStyle.MatchBrace, sel.Caret.Line, sel.Caret.Col, sel.Caret.Col);
-                            editor.Styles.StyleRange((int)StandardStyle.MatchBrace, lni, i, i);
+                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, sel.Caret.Line, sel.Caret.Col, sel.Caret.Col);
+                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, lni, i, i);
                             return true;
                         }
                     }
@@ -99,19 +96,16 @@ namespace CodeBox
 
                 for (var i = lni == sel.Caret.Line ? sel.Caret.Col - 2 : line.Length - 1; i > -1; i--)
                 {
-                    if (!line.IsDefaultStyle(i))
-                        continue;
-
-                    if (line[i].Char == END_PARENS[pi])
+                    if (line[i].Char == END_PARENS[pi] && line.IsDefaultStyle(i))
                         cc++;
-                    else if (line[i].Char == START_PARENS[pi])
+                    else if (line[i].Char == START_PARENS[pi] && line.IsDefaultStyle(i))
                     {
                         if (cc > 0)
                             cc--;
                         else
                         {
-                            editor.Styles.StyleRange((int)StandardStyle.MatchBrace, sel.Caret.Line, sel.Caret.Col - 1, sel.Caret.Col - 1);
-                            editor.Styles.StyleRange((int)StandardStyle.MatchBrace, lni, i, i);
+                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, sel.Caret.Line, sel.Caret.Col - 1, sel.Caret.Col - 1);
+                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, lni, i, i);
                             return true;
                         }
                     }

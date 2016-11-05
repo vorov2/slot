@@ -25,20 +25,12 @@ namespace CodeBox
             this.editor = editor;
             Register(StandardStyle.Default, new TextStyle());
             Register(StandardStyle.Selection, new SelectionStyle());
-            Register(StandardStyle.LineNumber, new TextStyle());
-            Register(StandardStyle.CurrentLineNumber, new TextStyle());
             Register(StandardStyle.SpecialSymbol, new TextStyle());
-            Register(StandardStyle.FoldingMarker, new MarkerStyle());
-            Register(StandardStyle.ActiveFoldingMarker, new MarkerStyle());
-            Register(StandardStyle.CallTip, new PopupStyle());
             Register(StandardStyle.Hyperlink, new TextStyle { FontStyle = FontStyle.Underline });
-            Register(StandardStyle.MatchBrace, new TextStyle());
+            Register(StandardStyle.MatchedBracket, new TextStyle());
         }
 
-        public Style GetStyle(int styleId)
-        {
-            return styles[styleId];
-        }
+        public Style GetStyle(int styleId) => styles[styleId];
 
         private void Register(StandardStyle styleId, Style style)
         {
@@ -55,29 +47,14 @@ namespace CodeBox
                 case StandardStyle.SpecialSymbol:
                     SpecialSymbol = (TextStyle)style;
                     break;
-                case StandardStyle.LineNumber:
-                    LineNumber = (TextStyle)style;
-                    break;
-                case StandardStyle.CurrentLineNumber:
-                    CurrentLineNumber = (TextStyle)style;
-                    break;
                 case StandardStyle.Selection:
                     Selection = (SelectionStyle)style;
-                    break;
-                case StandardStyle.FoldingMarker:
-                    FoldingMarker = (MarkerStyle)style;
-                    break;
-                case StandardStyle.ActiveFoldingMarker:
-                    ActiveFoldingMarker = (MarkerStyle)style;
-                    break;
-                case StandardStyle.CallTip:
-                    CallTip = (PopupStyle)style;
                     break;
                 case StandardStyle.Hyperlink:
                     Hyperlink = (TextStyle)style;
                     break;
-                case StandardStyle.MatchBrace:
-                    MatchBrace = (TextStyle)style;
+                case StandardStyle.MatchedBracket:
+                    MatchBracket = (TextStyle)style;
                     break;
             }
         }
@@ -91,15 +68,10 @@ namespace CodeBox
             styles.Add(styleId, style);
         }
 
-        public void ClearStyles(int line)
-        {
-            editor.Lines[line].AppliedStyles.Clear();
-        }
+        public void ClearStyles(int line) => editor.Lines[line].AppliedStyles.Clear();
 
-        public void StyleRange(int style, int line, int start, int end)
-        {
+        public void StyleRange(int style, int line, int start, int end) =>
             editor.Lines[line].AppliedStyles.Add(new AppliedStyle(style, start, end));
-        }
 
         internal void Restyle()
         {
@@ -117,10 +89,8 @@ namespace CodeBox
         }
 
         public event EventHandler<StyleNeededEventArgs> StyleNeeded;
-        private void OnStyleNeeded(Range range)
-        {
+        private void OnStyleNeeded(Range range) =>
             StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
-        }
 
         #region Standard styles
         public TextStyle Default { get; private set; }
@@ -128,20 +98,10 @@ namespace CodeBox
         public SelectionStyle Selection { get; private set; }
 
         public TextStyle SpecialSymbol { get; private set; }
-
-        public MarkerStyle FoldingMarker { get; private set; }
-
-        public MarkerStyle ActiveFoldingMarker { get; private set; }
-
-        public TextStyle LineNumber { get; private set; }
-
-        public TextStyle CurrentLineNumber { get; private set; }
-
-        public PopupStyle CallTip { get; private set; }
         
         public TextStyle Hyperlink { get; private set; }
 
-        public TextStyle MatchBrace { get; private set; }
+        public TextStyle MatchBracket { get; private set; }
         #endregion
     }
 }

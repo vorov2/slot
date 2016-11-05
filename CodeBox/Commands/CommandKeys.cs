@@ -30,19 +30,12 @@ namespace CodeBox.Commands
 
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is CommandKeys ? Equals((CommandKeys)obj) : false;
-        }
+        public override bool Equals(object obj) =>
+            obj is CommandKeys ? Equals((CommandKeys)obj) : false;
 
-        public bool Equals(CommandKeys other)
-        {
-            return Keys == other.Keys && Mouse == other.Mouse;
-        }
+        public bool Equals(CommandKeys other) =>
+            Keys == other.Keys && Mouse == other.Mouse;
 
-        public override string ToString()
-        {
-            return $"{Mouse}, {Keys}";
-        }
+        public override string ToString() => $"{Mouse}, {Keys}";
     }
 }

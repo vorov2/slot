@@ -11,10 +11,7 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public sealed class WordLeftCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel)
-        {
-            return WordLeft(Context, sel);
-        }
+        protected override Pos GetPosition(Selection sel) => WordLeft(Context, sel);
 
         internal static Pos WordLeft(IEditorContext ctx, Selection sel)
         {

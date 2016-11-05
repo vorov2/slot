@@ -23,10 +23,7 @@ namespace CodeBox.ObjectModel
 
         public Pos End { get; set; }
 
-        public bool IsEmpty
-        {
-            get { return Start == End; }
-        }
+        public bool IsEmpty => Start == End;
 
         internal Range Normalize()
         {
@@ -57,9 +54,6 @@ namespace CodeBox.ObjectModel
             return pos >= start && pos < end;
         }
 
-        public override string ToString()
-        {
-            return String.Format("Start:({0});End:({1})", Start, End);
-        }
+        public override string ToString() => $"Start:({Start});End:({End})";
     }
 }

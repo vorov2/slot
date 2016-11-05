@@ -111,9 +111,10 @@ namespace CodeBox
 
         internal void DrawFoldingIndicator(Graphics g, int x, int y)
         {
-            g.FillRectangle(editor.Styles.ActiveFoldingMarker.ForeBrush,
+            g.FillRectangle(editor.CachedBrush.Create(editor.Settings.FoldingActiveForeColor),
                 new Rectangle(x, y + editor.Info.LineHeight / 4, editor.Info.CharWidth * 3, editor.Info.LineHeight / 2));
-            g.DrawString("···", editor.Styles.Default.Font, editor.Styles.ActiveFoldingMarker.BackBrush,
+            g.DrawString("···", editor.Styles.Default.Font,
+                editor.CachedBrush.Create(editor.Settings.FoldingBackColor),
                 new Point(x, y), TextStyle.Format);
         }
 
@@ -131,16 +132,10 @@ namespace CodeBox
                 | (ln.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
         }
 
-        public bool IsFoldingHeader(int line)
-        {
-            return editor.Lines[line].Folding.Has(FoldingStates.Header);
-        }
+        public bool IsFoldingHeader(int line) => editor.Lines[line].Folding.Has(FoldingStates.Header);
 
         public event EventHandler<FoldingNeededEventArgs> FoldingNeeded;
-        private void OnFoldingNeeded(Range range)
-        {
-            FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range));
-        }
+        private void OnFoldingNeeded(Range range) => FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range));
 
         public IFoldingProvider Provider { get; set; }
     }

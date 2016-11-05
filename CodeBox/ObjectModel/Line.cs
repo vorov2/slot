@@ -26,10 +26,8 @@ namespace CodeBox.ObjectModel
             this.chars = new List<Character>(chars.Select(c => new Character(c)));
         }
 
-        public static Line FromString(string line, int id)
-        {
-            return string.IsNullOrEmpty(line) ? new Line(new char[0], id) : new Line(line.ToCharArray(), id);
-        }
+        public static Line FromString(string line, int id) =>
+            string.IsNullOrEmpty(line) ? new Line(new char[0], id) : new Line(line.ToCharArray(), id);
 
         internal bool TrailingCaret { get; set; }
 
@@ -37,25 +35,13 @@ namespace CodeBox.ObjectModel
 
         internal int Y { get; set; }
         
-        public int Length
-        {
-            get { return chars.Count; }
-        }
+        public int Length => chars.Count;
 
         public byte State { get; set; }
 
-        public string Text
-        {
-            get
-            {
-                return chars.MakeString();
-            }
-        }
+        public string Text => chars.MakeString();
 
-        public override string ToString()
-        {
-            return Text;
-        }
+        public override string ToString() => Text;
 
         public override bool Equals(object obj)
         {
@@ -63,10 +49,7 @@ namespace CodeBox.ObjectModel
             return ln != null && ln.Id == Id;
         }
 
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+        public override int GetHashCode() => Id.GetHashCode();
 
         public IEnumerator<Character> GetEnumerator()
         {
@@ -91,15 +74,9 @@ namespace CodeBox.ObjectModel
             return true;
         }
 
-        public char CharAt(int index)
-        {
-            return chars.Count > index ? chars[index].Char : '\0';
-        }
+        public char CharAt(int index) => chars.Count > index ? chars[index].Char : '\0';
 
-        public Character CharacterAt(int index)
-        {
-            return chars[index];
-        }
+        public Character CharacterAt(int index) => chars[index];
 
         public void Append(IEnumerable<Character> str)
         {
@@ -138,10 +115,7 @@ namespace CodeBox.ObjectModel
             Invalidated = false;
         }
 
-        public List<Character> GetRange(int index, int count)
-        {
-            return chars.GetRange(index, count);
-        }
+        public List<Character> GetRange(int index, int count) => chars.GetRange(index, count);
 
         public void RemoveAt(int index)
         {
@@ -183,7 +157,8 @@ namespace CodeBox.ObjectModel
         {
             foreach (var a in AppliedStyles)
                 if (col >= a.Start && col <= a.End)
-                    return a.StyleId == (int)StandardStyle.Default;
+                    return a.StyleId == (int)StandardStyle.Default
+                        || a.StyleId == (int)StandardStyle.MatchedBracket;
 
             return true;
         }

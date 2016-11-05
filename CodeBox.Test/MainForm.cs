@@ -30,25 +30,16 @@ namespace CodeBox.Test
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new FoldingMargin(ed));
            // ed.LeftMargins.Add(new GutterMargin(ed));
-            ed.RightMargins.Add(new ScrollBarMargin(ed));
-            ed.BottomMargins.Add(new ScrollBarMargin(ed));
+            ed.RightMargins.Add(new ScrollBarMargin(ed, Orientation.Vertical));
+            ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new TopMargin(ed));
             ed.Styles.Default.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
             ed.Styles.Default.BackColor = ColorTranslator.FromHtml("#1E1E1E");
-            ed.Styles.LineNumber.ForeColor = ColorTranslator.FromHtml("#505050");
-            ed.Styles.LineNumber.BackColor = ColorTranslator.FromHtml("#1E1E1E");
-            ed.Styles.CurrentLineNumber.ForeColor = ColorTranslator.FromHtml("#848484");
-            ed.Styles.CurrentLineNumber.BackColor = ColorTranslator.FromHtml("#262626");
             ed.Styles.SpecialSymbol.ForeColor = ColorTranslator.FromHtml("#505050");
-            ed.Styles.FoldingMarker.ForeColor = ColorTranslator.FromHtml("#505050");
-            ed.Styles.FoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
-            ed.Styles.ActiveFoldingMarker.ForeColor = ColorTranslator.FromHtml("#C0AAF7");
-            ed.Styles.ActiveFoldingMarker.BackColor = ColorTranslator.FromHtml("#1E1E1E");
+
             ed.Styles.Selection.BackColor = ColorTranslator.FromHtml("#264F78");
-            ed.Styles.CallTip.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
-            ed.Styles.CallTip.BackColor = ColorTranslator.FromHtml("#2D2D30");
-            ed.Styles.MatchBrace.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
-            ed.Styles.MatchBrace.BackColor = ColorTranslator.FromHtml("#264F78");
+            ed.Styles.MatchBracket.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
+            ed.Styles.MatchBracket.BackColor = ColorTranslator.FromHtml("#264F78");
             ed.Styles.Register(110,
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#8CDCDB")
@@ -62,12 +53,20 @@ namespace CodeBox.Test
                     ForeColor = ColorTranslator.FromHtml("#579032")
                 });
 
+            ed.Settings.LineNumbersForeColor = ColorTranslator.FromHtml("#505050");
+            ed.Settings.LineNumbersBackColor = ColorTranslator.FromHtml("#1E1E1E");
+            ed.Settings.LineNumbersCurrentForeColor = ColorTranslator.FromHtml("#848484");
+            ed.Settings.LineNumbersCurrentBackColor = ColorTranslator.FromHtml("#262626");
 
-            ed.Settings.AutocompleteForeColor = ColorTranslator.FromHtml("#DCDCDC");
-            ed.Settings.AutocompleteBackColor = ColorTranslator.FromHtml("#2D2D30");
-            ed.Settings.AutocompleteHoverColor = ColorTranslator.FromHtml("#3E3E42");
-            ed.Settings.AutocompleteSelectedColor = ColorTranslator.FromHtml("#264F78");
-            ed.Settings.AutocompleteBorderColor = ColorTranslator.FromHtml("#5F5F66");
+            ed.Settings.FoldingBackColor = ColorTranslator.FromHtml("#1E1E1E");
+            ed.Settings.FoldingForeColor = ColorTranslator.FromHtml("#505050");
+            ed.Settings.FoldingActiveForeColor = ColorTranslator.FromHtml("#C0AAF7");
+
+            ed.Settings.PopupForeColor = ColorTranslator.FromHtml("#DCDCDC");
+            ed.Settings.PopupBackColor = ColorTranslator.FromHtml("#2D2D30");
+            ed.Settings.PopupHoverColor = ColorTranslator.FromHtml("#3E3E42");
+            ed.Settings.PopupSelectedColor = ColorTranslator.FromHtml("#264F78");
+            ed.Settings.PopupBorderColor = ColorTranslator.FromHtml("#5F5F66");
 
 
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");

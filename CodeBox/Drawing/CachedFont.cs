@@ -17,10 +17,7 @@ namespace CodeBox.Drawing
             this.baseFont = baseFont;
         }
 
-        public void Dispose()
-        {
-            Reset();
-        }
+        public void Dispose() => Reset();
 
         public void Reset()
         {

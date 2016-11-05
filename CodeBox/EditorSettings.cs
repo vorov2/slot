@@ -110,16 +110,30 @@ namespace CodeBox
 
         public List<int> LongLineIndicators { get; }
 
-        #region Autocomplete
-        public Color AutocompleteBackColor { get; set; }
+        #region Styles
+        public Color FoldingBackColor { get; set; }
 
-        public Color AutocompleteBorderColor { get; set; }
+        public Color FoldingForeColor { get; set; }
 
-        public Color AutocompleteForeColor { get; set; }
+        public Color FoldingActiveForeColor { get; set; }
+        
+        public Color PopupBackColor { get; set; }
 
-        public Color AutocompleteHoverColor { get; set; }
+        public Color PopupBorderColor { get; set; }
 
-        public Color AutocompleteSelectedColor { get; set; }
+        public Color PopupForeColor { get; set; }
+
+        public Color PopupHoverColor { get; set; }
+
+        public Color PopupSelectedColor { get; set; }
+
+        public Color LineNumbersBackColor { get; set; }
+
+        public Color LineNumbersForeColor { get; set; }
+
+        public Color LineNumbersCurrentForeColor { get; set; }
+
+        public Color LineNumbersCurrentBackColor { get; set; }
         #endregion
     }
 

@@ -13,10 +13,7 @@ namespace CodeBox.Drawing
         private readonly Dictionary<Color, Pen> cache = new Dictionary<Color, Pen>();
         private readonly Dictionary<Color, Pen> cacheDashed = new Dictionary<Color, Pen>();
 
-        public void Dispose()
-        {
-            Reset();
-        }
+        public void Dispose() => Reset();
 
         public void Reset()
         {

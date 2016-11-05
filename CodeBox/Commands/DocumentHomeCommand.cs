@@ -7,9 +7,6 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public sealed class DocumentHomeCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel)
-        {
-            return default(Pos);
-        }
+        protected override Pos GetPosition(Selection sel) => default(Pos);
     }
 }

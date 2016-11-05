@@ -18,9 +18,6 @@ namespace CodeBox.Folding
 
     internal static class VisibleStatesExtensions
     {
-        public static bool Has(this FoldingStates enu, FoldingStates flag)
-        {
-            return (enu & flag) == flag;
-        }
+        public static bool Has(this FoldingStates enu, FoldingStates flag) => (enu & flag) == flag;
     }
 }

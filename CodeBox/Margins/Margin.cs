@@ -16,20 +16,11 @@ namespace CodeBox.Margins
             Editor = editor;
         }
 
-        public virtual MarginEffects MouseDown(Point loc)
-        {
-            return MarginEffects.None;
-        }
+        public virtual MarginEffects MouseDown(Point loc) => MarginEffects.None;
 
-        public virtual MarginEffects MouseUp(Point loc)
-        {
-            return MarginEffects.None;
-        }
+        public virtual MarginEffects MouseUp(Point loc) => MarginEffects.None;
 
-        public virtual MarginEffects MouseMove(Point loc)
-        {
-            return MarginEffects.None;
-        }
+        public virtual MarginEffects MouseMove(Point loc) => MarginEffects.None;
 
         public bool Draw(Graphics g, Rectangle bounds)
         {
@@ -46,9 +37,6 @@ namespace CodeBox.Margins
         internal Rectangle Bounds { get; private set;  }
 
         public event EventHandler SizeChanged;
-        protected virtual void OnSizeChanged()
-        {
-            SizeChanged?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnSizeChanged() => SizeChanged?.Invoke(this, EventArgs.Empty);
     }
 }

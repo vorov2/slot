@@ -49,15 +49,9 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        public void Add(Selection sel)
-        {
-            sels.Add(sel);
-        }
+        public void Add(Selection sel) => sels.Add(sel);
 
-        public void Set(Pos caret)
-        {
-            Set(new Selection(caret));
-        }
+        public void Set(Pos caret) => Set(new Selection(caret));
 
         public void Set(Selection sel)
         {
@@ -70,10 +64,7 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        internal void Clear()
-        {
-            sels.Clear();
-        }
+        internal void Clear() => sels.Clear();
 
         public void Truncate()
         {
@@ -87,10 +78,7 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        internal SelectionList Clone()
-        {
-            return new SelectionList(sels.Select(s => s.Clone()));
-        }
+        internal SelectionList Clone() => new SelectionList(sels.Select(s => s.Clone()));
 
         public void Remove(Selection sel)
         {
@@ -100,15 +88,9 @@ namespace CodeBox.ObjectModel
                 sel.Clear(default(Pos));
         }
 
-        public IEnumerator<Selection> GetEnumerator()
-        {
-            return sels.GetEnumerator();
-        }
+        public IEnumerator<Selection> GetEnumerator() => sels.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return sels.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => sels.GetEnumerator();
 
         internal Selection GetSelection(Pos pos, Selection except = null)
         {
@@ -128,10 +110,7 @@ namespace CodeBox.ObjectModel
             return false;
         }
 
-        public bool HasCaret(Pos pos)
-        {
-            return IndexOfCaret(pos) != -1;
-        }
+        public bool HasCaret(Pos pos) => IndexOfCaret(pos) != -1;
 
         public int IndexOfCaret(Pos pos)
         {
@@ -171,19 +150,10 @@ namespace CodeBox.ObjectModel
             return false;
         }
 
-        public Selection this[int index]
-        {
-            get { return sels[index]; }
-        }
+        public Selection this[int index] => sels[index];
 
-        public Selection Main
-        {
-            get { return sels[sels.Count - 1]; }
-        }
+        public Selection Main => sels[sels.Count - 1];
 
-        public int Count
-        {
-            get { return sels.Count; }
-        }
+        public int Count => sels.Count;
     }
 }

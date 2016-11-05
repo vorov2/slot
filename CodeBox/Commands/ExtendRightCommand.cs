@@ -7,9 +7,6 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     public sealed class ExtendRightCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel)
-        {
-            return RightCommand.MoveRight(Context, sel);
-        }
+        protected override Pos Select(Selection sel) => RightCommand.MoveRight(Context, sel);
     }
 }

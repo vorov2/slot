@@ -11,10 +11,7 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public class UpCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel)
-        {
-            return MoveUp(Context, sel);
-        }
+        protected override Pos GetPosition(Selection sel) => MoveUp(Context, sel);
         
         internal static Pos MoveUp(IEditorContext ctx, Selection sel)
         {

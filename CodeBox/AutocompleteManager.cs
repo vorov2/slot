@@ -35,10 +35,7 @@ namespace CodeBox
             }
         }
 
-        private void WindowMouseDown(object sender, MouseEventArgs e)
-        {
-            InsertCompleteString();
-        }
+        private void WindowMouseDown(object sender, MouseEventArgs e) => InsertCompleteString();
 
         private void InsertCompleteString()
         {
@@ -57,7 +54,7 @@ namespace CodeBox
             var prefix = completeString.ToString();
             window.SetItems(items.Where(i => i.StartsWith(prefix)));
             SetLocationByPos(pos);
-            _windowShown = true;
+            WindowShown = true;
             lastCol = pos.Col;
             window.Visible = CheckVisible(window.Location);
         }
@@ -81,7 +78,6 @@ namespace CodeBox
                 }
 
             completeString = sb;
-            Console.WriteLine(sb);
         }
 
         private void SetLocationByPos(Pos pos)
@@ -96,9 +92,9 @@ namespace CodeBox
 
         public void HideAutocomplete()
         {
-            if (_windowShown)
+            if (WindowShown)
             {
-                _windowShown = false;
+                WindowShown = false;
                 window.Visible = false;
             }
         }
@@ -124,7 +120,7 @@ namespace CodeBox
 
         internal void ShiftLocation(int xShift, int yShift)
         {
-            if (_windowShown)
+            if (WindowShown)
             {
                 var pt = new Point(window.Location.X - xShift, window.Location.Y - yShift);
                 window.Visible = CheckVisible(pt);
@@ -179,10 +175,6 @@ namespace CodeBox
             return false;
         }
 
-        private bool _windowShown;
-        public bool WindowShown
-        {
-            get { return _windowShown; }
-        }
+        public bool WindowShown { get; private set; }
     }
 }

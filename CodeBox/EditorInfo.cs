@@ -11,57 +11,27 @@ namespace CodeBox
             this.editor = editor;
         }
 
-        public int TextLeft
-        {
-            get { return editor.LeftMargins.TotalWidth; }
-        }
+        public int TextLeft => editor.LeftMargins.TotalWidth;
 
-        public int TextTop
-        {
-            get { return editor.TopMargins.TotalWidth; }
-        }
+        public int TextTop => editor.TopMargins.TotalWidth;
 
-        public int TextRight
-        {
-            get { return editor.ClientSize.Width - editor.RightMargins.TotalWidth; }
-        }
+        public int TextRight => editor.ClientSize.Width - editor.RightMargins.TotalWidth;
 
-        public int TextBottom
-        {
-            get { return editor.ClientSize.Height - editor.BottomMargins.TotalWidth; }
-        }
+        public int TextBottom => editor.ClientSize.Height - editor.BottomMargins.TotalWidth;
         
-        public int TextHeight
-        {
-            get { return TextBottom - TextTop; }
-        }
+        public int TextHeight => TextBottom - TextTop;
 
-        public int TextWidth
-        {
-            get { return TextRight - TextLeft; }
-        }
+        public int TextWidth => TextRight - TextLeft;
 
-        public int TextIntegralHeight
-        {
-            get { return (TextHeight / LineHeight) * LineHeight - editor.Scroll.Y; }
-        }
+        public int TextIntegralHeight => (TextHeight / LineHeight) * LineHeight - editor.Scroll.Y;
 
-        public int StripesPerScreen
-        {
-            get { return TextHeight / LineHeight; }
-        }
+        public int StripesPerScreen => TextHeight / LineHeight;
 
         public int CharWidth { get; internal set; }
 
         public int CharHeight { get; internal set; }
 
-        public int LineHeight
-        {
-            get
-            {
-                return CharHeight + 
-                    (int)Math.Round(CharHeight * editor.Settings.LinePadding);
-            }
-        }
+        public int LineHeight =>
+            CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
     }
 }

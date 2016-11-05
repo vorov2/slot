@@ -7,10 +7,7 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll | ClearSelections)]
     public sealed class PageDownCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel)
-        {
-            return PageDown(Context);
-        }
+        protected override Pos GetPosition(Selection sel) => PageDown(Context);
 
         internal static Pos PageDown(IEditorContext ctx)
         {

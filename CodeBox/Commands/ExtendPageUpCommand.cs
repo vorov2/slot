@@ -7,9 +7,6 @@ namespace CodeBox.Commands
     [CommandBehavior(Scroll)]
     public sealed class ExtendPageUpCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel)
-        {
-            return PageUpCommand.PageUp(Context);
-        }
+        protected override Pos Select(Selection sel) => PageUpCommand.PageUp(Context);
     }
 }
