@@ -15,7 +15,7 @@ Features:
 * [X] Multiple selections and multiple carets
 * [X] Rectangular selection
 * [X] Extendable syntax highlighting
-* [X] Combination of styles
+* [X] Ability to combine styles
 * [ ] Configurable lexer for syntax highlighting
 * [X] Multi level undo and redo
 * [X] Word wrapping
@@ -26,12 +26,13 @@ Features:
 * [ ] Indicators (such as error indicators)
 * [ ] Markers (such as bookmarks)
 * [X] Tool tips (or call tips)
-* [ ] Popups for autocompletion
+* [X] Popups for autocompletion
+* [ ] Code snippets
 * [ ] Split editing
 * [X] Hyperlinks
 * [X] Line indenting
 * [ ] Read-only mode
-* [X] Match parens
+* [X] Match brackets
 * [ ] Search including regex search
 * [ ] Macros
 * [ ] Zooming
