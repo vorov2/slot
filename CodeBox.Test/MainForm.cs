@@ -52,6 +52,11 @@ namespace CodeBox.Test
                 new TextStyle {
                     ForeColor = ColorTranslator.FromHtml("#579032")
                 });
+            ed.Styles.Register(113,
+                new TextStyle
+                {
+                    ForeColor = ColorTranslator.FromHtml("#569CD6")
+                });
 
             ed.Settings.LineNumbersForeColor = ColorTranslator.FromHtml("#505050");
             ed.Settings.LineNumbersBackColor = ColorTranslator.FromHtml("#1E1E1E");
@@ -70,7 +75,7 @@ namespace CodeBox.Test
 
 
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
-                Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, @"..\..\..\CodeBox\Editor.cs"));
+                Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, @"test.htm"));
 
 
         }

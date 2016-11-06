@@ -383,7 +383,8 @@ namespace CodeBox
 
         private void Tick(object sender, EventArgs e)
         {
-            if (PointToClient(Cursor.Position) == mousePosition && !movePosition.IsEmpty)
+            if (PointToClient(Cursor.Position) == mousePosition
+                && !movePosition.IsEmpty && movePosition.Line < Lines.Count)
                 CallTips.MouseDwell(movePosition);
             else
                 CallTips.HideCallTip();

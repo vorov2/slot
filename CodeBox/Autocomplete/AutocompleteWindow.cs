@@ -145,13 +145,13 @@ namespace CodeBox.Autocomplete
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            base.OnMouseUp(e);
-
             if (e.X >= Width - editor.Info.CharWidth)
             {
                 scrollBar.MouseUp(e.Location);
                 Invalidate();
             }
+            else
+                base.OnMouseUp(e);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -165,14 +165,13 @@ namespace CodeBox.Autocomplete
             {
                 var ln = LocationToLine(e.Location.Y);
                 selectedLine = ln;
+                base.OnMouseDown(e);
             }
-
-            base.OnMouseDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.X >= Width - editor.Info.CharWidth)
+            if (e.X >= Width - editor.Info.CharWidth || scrollBar.IsMouseDown)
                 scrollBar.MouseMove(e.Location);
             else
                 hoverLine = LocationToLine(e.Location.Y);

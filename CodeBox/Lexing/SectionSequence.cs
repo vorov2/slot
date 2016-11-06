@@ -49,15 +49,21 @@ namespace CodeBox.Lexing
             }
         }
 
-        public bool TryMatch(char c, int shift = 0)
+        public MatchResult TryMatch(char c, int shift = 0)
         {
             var os = Offset;
             var oldret = LastResult;
             Offset += shift;
-            var ret = Match(c);
+            var ret = MatchResult.Fail;
+
+            if (Offset < sequence.Length && MatchAnyState)
+                ret = MatchResult.Hit;
+            else
+                ret = Match(c);
+
             Offset = os;
             LastResult = oldret;
-            return ret == MatchResult.Hit;
+            return ret;
         }
 
         public bool MatchAnyState => sequence[Offset] == ' ';

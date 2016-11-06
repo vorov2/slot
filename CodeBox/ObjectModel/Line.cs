@@ -115,7 +115,8 @@ namespace CodeBox.ObjectModel
             Invalidated = false;
         }
 
-        public List<Character> GetRange(int index, int count) => chars.GetRange(index, count);
+        public List<Character> GetRange(int index, int count) => 
+            chars.GetRange(index, index + count >= chars.Count ? chars.Count - index : count);
 
         public void RemoveAt(int index)
         {

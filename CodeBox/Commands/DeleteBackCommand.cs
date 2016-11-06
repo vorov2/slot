@@ -76,7 +76,10 @@ namespace CodeBox.Commands
                 var txt = DeleteRangeCommand.DeleteRange(Context, new Selection(pos,
                     new Pos(pos.Line, Document.Lines[pos.Line].Length)));
                 var ipos = InsertNewLineCommand.InsertNewLine(Document, pos);
-                Document.Lines[ipos.Line].Append(txt);
+
+                if (txt != null)
+                    Document.Lines[ipos.Line].Append(txt);
+
                 pos = ipos;
             }
             else

@@ -13,7 +13,6 @@ namespace CodeBox.Autocomplete
     {
         private readonly Editor editor;
         private readonly AutocompleteWindow window;
-        private bool mouseDown;
         private int lastCaretPos;
         private int lastCaretSize;
 
@@ -26,7 +25,7 @@ namespace CodeBox.Autocomplete
         public void MouseDown(Point loc)
         {
             if (IsCaretInLocation(loc))
-                mouseDown = true;
+                IsMouseDown = true;
             else
             {
                 var value = GetScrollValue(loc);
@@ -34,11 +33,11 @@ namespace CodeBox.Autocomplete
             }
         }
 
-        public void MouseUp(Point loc) => mouseDown = false;
+        public void MouseUp(Point loc) => IsMouseDown = false;
 
         public void MouseMove(Point loc)
         {
-            if (mouseDown)
+            if (IsMouseDown)
             {
                 var value = GetScrollValue(loc);
                 window.SetScrollPositionY(value);
@@ -83,7 +82,7 @@ namespace CodeBox.Autocomplete
                 pos = window.ClientSize.Height - lastCaretSize;
 
             g.FillRectangle(editor.CachedBrush.Create(
-                mouseDown ? editor.Settings.ScrollActiveThumbColor : editor.Settings.ScrollThumbColor),
+                IsMouseDown ? editor.Settings.ScrollActiveThumbColor : editor.Settings.ScrollThumbColor),
                 new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
             lastCaretPos = pos;
         }
@@ -92,5 +91,7 @@ namespace CodeBox.Autocomplete
             loc.Y >= lastCaretPos && loc.Y < lastCaretPos + lastCaretSize;
 
         public int Size { get; set; }
+
+        internal bool IsMouseDown { get; private set; }
     }
 }

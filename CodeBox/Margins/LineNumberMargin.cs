@@ -41,7 +41,7 @@ namespace CodeBox.Margins
                 if (line.Y >= sc.Y && y >= bounds.Y)
                 {
                     var str = (i + 1).ToString().PadLeft(len);
-                    var x = bounds.X + info.CharWidth - sc.X;
+                    var x = bounds.X + info.CharWidth*2;
                     var col = Editor.CachedBrush.Create(Editor.Settings.LineNumbersForeColor);
 
                     if (i == caret.Line && MarkCurrentLine)
@@ -49,12 +49,12 @@ namespace CodeBox.Margins
                         var selBrush = Editor.CachedBrush.Create(Editor.Settings.LineNumbersCurrentBackColor);
 
                         if (selBrush != backBrush)
-                            g.FillRectangle(selBrush, new Rectangle(x + sc.X, y, bounds.Width, info.LineHeight));
+                            g.FillRectangle(selBrush, new Rectangle(bounds.X + info.CharWidth, y, bounds.Width, info.LineHeight));
 
                         col = Editor.CachedBrush.Create(Editor.Settings.LineNumbersCurrentForeColor);
                     }
 
-                    g.DrawString(str, font, col, x + sc.X, y);
+                    g.DrawString(str, font, col, x, y);
                 }
             }
 
@@ -62,7 +62,7 @@ namespace CodeBox.Margins
         }
 
         public override int CalculateSize() =>
-            (Editor.Document.Lines.Count.ToString().Length + 3) * Editor.Info.CharWidth;
+            (Editor.Document.Lines.Count.ToString().Length + 4) * Editor.Info.CharWidth;
 
         public bool MarkCurrentLine { get; set; }
     }
