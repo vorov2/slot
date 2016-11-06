@@ -33,7 +33,7 @@ namespace CodeBox.Lexing
                 else
                     return LastResult = MatchResult.Proc;
             }
-            else if (sc == ' ' && sequence.Length > Offset && sequence[Offset + 1] == c)
+            else if (sc == ' ' && sequence.Length > Offset + 1 && sequence[Offset + 1] == c)
             {
                 Offset++;
                 return LastResult = MatchResult.Hit;
