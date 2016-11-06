@@ -66,7 +66,7 @@ namespace CodeBox.Lexing
                 StyleCompletely = true,
                 Style = 112
             });
-            Sections[0].Keywords.AddRange("o'brain get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract void int byte long short sbyte uint ushort ulong string char bool object var if else return while for foreach continue break ref out", 110);
+            Sections[0].Keywords.AddRange("true false null switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract void int byte long short sbyte uint ushort ulong string char bool object var if else return while for foreach continue break ref out", 110);
         }
 
         private void AddSection(GrammarSection section)
