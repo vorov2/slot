@@ -319,6 +319,8 @@ namespace CodeBox
 
         public override Color BackColor => Styles.Default.BackColor;
 
+        public override Color ForeColor => Styles.Default.ForeColor;
+
         protected override void OnDoubleClick(EventArgs e)
         {
             var pos = PointToClient(Cursor.Position);

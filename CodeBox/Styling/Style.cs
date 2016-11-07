@@ -26,6 +26,7 @@ namespace CodeBox.Styling
 
         public virtual void DrawText(Graphics g, Rectangle rect, Pos pos)
         {
+            var fc = ForeColor.IsEmpty ? Editor.ForeColor : ForeColor;
             var ch = Editor.Lines[pos.Line].CharAt(pos.Col);
 
             if (ch == '\0' && Editor.Settings.ShowEol) ch = '\u00B6';
@@ -34,7 +35,7 @@ namespace CodeBox.Styling
 
             g.DrawString(ch.ToString(),
                 Font,
-                Editor.CachedBrush.Create(ForeColor),
+                Editor.CachedBrush.Create(fc),
                 rect.Location, Format);
         }
 
@@ -64,6 +65,8 @@ namespace CodeBox.Styling
         public Color BackColor { get; set; }
 
         public FontStyle FontStyle { get; set; }
+
+        internal bool Default { get; set; }
 
         internal Brush ForeBrush => Editor.CachedBrush.Create(ForeColor);
 

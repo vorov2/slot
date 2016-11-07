@@ -12,156 +12,65 @@ namespace CodeBox.Lexing
 {
     public sealed class ConfigurableLexer : IStylingProvider
     {
-        const string kw = "true false null switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract void int byte long short sbyte uint ushort ulong string char bool object var if else return while for foreach continue break ref out";
-
         public ConfigurableLexer()
         {
-            Sections = new List<GrammarSection>();
-            AddSection(new GrammarSection()); //root
-            AddSection(new GrammarSection
-            {
-                Id = 1,
-                Start = new SectionSequence("<!", true),
-                End = new SectionSequence(">", true),
-                Multiline = true,
-                StyleCompletely = true,
-                Style = (int)StandardStyle.Default
-            });
-            AddSection(new GrammarSection
-            {
-                Id = 2,
-                Start = new SectionSequence("<", true),
-                End = new SectionSequence(">", true),
-                Multiline = true,
-                StyleCompletely = true,
-                IdentifierStyle = 110,
-                FirstIdentifierStyle = 113
-            }).Keywords.Add("script", (113 & 0xFFFF) | (42 << 16));
-            AddSection(new GrammarSection
-            {
-                Id = 3,
-                Start = new SectionSequence("</", true),
-                End = new SectionSequence(">", true),
-                StyleCompletely = true,
-                IdentifierStyle = 113,
-                Style = 0
-            });
-            AddSection(new GrammarSection
-            {
-                Id = 4,
-                StartKeyword = 42,
-                End = new SectionSequence("</script>", false),
-                Multiline = true,
-            }).Keywords.AddRange(kw, (113 & 0xFFFF) | (0 << 16));
-            AddSection(new GrammarSection
-            {
-                Id = 5,
-                Start = new SectionSequence("<!--", true),
-                End = new SectionSequence("-->", true),
-                Multiline = true,
-                StyleCompletely = true,
-                Style = 112
-            });
-            AddSection(new GrammarSection
-            {
-                Id = 6,
-                ParentId = 2,
-                Start = new SectionSequence("\"", true),
-                End = new SectionSequence("\"", true),
-                StyleCompletely = true,
-                Style = 111
-            });
-
-
-            AddSection(new GrammarSection
-            {
-                Id = 7,
-                ParentId = 4,
-                Start = new SectionSequence("//", true),
-                StyleCompletely = true,
-                Style = 112
-            });
-            AddSection(new GrammarSection
-            {
-                Id = 8,
-                ParentId = 4,
-                Start = new SectionSequence("/*", true),
-                End = new SectionSequence("*/", true),
-                Multiline = true,
-                StyleCompletely = true,
-                Style = 112
-            });
-            AddSection(new GrammarSection
-            {
-                Id = 9,
-                ParentId = 4,
-                Start = new SectionSequence("'", true),
-                End = new SectionSequence("'", true),
-                StyleCompletely = true,
-                Style = 111
-            });
-            AddSection(new GrammarSection
-            {
-                Id = 10,
-                ParentId = 4,
-                Start = new SectionSequence("\"", true),
-                End = new SectionSequence("\"", true),
-                StyleCompletely = true,
-                Style = 111
-            });
-        }
-
-        private GrammarSection AddSection(GrammarSection section)
-        {
-            Sections.Add(section);
-            if (section.Id != 0)
-                Sections[section.ParentId].Sections.Add(section);
-            return section;
+            
         }
 
         public void Style(IEditorContext context, Range range)
         {
             Context = context;
-            Sections.Reset();
-            Parse(new State(Lines[range.Start.Line].State), range);
+            GrammarProvider.GetGrammar(GrammarKey).Sections.Reset();
+            Parse(new State(0, GrammarKey), range);
         }
+
+        private int lastKw = 0;
 
         private void Parse(State state, Range rng)
         {
             Console.WriteLine($"Start parse from {rng.Start}");
+            backDelegate = null;
             lastKw = 0;
             var lss = 0;
+
             for (var i = rng.Start.Line; i < rng.End.Line + 1; i++)
             {
+                var grm = GrammarProvider.GetGrammar(state.GrammarKey);
                 Styles.ClearStyles(i);
                 var col = 0;
-                state = ParseLine(state.Byte1, ref col, i);
+                state = ParseLine(grm.Sections[lss], ref col, i);
+                grm = GrammarProvider.GetGrammar(state.GrammarKey);
 
                 if (col <= Lines[i].Length - 1)
-                    state = ParseLine(state.Byte1, ref col, i);
+                    state = ParseLine(grm.Sections[state.SectionId], ref col, i);
 
-                Lines[i].State = lss != state.Int ? lss : state.Int;
-                lss = state.Int;
+                var st = state.GrammarKey != GrammarKey || state.SectionId != 0 ? 1 : 0;
+                Lines[i].State = st;// lss != st ? lss : st;
+                lss = state.SectionId;
             }
         }
-        int lastKw = 0;
 
-        private State ParseLine(byte section, ref int i, int line)
+        private GrammarSection backDelegate;
+        private State ParseLine(GrammarSection mys, ref int i, int line)
         {
+            var lastNum = i;
             var start = i;
             var identStart = i;
             var ln = Lines[line];
-            var mys = Sections[section];
+            var grammar = GrammarProvider.GetGrammar(mys.GrammarKey);
+            var backm = mys.Id == 0 && backDelegate != null ? backDelegate : mys;
             var last = '\0';
+            var term = '\0';
             var lastNonIdent = true;
 
-            for (; i < ln.Length; i++)
+            for (; i < ln.Length + 1; i++)
             {
                 var c = ln.CharAt(i);
                 var nonIdent = IsNonIdent(c);
+                var kres = lastNonIdent || mys.Keywords.Offset != -1 ? mys.Keywords.Match(c) : -1;
 
-                var kres = lastNonIdent || mys.Keywords.Offset != -1 ?
-                    mys.Keywords.Match(c) : -1;
+                if (mys.StyleBrackets && IsBracket(c))
+                    Styles.StyleRange((int)StandardStyle.Bracket, line, i, i);
 
                 if (kres > 0 && IsNonIdent(ln.CharAt(i + 1)))
                 {
@@ -175,7 +84,12 @@ namespace CodeBox.Lexing
 
                 if (nonIdent)
                 {
-                    if (!lastNonIdent && mys.IdentifierStyle != 0 && i - identStart - 1 > 1)
+                    if (lastNum != -1 && mys.StyleNumbers && !IsNumeric(c, last))
+                    {
+                        Styles.StyleRange((int)StandardStyle.Number, line, lastNum, i - 1);
+                        lastNum = -1;
+                    }
+                    else if (!lastNonIdent && mys.IdentifierStyle != 0 && i - identStart - 1 > 1)
                         Styles.StyleRange(
                             identStart - start < 3 && mys.FirstIdentifierStyle != 0 ?
                                 mys.FirstIdentifierStyle : mys.IdentifierStyle, line, identStart, i - 1);
@@ -183,79 +97,114 @@ namespace CodeBox.Lexing
                     identStart = i + 1;
                 }
 
-                var sect = default(GrammarSection);
-
-                //if (lastKw != 0)
-                //{
-                //    sect = Sections.MatchByKeyword(lastKw);
-                //    if (sect != null) { lastKw = 0; }
-                //    //i--; }
-                //}
-
-                if (sect == null)
-                    sect = mys.Sections.Match(c);
+                var sect = mys.Sections.Match(c);
 
                 if (sect != null 
                     && (sect.Start == null || 
-                    (!Overlap(mys.Sections, ln, i, sect) && (sect.Start.Length > 1 || IsNonIdent(sect.Start.First()) || IsNonIdent(last)))))
+                    (!Overlap(mys.Sections, ln, i, sect) && (sect.Start.Length > 1
+                        || IsNonIdent(sect.Start.First()) || IsNonIdent(last)))))
                 {
                     if (mys.Style != 0)
                         Styles.StyleRange(mys.Style, line, start, ln.Length);
 
                     i++;
-                    var ret = ParseLine(sect.Id, ref i, line);
+
+                    if (sect.ExternalGrammarKey != null)
+                    {
+                        backDelegate = sect;
+                        sect = GrammarProvider.GetGrammar(sect.ExternalGrammarKey).Sections[0];
+                    }
+
+                    var ret = ParseLine(sect, ref i, line);
 
                     if (i >= ln.Length - 1)
                         return ret;
                 }
-                else if (mys.End != null && mys.End.Match(c) == MatchResult.Hit)
+                else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
+                    && (backm.EscapeChar == '\0' || backm.EscapeChar != term))
                 {
-                    var off1 = mys.StyleCompletely ? mys.Start.Length : 0;
-                    Styles.StyleRange(mys.Style, line, start - off1, i - (mys.StyleCompletely ? 0 : mys.End.Offset));
-
-                    if (!mys.StyleCompletely)
-                        i -= mys.End.Offset;
-
-                    if (lastKw != 0 )
+                    if (backm.Style != 0)
                     {
-                        sect = Sections[mys.ParentId].Sections.MatchByKeyword(lastKw);
+                        var off1 = backm.DontStyleCompletely ? 0 : backm.Start != null ? backm.Start.Length : 0;
+                        Styles.StyleRange(backm.Style, line, start - off1, i - (backm.DontStyleCompletely ? backm.End.Offset : 0));
+                    }
+
+                    if (backm.DontStyleCompletely)
+                        i -= backm.End.Offset;
+
+                    if (lastKw != 0)
+                    {
+                        sect = grammar.Sections[mys.ParentId].Sections.MatchByKeyword(lastKw);
                         if (sect != null)
                         {
                             lastKw = 0;
-                            //i--; }
+
+                            if (sect.ExternalGrammarKey != null)
+                            {
+                                backDelegate = sect;
+                                sect = GrammarProvider.GetGrammar(sect.ExternalGrammarKey).Sections[0];
+                            }
+
                             return Fetch(sect.Id, sect);
                         }
                     }
-                    return Fetch(0, mys);
+
+                    return Fetch(0, backm);
                 }
 
                 last = c;
                 lastNonIdent = nonIdent;
+
+                if (nonIdent && !IsWhiteSpace(c))
+                    term = c;
+
+                if (lastNum == -1 && IsDigit(c))
+                    lastNum = i;
+                else if (IsWhiteSpace(c))
+                    lastNum = -1;
             }
 
             if (mys.Style != 0 && (mys.Multiline || mys.End == null))
             {
-                var off = mys.StyleCompletely ? mys.Start.Length : 0;
+                var off = !mys.DontStyleCompletely ? mys.Start.Length : 0;
                 Styles.StyleRange(mys.Style, line, start - off, ln.Length);
             }
-
+            
             if (mys.End != null && mys.Multiline)
-            {
-                //foreach (var ss in Sections)
-                //    if (ss.Start != null && ss.Start.LastResult == MatchResult.Proc
-                //        && ss.Start.MatchAnyState)
-                //        return new State { Byte1 = mys.Id, Byte4 = byte.MaxValue };
-
                 return Fetch(mys.Id, mys);
-            }
+            else if (mys.End == null && !mys.Multiline && mys.ContinuationChar != '\0' && mys.ContinuationChar == term)
+                return Fetch(mys.Id, mys);
             else
                 return Fetch(0, mys);
         }
 
-        private State Fetch(byte state, GrammarSection par)
+        private bool IsBracket(char c)
         {
-            return state != 0 ? new State { Byte1 = state } :
-                new State { Byte1 = par.ParentId };
+            return c == ')' || c == '(' || c == '['
+                || c == ']' || c == '{' || c == '}';
+        }
+
+        private bool IsDigit(char c)
+        {
+            return c >= '0' && c <= '9';
+        }
+
+        private bool IsNumeric(char c, char last)
+        {
+            return c == '.'
+                || c == '+' && (last == 'e' || last == 'E')
+                || c == '-' && (last == 'e' || last == 'E');
+        }
+
+        private bool IsWhiteSpace(char c)
+        {
+            return c == ' ' || c == '\t';
+        }
+
+        private State Fetch(int sectionId, GrammarSection par)
+        {
+            return sectionId != 0 ? new State(sectionId, par.GrammarKey) :
+                new State(par.ParentId, par.GrammarKey);
         }
 
         private bool Overlap(IEnumerable<GrammarSection> seq, Line ln, int col, GrammarSection sect)
@@ -274,12 +223,39 @@ namespace CodeBox.Lexing
 
         public IEditorContext Context { get; private set; }
 
-        public List<GrammarSection> Sections { get; private set; }
+        public string GrammarKey { get; set; }
+
+        public GrammarProvider GrammarProvider { get; } = new GrammarProvider();
+    }
+
+    public sealed class Grammar
+    {
+        public Grammar(string key)
+        {
+            Key = key;
+        }
+
+        public string Key { get; }
+        
+        public GrammarSection AddSection(GrammarSection section)
+        {
+            section.GrammarKey = Key;
+            Sections.Add(section);
+            if (section.Id != 0)
+                Sections[section.ParentId].Sections.Add(section);
+            return section;
+        }
+
+        internal List<GrammarSection> Sections { get; } = new List<GrammarSection>();
     }
 
     public sealed class GrammarSection
     {
         public byte Id { get; set; }
+
+        public string GrammarKey { get; set; }
+
+        public string ExternalGrammarKey { get; set; }
 
         public byte ParentId { get; set; }
 
@@ -289,7 +265,7 @@ namespace CodeBox.Lexing
 
         public SectionSequence End { get; set; }
 
-        public bool StyleCompletely { get; set; }//obsolete
+        public bool DontStyleCompletely { get; set; }
 
         public bool Multiline { get; set; }
 
@@ -299,7 +275,17 @@ namespace CodeBox.Lexing
 
         public int FirstIdentifierStyle { get; set; }
 
+        public bool StyleNumbers { get; set; }
+
+        public bool StyleBrackets { get; set; }
+
+        public int NonIdentifierStyle { get; set; }
+
         public int StartKeyword { get; set; }
+
+        public char ContinuationChar { get; set; }
+
+        public char EscapeChar { get; set; }
 
         public List<GrammarSection> Sections { get; } = new List<GrammarSection>();
     }
@@ -420,26 +406,35 @@ namespace CodeBox.Lexing
 
     public struct State
     {
-        public static readonly State Empty = default(State);
-        static byte GetN(int n, int val) => (byte)((val >> (8 * n)) & 0xFF);
-
-        public State(int i4)
+        public State(int sectionId, string grammarKey)
         {
-            Byte1 = GetN(0, i4);
-            Byte2 = GetN(1, i4);
-            Byte3 = GetN(2, i4);
-            Byte4 = GetN(3, i4);
+            SectionId = sectionId;
+            GrammarKey = grammarKey;
         }
 
-        public int Int =>
-            Byte1 & 0xFF | (Byte2 << 8) | (Byte3 << 16) | (Byte4 << 24);
+        public readonly int SectionId;
 
-        public byte Byte1;
+        public readonly string GrammarKey;
+    }
 
-        public byte Byte2;
+    public sealed class GrammarProvider
+    {
+        private readonly Dictionary<string, Grammar> grammars = new Dictionary<string, Grammar>();
 
-        public byte Byte3;
+        public void RegisterGrammar(Grammar grammar)
+        {
+            grammars.Remove(grammar.Key);
+            grammars.Add(grammar.Key, grammar);
+        }
 
-        public byte Byte4;
+        public Grammar GetGrammar(string key)
+        {
+            Grammar grammar;
+
+            if (!grammars.TryGetValue(key, out grammar))
+                throw new CodeBoxException($"Grammar '{key}' not found!");
+
+            return grammar;
+        }
     }
 }

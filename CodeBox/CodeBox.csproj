@@ -56,6 +56,7 @@
     <Compile Include="Autocomplete\DocumentCompleteSource.cs" />
     <Compile Include="Autocomplete\ICompleteSource.cs" />
     <Compile Include="CallTipManager.cs" />
+    <Compile Include="CodeBoxException.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\CommandKeys.cs" />
     <Compile Include="CommandManager.cs" />

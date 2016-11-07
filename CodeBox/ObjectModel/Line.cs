@@ -154,16 +154,6 @@ namespace CodeBox.ObjectModel
             return AppliedStyle.Empty;
         }
 
-        internal bool IsDefaultStyle(int col)
-        {
-            foreach (var a in AppliedStyles)
-                if (col >= a.Start && col <= a.End)
-                    return a.StyleId == (int)StandardStyle.Default
-                        || a.StyleId == (int)StandardStyle.MatchedBracket;
-
-            return true;
-        }
-
         internal Style GetStyle(int index, StyleManager man)
         {
             var ret = default(Style);

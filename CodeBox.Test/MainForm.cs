@@ -13,6 +13,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Commands;
 using CodeBox.Folding;
+using CodeBox.Lexing;
 
 namespace CodeBox.Test
 {
@@ -23,13 +24,25 @@ namespace CodeBox.Test
             InitializeComponent();
         }
 
+        private Color HCol(string str)
+        {
+            return ColorTranslator.FromHtml(str);
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             BindCommands();
+
+            var lexer = new ConfigurableLexer();
+            lexer.GrammarProvider.RegisterGrammar(HtmlGrammar());
+            lexer.GrammarProvider.RegisterGrammar(CsGrammar());
+            lexer.GrammarKey = "html";
+            ed.Styles.Provider = lexer;
+
+
             ed.Styles.StyleNeeded += editor1_StyleNeeded;
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new FoldingMargin(ed));
-           // ed.LeftMargins.Add(new GutterMargin(ed));
             ed.RightMargins.Add(new ScrollBarMargin(ed, Orientation.Vertical));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new TopMargin(ed));
@@ -38,25 +51,21 @@ namespace CodeBox.Test
             ed.Styles.SpecialSymbol.ForeColor = ColorTranslator.FromHtml("#505050");
 
             ed.Styles.Selection.BackColor = ColorTranslator.FromHtml("#264F78");
-            ed.Styles.MatchBracket.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
             ed.Styles.MatchBracket.BackColor = ColorTranslator.FromHtml("#264F78");
-            ed.Styles.Register(110,
-                new TextStyle {
-                    ForeColor = ColorTranslator.FromHtml("#8CDCDB")
-                });
-            ed.Styles.Register(111,
-                new TextStyle {
-                    ForeColor = ColorTranslator.FromHtml("#D69D85")
-                });
-            ed.Styles.Register(112,
-                new TextStyle {
-                    ForeColor = ColorTranslator.FromHtml("#579032")
-                });
-            ed.Styles.Register(113,
-                new TextStyle
-                {
-                    ForeColor = ColorTranslator.FromHtml("#569CD6")
-                });
+
+            ed.Styles.Number.ForeColor = ColorTranslator.FromHtml("#B5CEA8");
+            ed.Styles.Bracket.ForeColor = ColorTranslator.FromHtml("#FF7F7F");
+
+            ed.Styles.Keyword.ForeColor = HCol("#569CD6");
+            ed.Styles.KeywordSpecial.ForeColor = HCol("#8CDCDB");
+            ed.Styles.KeywordType.ForeColor = HCol("#44C7AE");
+            ed.Styles.Literal.ForeColor = HCol("#B8D7A3");
+            ed.Styles.Comment.ForeColor = HCol("#579032");
+            ed.Styles.CommentMultiline.ForeColor = HCol("#579032");
+            ed.Styles.CommentDocument.ForeColor = HCol("#579032");
+            ed.Styles.String.ForeColor = HCol("#D69D85");
+            ed.Styles.StringMultiline.ForeColor = HCol("#D69D85");
+            ed.Styles.StringSplice.ForeColor = HCol("#D69D85");
 
             ed.Settings.LineNumbersForeColor = ColorTranslator.FromHtml("#505050");
             ed.Settings.LineNumbersBackColor = ColorTranslator.FromHtml("#1E1E1E");
@@ -78,6 +87,122 @@ namespace CodeBox.Test
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, @"test.htm"));
 
 
+        }
+
+
+
+
+
+        const string kw = "nameof switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract var if else return while for foreach continue break ref out";
+
+        private Grammar CsGrammar()
+        {
+            var grm = new Grammar("csharp");
+            var glob = new GrammarSection
+            {
+                StyleNumbers = true
+            };
+            grm.AddSection(glob);
+            glob.Keywords.AddRange(kw, ((int)StandardStyle.Keyword & 0xFFFF) | (0 << 16));
+            glob.Keywords.AddRange("void int byte long short sbyte uint ushort ulong string char bool object", ((int)StandardStyle.KeywordType & 0xFFFF) | (0 << 16));
+            glob.Keywords.AddRange("true false null", ((int)StandardStyle.Literal & 0xFFFF) | (0 << 16));
+
+            grm.AddSection(new GrammarSection
+            {
+                Id = 1,
+                Start = new SectionSequence("//", true),
+                ContinuationChar = '\\',
+                Style = (int)StandardStyle.Comment
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 2,
+                Start = new SectionSequence("/*", true),
+                End = new SectionSequence("*/", true),
+                Multiline = true,
+                Style = (int)StandardStyle.CommentMultiline
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 3,
+                Start = new SectionSequence("'", true),
+                End = new SectionSequence("'", true),
+                EscapeChar = '\\',
+                Style = (int)StandardStyle.Char
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 4,
+                Start = new SectionSequence("\"", true),
+                End = new SectionSequence("\"", true),
+                EscapeChar = '\\',
+                Style = (int)StandardStyle.String
+            });
+
+            return grm;
+        }
+
+
+        private Grammar HtmlGrammar()
+        {
+            var grm = new Grammar("html");
+
+            grm.AddSection(new GrammarSection()); //root
+            grm.AddSection(new GrammarSection
+            {
+                Id = 1,
+                Start = new SectionSequence("<!", true),
+                End = new SectionSequence(">", true),
+                Multiline = true,
+                Style = (int)StandardStyle.Default
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 2,
+                Start = new SectionSequence("<", true),
+                End = new SectionSequence(">", true),
+                Multiline = true,
+                IdentifierStyle = (int)StandardStyle.KeywordSpecial,
+                FirstIdentifierStyle = (int)StandardStyle.Keyword
+            }).Keywords.Add("script", ((int)StandardStyle.Keyword & 0xFFFF) | (42 << 16));
+            grm.AddSection(new GrammarSection
+            {
+                Id = 3,
+                Start = new SectionSequence("</", true),
+                End = new SectionSequence(">", true),
+                IdentifierStyle = (int)StandardStyle.Keyword,
+                Style = 0
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 4,
+                StartKeyword = 42,
+                End = new SectionSequence("</script>", false),
+                Multiline = true,
+                DontStyleCompletely = true,
+                ExternalGrammarKey = "csharp"
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 5,
+                Start = new SectionSequence("<!--", true),
+                End = new SectionSequence("-->", true),
+                Multiline = true,
+                Style = (int)StandardStyle.CommentMultiline
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 6,
+                ParentId = 2,
+                Start = new SectionSequence("\"", true),
+                End = new SectionSequence("\"", true),
+                Style = (int)StandardStyle.String
+            });
+
+
+
+
+            return grm;
         }
 
         private void BindCommands()

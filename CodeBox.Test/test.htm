@@ -4,6 +4,8 @@
 
     public AppliedStyle FindHyperlink(int col)
     {
+        var str = "my \"string";
+
         foreach (var a in AppliedStyles)
         {
             if (col >= a.Start && col <= a.End && a.StyleId == (int)StandardStyle.Hyperlink)

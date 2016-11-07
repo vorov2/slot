@@ -24,12 +24,27 @@ namespace CodeBox
         public StyleManager(Editor editor)
         {
             this.editor = editor;
-            Register(StandardStyle.Default, new TextStyle());
+            Register(StandardStyle.Default, new TextStyle { Default = true });
             Register(StandardStyle.Selection, new SelectionStyle());
             Register(StandardStyle.SpecialSymbol, new TextStyle());
             Register(StandardStyle.Hyperlink, new TextStyle { FontStyle = FontStyle.Underline });
             Register(StandardStyle.MatchedBracket, new TextStyle());
-            Provider = new ConfigurableLexer();
+            Register(StandardStyle.Number, new TextStyle());
+            Register(StandardStyle.Bracket, new TextStyle());
+            Register(StandardStyle.Keyword, new TextStyle());
+            Register(StandardStyle.KeywordSpecial, new TextStyle());
+            Register(StandardStyle.KeywordType, new TextStyle());
+            Register(StandardStyle.KeywordModifier, new TextStyle());
+            Register(StandardStyle.Comment, new TextStyle());
+            Register(StandardStyle.CommentMultiline, new TextStyle());
+            Register(StandardStyle.CommentDocument, new TextStyle());
+            Register(StandardStyle.Char, new TextStyle());
+            Register(StandardStyle.String, new TextStyle());
+            Register(StandardStyle.StringMultiline, new TextStyle());
+            Register(StandardStyle.StringSplice, new TextStyle());
+            Register(StandardStyle.Preprocessor, new TextStyle());
+            Register(StandardStyle.Literal, new TextStyle());
+            Register(StandardStyle.Regex, new TextStyle());
         }
 
         public Style GetStyle(int styleId) => styles[styleId];
@@ -44,19 +59,67 @@ namespace CodeBox
             switch (styleId)
             {
                 case StandardStyle.Default:
-                    Default = (TextStyle)style;
+                    Default = style;
                     break;
                 case StandardStyle.SpecialSymbol:
-                    SpecialSymbol = (TextStyle)style;
+                    SpecialSymbol = style;
                     break;
                 case StandardStyle.Selection:
-                    Selection = (SelectionStyle)style;
+                    Selection = style;
                     break;
                 case StandardStyle.Hyperlink:
-                    Hyperlink = (TextStyle)style;
+                    Hyperlink = style;
                     break;
                 case StandardStyle.MatchedBracket:
-                    MatchBracket = (TextStyle)style;
+                    MatchBracket = style;
+                    break;
+                case StandardStyle.Number:
+                    Number = style;
+                    break;
+                case StandardStyle.Bracket:
+                    Bracket = style;
+                    break;
+                case StandardStyle.Keyword:
+                    Keyword = style;
+                    break;
+                case StandardStyle.KeywordSpecial:
+                    KeywordSpecial = style;
+                    break;
+                case StandardStyle.KeywordType:
+                    KeywordType = style;
+                    break;
+                case StandardStyle.KeywordModifier:
+                    KeywordModifier = style;
+                    break;
+                case StandardStyle.Comment:
+                    Comment = style;
+                    break;
+                case StandardStyle.CommentMultiline:
+                    CommentMultiline = style;
+                    break;
+                case StandardStyle.CommentDocument:
+                    CommentDocument = style;
+                    break;
+                case StandardStyle.String:
+                    String = style;
+                    break;
+                case StandardStyle.StringMultiline:
+                    StringMultiline = style;
+                    break;
+                case StandardStyle.StringSplice:
+                    StringSplice = style;
+                    break;
+                case StandardStyle.Char:
+                    Char = style;
+                    break;
+                case StandardStyle.Preprocessor:
+                    Preprocessor = style;
+                    break;
+                case StandardStyle.Literal:
+                    Literal = style;
+                    break;
+                case StandardStyle.Regex:
+                    Regex = style;
                     break;
             }
         }
@@ -105,15 +168,47 @@ namespace CodeBox
         public IStylingProvider Provider { get; set; }
 
         #region Standard styles
-        public TextStyle Default { get; private set; }
+        public Style Default { get; private set; }
 
-        public SelectionStyle Selection { get; private set; }
+        public Style Selection { get; private set; }
 
-        public TextStyle SpecialSymbol { get; private set; }
+        public Style SpecialSymbol { get; private set; }
         
-        public TextStyle Hyperlink { get; private set; }
+        public Style Hyperlink { get; private set; }
 
-        public TextStyle MatchBracket { get; private set; }
+        public Style MatchBracket { get; private set; }
+
+        public Style Number { get; private set; }
+
+        public Style Bracket { get; private set; }
+
+        public Style Keyword { get; private set; }
+
+        public Style KeywordSpecial { get; private set; }
+
+        public Style KeywordType { get; private set; }
+
+        public Style KeywordModifier { get; private set; }
+
+        public Style Comment { get; private set; }
+
+        public Style CommentMultiline { get; private set; }
+
+        public Style CommentDocument { get; private set; }
+
+        public Style String { get; private set; }
+
+        public Style StringMultiline { get; private set; }
+
+        public Style StringSplice { get; private set; }
+
+        public Style Char { get; private set; }
+
+        public Style Preprocessor { get; private set; }
+
+        public Style Literal { get; private set; }
+
+        public Style Regex { get; private set; }
         #endregion
     }
 }

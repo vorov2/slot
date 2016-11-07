@@ -33,6 +33,8 @@ namespace CodeBox
                 window.MouseDown += WindowMouseDown;
                 editor.Controls.Add(window);
             }
+
+            window.SetScrollPositionY(0);
         }
 
         private void WindowMouseDown(object sender, MouseEventArgs e) => InsertCompleteString();
@@ -46,10 +48,15 @@ namespace CodeBox
 
         public void ShowAutocomplete(Pos pos, IEnumerable<string> items)
         {
+            if (!items.Any())
+            {
+                HideAutocomplete();
+                return;
+            }
+
             this.items = items;
 
             InitializeWindow();
-            window.SetScrollPositionY(0);
             FindCompleteString();
             var prefix = completeString.ToString();
             window.SetItems(items.Where(i => i.StartsWith(prefix)));
@@ -141,16 +148,22 @@ namespace CodeBox
                 completeString.Remove(completeString.Length - 1, 1);
 
             lastCol = caret.Col;
-            Console.WriteLine(completeString);
-
+            
             if (c == '\t' || c == ' ')
                 HideAutocomplete();
             else
             {
                 var prefix = completeString.ToString();
-                window.SetItems(items.Where(i => i.StartsWith(prefix)));
-                window.Invalidate();
-                SetLocationByPos(caret);
+                var newItems = items.Where(i => i.StartsWith(prefix));
+
+                if (!newItems.Any())
+                    HideAutocomplete();
+                else
+                {
+                    window.SetItems(newItems);
+                    window.Invalidate();
+                    SetLocationByPos(caret);
+                }
             }
         }
 

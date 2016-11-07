@@ -25,6 +25,17 @@ namespace CodeBox
             InternalMatch();
         }
 
+        internal bool IsBracketStyle(Line line, int col)
+        {
+            foreach (var a in line.AppliedStyles)
+                if (col >= a.Start && col <= a.End)
+                    return a.StyleId == (int)StandardStyle.Default
+                        || a.StyleId == (int)StandardStyle.MatchedBracket
+                        || a.StyleId == (int)StandardStyle.Bracket;
+
+            return true;
+        }
+
         private void InternalMatch()
         {
             if (markedParent)
@@ -40,7 +51,7 @@ namespace CodeBox
 
                 if (sel.Caret.Col < ln.Length
                     && (pi = START_PARENS.IndexOf(ln[sel.Caret.Col].Char)) != -1
-                    && ln.IsDefaultStyle(sel.Caret.Col))
+                    && IsBracketStyle(ln, sel.Caret.Col))
                 {
                     var m = TraverseForward(pi, sel);
                     if (!markedParent)
@@ -48,7 +59,7 @@ namespace CodeBox
                 }
                 else if (sel.Caret.Col > 0
                     && (pi = END_PARENS.IndexOf(ln[sel.Caret.Col - 1].Char)) != -1
-                    && ln.IsDefaultStyle(sel.Caret.Col))
+                    && IsBracketStyle(ln, sel.Caret.Col))
                 {
                     var m = TraverseBackward(pi, sel);
                     if (!markedParent)
@@ -67,9 +78,9 @@ namespace CodeBox
 
                 for (var i = lni == sel.Caret.Line ? sel.Caret.Col + 1 : 0; i < line.Length; i++)
                 {
-                    if (line[i].Char == START_PARENS[pi] && line.IsDefaultStyle(i))
+                    if (line[i].Char == START_PARENS[pi] && IsBracketStyle(line, i))
                         cc++;
-                    else if (line[i].Char == END_PARENS[pi] && line.IsDefaultStyle(i))
+                    else if (line[i].Char == END_PARENS[pi] && IsBracketStyle(line, i))
                     {
                         if (cc > 0)
                             cc--;
@@ -96,9 +107,9 @@ namespace CodeBox
 
                 for (var i = lni == sel.Caret.Line ? sel.Caret.Col - 2 : line.Length - 1; i > -1; i--)
                 {
-                    if (line[i].Char == END_PARENS[pi] && line.IsDefaultStyle(i))
+                    if (line[i].Char == END_PARENS[pi] && IsBracketStyle(line, i))
                         cc++;
-                    else if (line[i].Char == START_PARENS[pi] && line.IsDefaultStyle(i))
+                    else if (line[i].Char == START_PARENS[pi] && IsBracketStyle(line, i))
                     {
                         if (cc > 0)
                             cc--;
