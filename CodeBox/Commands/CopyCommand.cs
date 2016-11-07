@@ -9,7 +9,7 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Silent)]
+    [CommandBehavior(Silent | IdleCaret)]
     public sealed class CopyCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)

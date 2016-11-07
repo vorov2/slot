@@ -121,7 +121,7 @@
     <Compile Include="Drawing\CaretRenderer.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorSettings.cs" />
-    <Compile Include="FoldingManager.cs" />
+    <Compile Include="Folding\FoldingManager.cs" />
     <Compile Include="Folding\FoldingNeededEventArgs.cs" />
     <Compile Include="Folding\FoldingStates.cs" />
     <Compile Include="Folding\IFoldingProvider.cs" />

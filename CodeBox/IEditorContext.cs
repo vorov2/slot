@@ -1,4 +1,5 @@
-﻿using CodeBox.ObjectModel;
+﻿using CodeBox.Folding;
+using CodeBox.ObjectModel;
 using System;
 
 namespace CodeBox

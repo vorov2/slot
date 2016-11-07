@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(SingleRun | Silent)]
+    [CommandBehavior(SingleRun | Silent | IdleCaret)]
     public sealed class AutocompleteCommand : Command
     {
         private DocumentCompleteSource completeSource = new DocumentCompleteSource();

@@ -23,6 +23,8 @@ namespace CodeBox.Commands
 
         LeaveEditor = 0x80,
         
-        Invalidate = 0x100
+        Invalidate = 0x100,
+
+        IdleCaret = 0x200
     }
 }

@@ -22,6 +22,7 @@ namespace CodeBox
 
         public void Match()
         {
+            Console.WriteLine("Match braket");
             InternalMatch();
         }
 

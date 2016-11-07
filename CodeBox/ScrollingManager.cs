@@ -136,8 +136,8 @@ namespace CodeBox
         private void OnScroll(int xChange, int yChange)
         {
             editor.Styles.Restyle();
-            editor.Redraw();
             editor.MatchBraket.Match();
+            editor.Redraw();
 
             if (editor.Autocomplete.WindowShown)
                 editor.Autocomplete.ShiftLocation(xChange, yChange);

@@ -154,8 +154,21 @@ namespace CodeBox
             lvl = lvl < fvl ? fvl : lvl;
             var range = new Range(new Pos(fvl, 0),
                 new Pos(lvl, editor.Lines[lvl].Length - 1));
+            RestyleRange(range);
+        }
 
-            if (Provider != null)
+        internal void RestyleDocument()
+        {
+            var range = new Range(new Pos(0, 0), new Pos(editor.Lines.Count - 1, 0));
+            RestyleRange(range);
+        }
+
+        private void RestyleRange(Range range)
+        {
+            if (range.End.Line <= 0)
+                return;
+
+            if(Provider != null)
                 Provider.Style(editor.Context, range);
             else
                 OnStyleNeeded(range);

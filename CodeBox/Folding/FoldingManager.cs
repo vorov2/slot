@@ -1,18 +1,15 @@
-﻿using CodeBox.Folding;
-using CodeBox.ObjectModel;
+﻿using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox
+namespace CodeBox.Folding
 {
     public sealed class FoldingManager
     {
         private readonly Editor editor;
+        private volatile bool busy;
 
         internal FoldingManager(Editor editor)
         {
@@ -83,11 +80,17 @@ namespace CodeBox
 
         internal void RebuildFolding()
         {
-            if (editor.Lines.Count == 0)
+            if (editor.Lines.Count == 0 || busy)
                 return;
 
-            Task.Run(() =>
+            Task.Run((Action)RunRebuild);
+        }
+
+        private void RunRebuild()
+        {
+            try
             {
+                busy = true;
                 var fvl = editor.Scroll.FirstVisibleLine;
                 var lvl = editor.Scroll.LastVisibleLine;
 
@@ -106,7 +109,11 @@ namespace CodeBox
                     OnFoldingNeeded(range);
                 else
                     fp.Fold(editor.Context, range);
-            });
+            }
+            finally
+            {
+                busy = false;
+            }
         }
 
         internal void DrawFoldingIndicator(Graphics g, int x, int y)
@@ -115,7 +122,7 @@ namespace CodeBox
                 new Rectangle(x, y + editor.Info.LineHeight / 4, editor.Info.CharWidth * 3, editor.Info.LineHeight / 2));
             g.DrawString("···", editor.Styles.Default.Font,
                 editor.CachedBrush.Create(editor.Settings.FoldingBackColor),
-                new Point(x, y), TextStyle.Format);
+                new Point(x, y), Style.Format);
         }
 
         public void SetFoldingLevel(int line, int level)

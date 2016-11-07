@@ -309,7 +309,7 @@ namespace CodeBox
                     var e = cmd.Execute(arg, sel);
 
                     if (e != ActionResults.None)
-                        exec = ActionResults.Change;
+                        exec |= e;
 
                     if (e == ActionResults.None && undo)
                         editor.Buffer.UndoStack.Pop();
@@ -328,10 +328,10 @@ namespace CodeBox
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
             if (exec != ActionResults.None)
-            {
                 DoAftermath(exp, exec);
+
+            if ((exp & ActionExponent.IdleCaret) != ActionExponent.IdleCaret)
                 editor.MatchBraket.Match();
-            }
 
             if (exec.Has(ActionResults.AutocompleteKeep) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.UpdateAutocomplete();
