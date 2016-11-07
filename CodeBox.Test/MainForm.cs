@@ -63,6 +63,7 @@ namespace CodeBox.Test
             ed.Styles.Comment.ForeColor = HCol("#579032");
             ed.Styles.CommentMultiline.ForeColor = HCol("#579032");
             ed.Styles.CommentDocument.ForeColor = HCol("#579032");
+            ed.Styles.Char.ForeColor = HCol("#D69D85");
             ed.Styles.String.ForeColor = HCol("#D69D85");
             ed.Styles.StringMultiline.ForeColor = HCol("#D69D85");
             ed.Styles.StringSplice.ForeColor = HCol("#D69D85");
@@ -82,11 +83,8 @@ namespace CodeBox.Test
             ed.Settings.PopupSelectedColor = ColorTranslator.FromHtml("#264F78");
             ed.Settings.PopupBorderColor = ColorTranslator.FromHtml("#5F5F66");
 
-
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, @"test.htm"));
-
-
         }
 
 
@@ -179,6 +177,7 @@ namespace CodeBox.Test
                 StartKeyword = 42,
                 End = new SectionSequence("</script>", false),
                 Multiline = true,
+                Style=200,
                 DontStyleCompletely = true,
                 ExternalGrammarKey = "csharp"
             });

@@ -38,7 +38,9 @@ namespace CodeBox.Lexing
                 var grm = GrammarProvider.GetGrammar(state.GrammarKey);
                 Styles.ClearStyles(i);
                 var col = 0;
-                state = ParseLine(grm.Sections[lss], ref col, i);
+                var sect = grm.Sections[lss];
+                sect.FoundKeyword = false;
+                state = ParseLine(sect, ref col, i);
                 grm = GrammarProvider.GetGrammar(state.GrammarKey);
 
                 if (col <= Lines[i].Length - 1)
@@ -77,6 +79,7 @@ namespace CodeBox.Lexing
                     lastKw = (kres >> 16) & 0xFFFF;
                     Styles.StyleRange(kres & 0xFFFF, line, i - mys.Keywords.Offset, i);
                     identStart = i + 1;
+                    mys.FoundKeyword = true;
                     mys.Keywords.Reset();
                 }
                 else if (kres < 0)
@@ -89,10 +92,13 @@ namespace CodeBox.Lexing
                         Styles.StyleRange((int)StandardStyle.Number, line, lastNum, i - 1);
                         lastNum = -1;
                     }
-                    else if (!lastNonIdent && mys.IdentifierStyle != 0 && i - identStart - 1 > 1)
+                    else if (!lastNonIdent && mys.IdentifierStyle != 0 && i - identStart - 1 >= 0)
+                    {
                         Styles.StyleRange(
-                            identStart - start < 3 && mys.FirstIdentifierStyle != 0 ?
+                           mys.FirstIdentifierStyle != 0 && !mys.FoundKeyword ?
                                 mys.FirstIdentifierStyle : mys.IdentifierStyle, line, identStart, i - 1);
+                        mys.FoundKeyword = true;
+                    }
 
                     identStart = i + 1;
                 }
@@ -114,15 +120,24 @@ namespace CodeBox.Lexing
                         backDelegate = sect;
                         sect = GrammarProvider.GetGrammar(sect.ExternalGrammarKey).Sections[0];
                     }
-
+                    reparse:
                     var ret = ParseLine(sect, ref i, line);
 
                     if (i >= ln.Length - 1)
                         return ret;
+                    else if (ret.SectionId != mys.Id || ret.GrammarKey != grammar.Key)
+                    {
+                        sect = ret.GrammarKey != grammar.Key
+                            ? GrammarProvider.GetGrammar(ret.GrammarKey).Sections[ret.SectionId]
+                            : grammar.Sections[ret.SectionId];
+                        goto reparse;
+                    }
                 }
                 else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
-                    && (backm.EscapeChar == '\0' || backm.EscapeChar != term))
+                    && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
                 {
+                    mys.FoundKeyword = false;
+
                     if (backm.Style != 0)
                     {
                         var off1 = backm.DontStyleCompletely ? 0 : backm.Start != null ? backm.Start.Length : 0;
@@ -130,7 +145,10 @@ namespace CodeBox.Lexing
                     }
 
                     if (backm.DontStyleCompletely)
+                    {
                         i -= backm.End.Offset;
+                        i = i < 0 ? 0 : i;
+                    }
 
                     if (lastKw != 0)
                     {
@@ -155,7 +173,7 @@ namespace CodeBox.Lexing
                 last = c;
                 lastNonIdent = nonIdent;
 
-                if (nonIdent && !IsWhiteSpace(c))
+                if (!IsWhiteSpace(c))
                     term = c;
 
                 if (lastNum == -1 && IsDigit(c))
@@ -164,15 +182,18 @@ namespace CodeBox.Lexing
                     lastNum = -1;
             }
 
+            var singleLineContinue = !mys.Multiline && mys.ContinuationChar != '\0' && mys.ContinuationChar == term;
+
             if (mys.Style != 0 && (mys.Multiline || mys.End == null))
             {
                 var off = !mys.DontStyleCompletely ? mys.Start.Length : 0;
                 Styles.StyleRange(mys.Style, line, start - off, ln.Length);
             }
-            
-            if (mys.End != null && mys.Multiline)
-                return Fetch(mys.Id, mys);
-            else if (mys.End == null && !mys.Multiline && mys.ContinuationChar != '\0' && mys.ContinuationChar == term)
+
+            if (!mys.Multiline && !singleLineContinue)
+                mys.FoundKeyword = false;
+
+            if (mys.End != null && mys.Multiline || mys.End == null && singleLineContinue)
                 return Fetch(mys.Id, mys);
             else
                 return Fetch(0, mys);
@@ -251,6 +272,8 @@ namespace CodeBox.Lexing
 
     public sealed class GrammarSection
     {
+        internal bool FoundKeyword { get; set; }
+
         public byte Id { get; set; }
 
         public string GrammarKey { get; set; }

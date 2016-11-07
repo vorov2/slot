@@ -118,7 +118,7 @@
     <Compile Include="Drawing\CachedFont.cs" />
     <Compile Include="Drawing\CachedPen.cs" />
     <Compile Include="Drawing\CaretData.cs" />
-    <Compile Include="Folding\CaretRenderer.cs" />
+    <Compile Include="Drawing\CaretRenderer.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorSettings.cs" />
     <Compile Include="FoldingManager.cs" />

@@ -56,7 +56,7 @@ namespace CodeBox.Drawing
                 g.TranslateTransform(editor.Scroll.X, editor.Scroll.Y);
 
                 if (timerDraw && timerBitmap != null)
-                    g.DrawImage(timerBitmap, caretX, caretY);
+                    DrawSurface(g, caretX, caretY);
                 else
                     DrawCaret(g, caretX, caretY, true);
             }
@@ -86,6 +86,16 @@ namespace CodeBox.Drawing
             return bmpGraphics;
         }
 
+        private void DrawSurface(Graphics g, int x, int y)
+        {
+            if (x >= editor.Info.TextLeft - editor.Scroll.X
+                && x < editor.Info.TextRight - editor.Scroll.X
+                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.Y)
+            {
+                g.DrawImage(timerBitmap, caretX, caretY);
+            }
+        }
+
         public void DrawCaret(Graphics g, int x, int y, bool main)
         {
             var w = GetCaretWidth(g);
@@ -98,7 +108,8 @@ namespace CodeBox.Drawing
                 h /= 2;
 
             if (x >= editor.Info.TextLeft - editor.Scroll.X
-                && x < editor.Info.TextRight - editor.Scroll.X)
+                && x < editor.Info.TextRight - editor.Scroll.X
+                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.Y)
             {
                 if (main)
                 {
