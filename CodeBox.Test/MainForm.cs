@@ -177,7 +177,6 @@ namespace CodeBox.Test
                 StartKeyword = 42,
                 End = new SectionSequence("</script>", false),
                 Multiline = true,
-                Style=200,
                 DontStyleCompletely = true,
                 ExternalGrammarKey = "csharp"
             });

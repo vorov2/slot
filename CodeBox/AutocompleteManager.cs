@@ -48,18 +48,19 @@ namespace CodeBox
 
         public void ShowAutocomplete(Pos pos, IEnumerable<string> items)
         {
-            if (!items.Any())
+            this.items = items;
+            InitializeWindow();
+            FindCompleteString();
+            var prefix = completeString.ToString();
+            var newItems = items.Where(i => i.StartsWith(prefix));
+
+            if (!newItems.Any())
             {
                 HideAutocomplete();
                 return;
             }
 
-            this.items = items;
-
-            InitializeWindow();
-            FindCompleteString();
-            var prefix = completeString.ToString();
-            window.SetItems(items.Where(i => i.StartsWith(prefix)));
+            window.SetItems(newItems);
             SetLocationByPos(pos);
             WindowShown = true;
             lastCol = pos.Col;

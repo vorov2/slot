@@ -50,7 +50,7 @@ namespace CodeBox.Commands
             var arg = new CommandArgument(redoChar.Char);
             redoChar = Character.Empty;
             Execute(arg, redoSel);
-            return new Pos(redoSel.Caret.Line, redoSel.Caret.Col + 1);
+            return new Pos(redoSel.Start.Line, redoSel.Start.Col + 1);
         }
 
         public override Pos Undo()

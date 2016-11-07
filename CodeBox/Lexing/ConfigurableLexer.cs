@@ -170,16 +170,16 @@ namespace CodeBox.Lexing
                     return Fetch(0, backm);
                 }
 
-                last = c;
-                lastNonIdent = nonIdent;
-
                 if (!IsWhiteSpace(c))
                     term = c;
 
-                if (lastNum == -1 && IsDigit(c))
+                if (lastNum == -1 && IsDigit(c) && lastNonIdent)
                     lastNum = i;
                 else if (IsWhiteSpace(c))
                     lastNum = -1;
+
+                last = c;
+                lastNonIdent = nonIdent;
             }
 
             var singleLineContinue = !mys.Multiline && mys.ContinuationChar != '\0' && mys.ContinuationChar == term;

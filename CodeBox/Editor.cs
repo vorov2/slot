@@ -265,7 +265,8 @@ namespace CodeBox
                         var high = sel && Buffer.Selections.IsSelected(pos);
 
                         if (c == '\0' || c == '\t' || c == ' ')
-                            style = Styles.GetStyle((int)StandardStyle.SpecialSymbol);
+                            style = line.GetStyle(i, Styles)
+                                .Combine(Styles.GetStyle((int)StandardStyle.SpecialSymbol));
                         else
                             style = line.GetStyle(i, Styles);
 
