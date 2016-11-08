@@ -13,7 +13,7 @@ namespace CodeBox.Lexing
             this.sequence = !caseSensitive ? sequence.ToUpper() : sequence;
         }
 
-        public MatchResult Match(char c)
+        internal MatchResult Match(char c)
         {
             if (c == '\t' || c == '\r' || c == '\n')
                 c = ' ';
@@ -49,7 +49,7 @@ namespace CodeBox.Lexing
             }
         }
 
-        public MatchResult TryMatch(char c, int shift = 0)
+        internal MatchResult TryMatch(char c, int shift = 0)
         {
             var os = Offset;
             var oldret = LastResult;

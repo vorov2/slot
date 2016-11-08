@@ -1,5 +1,6 @@
 ﻿using CodeBox.Folding;
 using CodeBox.ObjectModel;
+using CodeBox.Styling;
 using System;
 
 namespace CodeBox

@@ -551,7 +551,7 @@ namespace CodeBox
                 Buffer = new DocumentBuffer(doc);
                 InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();
-                Styles.Restyle();
+                Styles.RestyleDocument();
                 Folding.RebuildFolding();
             }
         }

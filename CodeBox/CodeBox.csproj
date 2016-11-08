@@ -130,9 +130,14 @@
     <Compile Include="Indentation\CurlyDentProvider.cs" />
     <Compile Include="Indentation\IDentProvider.cs" />
     <Compile Include="IndentManager.cs" />
+    <Compile Include="Lexing\EnumerableExtensions.cs" />
+    <Compile Include="Lexing\Grammar.cs" />
+    <Compile Include="Lexing\GrammarProvider.cs" />
+    <Compile Include="Lexing\GrammarSection.cs" />
     <Compile Include="Lexing\GrammarSectionSettings.cs" />
     <Compile Include="Lexing\MatchResult.cs" />
     <Compile Include="Lexing\SectionSequence.cs" />
+    <Compile Include="Lexing\State.cs" />
     <Compile Include="Lexing\StringTable.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="Margins\FoldingMargin.cs" />
@@ -165,7 +170,7 @@
     <Compile Include="ObjectModel\Range.cs" />
     <Compile Include="ObjectModel\Selection.cs" />
     <Compile Include="ObjectModel\SelectionList.cs" />
-    <Compile Include="StyleManager.cs" />
+    <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="Styling\CallTip.cs" />
     <Compile Include="Styling\IStylingProvider.cs" />

@@ -12,6 +12,8 @@ namespace CodeBox.Lexing
 {
     public sealed class ConfigurableLexer : IStylingProvider
     {
+        private string wordSep;
+
         public ConfigurableLexer()
         {
             
@@ -20,6 +22,7 @@ namespace CodeBox.Lexing
         public void Style(IEditorContext context, Range range)
         {
             Context = context;
+            wordSep = Context.Settings.WordSeparators;
             GrammarProvider.GetGrammar(GrammarKey).Sections.Reset();
             Parse(new State(0, GrammarKey), range);
         }
@@ -55,7 +58,7 @@ namespace CodeBox.Lexing
         private GrammarSection backDelegate;
         private State ParseLine(GrammarSection mys, ref int i, int line)
         {
-            var lastNum = i;
+            var lastNum = -1;
             var start = i;
             var identStart = i;
             var ln = Lines[line];
@@ -72,7 +75,7 @@ namespace CodeBox.Lexing
                 var kres = lastNonIdent || mys.Keywords.Offset != -1 ? mys.Keywords.Match(c) : -1;
 
                 if (mys.StyleBrackets && IsBracket(c))
-                    Styles.StyleRange((int)StandardStyle.Bracket, line, i, i);
+                    Styles.StyleRange(StandardStyle.Bracket, line, i, i);
 
                 if (kres > 0 && IsNonIdent(ln.CharAt(i + 1)))
                 {
@@ -85,17 +88,25 @@ namespace CodeBox.Lexing
                 else if (kres < 0)
                     mys.Keywords.Reset();
 
-                if (nonIdent)
+                if (lastNum != -1 && mys.StyleNumbers)
                 {
-                    if (lastNum != -1 && mys.StyleNumbers && !IsNumeric(c, last))
+                    var num = IsNumeric(c, last);
+
+                    if (nonIdent && !num)
                     {
-                        Styles.StyleRange((int)StandardStyle.Number, line, lastNum, i - 1);
+                        Styles.StyleRange(StandardStyle.Number, line, lastNum, i - 1);
                         lastNum = -1;
                     }
-                    else if (!lastNonIdent && mys.IdentifierStyle != 0 && i - identStart - 1 >= 0)
+                    else if (!nonIdent && !num)
+                        lastNum = -1;
+                }
+
+                if (nonIdent)
+                {
+                    if (!lastNonIdent && mys.IdentifierStyle != 0 && i - identStart - 1 >= 0)
                     {
                         Styles.StyleRange(
-                           mys.FirstIdentifierStyle != 0 && !mys.FoundKeyword ?
+                           mys.FirstIdentifierStyle != StandardStyle.Default && !mys.FoundKeyword ?
                                 mys.FirstIdentifierStyle : mys.IdentifierStyle, line, identStart, i - 1);
                         mys.FoundKeyword = true;
                     }
@@ -173,7 +184,7 @@ namespace CodeBox.Lexing
                 if (!IsWhiteSpace(c))
                     term = c;
 
-                if (lastNum == -1 && IsDigit(c) && lastNonIdent)
+                if (lastNum == -1 && lastNonIdent && (IsDigit(c) || c == '.' && IsDigit(ln.CharAt(i + 1))))
                     lastNum = i;
                 else if (IsWhiteSpace(c))
                     lastNum = -1;
@@ -212,7 +223,9 @@ namespace CodeBox.Lexing
 
         private bool IsNumeric(char c, char last)
         {
-            return c == '.'
+            return IsDigit(c) 
+                || c == '.'
+                || c == 'e' && IsDigit(last)
                 || c == '+' && (last == 'e' || last == 'E')
                 || c == '-' && (last == 'e' || last == 'E');
         }
@@ -235,7 +248,10 @@ namespace CodeBox.Lexing
 
         private bool IsNonIdent(char c)
         {
-            return c=='\0'||c == ' '||c =='\t'||"`~!@#$%^&*()-=+[{]}\\|;:\",.<>/?".IndexOf(c) != -1;
+            return c=='\0'
+                || c == ' '
+                || c =='\t'
+                || wordSep.IndexOf(c) != -1;
         }
 
         internal List<Line> Lines => Context.Buffer.Document.Lines;
@@ -247,217 +263,5 @@ namespace CodeBox.Lexing
         public string GrammarKey { get; set; }
 
         public GrammarProvider GrammarProvider { get; } = new GrammarProvider();
-    }
-
-    public sealed class Grammar
-    {
-        public Grammar(string key)
-        {
-            Key = key;
-        }
-
-        public string Key { get; }
-        
-        public GrammarSection AddSection(GrammarSection section)
-        {
-            section.GrammarKey = Key;
-            Sections.Add(section);
-            if (section.Id != 0)
-                Sections[section.ParentId].Sections.Add(section);
-            return section;
-        }
-
-        internal List<GrammarSection> Sections { get; } = new List<GrammarSection>();
-    }
-
-    public sealed class GrammarSection
-    {
-        internal bool FoundKeyword { get; set; }
-
-        public byte Id { get; set; }
-
-        public string GrammarKey { get; set; }
-
-        public string ExternalGrammarKey { get; set; }
-
-        public byte ParentId { get; set; }
-
-        public StringTable Keywords { get; } = new StringTable();
-
-        public SectionSequence Start { get; set; }
-
-        public SectionSequence End { get; set; }
-
-        public bool DontStyleCompletely { get; set; }
-
-        public bool Multiline { get; set; }
-
-        public int Style { get; set; }
-
-        public int IdentifierStyle { get; set; }
-
-        public int FirstIdentifierStyle { get; set; }
-
-        public bool StyleNumbers { get; set; }
-
-        public bool StyleBrackets { get; set; }
-
-        public int NonIdentifierStyle { get; set; }
-
-        public int StartKeyword { get; set; }
-
-        public char ContinuationChar { get; set; }
-
-        public char EscapeChar { get; set; }
-
-        public List<GrammarSection> Sections { get; } = new List<GrammarSection>();
-    }
-
-    public static class EnumerableExtensions
-    {
-        public static GrammarSection TryMatch(this IEnumerable<GrammarSection> sections, Line ln, int col, GrammarSection except)
-        {
-            foreach (var sect in sections)
-            {
-                if (sect == except || sect.Start == null)
-                    continue;
-
-                var res = sect.Start.TryMatch(ln.CharAt(col + 0), 0);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 1), 1);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 2), 2);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 3), 3);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 4), 4);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 5), 5);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 6), 6);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 7), 7);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 8), 8);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-
-                res = sect.Start.TryMatch(ln.CharAt(col + 9), 9);
-                if (res == MatchResult.Hit)
-                    return sect;
-                else if (res == MatchResult.Fail)
-                    continue;
-            }
-
-            return null;
-        }
-
-        public static GrammarSection MatchByKeyword(this IEnumerable<GrammarSection> sections, int key)
-        {
-            foreach (var sect in sections)
-            {
-                if (sect.StartKeyword == key)
-                    return sect;
-            }
-
-            return null;
-        }
-
-        public static GrammarSection Match(this IEnumerable<GrammarSection> sections, char c)
-        {
-            var res = MatchResult.Fail;
-            var match = default(GrammarSection);
-            
-            foreach (var sect in sections)
-            {
-                if (sect.Start == null)
-                    continue;
-
-                res = sect.Start.Match(c);
-
-                if (res == MatchResult.Hit && match == null)
-                    match = sect;
-                else if (res == MatchResult.Hit 
-                    && sect.Start.Offset > match.Start.Offset)
-                    match = sect;
-            }
-
-            return match;
-        }
-
-        public static void Reset(this IEnumerable<GrammarSection> sections)
-        {
-            foreach (var sect in sections)
-                if (sect.Start != null)
-                    sect.Start.Reset();
-        }
-    }
-
-    public struct State
-    {
-        public State(int sectionId, string grammarKey)
-        {
-            SectionId = sectionId;
-            GrammarKey = grammarKey;
-        }
-
-        public readonly int SectionId;
-
-        public readonly string GrammarKey;
-    }
-
-    public sealed class GrammarProvider
-    {
-        private readonly Dictionary<string, Grammar> grammars = new Dictionary<string, Grammar>();
-
-        public void RegisterGrammar(Grammar grammar)
-        {
-            grammars.Remove(grammar.Key);
-            grammars.Add(grammar.Key, grammar);
-        }
-
-        public Grammar GetGrammar(string key)
-        {
-            Grammar grammar;
-
-            if (!grammars.TryGetValue(key, out grammar))
-                throw new CodeBoxException($"Grammar '{key}' not found!");
-
-            return grammar;
-        }
     }
 }

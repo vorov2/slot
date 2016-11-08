@@ -110,7 +110,7 @@ namespace CodeBox.Test
                 Id = 1,
                 Start = new SectionSequence("//", true),
                 ContinuationChar = '\\',
-                Style = (int)StandardStyle.Comment
+                Style = StandardStyle.Comment
             });
             grm.AddSection(new GrammarSection
             {
@@ -118,7 +118,7 @@ namespace CodeBox.Test
                 Start = new SectionSequence("/*", true),
                 End = new SectionSequence("*/", true),
                 Multiline = true,
-                Style = (int)StandardStyle.CommentMultiline
+                Style = StandardStyle.CommentMultiline
             });
             grm.AddSection(new GrammarSection
             {
@@ -126,7 +126,7 @@ namespace CodeBox.Test
                 Start = new SectionSequence("'", true),
                 End = new SectionSequence("'", true),
                 EscapeChar = '\\',
-                Style = (int)StandardStyle.Char
+                Style = StandardStyle.Char
             });
             grm.AddSection(new GrammarSection
             {
@@ -134,7 +134,7 @@ namespace CodeBox.Test
                 Start = new SectionSequence("\"", true),
                 End = new SectionSequence("\"", true),
                 EscapeChar = '\\',
-                Style = (int)StandardStyle.String
+                Style = StandardStyle.String
             });
 
             return grm;
@@ -160,15 +160,15 @@ namespace CodeBox.Test
                 Start = new SectionSequence("<", true),
                 End = new SectionSequence(">", true),
                 Multiline = true,
-                IdentifierStyle = (int)StandardStyle.KeywordSpecial,
-                FirstIdentifierStyle = (int)StandardStyle.Keyword
+                IdentifierStyle = StandardStyle.KeywordSpecial,
+                FirstIdentifierStyle = StandardStyle.Keyword
             }).Keywords.Add("script", ((int)StandardStyle.Keyword & 0xFFFF) | (42 << 16));
             grm.AddSection(new GrammarSection
             {
                 Id = 3,
                 Start = new SectionSequence("</", true),
                 End = new SectionSequence(">", true),
-                IdentifierStyle = (int)StandardStyle.Keyword,
+                IdentifierStyle = StandardStyle.Keyword,
                 Style = 0
             });
             grm.AddSection(new GrammarSection
@@ -186,7 +186,7 @@ namespace CodeBox.Test
                 Start = new SectionSequence("<!--", true),
                 End = new SectionSequence("-->", true),
                 Multiline = true,
-                Style = (int)StandardStyle.CommentMultiline
+                Style = StandardStyle.CommentMultiline
             });
             grm.AddSection(new GrammarSection
             {
@@ -194,7 +194,7 @@ namespace CodeBox.Test
                 ParentId = 2,
                 Start = new SectionSequence("\"", true),
                 End = new SectionSequence("\"", true),
-                Style = (int)StandardStyle.String
+                Style = StandardStyle.String
             });
 
 

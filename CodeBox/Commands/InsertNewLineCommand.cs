@@ -70,7 +70,7 @@ namespace CodeBox.Commands
             var ln = doc.Lines[pos.Line];
             var str = default(IEnumerable<Character>);
 
-            if (pos.Col != ln.Length)
+            if (pos.Col != ln.Length && pos.Col < ln.Length)
             {
                 str = ln.GetRange(pos.Col, ln.Length - pos.Col);
                 ln.RemoveRange(pos.Col, ln.Length - pos.Col);

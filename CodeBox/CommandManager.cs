@@ -327,11 +327,11 @@ namespace CodeBox
             if (restoreCaret)
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
-            if (exec != ActionResults.None)
-                DoAftermath(exp, exec);
-
             if ((exp & ActionExponent.IdleCaret) != ActionExponent.IdleCaret)
                 editor.MatchBraket.Match();
+
+            if (exec != ActionResults.None)
+                DoAftermath(exp, exec);
 
             if (exec.Has(ActionResults.AutocompleteKeep) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.UpdateAutocomplete();

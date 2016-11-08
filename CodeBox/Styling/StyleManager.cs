@@ -8,7 +8,7 @@ using System.Drawing;
 using CodeBox.ObjectModel;
 using CodeBox.Lexing;
 
-namespace CodeBox
+namespace CodeBox.Styling
 {
     public sealed class StyleManager
     {
@@ -137,6 +137,9 @@ namespace CodeBox
 
         public void StyleRange(int style, int line, int start, int end) =>
             editor.Lines[line].AppliedStyles.Add(new AppliedStyle(style, start, end));
+
+        public void StyleRange(StandardStyle style, int line, int start, int end) =>
+            editor.Lines[line].AppliedStyles.Add(new AppliedStyle((int)style, start, end));
 
         internal void Restyle()
         {

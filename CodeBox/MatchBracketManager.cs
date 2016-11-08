@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CodeBox
 {
@@ -14,6 +15,10 @@ namespace CodeBox
         private const string START_PARENS = "([{";
         private const string END_PARENS = ")]}";
         private bool markedParent;
+        private int edits;
+        private Pos lastPos;
+        private Tuple<int, AppliedStyle> match1;
+        private Tuple<int, AppliedStyle> match2;
 
         public MatchBracketManager(Editor editor)
         {
@@ -22,7 +27,6 @@ namespace CodeBox
 
         public void Match()
         {
-            Console.WriteLine("Match braket");
             InternalMatch();
         }
 
@@ -39,12 +43,29 @@ namespace CodeBox
 
         private void InternalMatch()
         {
+            if (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret)
+            {
+                if (match1 != null && match2 != null)
+                {
+                    editor.Lines[match1.Item1].AppliedStyles.Add(match1.Item2);
+                    editor.Lines[match2.Item1].AppliedStyles.Add(match2.Item2);
+                }
+
+                return;
+            }
+
+            match1 = null;
+            match2 = null;
+            edits = editor.Buffer.Edits;
+            lastPos = editor.Buffer.Selections.Main.Caret;
+
             if (markedParent)
             {
                 editor.Styles.Restyle();
                 markedParent = false;
             }
 
+            Console.WriteLine("Match braket");
             foreach (var sel in editor.Buffer.Selections)
             {
                 var ln = editor.Lines[sel.Caret.Line];
@@ -87,8 +108,8 @@ namespace CodeBox
                             cc--;
                         else
                         {
-                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, sel.Caret.Line, sel.Caret.Col, sel.Caret.Col);
-                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, lni, i, i);
+                            Style(sel.Caret.Line, sel.Caret.Col);
+                            Style(lni, i);
                             return true;
                         }
                     }
@@ -116,8 +137,8 @@ namespace CodeBox
                             cc--;
                         else
                         {
-                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, sel.Caret.Line, sel.Caret.Col - 1, sel.Caret.Col - 1);
-                            editor.Styles.StyleRange((int)StandardStyle.MatchedBracket, lni, i, i);
+                            Style(sel.Caret.Line, sel.Caret.Col - 1);
+                            Style(lni, i);
                             return true;
                         }
                     }
@@ -125,6 +146,17 @@ namespace CodeBox
             }
 
             return false;
+        }
+
+        private void Style(int line, int col)
+        {
+            var tup = Tuple.Create(line, new AppliedStyle((int)StandardStyle.MatchedBracket, col, col));
+            editor.Lines[line].AppliedStyles.Add(tup.Item2);
+
+            if (match1 == null)
+                match1 = tup;
+            else
+                match2 = tup;
         }
     }
 }
