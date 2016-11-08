@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Grammars
+namespace CodeBox.Affinity
 {
-    public interface IGrammar
+    public interface IDocumentAffinity
     {
         string NonWordSymbols { get; }
+
+        string BracketSymbols { get; }
     }
 }

@@ -176,7 +176,8 @@ namespace CodeBox.Test
         {
             var grm = new Grammar("html")
             {
-                NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?"
+                NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
+                BracketSymbols = "<>"
             };
 
             grm.AddSection(new GrammarSection()); //root

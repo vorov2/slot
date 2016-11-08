@@ -1,10 +1,10 @@
-﻿using CodeBox.Grammars;
+﻿using CodeBox.Affinity;
 using System;
 using System.Collections.Generic;
 
 namespace CodeBox.Lexing
 {
-    public sealed class Grammar : IGrammar
+    public sealed class Grammar : IDocumentAffinity
     {
         public Grammar(string key)
         {
@@ -15,7 +15,11 @@ namespace CodeBox.Lexing
 
         public string Key { get; }
 
+        #region IDocumentAffinity
         public string NonWordSymbols { get; set; }
+
+        public string BracketSymbols { get; set; }
+        #endregion
 
         public GrammarSection AddSection(GrammarSection section)
         {

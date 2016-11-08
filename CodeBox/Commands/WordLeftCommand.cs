@@ -20,7 +20,7 @@ namespace CodeBox.Commands
 
             if (caret.Col > 0)
             {
-                var seps = ctx.GrammarManager.GetNonWordSymbols(line);
+                var seps = ctx.AffinityManager.GetNonWordSymbols(caret);
                 var c = line.CharAt(caret.Col - 1);
                 var strat = SelectWordCommand.GetStrategy(seps, c);
                 var pos = SelectWordCommand.FindBoundLeft(seps, line, caret.Col - 1, strat);

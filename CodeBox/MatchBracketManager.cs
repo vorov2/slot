@@ -12,8 +12,6 @@ namespace CodeBox
     internal sealed class MatchBracketManager
     {
         private readonly Editor editor;
-        private const string START_PARENS = "([{";
-        private const string END_PARENS = ")]}";
         private bool markedParent;
         private int edits;
         private Pos lastPos;
@@ -69,10 +67,12 @@ namespace CodeBox
             foreach (var sel in editor.Buffer.Selections)
             {
                 var ln = editor.Lines[sel.Caret.Line];
+                var bracketsForward = editor.AffinityManager.GetBracketSymbols(sel.Caret);
+                var bracketsBackward = editor.AffinityManager.GetBracketSymbols(new Pos(sel.Caret.Line, sel.Caret.Col - 1));
                 var pi = -1;
 
                 if (sel.Caret.Col < ln.Length
-                    && (pi = START_PARENS.IndexOf(ln[sel.Caret.Col].Char)) != -1
+                    && Even(pi = bracketsForward.IndexOf(ln[sel.Caret.Col].Char))
                     && IsBracketStyle(ln, sel.Caret.Col))
                 {
                     var m = TraverseForward(pi, sel);
@@ -80,7 +80,7 @@ namespace CodeBox
                         markedParent = m;
                 }
                 else if (sel.Caret.Col > 0
-                    && (pi = END_PARENS.IndexOf(ln[sel.Caret.Col - 1].Char)) != -1
+                    && Odd(pi = bracketsBackward.IndexOf(ln[sel.Caret.Col - 1].Char))
                     && IsBracketStyle(ln, sel.Caret.Col))
                 {
                     var m = TraverseBackward(pi, sel);
@@ -97,12 +97,14 @@ namespace CodeBox
             for (var lni = sel.Caret.Line; lni < editor.Lines.Count; lni++)
             {
                 var line = editor.Lines[lni];
+                var ist = lni == sel.Caret.Line ? sel.Caret.Col + 1 : 0;
+                var brackets = editor.AffinityManager.GetBracketSymbols(new Pos(lni, ist));
 
-                for (var i = lni == sel.Caret.Line ? sel.Caret.Col + 1 : 0; i < line.Length; i++)
+                for (var i = ist; i < line.Length; i++)
                 {
-                    if (line[i].Char == START_PARENS[pi] && IsBracketStyle(line, i))
+                    if (line[i].Char == brackets[pi] && IsBracketStyle(line, i))
                         cc++;
-                    else if (line[i].Char == END_PARENS[pi] && IsBracketStyle(line, i))
+                    else if (line[i].Char == brackets[pi + 1] && IsBracketStyle(line, i))
                     {
                         if (cc > 0)
                             cc--;
@@ -126,12 +128,15 @@ namespace CodeBox
             for (var lni = sel.Caret.Col > 2 ? sel.Caret.Line : sel.Caret.Line - 1; lni > -1; lni--)
             {
                 var line = editor.Lines[lni];
+                var ist1 = lni == sel.Caret.Line ? sel.Caret.Col - 1 : line.Length - 1;
+                var ist2 = lni == sel.Caret.Line ? sel.Caret.Col - 2 : line.Length - 1;
+                var brackets = editor.AffinityManager.GetBracketSymbols(new Pos(lni, ist1));
 
-                for (var i = lni == sel.Caret.Line ? sel.Caret.Col - 2 : line.Length - 1; i > -1; i--)
+                for (var i = ist2; i > -1; i--)
                 {
-                    if (line[i].Char == END_PARENS[pi] && IsBracketStyle(line, i))
+                    if (line[i].Char == brackets[pi] && IsBracketStyle(line, i))
                         cc++;
-                    else if (line[i].Char == START_PARENS[pi] && IsBracketStyle(line, i))
+                    else if (line[i].Char == brackets[pi - 1] && IsBracketStyle(line, i))
                     {
                         if (cc > 0)
                             cc--;
@@ -157,6 +162,16 @@ namespace CodeBox
                 match1 = tup;
             else
                 match2 = tup;
+        }
+
+        private bool Even(int num)
+        {
+            return num != -1 && num % 2 == 0;
+        }
+
+        private bool Odd(int num)
+        {
+            return num != -1 && num % 2 != 0;
         }
     }
 }

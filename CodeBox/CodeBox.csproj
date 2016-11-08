@@ -114,8 +114,8 @@
     <Compile Include="Commands\UndoCommand.cs" />
     <Compile Include="Commands\WordLeftCommand.cs" />
     <Compile Include="Commands\WordRightCommand.cs" />
-    <Compile Include="Grammars\GrammarManager.cs" />
-    <Compile Include="Grammars\IGrammar.cs" />
+    <Compile Include="Affinity\AffinityManager.cs" />
+    <Compile Include="Affinity\IDocumentAffinity.cs" />
     <Compile Include="Lexing\ChoiceSectionSequence.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
     <Compile Include="Drawing\CachedFont.cs" />

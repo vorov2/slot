@@ -37,19 +37,26 @@ namespace CodeBox.Lexing
 
             for (var i = rng.Start.Line; i < rng.End.Line + 1; i++)
             {
+                var line = Lines[i];
+                Context.AffinityManager.ClearAssociations(i);
                 var grm = GrammarProvider.GetGrammar(state.GrammarKey);
                 Styles.ClearStyles(i);
                 var col = 0;
                 var sect = grm.Sections[lss];
                 sect.FoundKeyword = false;
+                sect.Sections.Reset();
                 state = ParseLine(sect, ref col, i);
                 grm = GrammarProvider.GetGrammar(state.GrammarKey);
 
-                if (col <= Lines[i].Length - 1)
-                    state = ParseLine(grm.Sections[state.SectionId], ref col, i);
+                if (col <= line.Length - 1)
+                {
+                    sect = grm.Sections[state.SectionId];
+                    sect.Sections.Reset();
+                    state = ParseLine(sect, ref col, i);
+                }
 
                 var st = state.GrammarKey != GrammarKey || state.SectionId != 0 ? 1 : 0;
-                Lines[i].State = st;
+                line.State = st;
                 lss = state.SectionId;
             }
         }
@@ -62,7 +69,7 @@ namespace CodeBox.Lexing
             var identStart = i;
             var ln = Lines[line];
             var grammar = GrammarProvider.GetGrammar(mys.GrammarKey);
-            ln.GrammarId = grammar.Id;
+            Context.AffinityManager.AssociateGrammar(line, i > 0 ? i + 1 : 0, grammar.Id);
             wordSep = grammar.NonWordSymbols ?? Context.Settings.NonWordSymbols;
             var backm = mys.Id == 0 && backDelegate != null ? backDelegate : mys;
             var last = '\0';

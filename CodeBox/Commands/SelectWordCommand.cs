@@ -43,7 +43,7 @@ namespace CodeBox.Commands
             var doc = ctx.Buffer.Document;
             var caret = ctx.Buffer.Selections.Main.Caret;
             var line = doc.Lines[caret.Line];
-            var seps = ctx.GrammarManager.GetNonWordSymbols(line);
+            var seps = ctx.AffinityManager.GetNonWordSymbols(caret);
 
             if (caret.Col == line.Length - 1)
                 return null;

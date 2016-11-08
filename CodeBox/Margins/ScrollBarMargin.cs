@@ -14,6 +14,7 @@ namespace CodeBox.Margins
         private bool mouseDown;
         private int lastCaretPos;
         private int lastCaretSize;
+        private int diff;
 
         public ScrollBarMargin(Editor editor, Orientation orientation) : base(editor)
         {
@@ -25,11 +26,15 @@ namespace CodeBox.Margins
             if (IsCaretInLocation(loc))
             {
                 mouseDown = true;
+                var pos = (Orientation == Orientation.Horizontal ? loc.X : loc.Y) - lastCaretPos;
+                var mid = lastCaretSize / 2;
+                var diff = pos - mid;
+                Console.WriteLine($"diff: {diff}!!!!");
                 return MarginEffects.Redraw | MarginEffects.CaptureMouse;
             }
             else
             {
-                var value = GetScrollValue(loc);
+                var value = GetScrollValue(loc, true);
                 SetScrollPosition(value);
                 return MarginEffects.Redraw;
             }
@@ -45,7 +50,7 @@ namespace CodeBox.Margins
         {
             if (mouseDown)
             {
-                var value = GetScrollValue(loc);
+                var value = GetScrollValue(loc, false);
                 SetScrollPosition(value);
                 return MarginEffects.Redraw;
             }
@@ -53,11 +58,13 @@ namespace CodeBox.Margins
             return MarginEffects.None;
         }
 
-        private int GetScrollValue(Point loc)
+        private int GetScrollValue(Point loc, bool inCaret)
         {
             long max = GetMaximum();
             var v = Orientation == Orientation.Horizontal ? loc.X : loc.Y;
-            var ret = -(max * (v - lastCaretSize / 2) / (GetScrollSize() - lastCaretSize));
+            v -= diff;
+
+            var ret = -(max * (v /*- (inCaret ? lastCaretSize / 2 : 0)*/) / (GetScrollSize() - (inCaret?lastCaretSize:0)));
 
             if (ret > 0)
                 ret = 0;

@@ -33,17 +33,21 @@ namespace CodeBox.Autocomplete
             if (completes.Count == 0 && t != null)
                 t.Wait();
 
-            var id = context.Buffer.Document.Lines[context.Buffer.Selections.Main.Caret.Line].GrammarId;
-            Dictionary<string, object> dict;
+            var id = context.AffinityManager.GetGrammarId(context.Buffer.Selections.Main.Caret);
 
-            if (completes.TryGetValue(id, out dict))
+            if (id != 0)
             {
-                var items = dict.Keys.ToList();
-                items.Sort();
-                return items;
+                Dictionary<string, object> dict;
+
+                if (completes.TryGetValue(id, out dict))
+                {
+                    var items = dict.Keys.ToList();
+                    items.Sort();
+                    return items;
+                }
             }
-            else
-                return Enumerable.Empty<string>();
+
+            return Enumerable.Empty<string>();
         }
 
         private void WalkDocument(IEditorContext ctx)
@@ -54,16 +58,19 @@ namespace CodeBox.Autocomplete
             busy = true;
             var arr = ctx.Buffer.Document.Lines.ToList();
 
-            foreach (var line in arr)
+            for (var i = 0; i < arr.Count; i++)
             {
+                var line = arr[i];
+
                 if (line.Length < 2)
                     continue;
 
-                var seps = ctx.GrammarManager.GetNonWordSymbols(line);
+                var grm = ctx.AffinityManager.GetGrammarId(new Pos(i, 0));
+                var seps = ctx.AffinityManager.GetNonWordSymbols(new Pos(i, 0));
                 var dict = default(Dictionary<string, object>);
 
-                if (!completes.TryGetValue(line.GrammarId, out dict))
-                    completes.Add(line.GrammarId, dict = new Dictionary<string, object>());
+                if (!completes.TryGetValue(grm, out dict))
+                    completes.Add(grm, dict = new Dictionary<string, object>());
 
                 foreach (var str in line.Text.Split((" \t" + seps).ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {

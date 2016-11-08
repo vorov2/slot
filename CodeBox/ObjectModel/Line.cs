@@ -13,7 +13,6 @@ namespace CodeBox.ObjectModel
     {
         private List<Character> chars;
         private List<int> cuts;
-        internal int GrammarId;
 
         public Line(IEnumerable<Character> chars, int id)
         {

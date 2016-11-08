@@ -1,5 +1,5 @@
 ﻿using CodeBox.Drawing;
-using CodeBox.Grammars;
+using CodeBox.Affinity;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace CodeBox
 {
-    public sealed class EditorSettings : IGrammar
+    public sealed class EditorSettings : IDocumentAffinity
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
+        private const string BRACKETS = "()[]{}";
         private const int TABSIZE = 2;
         private readonly Editor editor;
 
@@ -21,6 +22,7 @@ namespace CodeBox
 
             //Defaults
             NonWordSymbols = SEPS;
+            BracketSymbols = BRACKETS;
             //WordWrap = true;
             WordWrapColumn = 80;
             //UseTabs = true;
@@ -37,8 +39,10 @@ namespace CodeBox
             LongLineIndicators.AddRange(new int[] { 25, 80, 100 });
         }
 
-        #region IGrammar
+        #region IDocumentAffinity
         public string NonWordSymbols { get; set; }
+
+        public string BracketSymbols { get; set; }
         #endregion
 
         public bool WordWrap { get; set; }

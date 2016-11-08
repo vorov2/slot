@@ -17,7 +17,7 @@ using CodeBox.Styling;
 using CodeBox.Folding;
 using CodeBox.Indentation;
 using CodeBox.Autocomplete;
-using CodeBox.Grammars;
+using CodeBox.Affinity;
 
 namespace CodeBox
 {
@@ -58,7 +58,7 @@ namespace CodeBox
             Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
             MatchBraket = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
-            GrammarManager = new GrammarManager(this);
+            AffinityManager = new AffinityManager(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
             timer.Tick += Tick;
@@ -362,7 +362,7 @@ namespace CodeBox
             if (leftMouseDown && p.IsEmpty)
             {
                 if (e.Y - Scroll.Y > Info.TextIntegralHeight && Scroll.LastVisibleLine < Lines.Count - 1)
-                    p = new Pos(Scroll.LastVisibleLine + 1, Lines[Scroll.LastVisibleLine].Length);
+                    p = new Pos(Scroll.LastVisibleLine + 1, Lines[Scroll.LastVisibleLine + 1].Length);
                 else if (e.Y < Info.TextTop && Scroll.FirstVisibleLine > 0)
                     p = new Pos(Scroll.FirstVisibleLine - 1, 0);
             }
@@ -641,6 +641,6 @@ namespace CodeBox
 
         public AutocompleteManager Autocomplete { get; }
 
-        public GrammarManager GrammarManager { get; }
+        public AffinityManager AffinityManager { get; }
     }
 }

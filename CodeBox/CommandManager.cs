@@ -324,14 +324,11 @@ namespace CodeBox
             if (thisUndo)
                 EndUndoAction();
 
-            if (restoreCaret)
-                SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
-
-            if ((exp & ActionExponent.IdleCaret) != ActionExponent.IdleCaret)
-                editor.MatchBraket.Match();
-
             if (exec != ActionResults.None)
                 DoAftermath(exp, exec);
+
+            if (restoreCaret)
+                SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
             if (exec.Has(ActionResults.AutocompleteKeep) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.UpdateAutocomplete();
@@ -423,6 +420,9 @@ namespace CodeBox
                 editor.Mouse = MouseEvents.None;
                 editor.Buffer.Selections.Truncate();
             }
+
+            if ((exp & ActionExponent.IdleCaret) != ActionExponent.IdleCaret)
+                editor.MatchBraket.Match();
         }
 
         internal int FirstEditLine { get; private set; }
