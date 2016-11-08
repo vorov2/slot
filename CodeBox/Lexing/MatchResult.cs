@@ -2,7 +2,7 @@
 
 namespace CodeBox.Lexing
 {
-    internal enum MatchResult
+    public enum MatchResult
     {
         Fail,
 

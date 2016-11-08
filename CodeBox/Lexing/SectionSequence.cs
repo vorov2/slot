@@ -2,10 +2,11 @@
 
 namespace CodeBox.Lexing
 {
-    public sealed class SectionSequence
+    public sealed class SectionSequence : ISectionSequence
     {
         private readonly string sequence;
         private readonly bool caseSensitive;
+        private MatchResult lastResult;
 
         public SectionSequence(string sequence, bool caseSensitive)
         {
@@ -13,12 +14,12 @@ namespace CodeBox.Lexing
             this.sequence = !caseSensitive ? sequence.ToUpper() : sequence;
         }
 
-        internal MatchResult Match(char c)
+        public MatchResult Match(char c)
         {
             if (c == '\t' || c == '\r' || c == '\n')
                 c = ' ';
 
-            if (LastResult == MatchResult.Hit)
+            if (lastResult == MatchResult.Hit)
                 Reset();
 
             var sc = sequence.Length > Offset ? sequence[Offset] : '\0';
@@ -29,30 +30,30 @@ namespace CodeBox.Lexing
                 Offset++;
 
                 if (Offset == sequence.Length)
-                    return LastResult = MatchResult.Hit;
+                    return lastResult = MatchResult.Hit;
                 else
-                    return LastResult = MatchResult.Proc;
+                    return lastResult = MatchResult.Proc;
             }
             else if (sc == ' ' && sequence.Length > Offset + 1 && sequence[Offset + 1] == c)
             {
                 Offset++;
-                return LastResult = MatchResult.Hit;
+                return lastResult = MatchResult.Hit;
             }
             else if (sc == ' ')
             {
-                return LastResult = MatchResult.Proc;
+                return lastResult = MatchResult.Proc;
             }
             else
             {
                 Reset();
-                return LastResult = MatchResult.Fail;
+                return lastResult = MatchResult.Fail;
             }
         }
 
-        internal MatchResult TryMatch(char c, int shift = 0)
+        public MatchResult TryMatch(char c, int shift = 0)
         {
             var os = Offset;
-            var oldret = LastResult;
+            var oldret = lastResult;
             Offset += shift;
             var ret = MatchResult.Fail;
 
@@ -62,7 +63,7 @@ namespace CodeBox.Lexing
                 ret = Match(c);
 
             Offset = os;
-            LastResult = oldret;
+            lastResult = oldret;
             return ret;
         }
 
@@ -72,10 +73,8 @@ namespace CodeBox.Lexing
 
         public void Reset() => Offset = 0;
 
-        internal int Offset { get; private set; }
+        public int Offset { get; private set; }
 
-        internal int Length => sequence.Length;
-
-        internal MatchResult LastResult { get; private set; }
+        public int Length => sequence.Length;
     }
 }

@@ -1,4 +1,6 @@
-﻿using CodeBox.Folding;
+﻿using CodeBox.Autocomplete;
+using CodeBox.Folding;
+using CodeBox.Grammars;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
@@ -7,6 +9,8 @@ namespace CodeBox
 {
     public interface IEditorContext
     {
+        GrammarManager GrammarManager { get; }
+
         CallTipManager CallTips { get; }
 
         StyleManager Styles { get; }

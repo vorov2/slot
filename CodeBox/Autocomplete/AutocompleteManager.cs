@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox
+namespace CodeBox.Autocomplete
 {
     public sealed class AutocompleteManager
     {
@@ -71,7 +71,7 @@ namespace CodeBox
         {
             var caret = editor.Buffer.Selections.Main.Caret;
             var line = editor.Lines[caret.Line];
-            var seps = editor.Settings.WordSeparators;
+            var seps = editor.Settings.NonWordSymbols;
             var sb = new StringBuilder();
 
             if (caret.Col > 0)
@@ -145,7 +145,7 @@ namespace CodeBox
 
             if (caret.Col > lastCol)
                 completeString.Append(line[caret.Col - 1]);
-            else if (caret.Col < lastCol)
+            else if (caret.Col < lastCol && completeString.Length > 0)
                 completeString.Remove(completeString.Length - 1, 1);
 
             lastCol = caret.Col;

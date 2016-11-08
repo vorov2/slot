@@ -16,6 +16,8 @@ using CodeBox.Drawing;
 using CodeBox.Styling;
 using CodeBox.Folding;
 using CodeBox.Indentation;
+using CodeBox.Autocomplete;
+using CodeBox.Grammars;
 
 namespace CodeBox
 {
@@ -56,6 +58,7 @@ namespace CodeBox
             Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
             MatchBraket = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
+            GrammarManager = new GrammarManager(this);
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
             timer.Tick += Tick;
@@ -637,5 +640,7 @@ namespace CodeBox
         internal MatchBracketManager MatchBraket { get; }
 
         public AutocompleteManager Autocomplete { get; }
+
+        public GrammarManager GrammarManager { get; }
     }
 }

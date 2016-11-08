@@ -9,6 +9,8 @@ namespace CodeBox.Autocomplete
 {
     public interface ICompleteSource
     {
-        IEnumerable<string> GetItems(DocumentBuffer buffer);
+        void Initialize(IEditorContext context);
+
+        IEnumerable<string> GetItems();
     }
 }

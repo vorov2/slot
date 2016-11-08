@@ -1,10 +1,19 @@
 ﻿<html>
   <li a="sboc"></li>
+  <style>
+  body {
+    width: 120pt;
+    height: 100%;
+    border: solid;
+    color: black;
+  }
+  </style>
   <script type="text/csharp">
     internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
 
     public AppliedStyle FindHyperlink(int col)
     {
+        var x = 12.2d;
         var str = "my \"string";
 
         foreach (var a in AppliedStyles)

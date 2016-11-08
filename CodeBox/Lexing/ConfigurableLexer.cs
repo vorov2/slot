@@ -22,7 +22,6 @@ namespace CodeBox.Lexing
         public void Style(IEditorContext context, Range range)
         {
             Context = context;
-            wordSep = Context.Settings.WordSeparators;
             GrammarProvider.GetGrammar(GrammarKey).Sections.Reset();
             Parse(new State(0, GrammarKey), range);
         }
@@ -50,7 +49,7 @@ namespace CodeBox.Lexing
                     state = ParseLine(grm.Sections[state.SectionId], ref col, i);
 
                 var st = state.GrammarKey != GrammarKey || state.SectionId != 0 ? 1 : 0;
-                Lines[i].State = st;// lss != st ? lss : st;
+                Lines[i].State = st;
                 lss = state.SectionId;
             }
         }
@@ -63,6 +62,8 @@ namespace CodeBox.Lexing
             var identStart = i;
             var ln = Lines[line];
             var grammar = GrammarProvider.GetGrammar(mys.GrammarKey);
+            ln.GrammarId = grammar.Id;
+            wordSep = grammar.NonWordSymbols ?? Context.Settings.NonWordSymbols;
             var backm = mys.Id == 0 && backDelegate != null ? backDelegate : mys;
             var last = '\0';
             var term = '\0';
@@ -92,7 +93,7 @@ namespace CodeBox.Lexing
                 {
                     var num = IsNumeric(c, last);
 
-                    if (nonIdent && !num)
+                    if (!num)
                     {
                         Styles.StyleRange(StandardStyle.Number, line, lastNum, i - 1);
                         lastNum = -1;
@@ -145,7 +146,7 @@ namespace CodeBox.Lexing
                     }
                 }
                 else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
-                    && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
+                        && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
                 {
                     mys.FoundKeyword = false;
 

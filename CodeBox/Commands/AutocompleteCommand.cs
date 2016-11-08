@@ -17,7 +17,8 @@ namespace CodeBox.Commands
 
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            var list = completeSource.GetItems(Context.Buffer);
+            completeSource.Initialize(Context);
+            var list = completeSource.GetItems();
             Context.Autocomplete.ShowAutocomplete(sel.Caret, list);
             return ActionResults.AutocompleteShow;
         }

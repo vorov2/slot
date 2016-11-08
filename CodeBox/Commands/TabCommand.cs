@@ -63,6 +63,11 @@ namespace CodeBox.Commands
                 var line = ctx.Buffer.Document.Lines[i];
                 var pos = HomeCommand.MoveHome(ctx.Buffer.Document, new Pos(i, line.Length));
 
+                if (pos.Col == 0 && line.All(c => c.Char == ' ' || c.Char == '\t'))
+                    pos = new Pos(pos.Line, line.Length);
+                else if (pos.Col == 0 && (line.CharAt(0) == ' ' || line.CharAt(0) == '\t'))
+                    pos = HomeCommand.MoveHome(ctx.Buffer.Document, pos);
+
                 if (pos.Col == 0)
                     continue;
                 else if (line[pos.Col - 1].Char == '\t')

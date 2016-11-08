@@ -50,7 +50,7 @@ namespace CodeBox.Autocomplete
                 y += editor.Info.LineHeight;
             }
 
-            width += editor.Info.CharWidth;
+            width += editor.Info.CharWidth * 5;
             var maxw = editor.Info.TextWidth / 3;
             Width = width > maxw ? maxw : width;
             var fullHeight = editor.Info.CharWidth * 2 + items.Count * editor.Info.LineHeight;

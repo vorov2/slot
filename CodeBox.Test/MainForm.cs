@@ -36,6 +36,7 @@ namespace CodeBox.Test
             var lexer = new ConfigurableLexer();
             lexer.GrammarProvider.RegisterGrammar(HtmlGrammar());
             lexer.GrammarProvider.RegisterGrammar(CsGrammar());
+            lexer.GrammarProvider.RegisterGrammar(CssGrammar());
             lexer.GrammarKey = "html";
             ed.Styles.Provider = lexer;
 
@@ -59,6 +60,7 @@ namespace CodeBox.Test
             ed.Styles.Keyword.ForeColor = HCol("#569CD6");
             ed.Styles.KeywordSpecial.ForeColor = HCol("#8CDCDB");
             ed.Styles.KeywordType.ForeColor = HCol("#44C7AE");
+            ed.Styles.KeywordModifier.ForeColor = HCol("#D7BA7D");
             ed.Styles.Literal.ForeColor = HCol("#B8D7A3");
             ed.Styles.Comment.ForeColor = HCol("#579032");
             ed.Styles.CommentMultiline.ForeColor = HCol("#579032");
@@ -88,7 +90,36 @@ namespace CodeBox.Test
         }
 
 
+        private Grammar CssGrammar()
+        {
+            var grm = new Grammar("css")
+            {
+                NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?"
+            };
+            grm.AddSection(new GrammarSection
+            {
+                IdentifierStyle = StandardStyle.KeywordModifier
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 1,
+                Start = new SectionSequence("{", true),
+                End = new SectionSequence("}", true),
+                Multiline = true,
+                IdentifierStyle = StandardStyle.KeywordSpecial
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 2,
+                ParentId = 1,
+                StyleNumbers = true,
+                Start = new SectionSequence(":", true),
+                End = new ChoiceSectionSequence(';', '}', true),
+                Multiline = true
+            });
 
+            return grm;
+        }
 
 
         const string kw = "nameof switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract var if else return while for foreach continue break ref out";
@@ -143,7 +174,10 @@ namespace CodeBox.Test
 
         private Grammar HtmlGrammar()
         {
-            var grm = new Grammar("html");
+            var grm = new Grammar("html")
+            {
+                NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?"
+            };
 
             grm.AddSection(new GrammarSection()); //root
             grm.AddSection(new GrammarSection
@@ -154,7 +188,7 @@ namespace CodeBox.Test
                 Multiline = true,
                 Style = (int)StandardStyle.Default
             });
-            grm.AddSection(new GrammarSection
+            var msect = new GrammarSection
             {
                 Id = 2,
                 Start = new SectionSequence("<", true),
@@ -162,7 +196,12 @@ namespace CodeBox.Test
                 Multiline = true,
                 IdentifierStyle = StandardStyle.KeywordSpecial,
                 FirstIdentifierStyle = StandardStyle.Keyword
-            }).Keywords.Add("script", ((int)StandardStyle.Keyword & 0xFFFF) | (42 << 16));
+            };
+            msect.Keywords.Add("script", ((int)StandardStyle.Keyword & 0xFFFF) | (42 << 16));
+            msect.Keywords.Add("style", ((int)StandardStyle.Keyword & 0xFFFF) | (84 << 16));
+            grm.AddSection(msect);
+            
+
             grm.AddSection(new GrammarSection
             {
                 Id = 3,
@@ -195,6 +234,15 @@ namespace CodeBox.Test
                 Start = new SectionSequence("\"", true),
                 End = new SectionSequence("\"", true),
                 Style = StandardStyle.String
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 7,
+                StartKeyword = 84,
+                End = new SectionSequence("</style>", false),
+                Multiline = true,
+                DontStyleCompletely = true,
+                ExternalGrammarKey = "css"
             });
 
 

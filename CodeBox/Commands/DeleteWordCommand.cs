@@ -18,7 +18,7 @@ namespace CodeBox.Commands
             if (sel.Caret.Col == ln.Length)
                 return base.Execute(arg, sel);
 
-            var seps = Context.Settings.WordSeparators;
+            var seps = Context.Settings.NonWordSymbols;
             var st = SelectWordCommand.GetStrategy(seps, ln.CharAt(sel.Caret.Col));
             var col = SelectWordCommand.FindBoundRight(seps, ln, sel.Caret.Col, st);
             var newSel = new Selection(sel.Caret, new Pos(sel.Caret.Line, col));

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionExponent;
+using CodeBox.Lexing;
 
 namespace CodeBox.Commands
 {
@@ -40,9 +41,9 @@ namespace CodeBox.Commands
         internal static Range SelectWord(IEditorContext ctx)
         {
             var doc = ctx.Buffer.Document;
-            var seps = ctx.Settings.WordSeparators;
             var caret = ctx.Buffer.Selections.Main.Caret;
             var line = doc.Lines[caret.Line];
+            var seps = ctx.GrammarManager.GetNonWordSymbols(line);
 
             if (caret.Col == line.Length - 1)
                 return null;

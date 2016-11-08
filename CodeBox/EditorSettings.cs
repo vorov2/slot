@@ -1,4 +1,5 @@
 ﻿using CodeBox.Drawing;
+using CodeBox.Grammars;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CodeBox
 {
-    public sealed class EditorSettings
+    public sealed class EditorSettings : IGrammar
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
         private const int TABSIZE = 2;
@@ -19,7 +20,7 @@ namespace CodeBox
             this.editor = editor;
 
             //Defaults
-            WordSeparators = SEPS;
+            NonWordSymbols = SEPS;
             //WordWrap = true;
             WordWrapColumn = 80;
             //UseTabs = true;
@@ -36,7 +37,9 @@ namespace CodeBox
             LongLineIndicators.AddRange(new int[] { 25, 80, 100 });
         }
 
-        public string WordSeparators { get; set; }
+        #region IGrammar
+        public string NonWordSymbols { get; set; }
+        #endregion
 
         public bool WordWrap { get; set; }
 
