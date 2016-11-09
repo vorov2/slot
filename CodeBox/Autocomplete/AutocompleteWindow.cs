@@ -172,7 +172,12 @@ namespace CodeBox.Autocomplete
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e.X >= Width - editor.Info.CharWidth || scrollBar.IsMouseDown)
+            {
+                if (e.Button != MouseButtons.Left)
+                    scrollBar.MouseUp(e.Location);
+
                 scrollBar.MouseMove(e.Location);
+            }
             else
                 hoverLine = LocationToLine(e.Location.Y);
 

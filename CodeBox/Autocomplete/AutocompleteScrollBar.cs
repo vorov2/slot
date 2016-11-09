@@ -15,6 +15,7 @@ namespace CodeBox.Autocomplete
         private readonly AutocompleteWindow window;
         private int lastCaretPos;
         private int lastCaretSize;
+        private int diff;
 
         public AutocompleteScrollBar(Editor editor, AutocompleteWindow window)
         {
@@ -25,7 +26,10 @@ namespace CodeBox.Autocomplete
         public void MouseDown(Point loc)
         {
             if (IsCaretInLocation(loc))
+            {
                 IsMouseDown = true;
+                diff = loc.Y - lastCaretPos;
+            }
             else
             {
                 var value = GetScrollValue(loc);
@@ -48,7 +52,9 @@ namespace CodeBox.Autocomplete
         {
             long max = window.ScrollMax;
             var v = loc.Y;
-            var ret = -(max * (v - lastCaretSize / 2) / (window.Height - lastCaretSize));
+            v -= diff;
+            var scrollSize = v / ((double)window.Height - lastCaretSize);
+            var ret = -(max * scrollSize);
 
             if (ret > 0)
                 ret = 0;
