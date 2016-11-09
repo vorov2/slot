@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CodeBox.Indentation;
 
 namespace CodeBox
 {
@@ -43,6 +44,8 @@ namespace CodeBox
         public string NonWordSymbols { get; set; }
 
         public string BracketSymbols { get; set; }
+
+        public IDentProvider IndentProvider { get; set; }
         #endregion
 
         public bool WordWrap { get; set; }

@@ -14,6 +14,7 @@ using CodeBox.Styling;
 using CodeBox.Commands;
 using CodeBox.Folding;
 using CodeBox.Lexing;
+using CodeBox.Indentation;
 
 namespace CodeBox.Test
 {
@@ -55,7 +56,7 @@ namespace CodeBox.Test
             ed.Styles.MatchBracket.BackColor = ColorTranslator.FromHtml("#264F78");
 
             ed.Styles.Number.ForeColor = ColorTranslator.FromHtml("#B5CEA8");
-            ed.Styles.Bracket.ForeColor = ColorTranslator.FromHtml("#FF7F7F");
+            ed.Styles.Bracket.ForeColor = ColorTranslator.FromHtml("#A5A5A5");
 
             ed.Styles.Keyword.ForeColor = HCol("#569CD6");
             ed.Styles.KeywordSpecial.ForeColor = HCol("#8CDCDB");
@@ -94,7 +95,8 @@ namespace CodeBox.Test
         {
             var grm = new Grammar("css")
             {
-                NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?"
+                NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?",
+                IndentProvider = new CurlyDentProvider()
             };
             grm.AddSection(new GrammarSection
             {
@@ -117,16 +119,44 @@ namespace CodeBox.Test
                 End = new ChoiceSectionSequence(';', '}', true),
                 Multiline = true
             });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 3,
+                ParentId = 0,
+                Style = StandardStyle.CommentMultiline,
+                Start = new SectionSequence("/*", true),
+                End  = new SectionSequence("*/", true),
+                Multiline = true
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 4,
+                ParentId = 1,
+                Style = StandardStyle.CommentMultiline,
+                Start = new SectionSequence("/*", true),
+                End = new SectionSequence("*/", true),
+                Multiline = true
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 5,
+                ParentId = 2,
+                Style = StandardStyle.CommentMultiline,
+                Start = new SectionSequence("/*", true),
+                End = new SectionSequence("*/", true),
+                Multiline = true
+            });
 
             return grm;
         }
 
-
         const string kw = "nameof switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract var if else return while for foreach continue break ref out";
-
         private Grammar CsGrammar()
         {
-            var grm = new Grammar("csharp");
+            var grm = new Grammar("csharp")
+            {
+                IndentProvider = new CurlyDentProvider()
+            };
             var glob = new GrammarSection
             {
                 StyleNumbers = true
@@ -170,17 +200,19 @@ namespace CodeBox.Test
 
             return grm;
         }
-
-
+        
         private Grammar HtmlGrammar()
         {
             var grm = new Grammar("html")
             {
                 NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
-                BracketSymbols = "<>"
+                BracketSymbols = "<>",
+                IndentProvider = new BlockDentProvider()
             };
 
-            grm.AddSection(new GrammarSection()); //root
+            grm.AddSection(new GrammarSection
+            {
+            }); //root
             grm.AddSection(new GrammarSection
             {
                 Id = 1,
@@ -297,8 +329,8 @@ namespace CodeBox.Test
             ed.Commands.Bind<WordRightCommand>(Keys.Control | Keys.Right);
             ed.Commands.Bind<ExtendWordRightCommandCommand>(Keys.Control | Keys.Shift | Keys.Right);
             ed.Commands.Bind<ExtendWordLeftCommandCommand>(Keys.Control | Keys.Shift | Keys.Left);
-            ed.Commands.Bind<ExtendPageDownCommand>(Keys.Control | Keys.PageDown);
-            ed.Commands.Bind<ExtendPageUpCommand>(Keys.Control | Keys.PageUp);
+            ed.Commands.Bind<ExtendPageDownCommand>(Keys.Shift | Keys.PageDown);
+            ed.Commands.Bind<ExtendPageUpCommand>(Keys.Shift | Keys.PageUp);
             ed.Commands.Bind<DocumentHomeCommand>(Keys.Control | Keys.Home);
             ed.Commands.Bind<DocumentEndCommand>(Keys.Control | Keys.End);
             ed.Commands.Bind<ExtendDocumentHomeCommand>(Keys.Control | Keys.Shift | Keys.Home);

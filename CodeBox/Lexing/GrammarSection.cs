@@ -9,8 +9,6 @@ namespace CodeBox.Lexing
 {
     public sealed class GrammarSection
     {
-        internal bool FoundKeyword { get; set; }
-
         public byte Id { get; set; }
 
         public string GrammarKey { get; set; }

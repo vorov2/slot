@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionExponent;
 using CodeBox.Lexing;
+using CodeBox.Affinity;
 
 namespace CodeBox.Commands
 {
@@ -43,7 +44,7 @@ namespace CodeBox.Commands
             var doc = ctx.Buffer.Document;
             var caret = ctx.Buffer.Selections.Main.Caret;
             var line = doc.Lines[caret.Line];
-            var seps = ctx.AffinityManager.GetNonWordSymbols(caret);
+            var seps = ctx.AffinityManager.GetAffinity(caret).GetNonWordSymbols(ctx, caret);
 
             if (caret.Col == line.Length - 1)
                 return null;

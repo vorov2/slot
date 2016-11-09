@@ -1,4 +1,5 @@
-﻿using CodeBox.Lexing;
+﻿using CodeBox.Indentation;
+using CodeBox.Lexing;
 using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace CodeBox.Affinity
             this.editor = editor;
         }
 
-        internal void AssociateGrammar(int line, int col, int grammar)
+        internal void Associate(int line, int col, int grammar)
         {
             var list = default(List<GrammarInfo>);
 
@@ -39,15 +40,15 @@ namespace CodeBox.Affinity
             grammars.Remove(line);
         }
 
-        public IDocumentAffinity GetGrammar(Pos pos)
+        public IDocumentAffinity GetAffinity(Pos pos)
         {
-            return GetGrammar(pos.Line, pos.Col);
+            return GetAffinity(pos.Line, pos.Col);
         }
 
-        public IDocumentAffinity GetGrammar(int line, int col)
+        public IDocumentAffinity GetAffinity(int line, int col)
         {
             IDocumentAffinity grm = editor.Settings;
-            var id = GetGrammarId(line, col);
+            var id = GetAffinityId(line, col);
 
             if (id != 0)
             {
@@ -60,12 +61,12 @@ namespace CodeBox.Affinity
             return grm;
         }
 
-        internal int GetGrammarId(Pos pos)
+        internal int GetAffinityId(Pos pos)
         {
-            return GetGrammarId(pos.Line, pos.Col);
+            return GetAffinityId(pos.Line, pos.Col);
         }
 
-        internal int GetGrammarId(int line, int col)
+        internal int GetAffinityId(int line, int col)
         {
             var list = default(List<GrammarInfo>);
 
@@ -73,18 +74,6 @@ namespace CodeBox.Affinity
                 return list.OrderByDescending(g => g.Col).FirstOrDefault(g => col >= g.Col).GrammarId;
 
             return 0;
-        }
-
-        public string GetNonWordSymbols(Pos pos)
-        {
-            var grm = GetGrammar(pos);
-            return grm.NonWordSymbols ?? editor.Settings.NonWordSymbols;
-        }
-
-        public string GetBracketSymbols(Pos pos)
-        {
-            var grm = GetGrammar(pos);
-            return grm.BracketSymbols ?? editor.Settings.BracketSymbols;
         }
     }
 }

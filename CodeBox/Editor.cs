@@ -55,7 +55,7 @@ namespace CodeBox
             Locations = new LocationManager(this);
             Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
             CallTips = new CallTipManager(this);
-            Indents = new IndentManager(this) { Provider = new CurlyDentProvider() };
+            Indents = new IndentManager(this);
             MatchBraket = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);

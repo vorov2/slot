@@ -26,10 +26,7 @@ namespace CodeBox.Margins
             if (IsCaretInLocation(loc))
             {
                 mouseDown = true;
-                var pos = (Orientation == Orientation.Horizontal ? loc.X : loc.Y) - lastCaretPos;
-                var mid = lastCaretSize / 2;
-                var diff = pos - mid;
-                Console.WriteLine($"diff: {diff}!!!!");
+                diff = (Orientation == Orientation.Horizontal ? loc.X : loc.Y) - lastCaretPos;
                 return MarginEffects.Redraw | MarginEffects.CaptureMouse;
             }
             else
@@ -61,11 +58,11 @@ namespace CodeBox.Margins
         private int GetScrollValue(Point loc, bool inCaret)
         {
             long max = GetMaximum();
-            var v = Orientation == Orientation.Horizontal ? loc.X : loc.Y;
+            var v = Orientation == Orientation.Horizontal ? loc.X - Bounds.X : loc.Y - Bounds.Y;
             v -= diff;
-
-            var ret = -(max * (v /*- (inCaret ? lastCaretSize / 2 : 0)*/) / (GetScrollSize() - (inCaret?lastCaretSize:0)));
-
+            var scrollSize = v / ((double)GetScrollSize() - lastCaretSize);
+            var ret = -(max * scrollSize);
+            
             if (ret > 0)
                 ret = 0;
             else if (ret < -max)
@@ -168,7 +165,7 @@ namespace CodeBox.Margins
         private int GetScrollSize()
         {
             if (Orientation == Orientation.Horizontal)
-                return Editor.ClientSize.Width;
+                return Editor.Info.TextWidth;
             else
                 return Editor.Info.TextHeight;
         }

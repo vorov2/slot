@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CodeBox.Affinity;
 
 namespace CodeBox
 {
@@ -67,15 +68,17 @@ namespace CodeBox
             foreach (var sel in editor.Buffer.Selections)
             {
                 var ln = editor.Lines[sel.Caret.Line];
-                var bracketsForward = editor.AffinityManager.GetBracketSymbols(sel.Caret);
-                var bracketsBackward = editor.AffinityManager.GetBracketSymbols(new Pos(sel.Caret.Line, sel.Caret.Col - 1));
+                var grm1 = editor.AffinityManager.GetAffinity(sel.Caret);
+                var grm2 = editor.AffinityManager.GetAffinity(new Pos(sel.Caret.Line, sel.Caret.Col - 1));
+                var bracketsForward = grm1.GetBracketSymbols(editor, sel.Caret);
+                var bracketsBackward = grm2.GetBracketSymbols(editor, new Pos(sel.Caret.Line, sel.Caret.Col - 1));
                 var pi = -1;
 
                 if (sel.Caret.Col < ln.Length
                     && Even(pi = bracketsForward.IndexOf(ln[sel.Caret.Col].Char))
                     && IsBracketStyle(ln, sel.Caret.Col))
                 {
-                    var m = TraverseForward(pi, sel);
+                    var m = TraverseForward(grm1, bracketsForward, pi, sel);
                     if (!markedParent)
                         markedParent = m;
                 }
@@ -83,14 +86,14 @@ namespace CodeBox
                     && Odd(pi = bracketsBackward.IndexOf(ln[sel.Caret.Col - 1].Char))
                     && IsBracketStyle(ln, sel.Caret.Col))
                 {
-                    var m = TraverseBackward(pi, sel);
+                    var m = TraverseBackward(grm2, bracketsBackward, pi, sel);
                     if (!markedParent)
                         markedParent = m;
                 }
             }
         }
 
-        private bool TraverseForward(int pi, Selection sel)
+        private bool TraverseForward(IDocumentAffinity aff, string brackets, int pi, Selection sel)
         {
             var cc = 0;
 
@@ -98,7 +101,10 @@ namespace CodeBox
             {
                 var line = editor.Lines[lni];
                 var ist = lni == sel.Caret.Line ? sel.Caret.Col + 1 : 0;
-                var brackets = editor.AffinityManager.GetBracketSymbols(new Pos(lni, ist));
+                var grm = editor.AffinityManager.GetAffinity(new Pos(lni, ist));
+
+                if (grm != aff)
+                    continue;
 
                 for (var i = ist; i < line.Length; i++)
                 {
@@ -121,7 +127,7 @@ namespace CodeBox
             return false;
         }
 
-        private bool TraverseBackward(int pi, Selection sel)
+        private bool TraverseBackward(IDocumentAffinity aff, string brackets, int pi, Selection sel)
         {
             var cc = 0;
 
@@ -130,7 +136,10 @@ namespace CodeBox
                 var line = editor.Lines[lni];
                 var ist1 = lni == sel.Caret.Line ? sel.Caret.Col - 1 : line.Length - 1;
                 var ist2 = lni == sel.Caret.Line ? sel.Caret.Col - 2 : line.Length - 1;
-                var brackets = editor.AffinityManager.GetBracketSymbols(new Pos(lni, ist1));
+                var grm = editor.AffinityManager.GetAffinity(new Pos(lni, ist1));
+
+                if (grm != aff)
+                    continue;
 
                 for (var i = ist2; i > -1; i--)
                 {

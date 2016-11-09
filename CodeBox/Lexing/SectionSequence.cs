@@ -67,6 +67,11 @@ namespace CodeBox.Lexing
             return ret;
         }
 
+        public override string ToString()
+        {
+            return sequence;
+        }
+
         public bool MatchAnyState => sequence[Offset] == ' ';
 
         public char First() => sequence[0];

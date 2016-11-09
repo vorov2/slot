@@ -13,7 +13,7 @@ namespace CodeBox.Lexing
         {
             foreach (var sect in sections)
             {
-                if (sect == except || sect.Start == null)
+                if (sect == except || sect.Start == null || sect.Start.Length <= except.Start.Length || sect.Start.Offset == 0)
                     continue;
 
                 var res = sect.Start.TryMatch(ln.CharAt(col + 0), 0);

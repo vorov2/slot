@@ -4,6 +4,7 @@ using CodeBox.Affinity;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
+using CodeBox.Indentation;
 
 namespace CodeBox
 {

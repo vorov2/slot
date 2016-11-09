@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Affinity\DocumentAffinityExtensions.cs" />
     <Compile Include="Autocomplete\AutocompleteManager.cs" />
     <Compile Include="Autocomplete\AutocompleteScrollBar.cs" />
     <Compile Include="Autocomplete\AutocompleteWindow.cs">
@@ -132,7 +133,7 @@
     <Compile Include="Indentation\BlockDentProvider.cs" />
     <Compile Include="Indentation\CurlyDentProvider.cs" />
     <Compile Include="Indentation\IDentProvider.cs" />
-    <Compile Include="IndentManager.cs" />
+    <Compile Include="Indentation\IndentManager.cs" />
     <Compile Include="Lexing\EnumerableExtensions.cs" />
     <Compile Include="Lexing\Grammar.cs" />
     <Compile Include="Lexing\GrammarProvider.cs" />

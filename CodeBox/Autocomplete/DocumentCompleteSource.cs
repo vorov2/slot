@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Lexing;
+using CodeBox.Affinity;
 
 namespace CodeBox.Autocomplete
 {
@@ -33,7 +34,7 @@ namespace CodeBox.Autocomplete
             if (completes.Count == 0 && t != null)
                 t.Wait();
 
-            var id = context.AffinityManager.GetGrammarId(context.Buffer.Selections.Main.Caret);
+            var id = context.AffinityManager.GetAffinityId(context.Buffer.Selections.Main.Caret);
 
             if (id != 0)
             {
@@ -65,8 +66,8 @@ namespace CodeBox.Autocomplete
                 if (line.Length < 2)
                     continue;
 
-                var grm = ctx.AffinityManager.GetGrammarId(new Pos(i, 0));
-                var seps = ctx.AffinityManager.GetNonWordSymbols(new Pos(i, 0));
+                var grm = ctx.AffinityManager.GetAffinityId(new Pos(i, 0));
+                var seps = ctx.AffinityManager.GetAffinity(new Pos(i, 0)).GetNonWordSymbols(ctx, new Pos(i, 0));
                 var dict = default(Dictionary<string, object>);
 
                 if (!completes.TryGetValue(grm, out dict))

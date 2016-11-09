@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using CodeBox.Affinity;
 using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
@@ -20,7 +21,7 @@ namespace CodeBox.Commands
 
             if (caret.Col > 0)
             {
-                var seps = ctx.AffinityManager.GetNonWordSymbols(caret);
+                var seps = ctx.AffinityManager.GetAffinity(caret).GetNonWordSymbols(ctx, caret);
                 var c = line.CharAt(caret.Col - 1);
                 var strat = SelectWordCommand.GetStrategy(seps, c);
                 var pos = SelectWordCommand.FindBoundLeft(seps, line, caret.Col - 1, strat);

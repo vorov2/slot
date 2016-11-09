@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeBox.Indentation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace CodeBox.Affinity
         string NonWordSymbols { get; }
 
         string BracketSymbols { get; }
+
+        IDentProvider IndentProvider { get; set; }
     }
 }

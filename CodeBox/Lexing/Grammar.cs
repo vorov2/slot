@@ -1,4 +1,5 @@
 ﻿using CodeBox.Affinity;
+using CodeBox.Indentation;
 using System;
 using System.Collections.Generic;
 
@@ -19,6 +20,8 @@ namespace CodeBox.Lexing
         public string NonWordSymbols { get; set; }
 
         public string BracketSymbols { get; set; }
+
+        public IDentProvider IndentProvider { get; set; }
         #endregion
 
         public GrammarSection AddSection(GrammarSection section)
