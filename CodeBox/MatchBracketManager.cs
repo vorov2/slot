@@ -83,6 +83,7 @@ namespace CodeBox
                         markedParent = m;
                 }
                 else if (sel.Caret.Col > 0
+                    && sel.Caret.Col <= ln.Length
                     && Odd(pi = bracketsBackward.IndexOf(ln[sel.Caret.Col - 1].Char))
                     && IsBracketStyle(ln, sel.Caret.Col))
                 {

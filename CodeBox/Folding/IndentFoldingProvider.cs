@@ -35,10 +35,11 @@ namespace CodeBox.Folding
             for (var i = li; i < range.End.Line + 1; i++)
             {
                 var line = ctx.Buffer.Document.Lines[i];
-
+                
                 if (line.IsEmpty())
                 {
                     line.Folding &= ~FoldingStates.Header;
+                    ctx.Folding.SetFoldingLevel(i, prevIndent);
                     continue;
                 }
 
@@ -57,11 +58,10 @@ namespace CodeBox.Folding
 
                 indent /= ctx.Settings.TabSize;
 
-                if (indent > prevIndent && i > 0)
+                if (indent > prevIndent && i > 0 && !ctx.Buffer.Document.Lines[i - 1].IsEmpty())
                 {
                     ctx.Folding.SetFoldingHeader(i - 1);
                     ctx.Folding.SetFoldingLevel(i, indent);
-
                 }
                 else
                     ctx.Folding.SetFoldingLevel(i, indent);

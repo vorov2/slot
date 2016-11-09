@@ -106,9 +106,7 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
-
-                DoAftermath(exp, ActionResults.Change);
-                SetCarets(count, pos);
+                DoAftermath(exp, ActionResults.Change, count, pos);
                 editor.Buffer.Edits--;
             }
         }
@@ -150,9 +148,7 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
-
-                DoAftermath(exp, ActionResults.Change);
-                SetCarets(count, pos);
+                DoAftermath(exp, ActionResults.Change, count, pos);
             }
         }
 
@@ -301,8 +297,15 @@ namespace CodeBox
                         AddCommand(cmd, exp);
                     }
 
-                    FirstEditLine = sel.GetFirstLine();
-                    LastEditLine = sel.GetLastLine();
+                    var fel = sel.GetFirstLine();
+
+                    if (fel < FirstEditLine)
+                        FirstEditLine = fel;
+
+                    var lel = sel.GetLastLine();
+
+                    if (lel > LastEditLine)
+                        LastEditLine = lel;
 
                     cmd.Context = editor.Context;
                     var e = cmd.Execute(arg, sel);
@@ -324,10 +327,7 @@ namespace CodeBox
                 EndUndoAction();
 
             if (exec != ActionResults.None)
-                DoAftermath(exp, exec);
-
-            if (restoreCaret)
-                SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
+                DoAftermath(exp, exec, editor.Buffer.Selections.Count, lastSel.Caret);
 
             if ((exp & ActionExponent.IdleCaret) != ActionExponent.IdleCaret)
                 editor.MatchBraket.Match();
@@ -389,7 +389,7 @@ namespace CodeBox
             }
         }
 
-        private void DoAftermath(ActionExponent exp, ActionResults exec)
+        private void DoAftermath(ActionExponent exp, ActionResults exec, int selCount, Pos caret)
         {
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify
                 || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
@@ -397,6 +397,9 @@ namespace CodeBox
                     exec.Has(ActionResults.AtomicChange) ? ScrollingManager.InvalidateFlags.Atomic
                     : ScrollingManager.InvalidateFlags.None
                     );
+
+            if ((exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret)
+                SetCarets(selCount, caret);
 
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
             {
