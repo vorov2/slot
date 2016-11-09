@@ -555,7 +555,7 @@ namespace CodeBox
                 InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();
                 Styles.RestyleDocument();
-                Folding.RebuildFolding();
+                Folding.RebuildFolding(full: true);
             }
         }
 

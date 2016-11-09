@@ -78,21 +78,21 @@ namespace CodeBox.Folding
             }
         }
 
-        internal void RebuildFolding()
+        internal void RebuildFolding(bool full = false)
         {
             if (editor.Lines.Count == 0 || busy)
                 return;
 
-            Task.Run((Action)RunRebuild);
+            RunRebuild(
+                full ? 0 : editor.Scroll.FirstVisibleLine,
+                full ? editor.Lines.Count - 1 : editor.Scroll.LastVisibleLine);
         }
 
-        private void RunRebuild()
+        private void RunRebuild(int fvl, int lvl)
         {
             try
             {
                 busy = true;
-                var fvl = editor.Scroll.FirstVisibleLine;
-                var lvl = editor.Scroll.LastVisibleLine;
 
                 while (fvl > -1 && !IsFoldingHeader(fvl))
                     fvl--;
@@ -104,6 +104,7 @@ namespace CodeBox.Folding
                         new Pos(fvl, 0),
                         new Pos(lvl, editor.Lines[lvl].Length - 1));
                 var fp = Provider;
+                Console.WriteLine($"RebuildFolding: {fvl} - {lvl}");
 
                 if (fp == null)
                     OnFoldingNeeded(range);

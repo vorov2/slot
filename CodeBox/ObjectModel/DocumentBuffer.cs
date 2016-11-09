@@ -23,6 +23,8 @@ namespace CodeBox.ObjectModel
         public string GetText() =>
             string.Join(Eol.AsString(), Document.Lines.Select(ln => ln.Text));
 
+        public string[] GetLines() => Document.Lines.Select(ln => ln.Text).ToArray();
+
         internal List<CallTip> Tips { get; }
 
         internal Stack<CommandInfo> UndoStack { get; }

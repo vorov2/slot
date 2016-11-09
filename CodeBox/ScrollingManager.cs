@@ -135,12 +135,15 @@ namespace CodeBox
 
         private void OnScroll(int xChange, int yChange)
         {
-            editor.Styles.Restyle();
-            editor.MatchBraket.Match();
-            editor.Redraw();
+            if (!SuppressOnScroll)
+            {
+                editor.Styles.Restyle();
+                editor.MatchBraket.Match();
+                editor.Redraw();
 
-            if (editor.Autocomplete.WindowShown)
-                editor.Autocomplete.ShiftLocation(xChange, yChange);
+                if (editor.Autocomplete.WindowShown)
+                    editor.Autocomplete.ShiftLocation(xChange, yChange);
+            }
         }
 
         private int CalculateFirstVisibleLine()
@@ -270,6 +273,7 @@ namespace CodeBox
 
             YMax = YMax - editor.Info.TextHeight + editor.Info.LineHeight * 5;
             YMax = YMax < 0 ? 0 : YMax;
+            _firstVisibleLine = null;
             _lastVisibleLine = null;
         }
 
@@ -340,5 +344,7 @@ namespace CodeBox
         internal int XMax { get; set; }
 
         internal int YMax { get; set; }
+
+        internal bool SuppressOnScroll { get; set; }
     }
 }

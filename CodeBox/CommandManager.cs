@@ -107,8 +107,8 @@ namespace CodeBox
                 int count;
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
 
-                SetCarets(count, pos);
                 DoAftermath(exp, ActionResults.Change);
+                SetCarets(count, pos);
                 editor.Buffer.Edits--;
             }
         }
@@ -151,9 +151,8 @@ namespace CodeBox
                 int count;
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
 
-                SetCarets(count, pos);
                 DoAftermath(exp, ActionResults.Change);
-                editor.Buffer.Edits++;
+                SetCarets(count, pos);
             }
         }
 
@@ -330,6 +329,9 @@ namespace CodeBox
             if (restoreCaret)
                 SetCarets(editor.Buffer.Selections.Count, lastSel.Caret);
 
+            if ((exp & ActionExponent.IdleCaret) != ActionExponent.IdleCaret)
+                editor.MatchBraket.Match();
+
             if (exec.Has(ActionResults.AutocompleteKeep) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.UpdateAutocomplete();
             else if (!exec.Has(ActionResults.AutocompleteShow))
@@ -389,8 +391,6 @@ namespace CodeBox
 
         private void DoAftermath(ActionExponent exp, ActionResults exec)
         {
-            var scrolled = false;
-
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify
                 || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
                 editor.Scroll.InvalidateLines(
@@ -399,14 +399,18 @@ namespace CodeBox
                     );
 
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
-                scrolled = editor.Scroll.UpdateVisibleRectangle();
+            {
+                editor.Scroll.SuppressOnScroll = true;
+                editor.Scroll.UpdateVisibleRectangle();
+                editor.Scroll.SuppressOnScroll = false;
+            }
+
+            if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll
+                || (exp & ActionExponent.Modify) == ActionExponent.Modify)
+                editor.Styles.Restyle();
 
             if ((exp & ActionExponent.Silent) != ActionExponent.Silent)
                 editor.Redraw();
-
-            if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
-                || (exp & ActionExponent.Modify) == ActionExponent.Modify)
-                editor.Styles.Restyle();
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
             {
@@ -420,9 +424,6 @@ namespace CodeBox
                 editor.Mouse = MouseEvents.None;
                 editor.Buffer.Selections.Truncate();
             }
-
-            if ((exp & ActionExponent.IdleCaret) != ActionExponent.IdleCaret)
-                editor.MatchBraket.Match();
         }
 
         internal int FirstEditLine { get; private set; }

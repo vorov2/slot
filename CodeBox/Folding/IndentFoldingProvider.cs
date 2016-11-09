@@ -32,7 +32,7 @@ namespace CodeBox.Folding
 
             var initIndent = prevIndent;
 
-            for (var i = li; i < ctx.Buffer.Document.Lines.Count; i++)
+            for (var i = li; i < range.End.Line + 1; i++)
             {
                 var line = ctx.Buffer.Document.Lines[i];
 
