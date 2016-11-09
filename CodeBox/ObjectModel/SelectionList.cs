@@ -152,7 +152,7 @@ namespace CodeBox.ObjectModel
 
         public Selection this[int index] => sels[index];
 
-        public Selection Main => sels[sels.Count - 1];
+        public Selection Main => sels[0];
 
         public int Count => sels.Count;
     }

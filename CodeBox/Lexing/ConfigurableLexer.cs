@@ -73,6 +73,7 @@ namespace CodeBox.Lexing
             {
                 var c = ln.CharAt(i);
                 var nonIdent = IsNonIdent(c, wordSep);
+                var ws = IsWhiteSpace(c);
                 var kres = lastNonIdent || mys.Keywords.Offset != -1 ? mys.Keywords.Match(c) : -1;
 
                 if (mys.StyleBrackets && IsBracket(grammar, c))
@@ -80,10 +81,14 @@ namespace CodeBox.Lexing
 
                 if (kres > 0 && IsNonIdent(ln.CharAt(i + 1), wordSep))
                 {
-                    pst.LastKeyword = (kres >> 16) & 0xFFFF;
+                    if (mys.ContextChars == null || mys.ContextChars.IndexOf(pst.Context) != -1)
+                    {
+                        pst.LastKeyword = (kres >> 16) & 0xFFFF;
+                        pst.Context = '\0';
+                    }
+
                     Styles.StyleRange(kres & 0xFFFF, line, i - mys.Keywords.Offset, i);
                     identStart = i + 1;
-                    pst.FoundKeyword = true;
                     mys.Keywords.Reset();
                 }
                 else if (kres < 0)
@@ -104,16 +109,23 @@ namespace CodeBox.Lexing
 
                 if (nonIdent)
                 {
-                    if (!lastNonIdent && mys.IdentifierStyle != 0 && i - identStart - 1 >= 0)
+                    if (!lastNonIdent && i - identStart - 1 >= 0)
                     {
-                        Styles.StyleRange(
-                           mys.FirstIdentifierStyle != StandardStyle.Default && !pst.FoundKeyword ?
-                                mys.FirstIdentifierStyle : mys.IdentifierStyle, line, identStart, i - 1);
-                        pst.FoundKeyword = true;
+                        if (mys.IdentifierStyle != 0)
+                        {
+                            Styles.StyleRange(
+                               mys.ContextIdentifierStyle != StandardStyle.Default
+                               && mys.ContextChars != null && mys.ContextChars.IndexOf(pst.Context) != -1 ?
+                                    mys.ContextIdentifierStyle : mys.IdentifierStyle, line, identStart, i - 1);
+                            pst.Context = '\0';
+                        }
                     }
 
                     identStart = i + 1;
                 }
+
+                if (!ws && nonIdent)
+                    pst.Context = c;
 
                 var sect = mys.Sections.Match(c);
 
@@ -126,6 +138,7 @@ namespace CodeBox.Lexing
                         Styles.StyleRange(mys.Style, line, start, ln.Length);
 
                     i++;
+                    mys.Sections.Reset();
 
                     if (sect.ExternalGrammarKey != null)
                     {
@@ -161,8 +174,6 @@ namespace CodeBox.Lexing
                     if (backm == pst.BackDelegate)
                         pst.BackDelegate = null;
 
-                    pst.FoundKeyword = false;
-
                     if (backm.DontStyleCompletely)
                     {
                         i -= backm.End.Offset;
@@ -189,12 +200,12 @@ namespace CodeBox.Lexing
                     return Fetch(0, backm);
                 }
 
-                if (!IsWhiteSpace(c))
+                if (!ws)
                     term = c;
-
+                
                 if (lastNum == -1 && lastNonIdent && (IsDigit(c) || c == '.' && IsDigit(ln.CharAt(i + 1))))
                     lastNum = i;
-                else if (IsWhiteSpace(c))
+                else if (ws)
                     lastNum = -1;
 
                 last = c;
@@ -208,9 +219,6 @@ namespace CodeBox.Lexing
                 var off = !mys.DontStyleCompletely ? mys.Start.Length : 0;
                 Styles.StyleRange(mys.Style, line, start - off, ln.Length);
             }
-
-            if (!mys.Multiline && !singleLineContinue)
-                pst.FoundKeyword = false;
 
             if (mys.End != null && mys.Multiline || mys.End == null && singleLineContinue)
                 return Fetch(mys.Id, mys);
@@ -274,7 +282,7 @@ namespace CodeBox.Lexing
 
     internal sealed class ParseState
     {
-        public bool FoundKeyword;
+        public char Context;
         public int LastKeyword;
         public GrammarSection BackDelegate;
     }

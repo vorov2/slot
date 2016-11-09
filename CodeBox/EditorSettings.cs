@@ -67,6 +67,8 @@ namespace CodeBox
 
         public bool ShowLineLength { get; set; }
 
+        public bool ShowCaretToolTip { get; set; }
+
         public bool CurrentLineIndicator { get; set; }
 
         public Color CurrentLineIndicatorColor { get; set; }

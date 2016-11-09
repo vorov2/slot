@@ -33,11 +33,13 @@ namespace CodeBox.Lexing
 
         public StandardStyle IdentifierStyle { get; set; }
 
-        public StandardStyle FirstIdentifierStyle { get; set; }
+        public StandardStyle ContextIdentifierStyle { get; set; }
 
         public bool StyleNumbers { get; set; }
 
         public bool StyleBrackets { get; set; }
+
+        public string ContextChars { get; set; }
 
         public char ContinuationChar { get; set; }
 

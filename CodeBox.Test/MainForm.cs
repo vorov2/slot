@@ -228,7 +228,8 @@ namespace CodeBox.Test
                 End = new SectionSequence(">", true),
                 Multiline = true,
                 IdentifierStyle = StandardStyle.KeywordSpecial,
-                FirstIdentifierStyle = StandardStyle.Keyword
+                ContextIdentifierStyle = StandardStyle.Keyword,
+                ContextChars = "<"
             };
             msect.Keywords.Add("script", ((int)StandardStyle.Keyword & 0xFFFF) | (42 << 16));
             msect.Keywords.Add("style", ((int)StandardStyle.Keyword & 0xFFFF) | (84 << 16));

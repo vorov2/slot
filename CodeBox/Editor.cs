@@ -172,7 +172,7 @@ namespace CodeBox
             {
                 Caret.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
 
-                if (c.Blink)
+                if (c.Blink && Settings.ShowCaretToolTip)
                     Renderer.DrawCaretIndicator(e.Graphics, c.Line, c.Col, c.X, c.Y);
             }
 
