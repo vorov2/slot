@@ -388,7 +388,7 @@ namespace CodeBox
             {
                 if (Mouse != MouseEvents.None || LastKeys != Keys.None)
                 {
-                    var arg = new CommandArgument(p);
+                    var arg = new CommandArgument(p, e.Location);
                     Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
                 }
 

@@ -391,6 +391,8 @@ namespace CodeBox
 
         private void DoAftermath(ActionExponent exp, ActionResults exec, int selCount, Pos caret)
         {
+            var scrolled = false;
+
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify
                 || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
                 editor.Scroll.InvalidateLines(
@@ -404,11 +406,11 @@ namespace CodeBox
             if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll)
             {
                 editor.Scroll.SuppressOnScroll = true;
-                editor.Scroll.UpdateVisibleRectangle();
+                scrolled = editor.Scroll.UpdateVisibleRectangle();
                 editor.Scroll.SuppressOnScroll = false;
             }
 
-            if ((exp & ActionExponent.Scroll) == ActionExponent.Scroll
+            if (((exp & ActionExponent.Scroll) == ActionExponent.Scroll && scrolled)
                 || (exp & ActionExponent.Modify) == ActionExponent.Modify)
                 editor.Styles.Restyle();
 

@@ -1,6 +1,7 @@
 ﻿using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,37 +9,27 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll | SingleRun)]
+    [CommandBehavior(/*Scroll |*/ SingleRun)]
     public sealed class BlockSelectCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            DoSelection(arg.Pos);
+            DoSelection(arg.Pos, arg.Location);
             return ActionResults.Clean;
         }
 
-        private void DoSelection(Pos p)
+        private void DoSelection(Pos p, Point loc)
         {
+            var start = Buffer.Selections.Main.Start;
+            var pline = p.Line;
+            var tetra = (loc.X - Context.Info.TextLeft) / Context.Info.CharWidth;
+
             var lines = Document.Lines;
 
-            if (lines[p.Line].Length == 0)
+            if (lines[pline].Length == 0)
                 return;
 
-            var start = Buffer.Selections[0].Start;
-            var maxLen = 0;
-
-            foreach (var sel in Buffer.Selections)
-            {
-                var len = Math.Abs(sel.End.Col - sel.Start.Col);
-
-                if (len > maxLen)
-                    maxLen = len;
-            }
-
-            var lastLen = Math.Abs(start.Col - p.Col);
-
-            if (p.Col < lines[p.Line].Length - 1 || lastLen > maxLen)
-                maxLen = lastLen;
+            var maxLen = p.Col;
 
             Buffer.Selections.Clear();
 
@@ -69,16 +60,22 @@ namespace CodeBox.Commands
             }
             else
             {
-                for (var i = start.Line; i < p.Line + 1; i++)
+                for (var i = start.Line; i < pline + 1; i++)
                 {
                     var ln = lines[i];
+                    var lnt = ln.GetTetras(Context.Settings.TabSize);
 
-                    if (ln.Length == 0)
+                    if (lnt < start.Col)
                         continue;
 
-                    var endCol = p.Col < start.Col
-                        ? (start.Col - maxLen < 0 ? 0 : start.Col - maxLen)
-                        : (start.Col + maxLen > ln.Length ? ln.Length : start.Col + maxLen);
+                    var endCol = tetra > lnt ? lnt : tetra;
+
+                    //var te = endCol;
+
+                    //for (var j = 0; j < te; j++)
+                    //    if (ln[i].Char == '\t')
+                    //        endCol -= (Context.Settings.TabSize - 1);
+
                     var sel = new Selection(new Pos(i, start.Col), new Pos(i, endCol));
 
                     if (i == start.Line)

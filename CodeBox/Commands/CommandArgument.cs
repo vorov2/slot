@@ -11,6 +11,7 @@ namespace CodeBox.Commands
             Char = ch;
             String = null;
             Pos = default(Pos);
+            Location = default(Point);
         }
 
         internal CommandArgument(string str)
@@ -18,17 +19,28 @@ namespace CodeBox.Commands
             Char = '\0';
             String = str;
             Pos = default(Pos);
+            Location = default(Point);
         }
 
         internal CommandArgument(Pos pos)
         {
             Char = '\0';
             String = null;
-            Pos = pos; 
+            Pos = pos;
+            Location = default(Point);
+        }
+
+        internal CommandArgument(Pos pos, Point loc)
+        {
+            Char = '\0';
+            String = null;
+            Pos = pos;
+            Location = loc;
         }
 
         public readonly char Char;
         public readonly string String;
         public readonly Pos Pos;
+        public readonly Point Location;
     }
 }
