@@ -286,6 +286,25 @@ namespace CodeBox.ObjectModel
 
             return _tetras = chars.Count - c + c * tabSize;
         }
+
+        internal int GetColumnForTetra(int tetra, int tabSize)
+        {
+            if (tetra == 0)
+                return 0;
+
+            for (var i = 0; i < chars.Count; i++)
+            {
+                if (chars[i].Char == '\t')
+                    tetra -= tabSize;
+                else
+                    tetra--;
+
+                if (tetra <= 0)
+                    return i+1;
+            }
+
+            return tetra;
+        }
         
         private void AddCut(int cut)
         {

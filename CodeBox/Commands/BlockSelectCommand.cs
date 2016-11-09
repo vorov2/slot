@@ -23,39 +23,37 @@ namespace CodeBox.Commands
             var start = Buffer.Selections.Main.Start;
             var pline = p.Line;
             var tetra = (loc.X - Context.Info.TextLeft) / Context.Info.CharWidth;
-
+            tetra = tetra < 0 ? 0 : tetra;
             var lines = Document.Lines;
 
             if (lines[pline].Length == 0)
                 return;
 
+            var tabSize = Context.Settings.TabSize;
+            var startTetra = lines[start.Line].GetTetras(start.Col, tabSize);
             var maxLen = p.Col;
-
+            
             Buffer.Selections.Clear();
 
             if (start > p)
             {
-                for (var i = start.Line; i > p.Line - 1; i--)
+                for (var i = start.Line; i > pline - 1; i--)
                 {
                     var ln = lines[i];
+                    var lnt = ln.GetTetras(tabSize);
+                    var min = tetra > startTetra ? startTetra : tetra;
 
-                    if (ln.Length == 0)
+                    if (lnt < min)
                         continue;
 
+                    var startCol = lnt < startTetra ? lnt : startTetra;
+                    var endCol = tetra > startCol && tetra > lnt ? lnt : tetra;
+
                     var sel = new Selection(
-                        new Pos(i, start.Col),
-                        new Pos(i, start.Col - maxLen < 0 ? 0 : start.Col - maxLen));
+                        new Pos(i, ln.GetColumnForTetra(startCol, tabSize)),
+                        new Pos(i, ln.GetColumnForTetra(endCol, tabSize)));
 
-                    if (i == start.Line)
-                        Buffer.Selections.Set(sel);
-                    else
-                    {
-                        var osel = Buffer.Selections.GetSelection(p);
-                        if (osel != null)
-                            Buffer.Selections.Remove(osel);
-
-                        Buffer.Selections.Add(sel);
-                    }
+                    AddSelection(i, start, p, sel);
                 }
             }
             else
@@ -63,33 +61,34 @@ namespace CodeBox.Commands
                 for (var i = start.Line; i < pline + 1; i++)
                 {
                     var ln = lines[i];
-                    var lnt = ln.GetTetras(Context.Settings.TabSize);
+                    var lnt = ln.GetTetras(tabSize);
 
-                    if (lnt < start.Col)
+                    if (lnt < startTetra)
                         continue;
 
                     var endCol = tetra > lnt ? lnt : tetra;
 
-                    //var te = endCol;
+                    var sel = new Selection(
+                        new Pos(i, ln.GetColumnForTetra(startTetra, tabSize)),
+                        new Pos(i, ln.GetColumnForTetra(endCol, tabSize)));
 
-                    //for (var j = 0; j < te; j++)
-                    //    if (ln[i].Char == '\t')
-                    //        endCol -= (Context.Settings.TabSize - 1);
-
-                    var sel = new Selection(new Pos(i, start.Col), new Pos(i, endCol));
-
-                    if (i == start.Line)
-                        Buffer.Selections.Set(sel);
-                    else
-                    {
-                        var osel = Buffer.Selections.GetSelection(p);
-
-                        if (osel != null)
-                            Buffer.Selections.Remove(osel);
-
-                        Buffer.Selections.Add(sel);
-                    }
+                    AddSelection(i, start, p, sel);
                 }
+            }
+        }
+
+        private void AddSelection(int i, Pos start, Pos p, Selection sel)
+        {
+            if (i == start.Line)
+                Buffer.Selections.Set(sel);
+            else
+            {
+                var osel = Buffer.Selections.GetSelection(p);
+
+                if (osel != null)
+                    Buffer.Selections.Remove(osel);
+
+                Buffer.Selections.Add(sel);
             }
         }
     }

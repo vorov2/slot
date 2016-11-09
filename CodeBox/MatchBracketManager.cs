@@ -24,11 +24,6 @@ namespace CodeBox
             this.editor = editor;
         }
 
-        public void Match()
-        {
-            InternalMatch();
-        }
-
         internal bool IsBracketStyle(Line line, int col)
         {
             foreach (var a in line.AppliedStyles)
@@ -40,9 +35,10 @@ namespace CodeBox
             return true;
         }
 
-        private void InternalMatch()
+        public void Match()
         {
-            if (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret)
+            if (!editor.Buffer.Selections.Main.IsEmpty 
+                || (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret))
             {
                 if (match1 != null && match2 != null)
                 {
@@ -64,7 +60,6 @@ namespace CodeBox
                 markedParent = false;
             }
 
-            Console.WriteLine("Match braket");
             foreach (var sel in editor.Buffer.Selections)
             {
                 var ln = editor.Lines[sel.Caret.Line];
