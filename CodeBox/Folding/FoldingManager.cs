@@ -117,13 +117,15 @@ namespace CodeBox.Folding
             }
         }
 
-        internal void DrawFoldingIndicator(Graphics g, int x, int y)
+        internal int DrawFoldingIndicator(Graphics g, int x, int y)
         {
+            var w = editor.Info.CharWidth * 3;
             g.FillRectangle(editor.CachedBrush.Create(editor.Settings.FoldingActiveForeColor),
-                new Rectangle(x, y + editor.Info.LineHeight / 4, editor.Info.CharWidth * 3, editor.Info.LineHeight / 2));
+                new Rectangle(x, y + editor.Info.LineHeight / 4, w, editor.Info.LineHeight / 2));
             g.DrawString("···", editor.Styles.Default.Font,
                 editor.CachedBrush.Create(editor.Settings.FoldingBackColor),
                 new Point(x, y), Style.Format);
+            return w;
         }
 
         public void SetFoldingLevel(int line, int level)

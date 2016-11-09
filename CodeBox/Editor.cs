@@ -46,6 +46,7 @@ namespace CodeBox
             BottomMargins = new MarginList(this);
             Info = new EditorInfo(this);
             Caret = new CaretRenderer(this);
+            Renderer = new Renderer(this);
             CachedBrush = new CachedBrush();
             CachedPen = new CachedPen();
             Scroll = new ScrollingManager(this);
@@ -133,7 +134,6 @@ namespace CodeBox
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             DrawMargins(0, e.Graphics, TopMargins);
             DrawMargins(0, e.Graphics, LeftMargins);
-
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
 
             var carets = new List<CaretData>();
@@ -169,7 +169,12 @@ namespace CodeBox
 
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             foreach (var c in carets)
+            {
                 Caret.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
+
+                if (c.Blink)
+                    Renderer.DrawCaretIndicator(e.Graphics, c.Line, c.Col, c.X, c.Y);
+            }
 
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
@@ -239,7 +244,8 @@ namespace CodeBox
 
             for (var j = 0; j < line.Stripes; j++)
             {
-                var curline = Settings.CurrentLineIndicator && Buffer.Selections.Main.IsEmpty
+                var curline = Settings.CurrentLineIndicator 
+                    && (Buffer.Selections.Main.IsEmpty || Buffer.Selections.Main.Start.Line == Buffer.Selections.Main.End.Line)
                     && lineIndex == Buffer.Selections.Main.Caret.Line;
 
                 if (curline)
@@ -302,19 +308,22 @@ namespace CodeBox
                                 Caret.Resume();
                             }
 
-                            carets.Add(new CaretData(x, y, blink));
+                            carets.Add(new CaretData(x, y, pos.Line, pos.Col, blink));
                         }
                     }
 
                     x += xw;
                 }
 
+                var addedWidth = 0;
+
+                if (line.Length > 0 && Settings.ShowLineLength)
+                    addedWidth = Renderer.DrawLineLengthIndicator(g, line.Length, x, y);
+
                 if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < Lines.Count &&
                     Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
-                {
-                    Folding.DrawFoldingIndicator(g, x, y);
-                }
-
+                    Folding.DrawFoldingIndicator(g, x + addedWidth, y);
+                
                 oldcut = cut;
                 y += Info.LineHeight;
                 x = lmarg;
@@ -622,7 +631,9 @@ namespace CodeBox
         internal CachedFont CachedSmallFont { get; set; }
 
         internal CaretRenderer Caret { get; }
-        
+
+        internal Renderer Renderer { get; }
+
         public CommandManager Commands { get; }
 
         public StyleManager Styles { get; }

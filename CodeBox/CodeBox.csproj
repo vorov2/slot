@@ -117,6 +117,7 @@
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
+    <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="Lexing\ChoiceSectionSequence.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
     <Compile Include="Drawing\CachedFont.cs" />

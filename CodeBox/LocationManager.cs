@@ -34,7 +34,7 @@ namespace CodeBox
                     return i;
             }
 
-            return -1;
+            return editor.Lines.Count - 1;
         }
 
         public Pos LocationToPosition(Point loc)

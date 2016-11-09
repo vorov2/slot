@@ -22,6 +22,8 @@ namespace CodeBox.Commands
                 var line = doc.Lines[pos.Line - 1];
                 pos = new Pos(pos.Line - 1, line.Length);
             }
+            else if (pos.Col < 0)
+                pos = new Pos(pos.Line, 0);
 
             sel.SetToRestore(pos);
             return pos;

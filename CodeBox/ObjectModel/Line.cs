@@ -122,6 +122,8 @@ namespace CodeBox.ObjectModel
             //TODO:
             if (index <= chars.Count)
                 chars.RemoveAt(index);
+            else
+                chars.RemoveAt(chars.Count - 1);
             _tetras = -1;
             Invalidated = false;
         }

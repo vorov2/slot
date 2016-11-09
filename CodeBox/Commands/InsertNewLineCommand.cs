@@ -15,6 +15,7 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
         private int indent;
+        private IEnumerable<Character> unindent;
 
         public override ActionResults Execute(CommandArgument arg, Selection selection)
         {
@@ -30,6 +31,17 @@ namespace CodeBox.Commands
 
             if (indent > 0)
             {
+                if (pos.Line > 0)
+                {
+                    var ln = Document.Lines[pos.Line - 1];
+
+                    if (ln.IsEmpty() && ln.Length > 0)
+                    {
+                        unindent = ln.ToList();
+                        ln.RemoveRange(0, ln.Length);
+                    }
+                }
+
                 var str = Context.Settings.UseTabs ? new string('\t', indent / Context.Settings.TabSize)
                     : new string(' ', indent);
                 Document.Lines[pos.Line].Insert(0, str.MakeCharacters());
@@ -60,6 +72,9 @@ namespace CodeBox.Commands
             
             if (indent > 0)
                 nextLine.RemoveRange(0, indent);
+
+            if (unindent != null)
+                line.Insert(0, unindent);
 
             line.Append(nextLine);
             return pos;
