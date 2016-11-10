@@ -99,5 +99,10 @@ namespace CodeBox.Commands
             pos = new Pos(pos.Line + 1, 0);
             return pos;
         }
+
+        public override ICommand Clone()
+        {
+            return new InsertCharCommand();
+        }
     }
 }

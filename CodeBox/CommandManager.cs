@@ -106,8 +106,9 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
-                DoAftermath(exp, ActionResults.Change, count, pos);
                 editor.Buffer.Edits--;
+                SetEditLines();
+                DoAftermath(exp, ActionResults.Change, count, pos);
             }
         }
 
@@ -148,6 +149,8 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
+                editor.Buffer.Edits++;
+                SetEditLines();
                 DoAftermath(exp, ActionResults.Change, count, pos);
             }
         }
@@ -177,6 +180,25 @@ namespace CodeBox
             }
 
             return exp;
+        }
+
+        private void SetEditLines()
+        {
+            FirstEditLine = int.MaxValue;
+            LastEditLine = 0;
+
+            foreach (var s in editor.Buffer.Selections)
+            {
+                var ln = s.GetFirstLine();
+
+                if (ln < FirstEditLine)
+                    FirstEditLine = ln;
+
+                ln = s.GetLastLine();
+
+                if (ln > LastEditLine)
+                    LastEditLine = ln;
+            }
         }
 
         public void Register<T>() where T : ICommand, new()
@@ -240,8 +262,8 @@ namespace CodeBox
 
         private void Run(CommandArgument arg, CommandInfo ci)
         {
-            FirstEditLine = -1;
-            LastEditLine = -1;
+            FirstEditLine = int.MaxValue;
+            LastEditLine = 0;
             var lines = editor.Lines;
             var exp = ci.Exponent;
             var single = editor.Buffer.Selections.Count == 1
@@ -325,6 +347,9 @@ namespace CodeBox
 
             if (thisUndo)
                 EndUndoAction();
+
+            if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
+                editor.Buffer.Edits++;
 
             if (exec != ActionResults.None)
                 DoAftermath(exp, exec, editor.Buffer.Selections.Count, lastSel.Caret);
@@ -418,10 +443,7 @@ namespace CodeBox
                 editor.Redraw();
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify)
-            {
                 editor.Folding.RebuildFolding();
-                editor.Buffer.Edits++;
-            }
 
             if ((exp & ActionExponent.LeaveEditor) == ActionExponent.LeaveEditor)
             {

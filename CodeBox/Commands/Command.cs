@@ -15,7 +15,10 @@ namespace CodeBox.Commands
 
         public virtual Pos Redo() => Pos.Empty;
 
-        public virtual ICommand Clone() => (ICommand)MemberwiseClone();
+        public virtual ICommand Clone()
+        {
+            throw new NotSupportedException();
+        }
 
         public IEditorContext Context { get; set; }
 

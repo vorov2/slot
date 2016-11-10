@@ -24,5 +24,10 @@ namespace CodeBox.Commands
             sel.End = new Pos(sel.Caret.Line, col != 0 ? col + 1 : col);
             return base.Execute(arg, sel);
         }
+
+        public override ICommand Clone()
+        {
+            return new DeleteWordBackCommand();
+        }
     }
 }

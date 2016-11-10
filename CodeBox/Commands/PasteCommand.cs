@@ -18,5 +18,10 @@ namespace CodeBox.Commands
             arg = new CommandArgument(str);
             return base.Execute(arg, sel);
         }
+
+        public override ICommand Clone()
+        {
+            return new PasteCommand();
+        }
     }
 }

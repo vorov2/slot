@@ -42,5 +42,10 @@ namespace CodeBox.Commands
             sel.Start = new Pos(sel.Start.Line, sel.Start.Col - indent);
             sel.End = new Pos(sel.End.Line, sel.End.Col - indent);
         }
+
+        public override ICommand Clone()
+        {
+            return new ShiftTabCommand();
+        }
     }
 }

@@ -91,5 +91,10 @@ namespace CodeBox.Commands
 
             return pos;
         }
+
+        public override ICommand Clone()
+        {
+            return new DeleteBackCommand();
+        }
     }
 }

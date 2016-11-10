@@ -107,5 +107,10 @@ namespace CodeBox.Commands
 
             return Pos.Empty;
         }
+
+        public override ICommand Clone()
+        {
+            return new InsertRangeCommand();
+        }
     }
 }

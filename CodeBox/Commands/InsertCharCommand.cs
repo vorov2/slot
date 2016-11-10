@@ -68,8 +68,12 @@ namespace CodeBox.Commands
             if (pos.IsEmpty)
                 pos = undoPos;
 
-            Buffer.Selections.Set(pos);
             return pos;
+        }
+
+        public override ICommand Clone()
+        {
+            return new InsertCharCommand();
         }
     }
 }

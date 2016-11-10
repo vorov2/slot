@@ -65,7 +65,7 @@ namespace CodeBox.Commands
             var pos = undoPos;
 
             if (@string != null)
-                InsertRangeCommand.InsertRange(Document, undoPos, @string);
+                pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
             else if (@char == Character.NewLine)
                 InsertNewLineCommand.InsertNewLine(Document, undoPos);
             else
@@ -75,6 +75,11 @@ namespace CodeBox.Commands
             }
 
             return pos;
+        }
+
+        public override ICommand Clone()
+        {
+            return new DeleteCommand();
         }
     }
 }

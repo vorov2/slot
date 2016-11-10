@@ -19,5 +19,10 @@ namespace CodeBox.Commands
             Clipboard.SetText(str, TextDataFormat.UnicodeText);
             return res;
         }
+
+        public override ICommand Clone()
+        {
+            return new CutCommand();
+        }
     }
 }

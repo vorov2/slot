@@ -30,8 +30,12 @@ namespace CodeBox.Commands
         public override Pos Undo()
         {
             InsertRangeCommand.InsertRange(Document, undoPos, data);
-            Buffer.Selections.Set(undoPos);
             return undoPos;
+        }
+
+        public override ICommand Clone()
+        {
+            return new DeleteRangeCommand();
         }
 
         internal static IEnumerable<Character> DeleteRange(IEditorContext ctx, Selection selection)

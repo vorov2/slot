@@ -24,5 +24,10 @@ namespace CodeBox.Commands
             var newSel = new Selection(sel.Caret, new Pos(sel.Caret.Line, col));
             return base.Execute(arg, newSel);
         }
+
+        public override ICommand Clone()
+        {
+            return new DeleteWordCommand();
+        }
     }
 }

@@ -33,5 +33,10 @@ namespace CodeBox.Commands
             Context.Folding.ToggleExpand(undoLine);
             return undoCaret;
         }
+
+        public override ICommand Clone()
+        {
+            return new ToggleFoldingCommand();
+        }
     }
 }

@@ -51,6 +51,8 @@ namespace CodeBox.ObjectModel
 
         public void Add(Selection sel) => sels.Add(sel);
 
+        internal void AddFirst(Selection sel) => sels.Insert(0, sel);
+
         public void Set(Pos caret) => Set(new Selection(caret));
 
         public void Set(Selection sel)

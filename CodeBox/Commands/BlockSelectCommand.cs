@@ -9,7 +9,7 @@ using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(/*Scroll |*/ SingleRun)]
+    [CommandBehavior(Scroll | SingleRun)]
     public sealed class BlockSelectCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
@@ -20,7 +20,7 @@ namespace CodeBox.Commands
 
         private void DoSelection(Pos p, Point loc)
         {
-            var start = Buffer.Selections.Main.Start;
+            var start = Buffer.Selections[Buffer.Selections.Count - 1].Start;
             var pline = p.Line;
             var tetra = (loc.X - Context.Info.TextLeft) / Context.Info.CharWidth;
             tetra = tetra < 0 ? 0 : tetra;
@@ -32,7 +32,6 @@ namespace CodeBox.Commands
             var tabSize = Context.Settings.TabSize;
             var startTetra = lines[start.Line].GetTetras(start.Col, tabSize);
             var maxLen = p.Col;
-            
             Buffer.Selections.Clear();
 
             if (start > p)
@@ -88,7 +87,7 @@ namespace CodeBox.Commands
                 if (osel != null)
                     Buffer.Selections.Remove(osel);
 
-                Buffer.Selections.Add(sel);
+                Buffer.Selections.AddFirst(sel);
             }
         }
     }
