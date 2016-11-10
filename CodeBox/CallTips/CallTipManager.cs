@@ -15,6 +15,7 @@ namespace CodeBox.CallTips
         private readonly Editor editor;
         private Pos shownTip = Pos.Empty;
         private CallTip lastTip;
+        private Rectangle lastTipRectangle;
         private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
         {
             LineAlignment = StringAlignment.Near,
@@ -208,9 +209,9 @@ namespace CodeBox.CallTips
                     x -= size.Width;
 
                 var pt = new Point(x, y);
-                var rect = new Rectangle(pt, size);
-                g.FillRectangle(editor.CachedBrush.Create(editor.Settings.PopupBackColor), rect);
-                g.DrawRectangle(editor.CachedPen.Create(editor.Settings.PopupBorderColor), rect);
+                lastTipRectangle = new Rectangle(pt, size);
+                g.FillRectangle(editor.CachedBrush.Create(editor.Settings.PopupBackColor), lastTipRectangle);
+                g.DrawRectangle(editor.CachedPen.Create(editor.Settings.PopupBorderColor), lastTipRectangle);
                 draw(g, pt);
                 shownTip = pos;
             }
@@ -261,6 +262,11 @@ namespace CodeBox.CallTips
                 HideCallTip();
                 lastTip = CallTip.Empty;
             }
+        }
+
+        public Rectangle TipRectangle
+        {
+            get { return shownTip.IsEmpty ? Rectangle.Empty : lastTipRectangle; }
         }
     }
 }

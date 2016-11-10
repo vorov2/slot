@@ -51,6 +51,14 @@ namespace CodeBox.Drawing
             if (!editor.Focused)
                 return;
 
+            var rect = editor.CallTips.TipRectangle;
+            var cx = caretX + editor.Scroll.X;
+            var cy = caretY + editor.Scroll.Y;
+
+            if (cx >= rect.X && cx <= rect.X + rect.Width
+                && cy >= rect.Y && cy <= rect.Y + rect.Height)
+                return;
+
             using (var g = editor.CreateGraphics())
             {
                 g.TranslateTransform(editor.Scroll.X, editor.Scroll.Y);
