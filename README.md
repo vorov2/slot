@@ -16,7 +16,7 @@ Features:
 * [X] Rectangular selection
 * [X] Extendable syntax highlighting
 * [X] Ability to combine styles
-* [ ] Configurable lexer for syntax highlighting
+* [X] Configurable lexer for syntax highlighting
 * [X] Multi level undo and redo
 * [X] Word wrapping
 * [X] Wrap by a wrap column
@@ -31,7 +31,7 @@ Features:
 * [ ] Split editing
 * [X] Hyperlinks
 * [X] Line indenting
-* [ ] Read-only mode
+* [X] Read-only mode
 * [X] Match brackets
 * [ ] Search including regex search
 * [ ] Macros
