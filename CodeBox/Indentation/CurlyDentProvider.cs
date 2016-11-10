@@ -39,10 +39,8 @@ namespace CodeBox.Indentation
                         indent += ctx.Settings.TabSize;
                     else
                         break;
-
-                if (curly && ctx.Settings.UseTabs)
-                    indent++;
-                else if (curly)
+                
+                if (curly)
                     indent += ctx.Settings.TabSize;
 
                 return indent;

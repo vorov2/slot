@@ -69,9 +69,12 @@ namespace CodeBox.Commands
             var line = Document.Lines[pos.Line];
             var nextLine = Document.Lines[pos.Line + 1];
             Document.Lines.Remove(nextLine);
-            
+
             if (indent > 0)
-                nextLine.RemoveRange(0, indent);
+            {
+                var real = Context.Settings.UseTabs ? indent / Context.Settings.TabSize : indent;
+                nextLine.RemoveRange(0, real);
+            }
 
             if (unindent != null)
                 line.Insert(0, unindent);

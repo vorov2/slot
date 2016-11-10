@@ -14,7 +14,7 @@ namespace CodeBox
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
         private const string BRACKETS = "()[]{}";
-        private const int TABSIZE = 2;
+        private const int TABSIZE = 4;
         private readonly Editor editor;
 
         public EditorSettings(Editor editor)

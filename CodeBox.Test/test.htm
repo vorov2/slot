@@ -1,61 +1,60 @@
 ﻿<html>
-  <li a="sboc" aria-busy="false"></li>
-  <style>
-  body {
-    width: 120pt;
-    height: 100%;
-    border: solid;
-    color: black;
-  }
-  </style>
-  <script type="text/csharp">
-    internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
+    <li a="sboc" aria-busy="false"></li>
+    <style>
+        body {
+            width: 120pt;
+            height: 100%;
+            border: solid;
+            color: black;
+        }
+    </style>
+    <script type="text/csharp">
+        internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
 
-    public AppliedStyle FindHyperlink(int col)
-    {
-        var x = 12.2d;
-        var str = "my \"string";
-
-        foreach (var a in AppliedStyles)
+        public AppliedStyle FindHyperlink(int col)
         {
-            if (col >= a.Start && col <= a.End && a.StyleId == (int)StandardStyle.Hyperlink)
-                return a;
+            var x = 12.2d;
+            var str = "my \"string";
+
+            foreach (var a in AppliedStyles)
+            {
+                if (col >= a.Start && col <= a.End && a.StyleId == (int)StandardStyle.Hyperlink)
+                    return a;
+            }
+
+            return AppliedStyle.Empty;
         }
 
-        return AppliedStyle.Empty;
-    }
-
-    internal bool IsDefaultStyle(int col)
-    {
-        foreach (var a in AppliedStyles)
-            if (col >= a.Start && col <= a.End)
-                return a.StyleId == (int)StandardStyle.Default
-                    || a.StyleId == (int)StandardStyle.MatchedBracket;
-
-        return true;
-    }
-
-    internal Style GetStyle(int index, StyleManager man)
-    {
-        var ret = default(Style);
-
-        foreach (var a in AppliedStyles)
+        internal bool IsDefaultStyle(int col)
         {
-            if (index >= a.Start && index <= a.End)
+            foreach (var a in AppliedStyles)
+                if (col >= a.Start && col <= a.End)
+                    return a.StyleId == (int)StandardStyle.Default
+                        || a.StyleId == (int)StandardStyle.MatchedBracket;
+
+            return true;
+        }
+
+        internal Style GetStyle(int index, StyleManager man)
+        {
+            var ret = default(Style);
+
+            foreach (var a in AppliedStyles)
             {
-                if (ret == null)
-                    ret = man.GetStyle(a.StyleId);
-                else
+                if (index >= a.Start && index <= a.End)
                 {
-                    var next = man.GetStyle(a.StyleId);
-                    ret = ret.Combine(next);
+                    if (ret == null)
+                        ret = man.GetStyle(a.StyleId);
+                    else
+                    {
+                        var next = man.GetStyle(a.StyleId);
+                        ret = ret.Combine(next);
+                    }
                 }
             }
+
+            ret = ret ?? man.GetStyle((int)StandardStyle.Default);
+            return ret;
         }
-
-        ret = ret ?? man.GetStyle((int)StandardStyle.Default);
-        return ret;
-    }
-  </script>
-
+    </script>
 </html>
