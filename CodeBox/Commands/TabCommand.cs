@@ -15,7 +15,7 @@ namespace CodeBox.Commands
 
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            var indent = Settings.UseTabs ? "\t" : new string(' ', Settings.TabSize);
+            var indent = Context.UseTabs ? "\t" : new string(' ', Context.TabSize);
             
             if (sel.Start.Line != sel.End.Line)
             {
@@ -37,7 +37,7 @@ namespace CodeBox.Commands
             if (undoIndent)
             {
                 var sel = redoSel;
-                Execute(default(CommandArgument), sel);
+                Execute(CommandArgument.Empty, sel);
                 return sel.End;
             }
             return base.Redo();
@@ -74,7 +74,7 @@ namespace CodeBox.Commands
                     line.RemoveAt(pos.Col - 1);
                 else
                 {
-                    var st = pos.Col - ctx.Settings.TabSize;
+                    var st = pos.Col - ctx.TabSize;
                     st = st < 0 ? 0 : st;
                     line.RemoveRange(st, pos.Col - st);
                 }

@@ -266,6 +266,10 @@ namespace CodeBox
             LastEditLine = 0;
             var lines = editor.Lines;
             var exp = ci.Exponent;
+
+            if (editor.ReadOnly && (exp & ActionExponent.Modify) == ActionExponent.Modify)
+                return;
+
             var single = editor.Buffer.Selections.Count == 1
                 || (exp & ActionExponent.SingleRun) == ActionExponent.SingleRun;
             var mainSel = editor.Buffer.Selections.Main;

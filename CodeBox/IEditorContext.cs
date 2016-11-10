@@ -5,6 +5,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
 using CodeBox.Indentation;
+using CodeBox.CallTips;
 
 namespace CodeBox
 {
@@ -37,6 +38,10 @@ namespace CodeBox
         bool WordWrap { get; }
 
         int WordWrapColumn { get; }
+
+        bool UseTabs { get; }
+
+        int TabSize { get; }
 
         bool Overtype { get; set; }
     }

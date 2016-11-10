@@ -24,13 +24,13 @@ namespace CodeBox.Commands
         public override Pos Redo()
         {
             var sel = redoSel;
-            Execute(default(CommandArgument), sel);
+            Execute(CommandArgument.Empty, sel);
             return sel.End;
         }
 
         public override Pos Undo()
         {
-            var indent = Settings.UseTabs ? "\t" : new string(' ', Settings.TabSize);
+            var indent = Context.UseTabs ? "\t" : new string(' ', Context.TabSize);
             TabCommand.Indent(Context, redoSel, indent.MakeCharacters());
             ShiftSel(redoSel);
             return redoSel.Caret;
@@ -38,7 +38,7 @@ namespace CodeBox.Commands
 
         private void ShiftSel(Selection sel)
         {
-            var indent = Settings.UseTabs ? 1 : Settings.TabSize;
+            var indent = Context.UseTabs ? 1 : Context.TabSize;
             sel.Start = new Pos(sel.Start.Line, sel.Start.Col - indent);
             sel.End = new Pos(sel.End.Line, sel.End.Col - indent);
         }

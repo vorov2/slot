@@ -31,6 +31,10 @@ namespace CodeBox
 
         public int CharHeight { get; internal set; }
 
+        public int SmallCharWidth { get; internal set; }
+
+        public int SmallCharHeight { get; internal set; }
+
         public int LineHeight =>
             CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
     }

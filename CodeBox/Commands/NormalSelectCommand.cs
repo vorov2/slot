@@ -19,7 +19,7 @@ namespace CodeBox.Commands
 
         private void DoSelection(Pos p)
         {
-            var sel = Buffer.Selections.Main;
+            var sel = Buffer.Selections[Buffer.Selections.Count - 1];
             sel.End = p;
             var osel = Buffer.Selections.GetSelection(p, sel);
 

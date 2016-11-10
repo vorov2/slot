@@ -4,8 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CodeBox.CallTips;
 
 namespace CodeBox.ObjectModel
 {
@@ -15,8 +14,8 @@ namespace CodeBox.ObjectModel
         {
             Document = doc;
             Selections = new SelectionList();
-            UndoStack = new Stack<CommandInfo>();
-            RedoStack = new Stack<CommandInfo>();
+            UndoStack = new LimitedStack<CommandInfo>();
+            RedoStack = new LimitedStack<CommandInfo>();
             Tips = new List<CallTip>();
         }
 
@@ -27,21 +26,40 @@ namespace CodeBox.ObjectModel
 
         internal List<CallTip> Tips { get; }
 
-        internal Stack<CommandInfo> UndoStack { get; }
+        internal LimitedStack<CommandInfo> UndoStack { get; }
 
-        internal Stack<CommandInfo> RedoStack { get; }
+        internal LimitedStack<CommandInfo> RedoStack { get; }
 
         public Document Document { get; internal set; }
 
         public SelectionList Selections { get; }
 
-        public int Edits { get; set; }
+        internal int Edits { get; set; }
 
         public bool Overtype { get; set; }
 
         public bool? WordWrap { get; set; }
 
         public int? WordWrapColumn { get; set; }
+
+        public bool? UseTabs { get; set; }
+
+        public int? TabSize { get; set; }
+
+        public bool? ShowEol { get; set; }
+
+        public bool? ShowWhitespace { get; set; }
+
+        public bool? ShowLineLength { get; set; }
+
+        public bool? CurrentLineIndicator { get; set; }
+
+        public bool ReadOnly { get; set; }
+
+        public bool IsDirty
+        {
+            get { return Edits > 0; }
+        }
 
         private Eol _eol;
         public Eol Eol

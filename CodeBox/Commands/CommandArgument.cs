@@ -6,20 +6,22 @@ namespace CodeBox.Commands
 {
     public struct CommandArgument
     {
+        public static readonly CommandArgument Empty = new CommandArgument(null);
+
         internal CommandArgument(char ch)
         {
             Char = ch;
             String = null;
-            Pos = default(Pos);
-            Location = default(Point);
+            Pos = Pos.Empty;
+            Location = Point.Empty;
         }
 
         internal CommandArgument(string str)
         {
             Char = '\0';
             String = str;
-            Pos = default(Pos);
-            Location = default(Point);
+            Pos = Pos.Empty;
+            Location = Point.Empty;
         }
 
         internal CommandArgument(Pos pos)
@@ -27,7 +29,7 @@ namespace CodeBox.Commands
             Char = '\0';
             String = null;
             Pos = pos;
-            Location = default(Point);
+            Location = Point.Empty;
         }
 
         internal CommandArgument(Pos pos, Point loc)

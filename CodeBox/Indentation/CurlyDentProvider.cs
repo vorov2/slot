@@ -36,12 +36,12 @@ namespace CodeBox.Indentation
                     if (c.Char == ' ')
                         indent++;
                     else if (c.Char == '\t')
-                        indent += ctx.Settings.TabSize;
+                        indent += ctx.TabSize;
                     else
                         break;
                 
                 if (curly)
-                    indent += ctx.Settings.TabSize;
+                    indent += ctx.TabSize;
 
                 return indent;
             }

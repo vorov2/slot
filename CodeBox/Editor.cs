@@ -18,6 +18,7 @@ using CodeBox.Folding;
 using CodeBox.Indentation;
 using CodeBox.Autocomplete;
 using CodeBox.Affinity;
+using CodeBox.CallTips;
 
 namespace CodeBox
 {
@@ -144,37 +145,12 @@ namespace CodeBox
             if (RightMargins.Count > 0)
                 DrawMargins(ClientSize.Width - RightMargins.First().CalculateSize(), e.Graphics, RightMargins);
 
-            if (!WordWrap)
-            {
-                foreach (var i in Settings.LongLineIndicators)
-                {
-                    var x = Info.TextLeft + i * Info.CharWidth + Scroll.X;
-
-                    if (x <= Info.TextLeft)
-                        continue;
-
-                    e.Graphics.DrawLine(CachedPen.Create(Styles.SpecialSymbol.ForeColor),
-                        x, Info.TextTop, x, Info.TextBottom);
-                }
-            }
-            else if (WordWrapColumn > 0)
-            {
-                var x = Info.TextLeft + WordWrapColumn * Info.CharWidth + Scroll.X;
-
-                if (x > Info.TextLeft)
-                    e.Graphics.DrawLine(CachedPen.Create(Styles.SpecialSymbol.ForeColor),
-                        x, Info.TextTop, x, Info.TextBottom);
-            }
-
+            Renderer.DrawLongLineIndicators(e.Graphics);
+            Renderer.DrawWordWrapColumn(e.Graphics);
 
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             foreach (var c in carets)
-            {
                 Caret.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
-
-                if (c.Blink && Settings.ShowCaretToolTip)
-                    Renderer.DrawCaretIndicator(e.Graphics, c.Line, c.Col, c.X, c.Y);
-            }
 
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
@@ -244,7 +220,7 @@ namespace CodeBox
 
             for (var j = 0; j < line.Stripes; j++)
             {
-                var curline = Settings.CurrentLineIndicator 
+                var curline = CurrentLineIndicator 
                     && (Buffer.Selections.Main.IsEmpty || Buffer.Selections.Main.Start.Line == Buffer.Selections.Main.End.Line)
                     && lineIndex == Buffer.Selections.Main.Caret.Line;
 
@@ -262,7 +238,7 @@ namespace CodeBox
                 for (var i = oldcut; i < cut; i++)
                 {
                     var c = line.CharAt(i);
-                    var xw = c == '\t' ? Settings.TabSize * Info.CharWidth : Info.CharWidth;
+                    var xw = c == '\t' ? Context.TabSize * Info.CharWidth : Info.CharWidth;
                     var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth
                         && y + Scroll.Y >= tmarg;
 
@@ -317,7 +293,7 @@ namespace CodeBox
 
                 var addedWidth = 0;
 
-                if (line.Length > 0 && Settings.ShowLineLength)
+                if (line.Length > 0 && ShowLineLength)
                     addedWidth = Renderer.DrawLineLengthIndicator(g, line.Length, x, y);
 
                 if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < Lines.Count &&
@@ -544,7 +520,7 @@ namespace CodeBox
                 return;
 
             LastKeys = e.Modifiers;
-            Commands.Run(LastKeys | e.KeyCode, default(CommandArgument));
+            Commands.Run(LastKeys | e.KeyCode, CommandArgument.Empty);
         }
         
         public DocumentBuffer Buffer { get; private set; }
@@ -602,6 +578,78 @@ namespace CodeBox
                 else
                     return Settings.WordWrapColumn;
             }
+        }
+
+        public bool UseTabs
+        {
+            get
+            {
+                if (Buffer.UseTabs != null)
+                    return Buffer.UseTabs.Value;
+                else
+                    return Settings.UseTabs;
+            }
+        }
+
+        public int TabSize
+        {
+            get
+            {
+                if (Buffer.TabSize != null)
+                    return Buffer.TabSize.Value;
+                else
+                    return Settings.TabSize;
+            }
+        }
+
+        public bool ShowEol
+        {
+            get
+            {
+                if (Buffer.ShowEol != null)
+                    return Buffer.ShowEol.Value;
+                else
+                    return Settings.ShowEol;
+            }
+        }
+
+        public bool ShowWhitespace
+        {
+            get
+            {
+                if (Buffer.ShowWhitespace != null)
+                    return Buffer.ShowWhitespace.Value;
+                else
+                    return Settings.ShowWhitespace;
+            }
+        }
+
+        public bool ShowLineLength
+        {
+            get
+            {
+                if (Buffer.ShowLineLength != null)
+                    return Buffer.ShowLineLength.Value;
+                else
+                    return Settings.ShowLineLength;
+            }
+        }
+
+        public bool CurrentLineIndicator
+        {
+            get
+            {
+                if (Buffer.CurrentLineIndicator != null)
+                    return Buffer.CurrentLineIndicator.Value;
+                else
+                    return Settings.CurrentLineIndicator;
+            }
+        }
+
+        public bool ReadOnly
+        {
+            get { return Buffer.ReadOnly; }
+            set { Buffer.ReadOnly = value; }
         }
 
         internal IEditorContext Context => this;

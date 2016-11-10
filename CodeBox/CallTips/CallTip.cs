@@ -1,7 +1,7 @@
 ﻿using CodeBox.ObjectModel;
 using System;
 
-namespace CodeBox.Styling
+namespace CodeBox.CallTips
 {
     public struct CallTip : IEquatable<CallTip>
     {

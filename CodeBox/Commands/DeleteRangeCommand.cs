@@ -23,13 +23,13 @@ namespace CodeBox.Commands
         public override Pos Redo()
         {
             data = null;
-            Execute(default(CommandArgument), redoSel);
+            Execute(CommandArgument.Empty, redoSel);
             return undoPos;
         }
 
         public override Pos Undo()
         {
-            InsertRangeCommand.InsertRange(Document, undoPos, data);
+            undoPos = InsertRangeCommand.InsertRange(Document, undoPos, data);
             return undoPos;
         }
 

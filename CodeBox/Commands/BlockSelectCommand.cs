@@ -29,7 +29,7 @@ namespace CodeBox.Commands
             if (lines[pline].Length == 0)
                 return;
 
-            var tabSize = Context.Settings.TabSize;
+            var tabSize = Context.TabSize;
             var startTetra = lines[start.Line].GetTetras(start.Col, tabSize);
             var maxLen = p.Col;
             Buffer.Selections.Clear();

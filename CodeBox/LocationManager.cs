@@ -53,7 +53,7 @@ namespace CodeBox
             var line = editor.Lines[pos.Line];
             var y = line.Y + line.GetStripe(pos.Col) * editor.Info.LineHeight + editor.Info.LineHeight
                 + editor.Info.TextTop;
-            var x = line.GetTetras(pos.Col, editor.Settings.TabSize) * editor.Info.CharWidth
+            var x = line.GetTetras(pos.Col, editor.TabSize) * editor.Info.CharWidth
                 + editor.Info.TextLeft;
             return new Point(x + editor.Scroll.X, y + editor.Scroll.Y);
         }
@@ -71,7 +71,7 @@ namespace CodeBox
             for (var i = sc; i < cut + 1; i++)
             {
                 var c = line.CharAt(i);
-                var cw = c == '\t' ? editor.Settings.TabSize * editor.Info.CharWidth : editor.Info.CharWidth;
+                var cw = c == '\t' ? editor.TabSize * editor.Info.CharWidth : editor.Info.CharWidth;
 
                 if (locX >= width - app && locX <= width + cw - app)
                     return i;

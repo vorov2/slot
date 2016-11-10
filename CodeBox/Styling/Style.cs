@@ -29,9 +29,9 @@ namespace CodeBox.Styling
             var fc = ForeColor.IsEmpty ? Editor.ForeColor : ForeColor;
             var ch = Editor.Lines[pos.Line].CharAt(pos.Col);
 
-            if (ch == '\0' && Editor.Settings.ShowEol) ch = '\u00B6';
-            else if (ch == '\t' && Editor.Settings.ShowWhitespace) ch = '\u2192';
-            else if (ch == ' ' && Editor.Settings.ShowWhitespace) ch = '·';
+            if (ch == '\0' && Editor.ShowEol) ch = '\u00B6';
+            else if (ch == '\t' && Editor.ShowWhitespace) ch = '\u2192';
+            else if (ch == ' ' && Editor.ShowWhitespace) ch = '·';
 
             g.DrawString(ch.ToString(),
                 Font,

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionExponent;
+using CodeBox.Folding;
 
 namespace CodeBox.Commands
 {
@@ -16,9 +17,27 @@ namespace CodeBox.Commands
 
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            undoLine = arg.Pos.Line;
             undoCaret = sel.Caret;
-            Context.Folding.ToggleExpand(undoLine);
+            var ln = arg.Pos.IsEmpty ? sel.Caret.Line : arg.Pos.Line;
+            var level = -1;
+
+            while (ln > -1)
+            {
+                var line = Document.Lines[ln];
+
+                if (line.Folding.Has(FoldingStates.Header) && (level == -1 || line.FoldingLevel < level))
+                {
+                    undoLine = ln;
+                    Context.Folding.ToggleExpand(undoLine);
+                    break;
+                }
+
+                if (level == -1)
+                    level = line.FoldingLevel;
+
+                ln--;
+            }
+
             return ActionResults.Clean;
         }
 

@@ -287,6 +287,8 @@ namespace CodeBox.Test
 
         private void BindCommands()
         {
+            ed.Commands.Bind<ToggleFoldingCommand>(Keys.Control | Keys.K);
+            ed.Commands.Bind<AutocompleteCommand>(Keys.Control | Keys.Space);
             ed.Commands.Bind<AutocompleteCommand>(Keys.Control | Keys.Space);
             ed.Commands.Bind<FollowLinkCommand>(MouseEvents.Click, Keys.Control);
             ed.Commands.Bind<DeleteWordBackCommand>(Keys.Control | Keys.Back);

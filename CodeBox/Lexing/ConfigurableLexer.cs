@@ -85,6 +85,11 @@ namespace CodeBox.Lexing
                     {
                         pst.LastKeyword = (kres >> 16) & 0xFFFF;
                         pst.Context = '\0';
+                        if (mys.ContextChars != null)
+                            Context.CallTips.BindCallTip(
+                                "<string>ToolTip header</string><br><i>Subheader for this unique tip</i><br><br>&lt;<keyword>script</keyword>&gt;<br>This is a context keyword which is only recognized in a particular context such as (&gt;) or any other different context symbol.", 
+                                new Pos(line, i - mys.Keywords.Offset), new Pos(line, i));
+                        //"*ToolTip header*\n_Subheader for this unique tip_\n\nThis is a context keyword which is only recognized in a particular context such as (>) or any other different context symbol.", new Pos(line, i - mys.Keywords.Offset), new Pos(line, i));
                     }
 
                     Styles.StyleRange(kres & 0xFFFF, line, i - mys.Keywords.Offset, i);

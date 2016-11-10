@@ -51,12 +51,12 @@ namespace CodeBox.Folding
                     if (c == ' ')
                         indent++;
                     else if (c == '\t')
-                        indent += ctx.Settings.TabSize;
+                        indent += ctx.TabSize;
                     else
                         break;
                 }
 
-                indent /= ctx.Settings.TabSize;
+                indent /= ctx.TabSize;
 
                 if (indent > prevIndent && i > 0 && !ctx.Buffer.Document.Lines[i - 1].IsEmpty())
                 {

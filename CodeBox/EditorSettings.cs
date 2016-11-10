@@ -67,8 +67,6 @@ namespace CodeBox
 
         public bool ShowLineLength { get; set; }
 
-        public bool ShowCaretToolTip { get; set; }
-
         public bool CurrentLineIndicator { get; set; }
 
         public Color CurrentLineIndicatorColor { get; set; }
@@ -113,6 +111,14 @@ namespace CodeBox
                         editor.CachedSmallFont.Dispose();
 
                     editor.CachedSmallFont = new CachedFont(value);
+
+                    using (var g = editor.CreateGraphics())
+                    {
+                        var size1 = g.MeasureString("<F>", value);
+                        var size2 = g.MeasureString("<>", value);
+                        editor.Info.SmallCharWidth = (int)(size1.Width - size2.Width);
+                        editor.Info.SmallCharHeight = (int)value.GetHeight(g);
+                    }
                 }
             }
         }

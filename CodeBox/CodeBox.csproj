@@ -56,7 +56,7 @@
     </Compile>
     <Compile Include="Autocomplete\DocumentCompleteSource.cs" />
     <Compile Include="Autocomplete\ICompleteSource.cs" />
-    <Compile Include="CallTipManager.cs" />
+    <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\CommandKeys.cs" />
@@ -145,6 +145,7 @@
     <Compile Include="Lexing\SectionSequence.cs" />
     <Compile Include="Lexing\State.cs" />
     <Compile Include="Lexing\StringTable.cs" />
+    <Compile Include="LimitedStack.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="Margins\FoldingMargin.cs" />
     <Compile Include="Margins\GutterMargin.cs" />
@@ -178,7 +179,7 @@
     <Compile Include="ObjectModel\SelectionList.cs" />
     <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
-    <Compile Include="Styling\CallTip.cs" />
+    <Compile Include="CallTips\CallTip.cs" />
     <Compile Include="Styling\IStylingProvider.cs" />
     <Compile Include="Styling\MarkerStyle.cs" />
     <Compile Include="Styling\SelectionStyle.cs" />

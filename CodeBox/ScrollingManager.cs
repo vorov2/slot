@@ -67,7 +67,7 @@ namespace CodeBox
 
         private int IsColumnVisible(Pos pos)
         {
-            var tetras = editor.Lines[pos.Line].GetTetras(pos.Col, editor.Settings.TabSize);
+            var tetras = editor.Lines[pos.Line].GetTetras(pos.Col, editor.TabSize);
             var curpos = tetras * editor.Info.CharWidth + editor.Info.TextLeft + X;
 
             if (curpos > editor.Info.TextRight)
@@ -199,7 +199,7 @@ namespace CodeBox
         public void FastInvalidateLines()
         {
             var ln = editor.Lines[editor.Buffer.Selections.Main.Caret.Line];
-            var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth
+            var w = ln.GetTetras(editor.TabSize) * editor.Info.CharWidth
                 - editor.Info.TextWidth + editor.Info.CharWidth * 5;
 
             if (w > YMax)
@@ -234,7 +234,7 @@ namespace CodeBox
                         continue;
 
                     ln.Y = y;
-                    var w = ln.GetTetras(editor.Settings.TabSize) * editor.Info.CharWidth;
+                    var w = ln.GetTetras(editor.TabSize) * editor.Info.CharWidth;
                     y += editor.Info.LineHeight;
 
                     if (w > maxWidth)
@@ -261,7 +261,7 @@ namespace CodeBox
                         continue;
 
                     if (!ln.Invalidated || forced)
-                        ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.Settings.TabSize);
+                        ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.TabSize);
                     ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
                 }

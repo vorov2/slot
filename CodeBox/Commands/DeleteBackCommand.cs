@@ -60,7 +60,7 @@ namespace CodeBox.Commands
         {
             @string = null;
             @char = Character.Empty;
-            Execute(default(CommandArgument), redoSel);
+            Execute(CommandArgument.Empty, redoSel);
             return undoPos;
         }
 

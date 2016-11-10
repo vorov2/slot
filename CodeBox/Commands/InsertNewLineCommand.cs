@@ -42,7 +42,7 @@ namespace CodeBox.Commands
                     }
                 }
 
-                var str = Context.Settings.UseTabs ? new string('\t', indent / Context.Settings.TabSize)
+                var str = Context.UseTabs ? new string('\t', indent / Context.TabSize)
                     : new string(' ', indent);
                 Document.Lines[pos.Line].Insert(0, str.MakeCharacters());
                 selection.Clear(new Pos(pos.Line, pos.Col + str.Length));
@@ -55,7 +55,7 @@ namespace CodeBox.Commands
         {
             @string = null;
             var sel = redoSel;
-            Execute(default(CommandArgument), sel);
+            Execute(CommandArgument.Empty, sel);
             return sel.Caret;
         }
 
@@ -72,7 +72,7 @@ namespace CodeBox.Commands
 
             if (indent > 0)
             {
-                var real = Context.Settings.UseTabs ? indent / Context.Settings.TabSize : indent;
+                var real = Context.UseTabs ? indent / Context.TabSize : indent;
                 nextLine.RemoveRange(0, real);
             }
 
