@@ -108,7 +108,7 @@ namespace CodeBox
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
                 editor.Buffer.Edits--;
                 SetEditLines();
-                DoAftermath(exp, ActionResults.Change, count, pos);
+                DoAftermath(exp | ActionExponent.RestoreCaret, ActionResults.Change, count, pos);
             }
         }
 
@@ -151,7 +151,7 @@ namespace CodeBox
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
                 editor.Buffer.Edits++;
                 SetEditLines();
-                DoAftermath(exp, ActionResults.Change, count, pos);
+                DoAftermath(exp | ActionExponent.RestoreCaret, ActionResults.Change, count, pos);
             }
         }
 
@@ -423,11 +423,16 @@ namespace CodeBox
             var scrolled = false;
 
             if ((exp & ActionExponent.Modify) == ActionExponent.Modify
-                || (exp & ActionExponent.Invalidate) ==  ActionExponent.Invalidate)
+                || (exp & ActionExponent.Invalidate) == ActionExponent.Invalidate)
+            {
                 editor.Scroll.InvalidateLines(
                     exec.Has(ActionResults.AtomicChange) ? ScrollingManager.InvalidateFlags.Atomic
                     : ScrollingManager.InvalidateFlags.None
                     );
+
+                if (editor.Scroll.Y < -editor.Scroll.YMax)
+                    exp |= ActionExponent.Scroll;
+            }
 
             if ((exp & ActionExponent.RestoreCaret) == ActionExponent.RestoreCaret)
                 SetCarets(selCount, caret);

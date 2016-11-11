@@ -27,9 +27,60 @@ namespace CodeBox.Commands
             }
             else
             {
+                if (!Context.UseTabs)
+                {
+                    var newIndent = FindIndent(true, sel.Caret.Line, indent.Length);
+
+                    if (newIndent == -1)
+                        newIndent = FindIndent(false, sel.Caret.Line, indent.Length);
+
+                    if (newIndent != -1)
+                        indent = new string(' ', newIndent);
+                }
+
                 arg = new CommandArgument(indent);
                 return base.Execute(arg, sel);
             }
+        }
+
+        private int FindIndent(bool backward, int line, int indent)
+        {
+            var first = -1;
+            
+            for (var i = line
+                ; backward ? i > -1 : i < Document.Lines.Count
+                ; i += backward ? -1 : 1)
+            {
+                if (Document.Lines[i].Length == 0)
+                    continue;
+
+                var sp = CountSpaces(i);
+                
+                if (first == -1)
+                    first = sp;
+                else if (sp > first)
+                    return sp - first;
+                else
+                    return -1;
+            }
+
+            return -1;
+        }
+
+        private int CountSpaces(int line)
+        {
+            var ln = Document.Lines[line];
+            var spaces = 0;
+
+            foreach (var c in ln)
+                if (c.Char == ' ')
+                    spaces++;
+                else if (c.Char == '\t')
+                    spaces += Context.TabSize;
+                else
+                    return spaces;
+
+            return spaces;
         }
 
         public override Pos Redo()

@@ -116,13 +116,16 @@ namespace CodeBox.Margins
                     mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
                     new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
                 lastCaretPos = pos;
-
                 var caretLine = Editor.Buffer.Selections.Main.Caret.Line;
-                var linePos = caretLine / (Editor.Lines.Count / 100d);
-                var caretY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
 
-                g.FillRectangle(Editor.Styles.Default.ForeBrush, new Rectangle(bounds.X, (int)caretY, bounds.Width,
-                    (int)Math.Round(g.DpiY / 96f) * 2));
+                foreach (var s in Editor.Buffer.Selections)
+                {
+                    var linePos = s.Caret.Line / (Editor.Lines.Count / 100d);
+                    var caretY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
+
+                    g.FillRectangle(Editor.Styles.Default.ForeBrush, new Rectangle(bounds.X, (int)caretY, bounds.Width,
+                        (int)Math.Round(g.DpiY / 96f) * s.Caret.Line == caretLine ? 2 : 1));
+                }
             }
 
             return true;

@@ -26,7 +26,7 @@ namespace CodeBox
             BracketSymbols = BRACKETS;
             //WordWrap = true;
             WordWrapColumn = 80;
-            UseTabs = true;
+            //UseTabs = true;
             ShowLineLength = true;
             CurrentLineIndicator = true;
             CurrentLineIndicatorColor = ColorTranslator.FromHtml("#262626");//161616

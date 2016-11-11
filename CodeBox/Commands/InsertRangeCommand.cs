@@ -43,13 +43,10 @@ namespace CodeBox.Commands
         public override Pos Undo()
         {
             DeleteRangeCommand.DeleteRange(Context, undo);
-            var pos = Pos.Empty;
+            var pos = undo.Caret;
 
             if (@string != null)
                 pos = InsertRange(Document, undo.End, @string);
-
-            if (pos.IsEmpty)
-                pos = undo.Caret;
 
             return pos;
         }
