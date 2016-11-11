@@ -16,7 +16,8 @@ namespace CodeBox.Commands
         
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            var range = SelectWord(Context);
+            var caret = sel.Caret;
+            var range = SelectWord(Context, caret);
             
             if (range == null)
             {
@@ -28,15 +29,19 @@ namespace CodeBox.Commands
             }
 
             if (range != null)
+            {
+                //if (sel.IsEmpty)
+                //    Buffer.Selections.Remove(sel);
+
                 Buffer.Selections.Set(Selection.FromRange(range));
+            }
 
             return Clean | Scroll;
         }
 
-        internal static Range SelectWord(IEditorContext ctx)
+        internal static Range SelectWord(IEditorContext ctx, Pos caret)
         {
             var doc = ctx.Buffer.Document;
-            var caret = ctx.Buffer.Selections.Main.Caret;
             var line = doc.Lines[caret.Line];
             var seps = ctx.AffinityManager.GetAffinity(caret).GetNonWordSymbols(ctx, caret);
 
