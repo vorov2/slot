@@ -13,6 +13,8 @@ namespace CodeBox.Affinity
 
         string BracketSymbols { get; }
 
+        string CommentMask { get; }
+
         IDentProvider IndentProvider { get; set; }
     }
 }

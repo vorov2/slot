@@ -21,6 +21,8 @@ namespace CodeBox.Lexing
 
         public string BracketSymbols { get; set; }
 
+        public string CommentMask { get; set; }
+
         public IDentProvider IndentProvider { get; set; }
         #endregion
 
