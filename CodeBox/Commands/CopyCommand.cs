@@ -1,22 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Silent | IdleCaret)]
     public sealed class CopyCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            var str = GetTextRange(Context, sel);
-            Clipboard.SetText(str, TextDataFormat.UnicodeText);
-            return ActionResults.Clean;
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < Buffer.Selections.Count; i++)
+            {
+                var s = Buffer.Selections[i];
+                var str = GetTextRange(Context, s);
+                sb.Append(str);
+                if (i != Buffer.Selections.Count - 1)
+                    sb.Append(Buffer.Eol.AsString());
+            }
+
+            if (sb.Length > 0)
+                Clipboard.SetText(sb.ToString(), TextDataFormat.UnicodeText);
+
+            return SingleRun | Pure;
         }
 
         internal static string GetTextRange(IEditorContext ctx, Range rangesr)

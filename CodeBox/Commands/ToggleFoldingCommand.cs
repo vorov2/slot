@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
 using CodeBox.Folding;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(SingleRun | Undoable | Invalidate)]
-    public sealed class ToggleFoldingCommand : Command
+    public sealed class ToggleFoldingCommand : Command, IModifyContent
     {
         private int undoLine;
         private Pos undoCaret;
@@ -38,19 +33,21 @@ namespace CodeBox.Commands
                 ln--;
             }
 
-            return ActionResults.Clean;
+            return SingleRun | Modify | ShallowChange;
         }
 
-        public override Pos Undo()
+        public override ActionResults Undo(out Pos pos)
         {
             Context.Folding.ToggleExpand(undoLine);
-            return undoCaret;
+            pos = undoCaret;
+            return SingleRun | Modify | ShallowChange;
         }
 
-        public override Pos Redo()
+        public override ActionResults Redo(out Pos pos)
         {
             Context.Folding.ToggleExpand(undoLine);
-            return undoCaret;
+            pos = undoCaret;
+            return SingleRun | Modify | ShallowChange;
         }
 
         public override ICommand Clone()

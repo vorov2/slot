@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public sealed class DeleteWordCommand : DeleteCommand
+    public sealed class DeleteWordCommand : DeleteCommand, IModifyContent
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {

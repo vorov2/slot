@@ -1,6 +1,6 @@
 ﻿using System;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
@@ -10,7 +10,7 @@ namespace CodeBox.Commands
         {
             var pos = Select(sel);
             sel.End = pos;
-            return ActionResults.Clean;
+            return Clean | Scroll;
         }
 
         protected abstract Pos Select(Selection sel);

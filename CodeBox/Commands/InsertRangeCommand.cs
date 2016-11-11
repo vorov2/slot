@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Undoable | Scroll)]
-    public class InsertRangeCommand : Command //Tested
+    public class InsertRangeCommand : Command, IModifyContent
     {
         private Selection undo;
         protected Selection redoSel;
@@ -27,28 +24,29 @@ namespace CodeBox.Commands
             var pos = InsertRange(Document, sel.Start, @redoString);
             undo = new Selection(sel.Start, pos);
             sel.Clear(pos);
-            return ActionResults.Change;
+            return Change;
         }
 
-        public override Pos Redo()
+        public override ActionResults Redo(out Pos pos)
         {
             @string = null;
             var sel = redoSel;
             var arg = new CommandArgument(redoString.MakeString(Context.Buffer.Eol));
             @redoString = null;
             Execute(arg, sel);
-            return sel.Caret;
+            pos = sel.Caret;
+            return Change;
         }
 
-        public override Pos Undo()
+        public override ActionResults Undo(out Pos pos)
         {
             DeleteRangeCommand.DeleteRange(Context, undo);
-            var pos = undo.Caret;
+            pos = undo.Caret;
 
             if (@string != null)
                 pos = InsertRange(Document, undo.End, @string);
 
-            return pos;
+            return Change;
         }
 
         internal static Pos InsertRange(Document doc, Pos pos, IEnumerable<Character> textRange)

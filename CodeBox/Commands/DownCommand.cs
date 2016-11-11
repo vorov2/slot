@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll | ClearSelections)]
     public class DownCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveDown(Context, sel);

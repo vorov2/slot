@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public sealed class InsertNewLineCommand : Command
+    public sealed class InsertNewLineCommand : Command, IModifyContent
     {
         private IEnumerable<Character> @string;
         private Pos undoPos;
@@ -48,20 +45,21 @@ namespace CodeBox.Commands
                 selection.Clear(new Pos(pos.Line, pos.Col + str.Length));
             }
 
-            return ActionResults.Change;
+            return Change;
         }
 
-        public override Pos Redo()
+        public override ActionResults Redo(out Pos pos)
         {
             @string = null;
             var sel = redoSel;
             Execute(CommandArgument.Empty, sel);
-            return sel.Caret;
+            pos = sel.Caret;
+            return Change;
         }
 
-        public override Pos Undo()
+        public override ActionResults Undo(out Pos pos)
         {
-            var pos = undoPos;
+            pos = undoPos;
 
             if (@string != null)
                 pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
@@ -80,7 +78,7 @@ namespace CodeBox.Commands
                 line.Insert(0, unindent);
 
             line.Append(nextLine);
-            return pos;
+            return Change;
         }
 
         internal static Pos InsertNewLine(Document doc, Pos pos)
@@ -102,7 +100,7 @@ namespace CodeBox.Commands
 
         public override ICommand Clone()
         {
-            return new InsertCharCommand();
+            return new InsertNewLineCommand();
         }
     }
 }

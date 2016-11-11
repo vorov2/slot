@@ -1,14 +1,9 @@
-﻿using CodeBox.ObjectModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static CodeBox.Commands.ActionExponent;
+﻿using System;
+using CodeBox.ObjectModel;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(ClearSelections)]
     public sealed class SelectAllCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
@@ -17,7 +12,7 @@ namespace CodeBox.Commands
             var ln = Document.Lines[idx];
             sel.Start = default(Pos);
             sel.End = new Pos(idx, ln.Length);
-            return ActionResults.Clean;
+            return Clean | SingleRun;
         }
     }
 }

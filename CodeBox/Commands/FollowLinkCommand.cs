@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
-using CodeBox.Styling;
 using System.Diagnostics;
+using CodeBox.ObjectModel;
+using CodeBox.Styling;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(LeaveEditor | SingleRun | IdleCaret)]
     public sealed class FollowLinkCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
@@ -22,10 +17,10 @@ namespace CodeBox.Commands
             {
                 var link = ln.GetRange(a.Start, a.End - a.Start + 1).MakeString();
                 Process.Start(link);
-                return ActionResults.Clean;
+                return Clean | LeaveEditor | SingleRun | IdleCaret;
             }
 
-            return ActionResults.None;
+            return Pure;
         }
     }
 }

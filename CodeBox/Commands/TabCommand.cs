@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | Scroll | Undoable)]
-    public sealed class TabCommand : InsertRangeCommand
+    public sealed class TabCommand : InsertRangeCommand, IModifyContent
     {
         private bool undoIndent;
 
@@ -23,7 +20,7 @@ namespace CodeBox.Commands
                 redoSel = sel.Clone();
                 var str = indent.MakeCharacters();
                 Indent(Context, sel, str);
-                return ActionResults.Change;
+                return Modify | Scroll;
             }
             else
             {
@@ -39,7 +36,8 @@ namespace CodeBox.Commands
                 }
 
                 arg = new CommandArgument(indent);
-                return base.Execute(arg, sel);
+                base.Execute(arg, sel);
+                return Modify | Scroll;
             }
         }
 
@@ -83,31 +81,35 @@ namespace CodeBox.Commands
             return spaces;
         }
 
-        public override Pos Redo()
+        public override ActionResults Redo(out Pos pos)
         {
             if (undoIndent)
             {
                 var sel = redoSel;
                 Execute(CommandArgument.Empty, sel);
-                return sel.End;
+                pos = sel.End;
+                return Change;
             }
-            return base.Redo();
+            else
+                return base.Redo(out pos);
         }
 
-        public override Pos Undo()
+        public override ActionResults Undo(out Pos pos)
         {
             if (undoIndent)
             {
-                Unindent(Context, redoSel);
-                return redoSel.Caret;
+                var change = Unindent(Context, redoSel);
+                pos = redoSel.Caret;
+                return Change;
             }
             else
-                return base.Undo();
+                return base.Undo(out pos);
         }
 
-        internal static void Unindent(IEditorContext ctx, Selection sel)
+        internal static bool Unindent(IEditorContext ctx, Selection sel)
         {
             var norm = sel.Normalize();
+            var change = false;
 
             for (var i = norm.Start.Line; i < norm.End.Line + 1; i++)
             {
@@ -122,14 +124,20 @@ namespace CodeBox.Commands
                 if (pos.Col == 0)
                     continue;
                 else if (line[pos.Col - 1].Char == '\t')
+                {
                     line.RemoveAt(pos.Col - 1);
+                    change = true;
+                }
                 else
                 {
                     var st = pos.Col - ctx.TabSize;
                     st = st < 0 ? 0 : st;
                     line.RemoveRange(st, pos.Col - st);
+                    change = true;
                 }
             }
+
+            return change;
         }
 
         internal static void Indent(IEditorContext ctx, Selection sel, IEnumerable<Character> indent)

@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
-using CodeBox.Lexing;
 using CodeBox.Affinity;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll | ClearSelections)]
     public class SelectWordCommand : Command
     {
         internal enum Strategy
@@ -23,7 +17,7 @@ namespace CodeBox.Commands
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             var range = SelectWord(Context);
-
+            
             if (range == null)
             {
                 var line = Document.Lines[sel.Caret.Line];
@@ -36,7 +30,7 @@ namespace CodeBox.Commands
             if (range != null)
                 Buffer.Selections.Set(Selection.FromRange(range));
 
-            return ActionResults.Clean;
+            return Clean | Scroll;
         }
 
         internal static Range SelectWord(IEditorContext ctx)

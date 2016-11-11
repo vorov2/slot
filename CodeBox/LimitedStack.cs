@@ -9,9 +9,10 @@ namespace CodeBox
 {
     internal sealed class LimitedStack<T> : IEnumerable<T>
     {
-        private const int CAPACITY = 100;
+        private const int CAPACITY = 500;
         private T[] items;
-        private int top = 0;
+        private int top;
+        private int count;
 
         public LimitedStack() : this(CAPACITY)
         {
@@ -27,12 +28,23 @@ namespace CodeBox
         {
             items[top] = item;
             top = (top + 1) % items.Length;
+            count++;
+
+            if (count > 100)
+                count = 100;
         }
 
         public T Pop()
         {
             top = (items.Length + top - 1) % items.Length;
-            return items[top];
+            count--;
+
+            if (count < 0)
+                count = 0;
+
+            var ret = items[top];
+            items[top] = default(T);
+            return ret;
         }
 
         public T Peek()
@@ -51,6 +63,6 @@ namespace CodeBox
             return GetEnumerator();
         }
 
-        public int Count => top;
+        public int Count => count;
     }
 }

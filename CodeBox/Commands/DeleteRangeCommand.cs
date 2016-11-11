@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public class DeleteRangeCommand : Command
+    public class DeleteRangeCommand : Command, IModifyContent
     {
         protected IEnumerable<Character> data;
         private Pos undoPos;
@@ -17,20 +16,22 @@ namespace CodeBox.Commands
             redoSel = sel.Clone();
             data = DeleteRange(Context, sel);
             undoPos = sel.Caret;
-            return ActionResults.Change;
+            return data != null ? Change : Pure;
         }
 
-        public override Pos Redo()
+        public override ActionResults Redo(out Pos pos)
         {
             data = null;
             Execute(CommandArgument.Empty, redoSel);
-            return undoPos;
+            pos = undoPos;
+            return Change;
         }
 
-        public override Pos Undo()
+        public override ActionResults Undo(out Pos pos)
         {
             undoPos = InsertRangeCommand.InsertRange(Document, undoPos, data);
-            return undoPos;
+            pos = undoPos;
+            return Change;
         }
 
         public override ICommand Clone()

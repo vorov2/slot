@@ -9,17 +9,38 @@ namespace CodeBox.Commands
     [Flags]
     public enum ActionResults
     {
+        //Combinations
+        Pure = Clean | Silent | IdleCaret,
+        Change = Modify | RestoreCaret | Scroll,
+
+
         None = 0x00,
 
-        Clean = 0x01,
+        Silent = 0x01,
 
-        Change = 0x02,
+        RestoreCaret = 0x02,
 
-        AtomicChange = 0x04,
+        Scroll = 0x04,
 
-        AutocompleteKeep = 0x08,
+        SingleRun = 0x08,
 
-        AutocompleteShow = 0x10
+        //ClearSelections = 0x10,
+
+        Clean = 0x20,
+
+        Modify = 0x40,
+
+        LeaveEditor = 0x80,
+
+        ShallowChange = 0x100,
+
+        IdleCaret = 0x200,
+
+        AtomicChange = 0x400,
+
+        AutocompleteKeep = 0x800,
+
+        AutocompleteShow = 0x1000
     }
 
     public static class ActionResultsExtensions

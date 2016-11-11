@@ -61,7 +61,6 @@
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\CommandKeys.cs" />
     <Compile Include="CommandManager.cs" />
-    <Compile Include="Commands\ActionExponent.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
@@ -95,6 +94,7 @@
     <Compile Include="Commands\HomeCommand.cs" />
     <Compile Include="Commands\InsertNewLineCommand.cs" />
     <Compile Include="Commands\InsertRangeCommand.cs" />
+    <Compile Include="Commands\IModifyContent.cs" />
     <Compile Include="Commands\NormalSelectCommand.cs" />
     <Compile Include="Commands\OvertypeCommand.cs" />
     <Compile Include="Commands\PageDownCommand.cs" />
@@ -162,7 +162,6 @@
     <Compile Include="MatchBracketManager.cs" />
     <Compile Include="ObjectModel\DocumentBuffer.cs" />
     <Compile Include="ObjectModel\Character.cs" />
-    <Compile Include="Commands\CommandBehaviorAttribute.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\LeftCommand.cs" />
     <Compile Include="Commands\UpCommand.cs" />

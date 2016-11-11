@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(SingleRun)]
     public sealed class UndoCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             Context.Commands.Undo();
-            return ActionResults.Clean;
+            return SingleRun | Clean;
         }
     }
 }

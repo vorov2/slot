@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
 using CodeBox.Autocomplete;
-using System.Windows.Forms;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(SingleRun | Silent | IdleCaret)]
     public sealed class AutocompleteCommand : Command
     {
         private DocumentCompleteSource completeSource = new DocumentCompleteSource();
@@ -20,7 +14,7 @@ namespace CodeBox.Commands
             completeSource.Initialize(Context);
             var list = completeSource.GetItems();
             Context.Autocomplete.ShowAutocomplete(sel.Caret, list);
-            return ActionResults.AutocompleteShow;
+            return Pure | SingleRun | AutocompleteShow;
         }
     }
 }

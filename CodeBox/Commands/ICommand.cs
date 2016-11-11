@@ -11,9 +11,9 @@ namespace CodeBox.Commands
     {
         ActionResults Execute(CommandArgument arg, Selection sel);
 
-        Pos Undo();
+        ActionResults Undo(out Pos pos);
 
-        Pos Redo();
+        ActionResults Redo(out Pos pos);
 
         ICommand Clone();
 

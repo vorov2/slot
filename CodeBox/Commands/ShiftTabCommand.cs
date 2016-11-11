@@ -1,39 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | Scroll | Undoable)]
-    public sealed class ShiftTabCommand : Command
+    public sealed class ShiftTabCommand : Command, IModifyContent
     {
         private Selection redoSel;
 
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            TabCommand.Unindent(Context, sel);
-            ShiftSel(sel);
-            return ActionResults.Change;
+            var change = TabCommand.Unindent(Context, sel);
+
+            if (change)
+            {
+                ShiftSel(sel);
+                return Modify | Scroll;
+            }
+            else
+                return Clean;
         }
 
-        public override Pos Redo()
+        public override ActionResults Redo(out Pos pos)
         {
             var sel = redoSel;
             Execute(CommandArgument.Empty, sel);
-            return sel.End;
+            pos = sel.End;
+            return Change;
         }
 
-        public override Pos Undo()
+        public override ActionResults Undo(out Pos pos)
         {
             var indent = Context.UseTabs ? "\t" : new string(' ', Context.TabSize);
             TabCommand.Indent(Context, redoSel, indent.MakeCharacters());
             ShiftSel(redoSel);
-            return redoSel.Caret;
+            pos = redoSel.Caret;
+            return Change;
         }
 
         private void ShiftSel(Selection sel)

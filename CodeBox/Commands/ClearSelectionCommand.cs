@@ -3,17 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(None)]
     public sealed class ClearSelectionCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             Buffer.Selections.Truncate();
-            return ActionResults.Clean;
+            return Clean;
         }
     }
 }

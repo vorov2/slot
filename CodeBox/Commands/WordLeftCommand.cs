@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Affinity;
-using static CodeBox.Commands.ActionExponent;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll | ClearSelections)]
     public sealed class WordLeftCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => WordLeft(Context, sel);

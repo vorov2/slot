@@ -1,21 +1,16 @@
-﻿using CodeBox.ObjectModel;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static CodeBox.Commands.ActionExponent;
+using CodeBox.ObjectModel;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll | SingleRun)]
     public sealed class BlockSelectCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             DoSelection(arg.Pos, arg.Location);
-            return ActionResults.Clean;
+            return Scroll | SingleRun | Clean;
         }
 
         private void DoSelection(Pos p, Point loc)

@@ -1,20 +1,15 @@
-﻿using CodeBox.ObjectModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static CodeBox.Commands.ActionExponent;
+﻿using System;
+using CodeBox.ObjectModel;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Scroll | SingleRun)]
     public sealed class NormalSelectCommand : Command
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             DoSelection(arg.Pos);
-            return ActionResults.Clean;
+            return Clean | Scroll | SingleRun;
         }
 
         private void DoSelection(Pos p)

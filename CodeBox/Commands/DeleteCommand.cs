@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionExponent;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    [CommandBehavior(Modify | RestoreCaret | Scroll | Undoable)]
-    public class DeleteCommand : Command
+    public class DeleteCommand : Command, IModifyContent
     {
         private IEnumerable<Character> @string;
         private Character @char;
@@ -19,11 +15,11 @@ namespace CodeBox.Commands
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             redoSel = sel.Clone();
-            var res = ActionResults.None;
+            var res = Pure;
 
             if (!sel.IsEmpty)
             {
-                res = ActionResults.Change;
+                res = Change;
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
             }
             else
@@ -36,7 +32,7 @@ namespace CodeBox.Commands
                 {
                     @char = ln.CharacterAt(caret.Col);
                     ln.RemoveAt(caret.Col);
-                    res = ActionResults.Change;
+                    res = Change;
                 }
                 else if (caret.Line < lines.Count - 1)
                 {
@@ -44,7 +40,7 @@ namespace CodeBox.Commands
                     @char = Character.NewLine;
                     lines.Remove(nl);
                     ln.Append(nl);
-                    res = ActionResults.Change;
+                    res = Change;
                 }
             }
 
@@ -52,17 +48,18 @@ namespace CodeBox.Commands
             return res;
         }
 
-        public override Pos Redo()
+        public override ActionResults Redo(out Pos pos)
         {
             @string = null;
             @char = Character.Empty;
             Execute(CommandArgument.Empty, redoSel);
-            return undoPos;
+            pos = undoPos;
+            return Change;
         }
 
-        public override Pos Undo()
+        public override ActionResults Undo(out Pos pos)
         {
-            var pos = undoPos;
+            pos = undoPos;
 
             if (@string != null)
                 pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
@@ -74,7 +71,7 @@ namespace CodeBox.Commands
                 ln.Insert(undoPos.Col, @char);
             }
 
-            return pos;
+            return Change;
         }
 
         public override ICommand Clone()

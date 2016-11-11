@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
@@ -11,14 +12,19 @@ namespace CodeBox.Commands
     {
         public abstract ActionResults Execute(CommandArgument arg, Selection sel);
 
-        public virtual Pos Undo() => Pos.Empty;
-
-        public virtual Pos Redo() => Pos.Empty;
-
-        public virtual ICommand Clone()
+        public virtual ActionResults Undo(out Pos pos)
         {
-            throw new NotSupportedException();
+            pos = Pos.Empty;
+            return None;
         }
+
+        public virtual ActionResults Redo(out Pos pos)
+        {
+            pos = Pos.Empty;
+            return None;
+        }
+
+        public virtual ICommand Clone() => this;
 
         public IEditorContext Context { get; set; }
 
