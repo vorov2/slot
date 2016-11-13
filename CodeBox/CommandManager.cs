@@ -302,6 +302,7 @@ namespace CodeBox
                     if (lel > LastEditLine)
                         LastEditLine = lel;
 
+                    cmd = cmd.Clone();
                     cmd.Context = editor.Context;
                     var e = cmd.Execute(arg, sel);
                     exp |= e;
@@ -398,7 +399,7 @@ namespace CodeBox
                     exp.Has(AtomicChange) ? ScrollingManager.InvalidateFlags.Atomic
                     : ScrollingManager.InvalidateFlags.None);
 
-                if (editor.Scroll.Y < -editor.Scroll.YMax)
+                if (editor.Scroll.Y + editor.Info.TextHeight < -editor.Scroll.YMax)
                     exp |= Scroll;
             }
 

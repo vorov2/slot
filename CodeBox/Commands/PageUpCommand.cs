@@ -1,5 +1,6 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using CodeBox.Folding;
 
 namespace CodeBox.Commands
 {
@@ -18,7 +19,12 @@ namespace CodeBox.Commands
 
             for (var i = caret.Line; i > -1; i--)
             {
-                lastLine = lines[i];
+                var ln = lines[i];
+
+                if (ln.Folding.Has(FoldingStates.Invisible))
+                    continue;
+
+                lastLine = ln;
                 lastLineIndex = i;
                 stripes += lastLine.Stripes;
 

@@ -13,8 +13,19 @@ namespace CodeBox.Commands
 
         internal static Pos MoveDown(IEditorContext ctx, Selection sel)
         {
-            var doc = ctx.Buffer.Document;
             var pos = sel.Caret;
+
+            do
+            {
+                pos = InternalMoveDown(ctx, sel, pos);
+            } while (ctx.Buffer.Document.Lines[pos.Line].Folding.HasFlag(Folding.FoldingStates.Invisible));
+
+            return pos;
+        }
+
+        private static Pos InternalMoveDown(IEditorContext ctx, Selection sel, Pos pos)
+        {
+            var doc = ctx.Buffer.Document;
 
             if (ctx.WordWrap)
             {

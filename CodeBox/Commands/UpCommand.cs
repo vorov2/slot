@@ -1,16 +1,28 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using CodeBox.Folding;
 
 namespace CodeBox.Commands
 {
     public class UpCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveUp(Context, sel);
-        
+
         internal static Pos MoveUp(IEditorContext ctx, Selection sel)
         {
-            var doc = ctx.Buffer.Document;
             var pos = sel.Caret;
+
+            do
+            {
+                pos = InternalMoveUp(ctx, sel, pos);
+            } while (ctx.Buffer.Document.Lines[pos.Line].Folding.Has(FoldingStates.Invisible));
+
+            return pos;
+        }
+
+        private static Pos InternalMoveUp(IEditorContext ctx, Selection sel, Pos pos)
+        {
+            var doc = ctx.Buffer.Document;
 
             if (ctx.WordWrap)
             {
