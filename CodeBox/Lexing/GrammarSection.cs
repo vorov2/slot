@@ -23,8 +23,6 @@ namespace CodeBox.Lexing
 
         public SectionSequence End { get; set; }
 
-        public SectionSequence End1 { get; set; }
-
         public bool DontStyleCompletely { get; set; }
 
         public bool Multiline { get; set; }

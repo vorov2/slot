@@ -1,4 +1,5 @@
-﻿using CodeBox.ObjectModel;
+﻿using CodeBox.Affinity;
+using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,6 @@ namespace CodeBox.Lexing
 
         private State ParseLine(GrammarSection mys, ref int i, int line, ParseState pst)
         {
-            var lastNum = -1;
             var start = i;
             var identStart = i;
             var ln = Lines[line];
@@ -101,17 +101,17 @@ namespace CodeBox.Lexing
                 else if (kres < 0)
                     mys.Keywords.Reset();
 
-                if (lastNum != -1 && mys.StyleNumbers)
+                if (/*lastNum != -1 &&*/ mys.StyleNumbers && grammar.NumberLiteral != null)
                 {
-                    var num = IsNumeric(c, last);
+                    var mc = grammar.NumberLiteral.MatchCount;
+                    var num = grammar.NumberLiteral.Match(c);//IsNumeric(c, last);
 
-                    if (!num)
+                    if (!num && mc > 0 && nonIdent)
                     {
-                        Styles.StyleRange(StandardStyle.Number, line, lastNum, i - 1);
-                        lastNum = -1;
+                        Styles.StyleRange(StandardStyle.Number, line, i - mc, i - 1);
                     }
-                    else if (!nonIdent && !num)
-                        lastNum = -1;
+                    //else if (!nonIdent && !num)
+                    //    lastNum = -1;
                 }
 
                 if (nonIdent)
@@ -215,13 +215,8 @@ namespace CodeBox.Lexing
                         identStart = i + 1;
                     }
                 }
-                else if (
-                    (backm.End != null && backm.End.Match(c) == MatchResult.Hit
+                else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
                         && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
-                    ||
-                    (backm.End1 != null && backm.End1.Match(c) == MatchResult.Hit
-                        && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
-                    )
                 {
                     if (backm.Style != 0)
                     {
@@ -246,10 +241,10 @@ namespace CodeBox.Lexing
                 if (!ws)
                     term = c;
                 
-                if (lastNum == -1 && lastNonIdent && (IsDigit(c) || c == '.' && IsDigit(ln.CharAt(i + 1))))
-                    lastNum = i;
-                else if (ws)
-                    lastNum = -1;
+                //if (lastNum == -1 && lastNonIdent && (IsDigit(c) || c == '.' && IsDigit(ln.CharAt(i + 1))))
+                //    lastNum = i;
+                //else if (ws)
+                //    lastNum = -1;
 
                 last = c;
                 lastNonIdent = nonIdent;
@@ -274,19 +269,19 @@ namespace CodeBox.Lexing
             return grammar.BracketSymbols.IndexOf(c) != -1;
         }
 
-        private bool IsDigit(char c)
-        {
-            return c >= '0' && c <= '9';
-        }
+        //private bool IsDigit(char c)
+        //{
+        //    return c >= '0' && c <= '9';
+        //}
 
-        private bool IsNumeric(char c, char last)
-        {
-            return IsDigit(c) 
-                || c == '.'
-                || c == 'e' && IsDigit(last)
-                || c == '+' && (last == 'e' || last == 'E')
-                || c == '-' && (last == 'e' || last == 'E');
-        }
+        //private bool IsNumeric(char c, char last)
+        //{
+        //    return IsDigit(c) 
+        //        || c == '.'
+        //        || c == 'e' && IsDigit(last)
+        //        || c == '+' && (last == 'e' || last == 'E')
+        //        || c == '-' && (last == 'e' || last == 'E');
+        //}
 
         private bool IsWhiteSpace(char c)
         {

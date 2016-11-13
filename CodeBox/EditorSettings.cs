@@ -46,6 +46,8 @@ namespace CodeBox
 
         public string BracketSymbols { get; set; }
 
+        public NumberLiteral NumberLiteral { get; set; }
+
         string IDocumentAffinity.CommentMask { get; }
 
         public IDentProvider IndentProvider { get; set; }

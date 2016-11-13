@@ -15,6 +15,8 @@ namespace CodeBox.Affinity
 
         string CommentMask { get; }
 
+        NumberLiteral NumberLiteral { get; }
+
         IDentProvider IndentProvider { get; set; }
     }
 }

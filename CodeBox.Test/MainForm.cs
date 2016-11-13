@@ -15,6 +15,7 @@ using CodeBox.Commands;
 using CodeBox.Folding;
 using CodeBox.Lexing;
 using CodeBox.Indentation;
+using CodeBox.Affinity;
 
 namespace CodeBox.Test
 {
@@ -96,30 +97,33 @@ namespace CodeBox.Test
             var grm = new Grammar("css")
             {
                 NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?",
+                NumberLiteral = new NumberLiteral("(0123456789){0123456789.+-}{ptx}(%)"),
                 IndentProvider = new CurlyDentProvider()
             };
             grm.AddSection(new GrammarSection
             {
-                IdentifierStyle = StandardStyle.KeywordModifier
+                IdentifierStyle = StandardStyle.Keyword
             });
-            grm.AddSection(new GrammarSection
+            var sect = new GrammarSection
             {
                 Id = 1,
+                StyleNumbers = true,
                 Start = new SectionSequence("{", true),
                 End = new SectionSequence("}", true),
-                Multiline = true,
-                IdentifierStyle = StandardStyle.KeywordSpecial
-            });
-            grm.AddSection(new GrammarSection
-            {
-                Id = 2,
-                ParentId = 1,
-                StyleNumbers = true,
-                Start = new SectionSequence(":", true),
-                End = new SectionSequence(";", true),
-                End1 = new SectionSequence("}", true),
                 Multiline = true
-            });
+            };
+            grm.AddSection(sect);
+            sect.Keywords.AddRange(@"azimuth border background-attachment background-color background-image background-position background-repeat background box-shadow border-radius border-bottom-color border-bottom-style border-bottom-width border-bottom border-collapse border-color border-left-color border-left-style border-left-width border-left border-right-color border-right-style border-right-width border-right border-spacing border-style border-top border-top-color border-top-style border-top-width border-width bottom caption-side clear clip color content counter-increment counter-reset cue-after cue-before cue cursor direction display elevation empty-cells float font-family font-size-adjust font-size font-stretch font-style font-variant font-weight font height image-rendering left letter-spacing line-height list-style-image list-style-position list-style-type list-style margin-bottom margin-left margin-right margin-top marker-offset margin marks max-height max-width min-height min-width -moz-border-radius opacity orphans outline-color outline-style outline-width outline overflow padding-bottom padding-left padding-right padding-top padding page-break-after page-break-before page-break-inside page pause-after pause-before pause pitch-range pitch play-during pointer-events position quotes resize richness right size speak-header speak-numeral speak-punctuation speech-rate speak src stress table-layout text-align text-decoration text-indent text-rendering text-shadow text-transform top unicode-bidi vertical-align visibility voice-family volume white-space widows width word-spacing word-wrap zoom z-index", (int)StandardStyle.KeywordSpecial);
+            //grm.AddSection(new GrammarSection
+            //{
+            //    Id = 2,
+            //    ParentId = 1,
+            //    StyleNumbers = true,
+            //    Start = new SectionSequence(":", true),
+            //    End = new SectionSequence(";", true),
+            //    End1 = new SectionSequence("}", true),
+            //    Multiline = true
+            //});
             grm.AddSection(new GrammarSection
             {
                 Id = 3,
@@ -138,25 +142,17 @@ namespace CodeBox.Test
                 End = new SectionSequence("*/", true),
                 Multiline = true
             });
-            grm.AddSection(new GrammarSection
-            {
-                Id = 5,
-                ParentId = 2,
-                Style = StandardStyle.CommentMultiline,
-                Start = new SectionSequence("/*", true),
-                End = new SectionSequence("*/", true),
-                Multiline = true
-            });
 
             return grm;
         }
 
-        const string kw = "nameof switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract var if else return while for foreach continue break ref out";
+        const string kw = "core_account_big core nameof switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract var if else return while for foreach continue break ref out";
         private Grammar CsGrammar()
         {
             var grm = new Grammar("csharp")
             {
-                IndentProvider = new CurlyDentProvider()
+                IndentProvider = new CurlyDentProvider(),
+                NumberLiteral = new NumberLiteral("(0123456789)[x]{0123456789.+-_abcdef}(lufdm)(ul)")
             };
             var glob = new GrammarSection
             {

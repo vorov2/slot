@@ -9,7 +9,7 @@ namespace CodeBox.Commands
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
             Context.Commands.Undo();
-            return SingleRun | Clean;
+            return SingleRun | Pure;
         }
     }
 }

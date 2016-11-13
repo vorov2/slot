@@ -42,7 +42,10 @@ namespace CodeBox.Lexing
             if (value == null || value.Length == 0)
                 throw new ArgumentNullException(nameof(value));
 
-            foreach (var s in value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            var arr = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            Array.Sort(arr);
+
+            foreach (var s in arr)
             {
                 InternalAdd(s, 0, buckets, code);
                 Count++;

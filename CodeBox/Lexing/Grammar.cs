@@ -23,6 +23,8 @@ namespace CodeBox.Lexing
 
         public string CommentMask { get; set; }
 
+        public NumberLiteral NumberLiteral { get; set; }
+
         public IDentProvider IndentProvider { get; set; }
         #endregion
 
