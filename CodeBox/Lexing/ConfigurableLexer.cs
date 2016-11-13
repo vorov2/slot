@@ -1,13 +1,7 @@
-﻿using CodeBox.Affinity;
+﻿using System;
+using System.Collections.Generic;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeBox.Lexing
 {
@@ -15,7 +9,7 @@ namespace CodeBox.Lexing
     {
         public ConfigurableLexer()
         {
-            
+
         }
 
         public void Style(IEditorContext context, Range range)
@@ -101,17 +95,13 @@ namespace CodeBox.Lexing
                 else if (kres < 0)
                     mys.Keywords.Reset();
 
-                if (/*lastNum != -1 &&*/ mys.StyleNumbers && grammar.NumberLiteral != null)
+                if (mys.StyleNumbers && grammar.NumberLiteral != null)
                 {
                     var mc = grammar.NumberLiteral.MatchCount;
-                    var num = grammar.NumberLiteral.Match(c);//IsNumeric(c, last);
+                    var num = grammar.NumberLiteral.Match(c);
 
                     if (!num && mc > 0 && nonIdent)
-                    {
                         Styles.StyleRange(StandardStyle.Number, line, i - mc, i - 1);
-                    }
-                    //else if (!nonIdent && !num)
-                    //    lastNum = -1;
                 }
 
                 if (nonIdent)
@@ -240,11 +230,6 @@ namespace CodeBox.Lexing
 
                 if (!ws)
                     term = c;
-                
-                //if (lastNum == -1 && lastNonIdent && (IsDigit(c) || c == '.' && IsDigit(ln.CharAt(i + 1))))
-                //    lastNum = i;
-                //else if (ws)
-                //    lastNum = -1;
 
                 last = c;
                 lastNonIdent = nonIdent;
@@ -268,20 +253,6 @@ namespace CodeBox.Lexing
         {
             return grammar.BracketSymbols.IndexOf(c) != -1;
         }
-
-        //private bool IsDigit(char c)
-        //{
-        //    return c >= '0' && c <= '9';
-        //}
-
-        //private bool IsNumeric(char c, char last)
-        //{
-        //    return IsDigit(c) 
-        //        || c == '.'
-        //        || c == 'e' && IsDigit(last)
-        //        || c == '+' && (last == 'e' || last == 'E')
-        //        || c == '-' && (last == 'e' || last == 'E');
-        //}
 
         private bool IsWhiteSpace(char c)
         {
@@ -315,11 +286,5 @@ namespace CodeBox.Lexing
         public string GrammarKey { get; set; }
 
         public GrammarProvider GrammarProvider { get; } = new GrammarProvider();
-    }
-
-    internal sealed class ParseState
-    {
-        public char Context;
-        public GrammarSection BackDelegate;
     }
 }

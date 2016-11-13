@@ -119,11 +119,7 @@ namespace CodeBox.ObjectModel
 
         public void RemoveAt(int index)
         {
-            //TODO:
-            if (index <= chars.Count)
-                chars.RemoveAt(index);
-            else
-                chars.RemoveAt(chars.Count - 1);
+            chars.RemoveAt(index);
             _tetras = -1;
             Invalidated = false;
         }

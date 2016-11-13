@@ -16,6 +16,24 @@ namespace CodeBox
         private int counter;
         private bool undoGroup;
         private readonly Editor editor;
+        private volatile EditorLock editorLock;
+
+        private sealed class EditorLock : IEditorLock
+        {
+            private readonly CommandManager man;
+            internal volatile int RefCount;
+
+            internal EditorLock(CommandManager man)
+            {
+                this.man = man;
+            }
+
+            public void Release()
+            {
+                if (--RefCount == 0)
+                    man.editorLock = null;
+            }
+        }
 
         internal CommandManager(Editor editor)
         {
@@ -80,6 +98,17 @@ namespace CodeBox
             Register<OvertypeCommand>();
             Register<InsertRangeCommand>();
             Register<DeleteRangeCommand>();
+        }
+
+        public IEditorLock ObtainLock()
+        {
+            if (editorLock == null)
+                return editorLock = new EditorLock(this);
+            else
+            {
+                editorLock.RefCount++;
+                return editorLock;
+            }
         }
 
         public bool BeginUndoAction()
@@ -245,7 +274,7 @@ namespace CodeBox
             ICommand ci;
 
             if (commands.TryGetValue(typeof(T), out ci))
-                Run(arg, ci);
+                InternalRun(arg, ci);
         }
 
         public void Run(Keys keys, CommandArgument arg) => Run(MouseEvents.None, keys, arg);
@@ -256,17 +285,17 @@ namespace CodeBox
 
             if (commandsByKeys.TryGetValue(new CommandKeys(mouse, keys), out seq))
                 foreach (var ci in seq)
-                    Run(arg, ci);
+                    InternalRun(arg, ci);
         }
 
-        private void Run(CommandArgument arg, ICommand cmd)
+        private void InternalRun(CommandArgument arg, ICommand cmd)
         {
             FirstEditLine = int.MaxValue;
             LastEditLine = 0;
-            cmd = cmd.Clone();
             var lines = editor.Lines;
+            var modify = cmd is IModifyContent;
 
-            if (editor.ReadOnly && cmd is IModifyContent)
+            if (modify && (editor.ReadOnly || editorLock != null))
                 return;
 
             var qry = editor.Buffer.Selections.Count == 1 ? null
@@ -330,7 +359,7 @@ namespace CodeBox
                 DoAftermath(exp, editor.Buffer.Selections.Count, lastSel.Caret);
 
             if (!exp.Has(IdleCaret))
-                editor.MatchBraket.Match();
+                editor.MatchBrakets.Match();
 
             if (exp.Has(AutocompleteKeep) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.UpdateAutocomplete();

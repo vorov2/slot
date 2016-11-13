@@ -37,6 +37,9 @@ namespace CodeBox
 
         public void Match()
         {
+            if (!Enabled)
+                return;
+
             if (!editor.Buffer.Selections.Main.IsEmpty 
                 || (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret))
             {
@@ -178,5 +181,7 @@ namespace CodeBox
         {
             return num != -1 && num % 2 != 0;
         }
+
+        public bool Enabled { get; set; }
     }
 }

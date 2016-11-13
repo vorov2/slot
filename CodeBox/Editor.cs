@@ -41,26 +41,29 @@ namespace CodeBox
                 | ControlStyles.Selectable, true);
             Cursor = Cursors.IBeam;
             TabStop = true;
+
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
             RightMargins = new MarginList(this);
             BottomMargins = new MarginList(this);
             Info = new EditorInfo(this);
+
             Caret = new CaretRenderer(this);
             Renderer = new Renderer(this);
             CachedBrush = new CachedBrush();
             CachedPen = new CachedPen();
             Scroll = new ScrollingManager(this);
             Styles = new StyleManager(this);
-            Settings = new EditorSettings(this);
             Commands = new CommandManager(this);
             Locations = new LocationManager(this);
             Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
             CallTips = new CallTipManager(this);
             Indents = new IndentManager(this);
-            MatchBraket = new MatchBracketManager(this);
+            MatchBrakets = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
+            Settings = new EditorSettings(this);
+
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
             timer.Tick += Tick;
@@ -364,7 +367,7 @@ namespace CodeBox
             {
                 if (Mouse != MouseEvents.None || LastKeys != Keys.None)
                 {
-                    var arg = new CommandArgument(p, e.Location);
+                    var arg = new CommandArgument(p);
                     Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
                 }
 
@@ -522,28 +525,53 @@ namespace CodeBox
             LastKeys = e.Modifiers;
             Commands.Run(LastKeys | e.KeyCode, CommandArgument.Empty);
         }
-        
+
+        [Browsable(false)]
         public DocumentBuffer Buffer { get; private set; }
 
+        [Browsable(false)]
         public Document Document => Buffer.Document;
 
         internal List<Line> Lines => Document.Lines;
 
+        [Browsable(false)]
         public override string Text
         {
-            get { return Buffer.GetText(); }
+            get
+            {
+                var @lock = Commands.ObtainLock();
+
+                try
+                {
+                    return Buffer.GetText();
+                }
+                finally
+                {
+                    @lock.Release();
+                }
+            }
             set
             {
-                base.Text = value;
-                var doc = Document.Read(value);
-                Buffer = new DocumentBuffer(doc);
-                InitializeBuffer(Buffer);
-                Scroll.InvalidateLines();
-                Styles.RestyleDocument();
-                Folding.RebuildFolding(full: true);
+                var @lock = Commands.ObtainLock();
+
+                try
+                {
+                    base.Text = value;
+                    var doc = Document.Read(value);
+                    Buffer = new DocumentBuffer(doc);
+                    InitializeBuffer(Buffer);
+                    Scroll.InvalidateLines();
+                    Styles.RestyleDocument();
+                    Folding.RebuildFolding(full: true);
+                }
+                finally
+                {
+                    @lock.Release();
+                }
             }
         }
 
+        [Browsable(false)]
         public bool Overtype
         {
             get { return Buffer.Overtype; }
@@ -558,6 +586,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public bool WordWrap
         {
             get
@@ -569,6 +598,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public int WordWrapColumn
         {
             get
@@ -580,6 +610,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public bool UseTabs
         {
             get
@@ -591,6 +622,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public int TabSize
         {
             get
@@ -602,6 +634,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public bool ShowEol
         {
             get
@@ -613,6 +646,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public bool ShowWhitespace
         {
             get
@@ -624,6 +658,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public bool ShowLineLength
         {
             get
@@ -635,6 +670,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public bool CurrentLineIndicator
         {
             get
@@ -646,6 +682,7 @@ namespace CodeBox
             }
         }
 
+        [Browsable(false)]
         public bool ReadOnly
         {
             get { return Buffer.ReadOnly; }
@@ -658,16 +695,22 @@ namespace CodeBox
 
         internal MouseEvents Mouse { get; set; }
 
+        [Browsable(false)]
         public EditorInfo Info { get; }
 
+        [Browsable(false)]
         public EditorSettings Settings { get; }
 
+        [Browsable(false)]
         public MarginList TopMargins { get; }
 
+        [Browsable(false)]
         public MarginList LeftMargins { get; }
 
+        [Browsable(false)]
         public MarginList RightMargins { get; }
 
+        [Browsable(false)]
         public MarginList BottomMargins { get; }
 
         internal CachedBrush CachedBrush { get; private set; }
@@ -682,24 +725,34 @@ namespace CodeBox
 
         internal Renderer Renderer { get; }
 
+        [Browsable(false)]
         public CommandManager Commands { get; }
 
+        [Browsable(false)]
         public StyleManager Styles { get; }
 
+        [Browsable(false)]
         public ScrollingManager Scroll { get; }
 
+        [Browsable(false)]
         public LocationManager Locations { get; }
 
+        [Browsable(false)]
         public FoldingManager Folding { get; }
 
+        [Browsable(false)]
         public CallTipManager CallTips { get; }
 
+        [Browsable(false)]
         public IndentManager Indents { get; }
 
-        internal MatchBracketManager MatchBraket { get; }
+        [Browsable(false)]
+        internal MatchBracketManager MatchBrakets { get; }
 
+        [Browsable(false)]
         public AutocompleteManager Autocomplete { get; }
 
+        [Browsable(false)]
         public AffinityManager AffinityManager { get; }
     }
 }

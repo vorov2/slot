@@ -27,6 +27,7 @@ namespace CodeBox
             //WordWrap = true;
             WordWrapColumn = 80;
             //UseTabs = true;
+            MatchBrackets = true;
             ShowLineLength = true;
             CurrentLineIndicator = true;
             CurrentLineIndicatorColor = ColorTranslator.FromHtml("#262626");//161616
@@ -52,6 +53,21 @@ namespace CodeBox
 
         public IDentProvider IndentProvider { get; set; }
         #endregion
+
+        public bool MatchBrackets
+        {
+            get { return editor.MatchBrakets.Enabled; }
+            set
+            {
+                if (value != editor.MatchBrakets.Enabled)
+                {
+                    editor.MatchBrakets.Enabled = value;
+
+                    if (editor.Buffer != null)
+                        editor.Styles.Restyle();
+                }
+            }
+        }
 
         public bool WordWrap { get; set; }
 

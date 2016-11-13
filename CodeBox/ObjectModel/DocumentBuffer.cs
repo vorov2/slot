@@ -19,7 +19,7 @@ namespace CodeBox.ObjectModel
             Tips = new List<CallTip>();
         }
 
-        public string GetText() =>
+        internal string GetText() =>
             string.Join(Eol.AsString(), Document.Lines.Select(ln => ln.Text));
 
         public string[] GetLines() => Document.Lines.Select(ln => ln.Text).ToArray();

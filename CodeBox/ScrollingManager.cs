@@ -138,7 +138,7 @@ namespace CodeBox
             if (!SuppressOnScroll)
             {
                 editor.Styles.Restyle();
-                editor.MatchBraket.Match();
+                editor.MatchBrakets.Match();
                 editor.Redraw();
 
                 if (editor.Autocomplete.WindowShown)

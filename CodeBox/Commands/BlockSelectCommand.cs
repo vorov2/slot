@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
 
@@ -9,7 +10,7 @@ namespace CodeBox.Commands
     {
         public override ActionResults Execute(CommandArgument arg, Selection sel)
         {
-            DoSelection(arg.Pos, arg.Location);
+            DoSelection(arg.Pos, ((Editor)Context).PointToClient(Cursor.Position));
             return Scroll | SingleRun | Clean;
         }
 
