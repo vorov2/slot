@@ -17,49 +17,49 @@ namespace CodeBox.Lexing
                     continue;
 
                 var res = sect.Start.TryMatch(ln.CharAt(col + 0), 0);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 1), 1);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 2), 2);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 3), 3);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 4), 4);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 5), 5);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 6), 6);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 7), 7);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
@@ -71,21 +71,10 @@ namespace CodeBox.Lexing
                     continue;
 
                 res = sect.Start.TryMatch(ln.CharAt(col + 9), 9);
-                if (res == MatchResult.Hit)
+                if (res == MatchResult.Hit || sect.Start.MatchAnyState)
                     return sect;
                 else if (res == MatchResult.Fail)
                     continue;
-            }
-
-            return null;
-        }
-
-        public static GrammarSection MatchByKeyword(this IEnumerable<GrammarSection> sections, int key)
-        {
-            foreach (var sect in sections)
-            {
-                if (sect.StartKeyword == key)
-                    return sect;
             }
 
             return null;
@@ -118,6 +107,22 @@ namespace CodeBox.Lexing
             foreach (var sect in sections)
                 if (sect.Start != null)
                     sect.Start.Reset();
+        }
+        
+        public static void ResetSelective(this IEnumerable<GrammarSection> sections)
+        {
+            foreach (var sect in sections)
+                if (sect.Start != null && !sect.Start.MatchAnyState)
+                    sect.Start.Reset();
+        }
+
+        public static bool MatchAnyState(this IEnumerable<GrammarSection> sections)
+        {
+            foreach (var sect in sections)
+                if (sect.Start != null && sect.Start.MatchAnyState)
+                    return true;
+
+            return false;
         }
     }
 }

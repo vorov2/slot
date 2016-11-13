@@ -118,7 +118,6 @@
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
     <Compile Include="Drawing\Renderer.cs" />
-    <Compile Include="Lexing\ChoiceSectionSequence.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
     <Compile Include="Drawing\CachedFont.cs" />
     <Compile Include="Drawing\CachedPen.cs" />
@@ -140,7 +139,6 @@
     <Compile Include="Lexing\GrammarProvider.cs" />
     <Compile Include="Lexing\GrammarSection.cs" />
     <Compile Include="Lexing\GrammarSectionSettings.cs" />
-    <Compile Include="Lexing\ISectionSequence.cs" />
     <Compile Include="Lexing\MatchResult.cs" />
     <Compile Include="Lexing\SectionSequence.cs" />
     <Compile Include="Lexing\State.cs" />

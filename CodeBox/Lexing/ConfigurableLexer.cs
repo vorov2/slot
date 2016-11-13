@@ -21,7 +21,7 @@ namespace CodeBox.Lexing
         {
             Context = context;
             GrammarProvider.GetGrammar(GrammarKey).Sections.Reset();
-            Parse(new State(0, GrammarKey), range);
+            Parse(new State(0, GrammarKey, false), range);
         }
 
         private void Parse(State state, Range rng)
@@ -38,7 +38,7 @@ namespace CodeBox.Lexing
                 Styles.ClearStyles(i);
                 var col = 0;
                 var sect = grm.Sections[lss];
-                sect.Sections.Reset();
+                sect.Sections.ResetSelective();
                 state = ParseLine(sect, ref col, i, pst);
                 grm = GrammarProvider.GetGrammar(state.GrammarKey);
 
@@ -46,11 +46,11 @@ namespace CodeBox.Lexing
                 {
                     grm = GrammarProvider.GetGrammar(state.GrammarKey);
                     sect = grm.Sections[state.SectionId];
-                    sect.Sections.Reset();
+                    sect.Sections.ResetSelective();
                     state = ParseLine(sect, ref col, i, pst);
                 }
 
-                var st = state.GrammarKey != GrammarKey || state.SectionId != 0 ? 1 : 0;
+                var st = state.GrammarKey != GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
                 line.State = st;
                 lss = state.SectionId;
             }
@@ -86,8 +86,7 @@ namespace CodeBox.Lexing
 
                     if (mys.ContextChars == null || mys.ContextChars.IndexOf(pst.Context) != -1)
                     {
-                        style = kres & 0xFFFF;
-                        pst.LastKeyword = (kres >> 16) & 0xFFFF;
+                        style = kres;
                         pst.Context = '\0';
                         if (mys.ContextChars != null)
                             Context.CallTips.BindCallTip(
@@ -145,6 +144,50 @@ namespace CodeBox.Lexing
                     if (mys.Style != 0)
                         Styles.StyleRange(mys.Style, line, start, ln.Length);
 
+                    if (sect.DontStyleCompletely)
+                    {
+                        var oldi = i;
+                        var lineIndex = line;
+                        var newCol = i;
+
+                        if (sect.Start.MatchCount > ln.Length)
+                        {
+                            var shift = sect.Start.MatchCount;
+                            var nln = ln;
+
+                            do
+                            {
+                                shift -= nln.Length;
+
+                                if (nln.Length == 0)
+                                    shift--;
+
+                                if (shift >= 0)
+                                {
+                                    lineIndex--;
+                                    nln = Context.Buffer.Document.Lines[lineIndex];
+                                }
+
+                            } while (shift >= 0);
+
+                            newCol = Math.Abs(shift) + 1;
+                        }
+                        else
+                            newCol = i - sect.Start.MatchCount + 1;
+
+                        sect.Start.Disabled = true;
+                        var tys = mys;
+                        for (var ni = lineIndex; ni < line + 1; ni++)
+                        {
+                            var tst = ParseLine(tys, ref newCol, ni, pst);
+                            tys = grammar.Sections[tst.SectionId];
+                            newCol = 0;
+                        }
+                        sect.Start.Disabled = false;
+                        sect.Start.Reset();
+                        i = oldi;
+                    }
+
                     i++;
                     mys.Sections.Reset();
 
@@ -172,8 +215,13 @@ namespace CodeBox.Lexing
                         identStart = i + 1;
                     }
                 }
-                else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
+                else if (
+                    (backm.End != null && backm.End.Match(c) == MatchResult.Hit
                         && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
+                    ||
+                    (backm.End1 != null && backm.End1.Match(c) == MatchResult.Hit
+                        && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
+                    )
                 {
                     if (backm.Style != 0)
                     {
@@ -188,28 +236,11 @@ namespace CodeBox.Lexing
 
                     if (backm.DontStyleCompletely)
                     {
-                        i -= backm.End.Offset;
+                        i -= backm.End.MatchCount;
                         i = i < 0 ? 0 : i;
                     }
 
-                    if (pst.LastKeyword != 0)
-                    {
-                        sect = grammar.Sections[mys.ParentId].Sections.MatchByKeyword(pst.LastKeyword);
-                        if (sect != null)
-                        {
-                            pst.LastKeyword = 0;
-
-                            if (sect.ExternalGrammarKey != null)
-                            {
-                                pst.BackDelegate = sect;
-                                sect = GrammarProvider.GetGrammar(sect.ExternalGrammarKey).Sections[0];
-                            }
-
-                            return Fetch(sect.Id, sect);
-                        }
-                    }
-
-                    return Fetch(0, backm);
+                    return Fetch(mys.ParentId, backm);
                 }
 
                 if (!ws)
@@ -235,7 +266,7 @@ namespace CodeBox.Lexing
             if (mys.End != null && mys.Multiline || mys.End == null && singleLineContinue)
                 return Fetch(mys.Id, mys);
             else
-                return Fetch(0, mys);
+                return Fetch(0, mys, mys.Sections.MatchAnyState());
         }
 
         private bool IsBracket(Grammar grammar, char c)
@@ -262,10 +293,9 @@ namespace CodeBox.Lexing
             return c == ' ' || c == '\t';
         }
 
-        private State Fetch(int sectionId, GrammarSection par)
+        private State Fetch(int sectionId, GrammarSection par, bool matchAnyState = false)
         {
-            return sectionId != 0 ? new State(sectionId, par.GrammarKey) :
-                new State(par.ParentId, par.GrammarKey);
+            return new State(sectionId, par.GrammarKey, matchAnyState);
         }
 
         private bool Overlap(IEnumerable<GrammarSection> seq, Line ln, int col, GrammarSection sect)
@@ -295,7 +325,6 @@ namespace CodeBox.Lexing
     internal sealed class ParseState
     {
         public char Context;
-        public int LastKeyword;
         public GrammarSection BackDelegate;
     }
 }

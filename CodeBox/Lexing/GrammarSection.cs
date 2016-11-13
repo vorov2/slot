@@ -19,11 +19,11 @@ namespace CodeBox.Lexing
 
         public StringTable Keywords { get; } = new StringTable();
 
-        public ISectionSequence Start { get; set; }
+        public SectionSequence Start { get; set; }
 
-        public ISectionSequence End { get; set; }
+        public SectionSequence End { get; set; }
 
-        public int StartKeyword { get; set; }
+        public SectionSequence End1 { get; set; }
 
         public bool DontStyleCompletely { get; set; }
 
