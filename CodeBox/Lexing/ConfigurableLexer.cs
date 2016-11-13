@@ -42,8 +42,9 @@ namespace CodeBox.Lexing
                 state = ParseLine(sect, ref col, i, pst);
                 grm = GrammarProvider.GetGrammar(state.GrammarKey);
 
-                if (col <= line.Length - 1)
+                while (col <= line.Length - 1)
                 {
+                    grm = GrammarProvider.GetGrammar(state.GrammarKey);
                     sect = grm.Sections[state.SectionId];
                     sect.Sections.Reset();
                     state = ParseLine(sect, ref col, i, pst);
@@ -81,8 +82,11 @@ namespace CodeBox.Lexing
 
                 if (kres > 0 && IsNonIdent(ln.CharAt(i + 1), wordSep))
                 {
+                    var style = (int)mys.IdentifierStyle;
+
                     if (mys.ContextChars == null || mys.ContextChars.IndexOf(pst.Context) != -1)
                     {
+                        style = kres & 0xFFFF;
                         pst.LastKeyword = (kres >> 16) & 0xFFFF;
                         pst.Context = '\0';
                         if (mys.ContextChars != null)
@@ -91,7 +95,7 @@ namespace CodeBox.Lexing
                                 new Pos(line, i - mys.Keywords.Offset), new Pos(line, i));
                     }
 
-                    Styles.StyleRange(kres & 0xFFFF, line, i - mys.Keywords.Offset, i);
+                    Styles.StyleRange(style, line, i - mys.Keywords.Offset, i);
                     identStart = i + 1;
                     mys.Keywords.Reset();
                 }
@@ -162,7 +166,11 @@ namespace CodeBox.Lexing
                         goto reparse;
                     }
                     else
+                    {
                         i--;
+                        lastNonIdent = true;
+                        identStart = i + 1;
+                    }
                 }
                 else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
                         && (backm.EscapeChar == '\0' || backm.EscapeChar != last))

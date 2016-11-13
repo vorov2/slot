@@ -169,7 +169,7 @@ namespace CodeBox.Styling
 
         private void RestyleRange(Range range)
         {
-            if (range.End.Line <= 0)
+            if (range.End.Line < 0)
                 return;
 
             if(Provider != null)

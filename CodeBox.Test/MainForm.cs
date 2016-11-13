@@ -200,7 +200,57 @@ namespace CodeBox.Test
 
             return grm;
         }
-        
+
+
+
+        private Grammar HtmlGrammar2()
+        {
+            var grm = new Grammar("html")
+            {
+                NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
+                BracketSymbols = "<>",
+                IndentProvider = new BlockDentProvider()
+            };
+            grm.AddSection(new GrammarSection
+            {
+                Id = 0,
+                ContextChars = "</",
+                ContextIdentifierStyle = StandardStyle.Keyword,
+                IdentifierStyle = StandardStyle.KeywordSpecial,
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 1,
+                Start = new SectionSequence("\"", true),
+                End = new SectionSequence("\"", true),
+                Style = StandardStyle.String
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 2,
+                Start = new SectionSequence(">", true),
+                End = new SectionSequence("<", true),
+                Multiline = true,
+                Style = StandardStyle.Default,
+                DontStyleCompletely = true
+            });
+            grm.AddSection(new GrammarSection
+            {
+                Id = 3,
+                Start = new SectionSequence("<script >", false),
+                End = new SectionSequence("</script>", false),
+                Multiline = true,
+                DontStyleCompletely = true,
+                ExternalGrammarKey = "csharp"
+            });
+
+
+
+
+            return grm;
+        }
+
+
         private Grammar HtmlGrammar()
         {
             var grm = new Grammar("html")
