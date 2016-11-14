@@ -80,7 +80,7 @@ namespace CodeBox.Lexing
                 GrammarKey = grammar,
                 ExternalGrammarKey = dict.String("grammar"),
                 IgnoreCase = ignoreCase,
-                ContextChars = dict.String("context"),
+                ContextChars = dict.String($"context"),
                 ContinuationChar = dict.Char("contination"),
                 EscapeChar = dict.Char("escape"),
                 Multiline = dict.Bool("multiline"),

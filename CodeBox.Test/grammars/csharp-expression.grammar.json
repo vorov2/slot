@@ -1,0 +1,46 @@
+﻿{
+    "key": "csharp-expression",
+    "numbers": "(0123456789)[x]{0123456789.+-_abcdef}(lufdm)(ul)",
+    "delimeters": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+    "brackets": "(){}[]",
+    "commentMask": "/* */",
+    "styleNumbers": true,
+    "indentProvider": "indent.curly",
+    "keywords": [
+        {
+            "style": "keyword",
+            "words": "new this base"
+        },
+        {
+            "style": "keyword.typename",
+            "words": "bool byte decimal char double float int long object sbyte short string uint ulong ushort void"
+        },
+        {
+            "style": "keyword.literal",
+            "words": "true false null"
+        }
+    ],
+    "sections": [
+        {
+            "key": "comment.multiline",
+            "start": "/*",
+            "end": "*/",
+            "style": "comment.multiline",
+            "multiline": true
+        },
+        {
+            "key": "string",
+            "start": "\"",
+            "end": "\"",
+            "escape": "\\",
+            "style": "string"
+        },
+        {
+            "key": "char",
+            "start": "'",
+            "end": "'",
+            "escape": "\\",
+            "style": "char"
+        }
+    ]
+}

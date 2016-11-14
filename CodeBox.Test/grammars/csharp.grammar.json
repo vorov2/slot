@@ -32,54 +32,47 @@
         {
             "key": "comment",
             "start": "//",
-            "style": "comment",
-            "ignoreCase": true
+            "style": "comment"
         },
         {
             "key": "comment.document",
             "start": "///",
-            "style": "comment.document",
-            "ignoreCase": true
+            "style": "comment.document"
         },
         {
             "key": "comment.multiline",
             "start": "/*",
             "end": "*/",
             "style": "comment.multiline",
-            "multiline": true,
-            "ignoreCase": true
+            "multiline": true
         },
         {
             "key": "string",
             "start": "\"",
             "end": "\"",
             "escape": "\\",
-            "style": "string",
-            "ignoreCase": true
+            "style": "string"
         },
         {
             "key": "string.splice",
             "start": "$\"",
             "end": "\"",
             "escape": "\\",
-            "style": "string",
-            "ignoreCase": true
+            "style": "string"
         },
         {
             "key": "string.multiline",
             "start": "@\"",
             "end": "\"",
             "multiline": true,
-            "style": "string.multiline",
-            "ignoreCase": true
+            "style": "string.multiline"
         },
         {
             "key": "char",
             "start": "'",
             "end": "'",
             "escape": "\\",
-            "style": "char",
-            "ignoreCase": true
+            "style": "char"
         }
     ]
 }
