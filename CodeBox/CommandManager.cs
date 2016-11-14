@@ -135,10 +135,6 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Undo(editor.Buffer.UndoStack.Peek().Id, out count, out pos);
-
-                if (!exp.Has(ShallowChange))
-                    editor.Buffer.Edits--;
-
                 SetEditLines();
                 DoAftermath(exp, count, pos);
             }
@@ -185,10 +181,6 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Redo(editor.Buffer.RedoStack.Peek().Id, out count, out pos);
-
-                if (!exp.Has(ShallowChange))
-                    editor.Buffer.Edits++;
-
                 SetEditLines();
                 DoAftermath(exp, count, pos);
             }
@@ -288,12 +280,16 @@ namespace CodeBox
                     InternalRun(arg, ci);
         }
 
+
+        private ICommand lastCommand;
+
         private void InternalRun(CommandArgument arg, ICommand cmd)
         {
             FirstEditLine = int.MaxValue;
             LastEditLine = 0;
             var lines = editor.Lines;
             var modify = cmd is IModifyContent;
+            var saveCmd = cmd;
 
             if (modify && (editor.ReadOnly || editorLock != null))
                 return;
@@ -301,7 +297,7 @@ namespace CodeBox
             var qry = editor.Buffer.Selections.Count == 1 ? null
                 : editor.Buffer.Selections.OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
             var exp = None;
-            var thisUndo = BeginUndoAction();
+            var thisUndo = cmd != lastCommand ? BeginUndoAction() : false;
             var lastSel = editor.Buffer.Selections.Main;
 
             if (qry == null)
@@ -352,9 +348,6 @@ namespace CodeBox
             if (thisUndo)
                 EndUndoAction();
 
-            if (exp.Has(Modify) && !exp.Has(ShallowChange))
-                editor.Buffer.Edits++;
-
             if (exp != None)
                 DoAftermath(exp, editor.Buffer.Selections.Count, lastSel.Caret);
 
@@ -365,6 +358,8 @@ namespace CodeBox
                 editor.Autocomplete.UpdateAutocomplete();
             else if (!exp.Has(AutocompleteShow) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.HideAutocomplete();
+
+            lastCommand = saveCmd;
         }
 
         private void AttachCaret(Pos pos)
@@ -430,6 +425,9 @@ namespace CodeBox
 
                 if (editor.Scroll.Y + editor.Info.TextHeight < -editor.Scroll.YMax)
                     exp |= Scroll;
+
+                if (!exp.Has(ShallowChange))
+                    editor.Buffer.Edits++;
             }
 
             if (exp.Has(RestoreCaret))

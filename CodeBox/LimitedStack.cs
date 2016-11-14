@@ -9,7 +9,7 @@ namespace CodeBox
 {
     internal sealed class LimitedStack<T> : IEnumerable<T>
     {
-        private const int CAPACITY = 500;
+        private const int CAPACITY = 100;
         private T[] items;
         private int top;
         private int count;
@@ -30,8 +30,8 @@ namespace CodeBox
             top = (top + 1) % items.Length;
             count++;
 
-            if (count > 100)
-                count = 100;
+            if (count > CAPACITY)
+                count = CAPACITY;
         }
 
         public T Pop()
