@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace CodeBox.Lexing
 {
-    public sealed class GrammarSection
+    public class GrammarSection
     {
-        public byte Id { get; set; }
+        public GrammarSection()
+        {
+
+        }
+
+        public int Id { get; set; }
 
         public string GrammarKey { get; set; }
 
@@ -17,7 +22,9 @@ namespace CodeBox.Lexing
 
         public byte ParentId { get; set; }
 
-        public StringTable Keywords { get; } = new StringTable();
+        public bool IgnoreCase { get; set; }
+
+        public StringTable Keywords { get; set; }
 
         public SectionSequence Start { get; set; }
 

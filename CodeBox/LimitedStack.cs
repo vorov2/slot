@@ -9,7 +9,7 @@ namespace CodeBox
 {
     internal sealed class LimitedStack<T> : IEnumerable<T>
     {
-        private const int CAPACITY = 100;
+        private const int CAPACITY = 1000;
         private T[] items;
         private int top;
         private int count;

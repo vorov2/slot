@@ -33,8 +33,7 @@ namespace CodeBox.Styling
             Register(StandardStyle.Bracket, new TextStyle());
             Register(StandardStyle.Keyword, new TextStyle());
             Register(StandardStyle.KeywordSpecial, new TextStyle());
-            Register(StandardStyle.KeywordType, new TextStyle());
-            Register(StandardStyle.KeywordModifier, new TextStyle());
+            Register(StandardStyle.TypeName, new TextStyle());
             Register(StandardStyle.Comment, new TextStyle());
             Register(StandardStyle.CommentMultiline, new TextStyle());
             Register(StandardStyle.CommentDocument, new TextStyle());
@@ -85,11 +84,8 @@ namespace CodeBox.Styling
                 case StandardStyle.KeywordSpecial:
                     KeywordSpecial = style;
                     break;
-                case StandardStyle.KeywordType:
-                    KeywordType = style;
-                    break;
-                case StandardStyle.KeywordModifier:
-                    KeywordModifier = style;
+                case StandardStyle.TypeName:
+                    TypeName = style;
                     break;
                 case StandardStyle.Comment:
                     Comment = style;
@@ -203,9 +199,7 @@ namespace CodeBox.Styling
 
         public Style KeywordSpecial { get; private set; }
 
-        public Style KeywordType { get; private set; }
-
-        public Style KeywordModifier { get; private set; }
+        public Style TypeName { get; private set; }
 
         public Style Comment { get; private set; }
 

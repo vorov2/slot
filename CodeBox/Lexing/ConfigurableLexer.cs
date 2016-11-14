@@ -32,7 +32,7 @@ namespace CodeBox.Lexing
                 var grm = GrammarProvider.GetGrammar(state.GrammarKey);
                 Styles.ClearStyles(i);
                 var col = 0;
-                var sect = grm.Sections[lss];
+                var sect = grm.GetSection(lss);
                 sect.Sections.ResetSelective();
                 state = ParseLine(sect, ref col, i, pst);
                 grm = GrammarProvider.GetGrammar(state.GrammarKey);
@@ -40,7 +40,7 @@ namespace CodeBox.Lexing
                 while (col <= line.Length - 1)
                 {
                     grm = GrammarProvider.GetGrammar(state.GrammarKey);
-                    sect = grm.Sections[state.SectionId];
+                    sect = grm.GetSection(state.SectionId);
                     sect.Sections.ResetSelective();
                     state = ParseLine(sect, ref col, i, pst);
                 }
@@ -57,7 +57,7 @@ namespace CodeBox.Lexing
             var identStart = i;
             var ln = Lines[line];
             var grammar = GrammarProvider.GetGrammar(mys.GrammarKey);
-            Context.AffinityManager.Associate(line, i > 0 ? i + 0 : 0, grammar.Id);
+            Context.AffinityManager.Associate(line, i > 0 ? i + 0 : 0, grammar.GlobalId);
             var wordSep = grammar.NonWordSymbols ?? Context.Settings.NonWordSymbols;
             var backm = mys.Id == 0 && pst.BackDelegate != null ? pst.BackDelegate : mys;
             var last = '\0';
@@ -98,7 +98,7 @@ namespace CodeBox.Lexing
                 if (mys.StyleNumbers && grammar.NumberLiteral != null)
                 {
                     var mc = grammar.NumberLiteral.MatchCount;
-                    var num = grammar.NumberLiteral.Match(c);
+                    var num = grammar.NumberLiteral.Match(c, last);
 
                     if (!num && mc > 0 && nonIdent)
                         Styles.StyleRange(StandardStyle.Number, line, i - mc, i - 1);
@@ -191,9 +191,9 @@ namespace CodeBox.Lexing
 
                     if (i >= ln.Length - 1)
                         return ret;
-                    else if (ret.SectionId != mys.Id || ret.GrammarKey != grammar.Key)
+                    else if (ret.SectionId != mys.Id || ret.GrammarKey != grammar.GrammarKey)
                     {
-                        sect = ret.GrammarKey != grammar.Key
+                        sect = ret.GrammarKey != grammar.GrammarKey
                             ? GrammarProvider.GetGrammar(ret.GrammarKey).Sections[ret.SectionId]
                             : grammar.Sections[ret.SectionId];
                         goto reparse;
@@ -206,7 +206,7 @@ namespace CodeBox.Lexing
                     }
                 }
                 else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
-                        && (backm.EscapeChar == '\0' || backm.EscapeChar != last))
+                        && (backm.EscapeChar == '\0' || backm.EscapeChar != last || (i >= 1 && backm.EscapeChar == ln.CharAt(i - 2))))
                 {
                     if (backm.Style != 0)
                     {

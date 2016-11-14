@@ -51,7 +51,7 @@ namespace CodeBox
 
         string IDocumentAffinity.CommentMask { get; }
 
-        public IDentProvider IndentProvider { get; set; }
+        public string IndentProviderKey { get; set; }
         #endregion
 
         public bool MatchBrackets

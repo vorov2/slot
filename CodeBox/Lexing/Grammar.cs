@@ -5,16 +5,12 @@ using System.Collections.Generic;
 
 namespace CodeBox.Lexing
 {
-    public sealed class Grammar : IDocumentAffinity
+    public sealed class Grammar : GrammarSection, IDocumentAffinity
     {
-        public Grammar(string key)
+        public Grammar()
         {
-            Key = key;
+
         }
-
-        internal int Id { get; set; }
-
-        public string Key { get; }
 
         #region IDocumentAffinity
         public string NonWordSymbols { get; set; }
@@ -25,19 +21,26 @@ namespace CodeBox.Lexing
 
         public NumberLiteral NumberLiteral { get; set; }
 
-        public IDentProvider IndentProvider { get; set; }
+        public string IndentProviderKey { get; set; }
         #endregion
+
+        internal GrammarSection GetSection(int id)
+        {
+            if (id == 0)
+                return this;
+            else
+                return Sections[id];
+        }
 
         public GrammarSection AddSection(GrammarSection section)
         {
-            section.GrammarKey = Key;
+            section.GrammarKey = GrammarKey;
             Sections.Add(section);
             if (section.Id != 0)
                 Sections[section.ParentId].Sections.Add(section);
             return section;
         }
 
-        internal List<GrammarSection> Sections { get; } = new List<GrammarSection>();
+        internal int GlobalId { get; set; }
     }
-
 }

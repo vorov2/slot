@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -117,7 +118,10 @@
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
+    <Compile Include="ComponentCatalog.cs" />
     <Compile Include="Drawing\Renderer.cs" />
+    <Compile Include="FieldNameAttribute.cs" />
+    <Compile Include="IComponentMetadata.cs" />
     <Compile Include="IEditorLock.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
     <Compile Include="Drawing\CachedFont.cs" />
@@ -138,6 +142,7 @@
     <Compile Include="Lexing\EnumerableExtensions.cs" />
     <Compile Include="Lexing\Grammar.cs" />
     <Compile Include="Lexing\GrammarProvider.cs" />
+    <Compile Include="Lexing\GrammarReader.cs" />
     <Compile Include="Lexing\GrammarSection.cs" />
     <Compile Include="Lexing\GrammarSectionSettings.cs" />
     <Compile Include="Lexing\MatchResult.cs" />
@@ -211,7 +216,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Util\Json\Json.csproj">
+      <Project>{2c727444-c7dd-4db3-8546-964f4b354242}</Project>
+      <Name>Json</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

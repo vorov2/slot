@@ -156,7 +156,7 @@ namespace CodeBox
                     Pos p;
                     var e = cmd.Command.Undo(out p);
 
-                    if (pos.IsEmpty)
+                    if (pos.IsEmpty || p < pos)
                         pos = p;
 
                     exp |= e;
@@ -297,7 +297,7 @@ namespace CodeBox
             var qry = editor.Buffer.Selections.Count == 1 ? null
                 : editor.Buffer.Selections.OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
             var exp = None;
-            var thisUndo = cmd != lastCommand ? BeginUndoAction() : false;
+            var thisUndo = /*cmd != lastCommand*/true ? BeginUndoAction() : false;
             var lastSel = editor.Buffer.Selections.Main;
 
             if (qry == null)

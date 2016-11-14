@@ -10,10 +10,10 @@ namespace CodeBox.Lexing
 
         public void RegisterGrammar(Grammar grammar)
         {
-            grammars.Remove(grammar.Key);
-            grammars.Add(grammar.Key, grammar);
+            grammars.Remove(grammar.GrammarKey);
+            grammars.Add(grammar.GrammarKey, grammar);
             index.Add(grammar);
-            grammar.Id = index.Count;
+            grammar.GlobalId = index.Count;
         }
 
         public Grammar GetGrammar(string key)

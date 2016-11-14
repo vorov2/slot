@@ -36,11 +36,14 @@ namespace CodeBox.Test
             BindCommands();
 
             var lexer = new ConfigurableLexer();
-            lexer.GrammarProvider.RegisterGrammar(HtmlGrammar2());
-            lexer.GrammarProvider.RegisterGrammar(CsGrammar());
-            lexer.GrammarProvider.RegisterGrammar(CssGrammar());
-            lexer.GrammarKey = "html";
+            //lexer.GrammarProvider.RegisterGrammar(HtmlGrammar2());
+            //lexer.GrammarProvider.RegisterGrammar(CsGrammar());
+            //lexer.GrammarProvider.RegisterGrammar(CssGrammar());
+            //lexer.GrammarKey = "html";
             ed.Styles.Provider = lexer;
+            var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
+            lexer.GrammarProvider.RegisterGrammar(csharp);
+            lexer.GrammarKey = "csharp";
 
 
             ed.Styles.StyleNeeded += editor1_StyleNeeded;
@@ -61,8 +64,7 @@ namespace CodeBox.Test
 
             ed.Styles.Keyword.ForeColor = HCol("#569CD6");
             ed.Styles.KeywordSpecial.ForeColor = HCol("#8CDCDB");
-            ed.Styles.KeywordType.ForeColor = HCol("#44C7AE");
-            ed.Styles.KeywordModifier.ForeColor = HCol("#D7BA7D");
+            ed.Styles.TypeName.ForeColor = HCol("#44C7AE");
             ed.Styles.Literal.ForeColor = HCol("#B8D7A3");
             ed.Styles.Comment.ForeColor = HCol("#579032");
             ed.Styles.CommentMultiline.ForeColor = HCol("#579032");
@@ -71,6 +73,8 @@ namespace CodeBox.Test
             ed.Styles.String.ForeColor = HCol("#D69D85");
             ed.Styles.StringMultiline.ForeColor = HCol("#D69D85");
             ed.Styles.StringSplice.ForeColor = HCol("#D69D85");
+            ed.Styles.Regex.ForeColor = HCol("#FF7CDC");
+            ed.Styles.Preprocessor.ForeColor = HCol("#7F7F7F");
 
             ed.Settings.LineNumbersForeColor = ColorTranslator.FromHtml("#505050");
             ed.Settings.LineNumbersBackColor = ColorTranslator.FromHtml("#1E1E1E");
@@ -88,17 +92,23 @@ namespace CodeBox.Test
             ed.Settings.PopupBorderColor = ColorTranslator.FromHtml("#5F5F66");
 
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
-                Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, @"test.htm"));
+                LocalFile("MainForm.cs"));
+        }
+
+        private string LocalFile(string fileName)
+        {
+            return Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, fileName);
         }
 
 
         private Grammar CssGrammar()
         {
-            var grm = new Grammar("css")
+            var grm = new Grammar
             {
+                GrammarKey = "css",
                 NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?",
                 NumberLiteral = new NumberLiteral("(0123456789){0123456789.+-}{ptx}(%)"),
-                IndentProvider = new CurlyDentProvider()
+                //IndentProvider = new CurlyDentProvider()
             };
             grm.AddSection(new GrammarSection
             {
@@ -149,9 +159,10 @@ namespace CodeBox.Test
         const string kw = "core_account_big core nameof switch case default this base get set in new volatile override virtual using namespace readonly static const public private internal protected sealed class struct abstract var if else return while for foreach continue break ref out";
         private Grammar CsGrammar()
         {
-            var grm = new Grammar("csharp")
+            var grm = new Grammar
             {
-                IndentProvider = new CurlyDentProvider(),
+                GrammarKey = "csharp",
+                //IndentProvider = new CurlyDentProvider(),
                 NumberLiteral = new NumberLiteral("(0123456789)[x]{0123456789.+-_abcdef}(lufdm)(ul)")
             };
             var glob = new GrammarSection
@@ -160,7 +171,7 @@ namespace CodeBox.Test
             };
             grm.AddSection(glob);
             glob.Keywords.AddRange(kw, (int)StandardStyle.Keyword);
-            glob.Keywords.AddRange("void int byte long short sbyte uint ushort ulong string char bool object", (int)StandardStyle.KeywordType);
+            glob.Keywords.AddRange("void int byte long short sbyte uint ushort ulong string char bool object", (int)StandardStyle.TypeName);
             glob.Keywords.AddRange("true false null", (int)StandardStyle.Literal);
 
             grm.AddSection(new GrammarSection
@@ -202,11 +213,12 @@ namespace CodeBox.Test
 
         private Grammar HtmlGrammar2()
         {
-            var grm = new Grammar("html")
+            var grm = new Grammar
             {
+                GrammarKey = "html",
                 NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
                 BracketSymbols = "<>",
-                IndentProvider = new BlockDentProvider()
+                //IndentProvider = new BlockDentProvider()
             };
             grm.AddSection(new GrammarSection
             {
@@ -275,11 +287,12 @@ namespace CodeBox.Test
 
         private Grammar HtmlGrammar()
         {
-            var grm = new Grammar("html")
+            var grm = new Grammar
             {
+                GrammarKey = "html",
                 NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
                 BracketSymbols = "<>",
-                IndentProvider = new BlockDentProvider()
+                //IndentProvider = new BlockDentProvider()
             };
 
             grm.AddSection(new GrammarSection

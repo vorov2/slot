@@ -9,10 +9,10 @@ namespace CodeBox.Affinity
     public sealed class NumberLiteral
     {
         private readonly List<Sect> pattern;
-        private char last;
         private int pointer;
         private const string BRACKETS1 = "({[";
         private const string BRACKETS2 = ")}]";
+        private const string DELIMS = " \0\t(){}[]<>,;~!?-+%#^&*/\\='\"";
 
         public class Sect
         {
@@ -31,9 +31,9 @@ namespace CodeBox.Affinity
             this.pattern = ParsePattern(pattern.ToUpper());
         }
 
-        public bool Match(char c)
+        public bool Match(char c, char last)
         {
-            if (pointer >= pattern.Count)
+            if (pointer >= pattern.Count || (MatchCount == 0 && DELIMS.IndexOf(last) == -1))
             {
                 Reset();
                 return false;
@@ -50,13 +50,11 @@ namespace CodeBox.Affinity
             if (!has && (par.Multiple || par.Optional))
             {
                 pointer++;
-                return Match(c);
+                return Match(c, last);
             }
 
             if (has && !par.Multiple)
                 pointer++;
-
-            last = c;
 
             if (has)
                 MatchCount++;
@@ -70,7 +68,6 @@ namespace CodeBox.Affinity
         {
             MatchCount = 0;
             pointer = 0;
-            last = '\0';
         }
 
         private List<Sect> ParsePattern(string pattern)

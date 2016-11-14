@@ -28,12 +28,17 @@ namespace CodeBox.Lexing
             }
         }
 
+        public StringTable(bool ignoreCase)
+        {
+            IgnoreCase = ignoreCase;
+        }
+
         public void Add(string value, int code)
         {
             if (value == null || value.Length == 0)
                 throw new ArgumentNullException(nameof(value));
 
-            InternalAdd(value, 0, buckets, code);
+            InternalAdd(IgnoreCase ? value.ToUpper() : value, 0, buckets, code);
             Count++;
         }
 
@@ -42,7 +47,7 @@ namespace CodeBox.Lexing
             if (value == null || value.Length == 0)
                 throw new ArgumentNullException(nameof(value));
 
-            var arr = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var arr = value.Split(new char[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             Array.Sort(arr);
 
             foreach (var s in arr)
@@ -91,6 +96,8 @@ namespace CodeBox.Lexing
         [DebuggerHidden]
         public int Match(char c)
         {
+            c = IgnoreCase ? char.ToUpper(c) : c;
+
             if (++Offset < BUCKET_SIZE)
             {
                 var bList = Offset == 0 ? buckets : lastBucket.Buckets;
@@ -156,5 +163,7 @@ namespace CodeBox.Lexing
         public int Offset { get; private set; } = -1;
 
         public int Count { get; private set; }
+
+        public bool IgnoreCase { get; }
     }
 }
