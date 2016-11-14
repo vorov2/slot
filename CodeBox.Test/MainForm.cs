@@ -42,7 +42,9 @@ namespace CodeBox.Test
             //lexer.GrammarKey = "html";
             ed.Styles.Provider = lexer;
             var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
+            var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
             lexer.GrammarProvider.RegisterGrammar(csharp);
+            lexer.GrammarProvider.RegisterGrammar(csharpExp);
             lexer.GrammarKey = "csharp";
 
 
@@ -106,7 +108,7 @@ namespace CodeBox.Test
         {
             var grm = new Grammar
             {
-                GrammarKey = "html",
+                Key = "html",
                 NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
                 BracketSymbols = "<>",
                 //IndentProvider = new BlockDentProvider()
@@ -180,7 +182,7 @@ namespace CodeBox.Test
         {
             var grm = new Grammar
             {
-                GrammarKey = "html",
+                Key = "html",
                 NonWordSymbols = "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
                 BracketSymbols = "<>",
                 //IndentProvider = new BlockDentProvider()

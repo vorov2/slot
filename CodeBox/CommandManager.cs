@@ -17,6 +17,7 @@ namespace CodeBox
         private bool undoGroup;
         private readonly Editor editor;
         private volatile EditorLock editorLock;
+        private bool atomic;
 
         private sealed class EditorLock : IEditorLock
         {
@@ -280,9 +281,6 @@ namespace CodeBox
                     InternalRun(arg, ci);
         }
 
-
-        private ICommand lastCommand;
-
         private void InternalRun(CommandArgument arg, ICommand cmd)
         {
             FirstEditLine = int.MaxValue;
@@ -297,7 +295,7 @@ namespace CodeBox
             var qry = editor.Buffer.Selections.Count == 1 ? null
                 : editor.Buffer.Selections.OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
             var exp = None;
-            var thisUndo = /*cmd != lastCommand*/true ? BeginUndoAction() : false;
+            var thisUndo = false;
             var lastSel = editor.Buffer.Selections.Main;
 
             if (qry == null)
@@ -306,8 +304,12 @@ namespace CodeBox
                 LastEditLine = lastSel.GetLastLine();
                 cmd = cmd.Clone();
                 cmd.Context = editor.Context;
+                exp = cmd.Execute(arg, lastSel);
 
-                if ((exp = cmd.Execute(arg, lastSel)).Has(Modify))
+                if (!atomic || !exp.Has(AtomicChange))
+                    thisUndo = BeginUndoAction();
+
+                if (exp.Has(Modify))
                     AddCommand(cmd);
 
                 if (exp.Has(RestoreCaret))
@@ -315,6 +317,8 @@ namespace CodeBox
             }
             else
             {
+                thisUndo = BeginUndoAction();
+
                 foreach (var sel in qry)
                 {
                     var fel = sel.GetFirstLine();
@@ -330,6 +334,7 @@ namespace CodeBox
                     cmd = cmd.Clone();
                     cmd.Context = editor.Context;
                     var e = cmd.Execute(arg, sel);
+
                     exp |= e;
 
                     if (e.Has(Modify))
@@ -359,7 +364,7 @@ namespace CodeBox
             else if (!exp.Has(AutocompleteShow) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.HideAutocomplete();
 
-            lastCommand = saveCmd;
+            atomic = qry == null && exp.Has(AtomicChange);
         }
 
         private void AttachCaret(Pos pos)

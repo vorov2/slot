@@ -7,5 +7,7 @@ namespace CodeBox.Lexing
         public char Context;
 
         public GrammarSection BackDelegate;
+
+        public bool Fallback;
     }
 }

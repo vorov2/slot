@@ -4,31 +4,33 @@
     "delimeters": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
     "brackets": "(){}[]",
     "commentMask": "/* */",
-    "styleNumbers": true,
     "indentProvider": "indent.curly",
-    "keywords": [
-        {
-            "style": "keyword",
-            "words": "class delegate enum struct interface abstract const explicit extern implicit internal namespace operator override partial private protected public readonly sealed static volatile virtual var dynamic as base break case catch checked continue default do else finally fixed for add get foreach global goto if is lock new out params ref remove return set sizeof stackalloc switch this throw try typeof unchecked unsafe using while yield"
-        },
-        {
-            "style": "keyword.typename",
-            "words": "bool byte decimal char double float int long object sbyte short string uint ulong ushort void"
-        },
-        {
-            "style": "keyword.special",
-            "words": "ascending async await by equals from in into join let on orderby select group where descending value"
-        },
-        {
-            "style": "keyword.literal",
-            "words": "true false null"
-        },
-        {
-            "style": "preprocessor",
-            "words": "#if #else #elif #endif #define #undef #warning #error #line #region #endregion #pragma #pragma #pragma"
-        }
-    ],
     "sections": [
+        {
+            "styleNumbers": true,
+            "keywords": [
+                {
+                    "style": "keyword",
+                    "words": "class delegate enum struct interface abstract const explicit extern implicit internal namespace operator override partial private protected public readonly sealed static volatile virtual var dynamic as base break case catch checked continue default do else finally fixed for add get foreach global goto if is lock new out params ref remove return set sizeof stackalloc switch this throw try typeof unchecked unsafe using while yield"
+                },
+                {
+                    "style": "keyword.typename",
+                    "words": "bool byte decimal char double float int long object sbyte short string uint ulong ushort void"
+                },
+                {
+                    "style": "keyword.special",
+                    "words": "ascending async await by equals from in into join let on orderby select group where descending value"
+                },
+                {
+                    "style": "keyword.literal",
+                    "words": "true false null"
+                },
+                {
+                    "style": "preprocessor",
+                    "words": "#if #else #elif #endif #define #undef #warning #error #line #region #endregion #pragma #pragma #pragma"
+                }
+            ]
+        },
         {
             "key": "comment",
             "start": "//",
@@ -73,6 +75,14 @@
             "end": "'",
             "escape": "\\",
             "style": "char"
+        },
+        {
+            "key": "string.csharp",
+            "parent": "string.splice",
+            "start": "{",
+            "end": "}",
+            "terminator": "{",
+            "grammar": "csharp-expression"
         }
     ]
 }

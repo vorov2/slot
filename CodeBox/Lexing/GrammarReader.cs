@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeBox.Lexing
 {
@@ -19,45 +17,43 @@ namespace CodeBox.Lexing
             if (dict != null)
             {
                 var sectionMap = new Dictionary<string, Tuple<string, string, GrammarSection>>();
-                var grammarKey = dict.String("key");
-                var grammar = ProcessSection<Grammar>(grammarKey, dict).Item3;
-                grammar.BracketSymbols = dict.String("brackets");
-                grammar.NonWordSymbols = dict.String("delimeters");
-                grammar.CommentMask = dict.String("commentMask");
-                grammar.NumberLiteral = new NumberLiteral(dict.String("numbers"));
-                grammar.IndentProviderKey = dict.String("indentProvider");
-                sectionMap.Add("root", Tuple.Create<string, string, GrammarSection>("root", null, grammar));
+                var grammar = new Grammar
+                {
+                    Key = dict.String("key"),
+                    BracketSymbols = dict.String("brackets"),
+                    NonWordSymbols = dict.String("delimeters"),
+                    CommentMask = dict.String("commentMask"),
+                    NumberLiteral = new NumberLiteral(dict.String("numbers")),
+                    IndentProviderKey = dict.String("indentProvider")
+                };
 
                 var sections = dict.Object("sections") as List<object>;
-                byte id = 0;
 
                 foreach (var o in sections)
                 {
                     var nd = o as Dictionary<string, object>;
+                    var tup = ProcessSection<GrammarSection>(grammar.Key, nd);
+                    tup.Item3.Id = grammar.Sections.Count;
+                    grammar.Sections.Add(tup.Item3);
 
-                    var tup = ProcessSection<GrammarSection>(grammar.GrammarKey, nd);
-                    tup.Item3.Id = id++;
-                    var key = id == 1 ? "root" : tup.Item1; 
+                    var key = tup.Item1 ?? "root";
 
-                    if (key != null)
-                    {
-                        if (sectionMap.ContainsKey(tup.Item1))
-                            throw new CodeBoxException($"Duplicate section key {tup.Item1} in grammar {grammar.GrammarKey}.");
+                    if (sectionMap.ContainsKey(key))
+                        throw new CodeBoxException($"Duplicate section key '{tup.Item1}' in grammar '{grammar.Key}'.");
 
-                        sectionMap.Add(tup.Item1, tup);
-                    }
+                    sectionMap.Add(key, tup);
                 }
 
                 foreach (var tup in sectionMap.Values)
                 {
                     var parentKey = tup.Item2 ?? "root";
-                    Tuple<string, string, GrammarSection> parent;
+                    Tuple<string, string, GrammarSection> parent = null;
 
                     if (!sectionMap.TryGetValue(parentKey, out parent))
-                        throw new CodeBoxException($"A parent section with key {parentKey} not found in grammar {grammar.GrammarKey}.");
+                        throw new CodeBoxException($"A parent section with key '{parentKey}' not found in grammar '{grammar.Key}'.");
 
+                    tup.Item3.ParentId = parent.Item3.Id;
                     parent.Item3.Sections.Add(tup.Item3);
-                    grammar.Sections.Add(tup.Item3);
                 }
 
                 return grammar;
@@ -66,8 +62,7 @@ namespace CodeBox.Lexing
             return null;
         }
 
-        private static Tuple<string, string, T> ProcessSection<T>(string grammar, Dictionary<string, object> dict)
-            where T : GrammarSection, new()
+        private static Tuple<string, string, GrammarSection> ProcessSection<T>(string grammar, Dictionary<string, object> dict)
         {
             if (dict == null)
                 return null;
@@ -75,14 +70,15 @@ namespace CodeBox.Lexing
             string tmp;
             var ignoreCase = dict.Bool("ignoreCase");
 
-            var sect = new T
+            var sect = new GrammarSection
             {
                 GrammarKey = grammar,
                 ExternalGrammarKey = dict.String("grammar"),
                 IgnoreCase = ignoreCase,
-                ContextChars = dict.String($"context"),
+                ContextChars = dict.String("context"),
                 ContinuationChar = dict.Char("contination"),
                 EscapeChar = dict.Char("escape"),
+                TerminatorChar = dict.Char("terminator"),
                 Multiline = dict.Bool("multiline"),
                 DontStyleCompletely = dict.Bool("dontStyleCompletely"),
                 StyleBrackets = dict.Bool("styleBrackets"),

@@ -137,8 +137,6 @@ namespace CodeBox
         {
             if (!SuppressOnScroll)
             {
-                editor.Styles.Restyle();
-                editor.MatchBrakets.Match();
                 editor.Redraw();
 
                 if (editor.Autocomplete.WindowShown)
@@ -202,8 +200,8 @@ namespace CodeBox
             var w = ln.GetTetras(editor.TabSize) * editor.Info.CharWidth
                 - editor.Info.TextWidth + editor.Info.CharWidth * 5;
 
-            if (w > YMax)
-                YMax = w;
+            if (w > XMax)
+                XMax = w;
         }
 
         internal void InvalidateLines(InvalidateFlags flags = InvalidateFlags.None)

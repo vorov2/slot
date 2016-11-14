@@ -83,7 +83,7 @@ namespace CodeBox
                 else if (sel.Caret.Col > 0
                     && sel.Caret.Col <= ln.Length
                     && Odd(pi = bracketsBackward.IndexOf(ln[sel.Caret.Col - 1].Char))
-                    && IsBracketStyle(ln, sel.Caret.Col))
+                    && IsBracketStyle(ln, sel.Caret.Col - 1))
                 {
                     var m = TraverseBackward(grm2, bracketsBackward, pi, sel);
                     if (!markedParent)
@@ -102,7 +102,7 @@ namespace CodeBox
                 var ist = lni == sel.Caret.Line ? sel.Caret.Col + 1 : 0;
                 var grm = editor.AffinityManager.GetAffinity(new Pos(lni, ist));
 
-                if (grm != aff)
+                if (grm != aff && lni != sel.Caret.Line)
                     continue;
 
                 for (var i = ist; i < line.Length; i++)
@@ -137,7 +137,7 @@ namespace CodeBox
                 var ist2 = lni == sel.Caret.Line ? sel.Caret.Col - 2 : line.Length - 1;
                 var grm = editor.AffinityManager.GetAffinity(new Pos(lni, ist1));
 
-                if (grm != aff)
+                if (grm != aff && lni != sel.Caret.Line)
                     continue;
 
                 for (var i = ist2; i > -1; i--)

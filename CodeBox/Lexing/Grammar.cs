@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CodeBox.Lexing
 {
-    public sealed class Grammar : GrammarSection, IDocumentAffinity
+    public sealed class Grammar : IDocumentAffinity
     {
         public Grammar()
         {
@@ -24,17 +24,11 @@ namespace CodeBox.Lexing
         public string IndentProviderKey { get; set; }
         #endregion
 
-        internal GrammarSection GetSection(int id)
-        {
-            if (id == 0)
-                return this;
-            else
-                return Sections[id];
-        }
+        public string Key { get; set; }
 
         public GrammarSection AddSection(GrammarSection section)
         {
-            section.GrammarKey = GrammarKey;
+            section.GrammarKey = Key;
             Sections.Add(section);
             if (section.Id != 0)
                 Sections[section.ParentId].Sections.Add(section);
@@ -42,5 +36,7 @@ namespace CodeBox.Lexing
         }
 
         internal int GlobalId { get; set; }
+
+        internal List<GrammarSection> Sections { get; } = new List<GrammarSection>();
     }
 }

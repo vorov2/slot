@@ -20,7 +20,7 @@ namespace CodeBox.Lexing
 
         public string ExternalGrammarKey { get; set; }
 
-        public byte ParentId { get; set; }
+        public int ParentId { get; set; }
 
         public bool IgnoreCase { get; set; }
 
@@ -49,6 +49,8 @@ namespace CodeBox.Lexing
         public char ContinuationChar { get; set; }
 
         public char EscapeChar { get; set; }
+
+        public char TerminatorChar { get; set; }
 
         internal List<GrammarSection> Sections { get; } = new List<GrammarSection>();
     }

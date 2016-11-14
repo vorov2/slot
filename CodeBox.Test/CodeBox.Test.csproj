@@ -74,7 +74,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="grammars\csharp-expression.grammar.json" />
+    <None Include="grammars\csharp-expression.grammar.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="grammars\csharp.grammar.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
