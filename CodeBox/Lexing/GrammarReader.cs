@@ -13,6 +13,7 @@ namespace CodeBox.Lexing
         {
             var json = new Json.JsonParser(source) { SkipNulls = true };
             var dict = json.Parse() as Dictionary<string, object>;
+            var tmp = default(string);
 
             if (dict != null)
             {
@@ -23,7 +24,7 @@ namespace CodeBox.Lexing
                     BracketSymbols = dict.String("brackets"),
                     NonWordSymbols = dict.String("delimeters"),
                     CommentMask = dict.String("commentMask"),
-                    NumberLiteral = new NumberLiteral(dict.String("numbers")),
+                    NumberLiteral = (tmp = dict.String("numbers")) != null ? new NumberLiteral(tmp) :null,
                     IndentProviderKey = dict.String("indentProvider")
                 };
 

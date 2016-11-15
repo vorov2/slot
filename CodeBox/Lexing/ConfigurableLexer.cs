@@ -150,8 +150,9 @@ namespace CodeBox.Lexing
 
                     if (mys.Style != 0)
                     {
-                        var off1 = backm.DontStyleCompletely ? 0 : backm.Start != null ? backm.Start.Length : 0;
+                        var off1 = backm.DontStyleCompletely || pst.Fallback ? 0 : backm.Start != null ? backm.Start.Length : 0;
                         Styles.StyleRange(mys.Style, line, start - off1, i - (sect.Start == null ? 0 : sect.Start.Length));
+                        pst.Fallback = false;
                     }
 
                     if (sect.DontStyleCompletely)
@@ -185,13 +186,18 @@ namespace CodeBox.Lexing
                         else
                             newCol = i - sect.Start.MatchCount + 1;
 
+                        newCol = newCol < 0 ? 0 : newCol;
                         sect.Start.Disabled = true;
                         var tys = mys;
                         for (var ni = lineIndex; ni < line + 1; ni++)
                         {
                             var tst = ParseLine(tys, ref newCol, ni, pst);
                             tys = grammar.Sections[tst.SectionId];
-                            newCol = 0;
+                            
+                            if (newCol >= Lines[ni].Length - 1)
+                                newCol = 0;
+                            else
+                                ni--;
                         }
                         sect.Start.Disabled = false;
                         sect.Start.Reset();
@@ -207,31 +213,6 @@ namespace CodeBox.Lexing
                     }
 
                     return Fetch(sect.Id, sect);
-                    //mys.Sections.Reset();
-
-                    //if (sect.ExternalGrammarKey != null)
-                    //{
-                    //    pst.BackDelegate = sect;
-                    //    sect = GrammarProvider.GetGrammar(sect.ExternalGrammarKey).GetSection(0);
-                    //}
-                    //reparse:
-                    //var ret = ParseLine(sect, ref i, line, pst);
-
-                    //if (i >= ln.Length - 1)
-                    //    return ret;
-                    //else if (ret.SectionId != mys.Id || ret.GrammarKey != grammar.GrammarKey)
-                    //{
-                    //    sect = ret.GrammarKey != grammar.GrammarKey
-                    //        ? GrammarProvider.GetGrammar(ret.GrammarKey).GetSection(ret.SectionId)
-                    //        : grammar.GetSection(ret.SectionId);
-                    //    goto reparse;
-                    //}
-                    //else
-                    //{
-                    //    i--;
-                    //    lastNonIdent = true;
-                    //    identStart = i + 1;
-                    //}
                 }
                 else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
                         && (backm.EscapeChar == '\0' || backm.EscapeChar != last || (i >= 1 && backm.EscapeChar == ln.CharAt(i - 2))))

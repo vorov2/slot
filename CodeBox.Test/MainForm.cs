@@ -43,9 +43,11 @@ namespace CodeBox.Test
             ed.Styles.Provider = lexer;
             var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
             var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
+            var html = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\html.grammar.json")));
             lexer.GrammarProvider.RegisterGrammar(csharp);
             lexer.GrammarProvider.RegisterGrammar(csharpExp);
-            lexer.GrammarKey = "csharp";
+            lexer.GrammarProvider.RegisterGrammar(html);
+            lexer.GrammarKey = "html";
 
 
             ed.Styles.StyleNeeded += editor1_StyleNeeded;
@@ -94,7 +96,7 @@ namespace CodeBox.Test
             ed.Settings.PopupBorderColor = ColorTranslator.FromHtml("#5F5F66");
 
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
-                LocalFile("MainForm.cs"));
+                LocalFile("test.htm"));
         }
 
         private string LocalFile(string fileName)

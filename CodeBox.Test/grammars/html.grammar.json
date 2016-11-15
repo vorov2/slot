@@ -1,0 +1,58 @@
+﻿{
+    "key": "html",
+    "delimeters": "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
+    "brackets": "<>",
+    "indentProvider": "indent.block",
+    "sections": [
+        {
+
+        },
+        {
+            "key": "preprocessor",
+            "multiline": true,
+            "start": "<!",
+            "end": ">"
+        },
+        {
+            "key": "comment",
+            "multiline": true,
+            "start": "<!--",
+            "end": "-->",
+            "style": "comment.multiline"
+        },
+        {
+            "key": "tag",
+            "start": "<",
+            "end": ">",
+            "multiline": true,
+            "context": "</",
+            "identifierStyle": "keyword.special",
+            "contextIdentifierStyle": "keyword"
+        },
+        {
+            "key": "comment2",
+            "parent": "tag",
+            "multiline": true,
+            "start": "<!--",
+            "end": "-->",
+            "style": "comment.multiline"
+        },
+        {
+            "key": "string",
+            "parent": "tag",
+            "multiline": true,
+            "start": "\"",
+            "end": "\"",
+            "ignoreCase": true,
+            "style": "string.multiline"
+        },
+        {
+            "key": "csharp",
+            "multiline": true,
+            "start": "<script >",
+            "end": "</script>",
+            "dontStyleCompletely": true,
+            "grammar": "csharp"
+        }
+    ]
+}
