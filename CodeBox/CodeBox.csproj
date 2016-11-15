@@ -147,7 +147,6 @@
     <Compile Include="Lexing\GrammarSectionSettings.cs" />
     <Compile Include="Lexing\MatchResult.cs" />
     <Compile Include="Affinity\NumberLiteral.cs" />
-    <Compile Include="Lexing\ParseState.cs" />
     <Compile Include="Lexing\SectionSequence.cs" />
     <Compile Include="Lexing\State.cs" />
     <Compile Include="Lexing\StringTable.cs" />

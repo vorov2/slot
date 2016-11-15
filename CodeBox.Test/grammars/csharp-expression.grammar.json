@@ -3,24 +3,22 @@
     "numbers": "(0123456789)[x]{0123456789.+-_abcdef}(lufdm)(ul)",
     "delimeters": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
     "brackets": "()[]{}",
-    "sections": [
+    "styleNumbers": true,
+    "keywords": [
         {
-            "styleNumbers": true,
-            "keywords": [
-                {
-                    "style": "keyword",
-                    "words": "new this base"
-                },
-                {
-                    "style": "keyword.typename",
-                    "words": "bool byte decimal char double float int long object sbyte short string uint ulong ushort void"
-                },
-                {
-                    "style": "keyword.literal",
-                    "words": "true false null"
-                }
-            ]
+            "style": "keyword",
+            "words": "new this base"
         },
+        {
+            "style": "keyword.typename",
+            "words": "bool byte decimal char double float int long object sbyte short string uint ulong ushort void"
+        },
+        {
+            "style": "keyword.literal",
+            "words": "true false null"
+        }
+    ],
+    "sections": [
         {
             "key": "comment.multiline",
             "start": "/*",

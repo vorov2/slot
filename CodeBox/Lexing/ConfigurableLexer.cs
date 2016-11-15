@@ -7,6 +7,8 @@ namespace CodeBox.Lexing
 {
     public sealed class ConfigurableLexer : IStylingProvider
     {
+        private char contextChar;
+
         public ConfigurableLexer()
         {
 
@@ -23,8 +25,8 @@ namespace CodeBox.Lexing
         {
             Console.WriteLine($"Start parse from {rng.Start}");
             var lss = 0;
+            contextChar = '\0';
             var len = Context.Buffer.Document.Lines.Count;
-            var pst = new ParseState();
 
             for (var i = rng.Start.Line; i < len; i++)
             {
@@ -35,7 +37,7 @@ namespace CodeBox.Lexing
                 var col = 0;
                 var sect = grm.Sections[lss];
                 sect.Sections.ResetSelective();
-                state = ParseLine(sect, ref col, i, pst);
+                state = ParseLine(sect, ref col, i);
                 grm = GrammarProvider.GetGrammar(state.GrammarKey);
                 var st = (sect.Id != 0 || sect.GrammarKey != GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
 
@@ -44,7 +46,7 @@ namespace CodeBox.Lexing
                     grm = GrammarProvider.GetGrammar(state.GrammarKey);
                     sect = grm.Sections[state.SectionId];
                     sect.Sections.ResetSelective();
-                    state = ParseLine(sect, ref col, i, pst);
+                    state = ParseLine(sect, ref col, i);
                     st = st == 2 ? 1 : StateToBit(state);
                 }
 
@@ -61,7 +63,7 @@ namespace CodeBox.Lexing
             return state.GrammarKey != GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
         }
 
-        private State ParseLine(GrammarSection mys, ref int i, int line, ParseState pst)
+        private State ParseLine(GrammarSection mys, ref int i, int line)
         {
             var start = i;
             var identStart = i;
@@ -69,7 +71,7 @@ namespace CodeBox.Lexing
             var grammar = GrammarProvider.GetGrammar(mys.GrammarKey);
             Context.AffinityManager.Associate(line, i, grammar.GlobalId);
             var wordSep = grammar.NonWordSymbols ?? Context.Settings.NonWordSymbols;
-            var backm = mys.Id == 0 && pst.BackDelegate != null ? pst.BackDelegate : mys;
+            var backm = mys.Id == 0 && mys.BackDelegate != null ? mys.BackDelegate : mys;
             var last = '\0';
             var term = '\0';
             var lastNonIdent = true;
@@ -88,10 +90,10 @@ namespace CodeBox.Lexing
                 {
                     var style = (int)mys.IdentifierStyle;
 
-                    if (mys.ContextChars == null || mys.ContextChars.IndexOf(pst.Context) != -1)
+                    if (mys.ContextChars == null || mys.ContextChars.IndexOf(contextChar) != -1)
                     {
                         style = kres;
-                        pst.Context = '\0';
+                        contextChar = '\0';
                         if (mys.ContextChars != null)
                             Context.CallTips.BindCallTip(
                                 "<b>ToolTip header</b><br><i>Subheader for this unique tip</i><br><br>&lt;<keyword>script</keyword><keywordspecial> type</keywordspecial>=<string>\"text/csharp\"</string>&gt;<br>This is a context keyword which is only recognized in a particular context such as (&gt;) or any other different context symbol.", 
@@ -122,17 +124,17 @@ namespace CodeBox.Lexing
                         {
                             Styles.StyleRange(
                                mys.ContextIdentifierStyle != StandardStyle.Default
-                               && mys.ContextChars != null && mys.ContextChars.IndexOf(pst.Context) != -1 ?
+                               && mys.ContextChars != null && mys.ContextChars.IndexOf(contextChar) != -1 ?
                                     mys.ContextIdentifierStyle : mys.IdentifierStyle, line, identStart, i - 1);
-                            pst.Context = '\0';
+                            contextChar = '\0';
                         }
                     }
 
                     identStart = i + 1;
                 }
 
-                if (!ws && nonIdent)
-                    pst.Context = c;
+                if (!ws && nonIdent && c!= '\0')
+                    contextChar = c;
 
                 var sect = mys.Sections.Match(c);
 
@@ -150,9 +152,9 @@ namespace CodeBox.Lexing
 
                     if (mys.Style != 0)
                     {
-                        var off1 = backm.DontStyleCompletely || pst.Fallback ? 0 : backm.Start != null ? backm.Start.Length : 0;
+                        var off1 = backm.DontStyleCompletely || mys.Fallback ? 0 : backm.Start != null ? backm.Start.Length : 0;
                         Styles.StyleRange(mys.Style, line, start - off1, i - (sect.Start == null ? 0 : sect.Start.Length));
-                        pst.Fallback = false;
+                        mys.Fallback = false;
                     }
 
                     if (sect.DontStyleCompletely)
@@ -191,7 +193,7 @@ namespace CodeBox.Lexing
                         var tys = mys;
                         for (var ni = lineIndex; ni < line + 1; ni++)
                         {
-                            var tst = ParseLine(tys, ref newCol, ni, pst);
+                            var tst = ParseLine(tys, ref newCol, ni);
                             tys = grammar.Sections[tst.SectionId];
                             
                             if (newCol >= Lines[ni].Length - 1)
@@ -208,8 +210,9 @@ namespace CodeBox.Lexing
 
                     if (sect.ExternalGrammarKey != null)
                     {
-                        pst.BackDelegate = sect;
+                        var bd = sect;
                         sect = GrammarProvider.GetGrammar(sect.ExternalGrammarKey).Sections[0];
+                        sect.BackDelegate = bd;
                     }
 
                     return Fetch(sect.Id, sect);
@@ -219,21 +222,21 @@ namespace CodeBox.Lexing
                 {
                     if (backm.Style != 0)
                     {
-                        var off1 = backm.DontStyleCompletely || pst.Fallback ? 0 : backm.Start != null ? backm.Start.Length : 0;
+                        var off1 = backm.DontStyleCompletely || backm.Fallback ? 0 : backm.Start != null ? backm.Start.Length : 0;
                         Styles.StyleRange(backm.Style, line, start - off1, i - (backm.DontStyleCompletely ? backm.End.Offset : 0));
-                        pst.Fallback = false;
+                        backm.Fallback = false;
                     }
 
                     i++;
                     var parId = mys.ParentId;
 
-                    if (backm == pst.BackDelegate)
+                    if (backm == mys.BackDelegate)
                     {
-                        pst.BackDelegate = null;
+                        mys.BackDelegate = null;
                         parId = backm.ParentId;
 
                         if (parId != 0)
-                            pst.Fallback = true;
+                            GrammarProvider.GetGrammar(backm.GrammarKey).Sections[parId].Fallback = true;
                     }
 
                     if (backm.DontStyleCompletely)

@@ -80,7 +80,9 @@
     <None Include="grammars\csharp.grammar.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="grammars\css.grammar.json" />
+    <None Include="grammars\css.grammar.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="grammars\html.grammar.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

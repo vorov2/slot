@@ -14,6 +14,9 @@ namespace CodeBox.Lexing
 
         }
 
+        internal GrammarSection BackDelegate;
+        internal bool Fallback;
+
         public int Id { get; set; }
 
         public string GrammarKey { get; set; }

@@ -28,14 +28,17 @@ namespace CodeBox.Lexing
                     IndentProviderKey = dict.String("indentProvider")
                 };
 
+                var rt = ProcessSection(grammar.Key, dict);
+                sectionMap.Add("root", rt);
+                grammar.Sections.Add(rt.Item3);
                 var sections = dict.Object("sections") as List<object>;
 
                 foreach (var o in sections)
                 {
                     var nd = o as Dictionary<string, object>;
-                    var tup = ProcessSection<GrammarSection>(grammar.Key, nd);
+                    var tup = ProcessSection(grammar.Key, nd);
                     tup.Item3.Id = grammar.Sections.Count;
-                    grammar.Sections.Add(tup.Item3);
+                    grammar.Sections.Add(tup.Item3) ;
 
                     var key = tup.Item1 ?? "root";
 
@@ -47,6 +50,9 @@ namespace CodeBox.Lexing
 
                 foreach (var tup in sectionMap.Values)
                 {
+                    if (tup.Item1 == null)
+                        continue;
+
                     var parentKey = tup.Item2 ?? "root";
                     Tuple<string, string, GrammarSection> parent = null;
 
@@ -63,7 +69,7 @@ namespace CodeBox.Lexing
             return null;
         }
 
-        private static Tuple<string, string, GrammarSection> ProcessSection<T>(string grammar, Dictionary<string, object> dict)
+        private static Tuple<string, string, GrammarSection> ProcessSection(string grammar, Dictionary<string, object> dict)
         {
             if (dict == null)
                 return null;

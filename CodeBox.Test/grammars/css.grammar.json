@@ -3,7 +3,6 @@
     "numbers": "(0123456789){0123456789.+-}{ptx}(%)",
     "delimeters": "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?",
     "brackets": "{}",
-    "styleNumbers": true,
     "indentProvider": "indent.curly",
     "commentMask": "/* */",
     "identifierStyle": "keyword",
@@ -12,6 +11,8 @@
             "key": "class",
             "start": "{",
             "end": "}",
+            "multiline": true,
+            "styleNumbers": true,
             "keywords": [
                 {
                     "style": "keyword.special",
