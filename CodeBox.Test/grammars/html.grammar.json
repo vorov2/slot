@@ -8,7 +8,8 @@
             "key": "preprocessor",
             "multiline": true,
             "start": "<!",
-            "end": ">"
+            "end": ">",
+            "style": "bracket"
         },
         {
             "key": "comment",
@@ -23,6 +24,7 @@
             "end": ">",
             "multiline": true,
             "context": "</",
+            "style": "bracket",
             "identifierStyle": "keyword.special",
             "contextIdentifierStyle": "keyword"
         },

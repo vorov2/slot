@@ -41,7 +41,7 @@ namespace CodeBox.Lexing
                 grm = GrammarProvider.GetGrammar(state.GrammarKey);
                 var st = (sect.Id != 0 || sect.GrammarKey != GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
 
-                while (col < line.Length - 1)
+                while (col <= line.Length)
                 {
                     grm = GrammarProvider.GetGrammar(state.GrammarKey);
                     sect = grm.Sections[state.SectionId];
@@ -196,7 +196,7 @@ namespace CodeBox.Lexing
                             var tst = ParseLine(tys, ref newCol, ni);
                             tys = grammar.Sections[tst.SectionId];
                             
-                            if (newCol >= Lines[ni].Length - 1)
+                            if (newCol >= Lines[ni].Length)
                                 newCol = 0;
                             else
                                 ni--;
@@ -220,6 +220,13 @@ namespace CodeBox.Lexing
                 else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
                     && (backm.EscapeChar == '\0' || backm.EscapeChar != last || (i >= 1 && backm.EscapeChar == ln.CharAt(i - 2))))
                 {
+                    if (i < ln.Length - 1 && backm.TerminatorEndChar == ln.CharAt(i + 1))
+                    {
+                        i++;
+                        backm.End.Reset();
+                        continue;
+                    }
+
                     if (backm.Style != 0)
                     {
                         var off1 = backm.DontStyleCompletely || backm.Fallback ? 0 : backm.Start != null ? backm.Start.Length : 0;

@@ -55,6 +55,8 @@ namespace CodeBox.Lexing
 
         public char TerminatorChar { get; set; }
 
+        public char TerminatorEndChar { get; set; }
+
         internal List<GrammarSection> Sections { get; } = new List<GrammarSection>();
     }
 }

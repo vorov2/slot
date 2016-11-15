@@ -93,6 +93,7 @@ namespace CodeBox.Lexing
                 Style = dict.Style("style"),
                 IdentifierStyle = dict.Style("identifierStyle"),
                 ContextIdentifierStyle = dict.Style("contextIdentifierStyle"),
+                TerminatorEndChar = dict.Char("terminatorEnd"),
                 Start = (tmp = dict.String("start")) != null ? new SectionSequence(tmp, !ignoreCase) : null,
                 End = (tmp = dict.String("end")) != null ? new SectionSequence(tmp, !ignoreCase) : null,
                 Keywords = ProcessKeywords(ignoreCase, dict.Object("keywords") as List<object>)
