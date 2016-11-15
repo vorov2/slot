@@ -6,12 +6,26 @@ namespace CodeBox.Commands
 {
     public sealed class SelectLineCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        private Pos pos;
+
+        public SelectLineCommand(Pos pos)
         {
-            if (arg.Pos.Line > -1)
+            this.pos = pos;
+        }
+
+        public SelectLineCommand()
+        {
+            pos = Pos.Empty;
+        }
+
+        public override ActionResults Execute(Selection sel)
+        {
+            var p = pos == Pos.Empty ? Context.Caret : pos;
+
+            if (p.Line > -1)
             {
-                sel.Start = new Pos(arg.Pos.Line, 0);
-                sel.End = new Pos(arg.Pos.Line, Document.Lines[arg.Pos.Line].Length);
+                sel.Start = new Pos(p.Line, 0);
+                sel.End = new Pos(p.Line, Document.Lines[p.Line].Length);
             }
 
             return Clean;

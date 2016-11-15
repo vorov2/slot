@@ -10,18 +10,27 @@ namespace CodeBox.Commands
     {
         private Selection undo;
         protected Selection redoSel;
-        private IEnumerable<Character> @string;
-        private IEnumerable<Character> @redoString;
+        private IEnumerable<Character> deleteString;
+        protected IEnumerable<Character> insertString;
 
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public InsertRangeCommand(IEnumerable<Character> insertString)
+        {
+            this.insertString = insertString;
+        }
+
+        protected InsertRangeCommand()
+        {
+
+        }
+
+        public override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
 
             if (!sel.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(Context, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
 
-            @redoString = arg.String.MakeCharacters();
-            var pos = InsertRange(Document, sel.Start, @redoString);
+            var pos = InsertRange(Document, sel.Start, insertString);
             undo = new Selection(sel.Start, pos);
             sel.Clear(pos);
             return Change;
@@ -29,11 +38,9 @@ namespace CodeBox.Commands
 
         public override ActionResults Redo(out Pos pos)
         {
-            @string = null;
+            deleteString = null;
             var sel = redoSel;
-            var arg = new CommandArgument(redoString.MakeString(Context.Buffer.Eol));
-            @redoString = null;
-            Execute(arg, sel);
+            Execute(sel);
             pos = sel.Caret;
             return Change;
         }
@@ -43,8 +50,8 @@ namespace CodeBox.Commands
             DeleteRangeCommand.DeleteRange(Context, undo);
             pos = undo.Caret;
 
-            if (@string != null)
-                pos = InsertRange(Document, undo.End, @string);
+            if (deleteString != null)
+                pos = InsertRange(Document, undo.End, deleteString);
 
             return Change;
         }

@@ -21,7 +21,7 @@ namespace CodeBox.Margins
         {
             var sel = Editor.Buffer.Selections.Main;
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
-            Editor.Commands.Run<SelectLineCommand>(new CommandArgument(new Pos(lineIndex, 0)));
+            Editor.Commands.Run(new SelectLineCommand(new Pos(lineIndex, 0)));
             return MarginEffects.Redraw;
         }
 

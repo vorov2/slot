@@ -8,9 +8,9 @@ namespace CodeBox.Commands
 {
     public sealed class BlockSelectCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
-            DoSelection(arg.Pos, ((Editor)Context).PointToClient(Cursor.Position));
+            DoSelection(Context.Caret, ((Editor)Context).PointToClient(Cursor.Position));
             return Scroll | SingleRun | Clean;
         }
 

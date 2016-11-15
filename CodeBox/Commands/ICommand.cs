@@ -5,7 +5,7 @@ namespace CodeBox.Commands
 {
     public interface ICommand
     {
-        ActionResults Execute(CommandArgument arg, Selection sel);
+        ActionResults Execute(Selection sel);
 
         ActionResults Undo(out Pos pos);
 

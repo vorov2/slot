@@ -9,7 +9,7 @@ namespace CodeBox.Commands
 {
     public sealed class ClearSelectionCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             Buffer.Selections.Truncate();
             return Clean;

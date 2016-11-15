@@ -23,7 +23,7 @@ namespace CodeBox.Margins
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
 
             if (lineIndex > -1)
-                Editor.Commands.Run<ToggleFoldingCommand>(new CommandArgument(new Pos(lineIndex, 0)));
+                Editor.Commands.Run(new ToggleFoldingCommand(new Pos(lineIndex, 0)));
 
             return MarginEffects.Redraw | MarginEffects.Invalidate | MarginEffects.CaptureMouse;
         }

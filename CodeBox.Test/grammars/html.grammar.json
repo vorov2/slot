@@ -43,7 +43,6 @@
             "multiline": true,
             "start": "\"",
             "end": "\"",
-            "ignoreCase": true,
             "style": "string.multiline"
         },
         {
@@ -52,6 +51,7 @@
             "start": "<script >",
             "end": "</script>",
             "dontStyleCompletely": true,
+            "ignoreCase": true,
             "grammar": "csharp"
         }
     ]

@@ -4,13 +4,13 @@ using CodeBox.ObjectModel;
 
 namespace CodeBox.Commands
 {
-    public sealed class PasteCommand : InsertRangeCommand
+    public sealed class PasteCommand : InsertRangeCommand, IModifyContent
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             var str = Clipboard.GetText();
-            arg = new CommandArgument(str);
-            return base.Execute(arg, sel);
+            base.insertString = str.MakeCharacters();
+            return base.Execute(sel);
         }
 
         public override ICommand Clone()

@@ -163,7 +163,6 @@
     <Compile Include="Margins\ScrollBarMargin.cs" />
     <Compile Include="Margins\TopMargin.cs" />
     <Compile Include="Commands\MouseEvents.cs" />
-    <Compile Include="Commands\CommandArgument.cs" />
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="MatchBracketManager.cs" />
     <Compile Include="ObjectModel\DocumentBuffer.cs" />

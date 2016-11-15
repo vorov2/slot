@@ -6,7 +6,7 @@ namespace CodeBox.Commands
 {
     public sealed class RedoCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             Context.Commands.Redo();
             return SingleRun | Pure;

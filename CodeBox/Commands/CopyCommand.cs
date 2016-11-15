@@ -8,7 +8,7 @@ namespace CodeBox.Commands
 {
     public sealed class CopyCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             var sb = new StringBuilder();
 

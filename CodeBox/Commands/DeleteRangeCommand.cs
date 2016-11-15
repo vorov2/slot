@@ -11,7 +11,7 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
             data = DeleteRange(Context, sel);
@@ -22,7 +22,7 @@ namespace CodeBox.Commands
         public override ActionResults Redo(out Pos pos)
         {
             data = null;
-            Execute(CommandArgument.Empty, redoSel);
+            Execute(redoSel);
             pos = undoPos;
             return Change;
         }

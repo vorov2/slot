@@ -6,9 +6,9 @@ namespace CodeBox.Commands
 {
     public sealed class NormalSelectCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
-            DoSelection(arg.Pos);
+            DoSelection(Context.Caret);
             return Clean | Scroll | SingleRun;
         }
 

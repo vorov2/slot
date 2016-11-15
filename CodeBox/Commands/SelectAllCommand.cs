@@ -6,7 +6,7 @@ namespace CodeBox.Commands
 {
     public sealed class SelectAllCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             var idx = Document.Lines.Count - 1;
             var ln = Document.Lines[idx];

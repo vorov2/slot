@@ -48,7 +48,7 @@ namespace CodeBox
             BottomMargins = new MarginList(this);
             Info = new EditorInfo(this);
 
-            Caret = new CaretRenderer(this);
+            CaretRenderer = new CaretRenderer(this);
             Renderer = new Renderer(this);
             CachedBrush = new CachedBrush();
             CachedPen = new CachedPen();
@@ -77,7 +77,7 @@ namespace CodeBox
 
             if (disposing)
             {
-                Caret.Dispose();
+                CaretRenderer.Dispose();
                 CachedBrush.Dispose();
                 CachedFont.Dispose();
             }
@@ -128,7 +128,7 @@ namespace CodeBox
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Caret.Suspend();
+            CaretRenderer.Suspend();
 
             var dt = DateTime.Now;
 
@@ -153,7 +153,7 @@ namespace CodeBox
 
             e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
             foreach (var c in carets)
-                Caret.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
+                CaretRenderer.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
 
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
@@ -273,7 +273,7 @@ namespace CodeBox
 
                             if (blink)
                             {
-                                var cg = Caret.GetDrawingSurface();
+                                var cg = CaretRenderer.GetDrawingSurface();
                                 cg.Clear(high ? Styles.Selection.BackColor 
                                     : curline ? Settings.CurrentLineIndicatorColor : Styles.Default.BackColor);
                                 style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
@@ -284,7 +284,7 @@ namespace CodeBox
                                         0, 0, 0, rect.Size.Height);
                                 }
 
-                                Caret.Resume();
+                                CaretRenderer.Resume();
                             }
 
                             carets.Add(new CaretData(x, y, pos.Line, pos.Col, blink));
@@ -321,8 +321,8 @@ namespace CodeBox
                 && pos.Y >= Info.TextTop
                 && pos.Y <= Info.TextBottom)
             {
-                var p = Locations.LocationToPosition(pos);
-                Commands.Run(MouseEvents.DoubleClick, Keys.None, new CommandArgument(p));
+                Caret = Locations.LocationToPosition(pos);
+                Commands.Run(MouseEvents.DoubleClick, Keys.None);
             }
         }
 
@@ -362,13 +362,13 @@ namespace CodeBox
 
             mousePosition = e.Location;
             movePosition = p;
+            Caret = p;
 
             if (!p.IsEmpty)
             {
                 if (Mouse != MouseEvents.None || LastKeys != Keys.None)
                 {
-                    var arg = new CommandArgument(p);
-                    Commands.Run(Mouse | MouseEvents.Move, LastKeys, arg);
+                    Commands.Run(Mouse | MouseEvents.Move, LastKeys);
                 }
 
                 timer.Start();
@@ -425,8 +425,8 @@ namespace CodeBox
                 else
                 {
                     var pos = Locations.LocationToPosition(e.Location);
-                    pos = pos.IsEmpty ? default(Pos) : pos;
-                    Commands.Run(Mouse, LastKeys, new CommandArgument(pos));
+                    Caret = pos.IsEmpty ? default(Pos) : pos;
+                    Commands.Run(Mouse, LastKeys);
                     var idx = Buffer.Selections.IndexOfCaret(pos);
 
                     if (idx != -1)
@@ -468,8 +468,7 @@ namespace CodeBox
                     case '\u001b': //Esc
                         return true;
                     default:
-                        var arg = new CommandArgument(ch);
-                        Commands.Run<InsertCharCommand>(arg);
+                        Commands.Run(new InsertCharCommand(new Character(ch)));
                         break;
                 }
 
@@ -523,7 +522,7 @@ namespace CodeBox
                 return;
 
             LastKeys = e.Modifiers;
-            Commands.Run(LastKeys | e.KeyCode, CommandArgument.Empty);
+            Commands.Run(LastKeys | e.KeyCode);
         }
 
         [Browsable(false)]
@@ -580,7 +579,7 @@ namespace CodeBox
                 if (value != Buffer.Overtype)
                 {
                     Buffer.Overtype = value;
-                    Caret.BlockCaret = value;
+                    CaretRenderer.BlockCaret = value;
                     Redraw();
                 }
             }
@@ -721,9 +720,11 @@ namespace CodeBox
 
         internal CachedFont CachedSmallFont { get; set; }
 
-        internal CaretRenderer Caret { get; }
+        internal CaretRenderer CaretRenderer { get; }
 
         internal Renderer Renderer { get; }
+
+        public Pos Caret { get; private set; }
 
         [Browsable(false)]
         public CommandManager Commands { get; }

@@ -44,5 +44,7 @@ namespace CodeBox
         int TabSize { get; }
 
         bool Overtype { get; set; }
+
+        Pos Caret { get; }
     }
 }

@@ -9,7 +9,7 @@ namespace CodeBox.Commands
     {
         private DocumentCompleteSource completeSource = new DocumentCompleteSource();
 
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             completeSource.Initialize(Context);
             var list = completeSource.GetItems();

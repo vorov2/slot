@@ -12,7 +12,7 @@ namespace CodeBox.Commands
         private Selection redoSel;
         private Pos undoPos;
 
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
             var res = Pure;
@@ -52,7 +52,7 @@ namespace CodeBox.Commands
         {
             @string = null;
             @char = Character.Empty;
-            Execute(CommandArgument.Empty, redoSel);
+            Execute(redoSel);
             pos = undoPos;
             return Change;
         }

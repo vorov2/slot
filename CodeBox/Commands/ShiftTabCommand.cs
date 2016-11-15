@@ -8,7 +8,7 @@ namespace CodeBox.Commands
     {
         private Selection redoSel;
 
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
             var change = TabCommand.Unindent(Context, sel);
@@ -25,7 +25,7 @@ namespace CodeBox.Commands
         public override ActionResults Redo(out Pos pos)
         {
             var sel = redoSel;
-            Execute(CommandArgument.Empty, sel);
+            Execute(sel);
             pos = sel.End;
             return Change;
         }

@@ -6,7 +6,7 @@ namespace CodeBox.Commands
 {
     public abstract class CaretCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             var pos = GetPosition(sel);
             sel.Clear(pos);

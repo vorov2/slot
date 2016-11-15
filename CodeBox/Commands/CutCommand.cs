@@ -7,9 +7,9 @@ namespace CodeBox.Commands
 {
     public sealed class CutCommand : DeleteRangeCommand, IModifyContent
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
-            var res = base.Execute(arg, sel);
+            var res = base.Execute(sel);
 
             if (data != null)
             {

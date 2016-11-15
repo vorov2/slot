@@ -41,64 +41,6 @@ namespace CodeBox
             commands = new Dictionary<Type, ICommand>();
             commandsByKeys = new Dictionary<CommandKeys, List<ICommand>>();
             this.editor = editor;
-            RegisterCommands();
-        }
-
-        private void RegisterCommands()
-        {
-            Register<AutocompleteCommand>();
-            Register<SelectLineCommand>();
-            Register<ToggleFoldingCommand>();
-            Register<FollowLinkCommand>();
-            Register<DeleteWordBackCommand>();
-            Register<DeleteWordCommand>();
-            Register<ScrollLineUpCommand>();
-            Register<ScrollLineDownCommand>();
-            Register<RedoCommand>();
-            Register<UndoCommand>();
-            Register<SetCaretCommand>();
-            Register<AddCaretCommand>();
-            Register<NormalSelectCommand>();
-            Register<BlockSelectCommand>();
-            Register<InsertCharCommand>();
-            Register<SelectWordCommand>();
-            Register<CutCommand>();
-            Register<CopyCommand>();
-            Register<PasteCommand>();
-            Register<SelectAllCommand>();
-            Register<ShiftTabCommand>();
-            Register<TabCommand>();
-            Register<ClearSelectionCommand>();
-            Register<LeftCommand>();
-            Register<RightCommand>();
-            Register<UpCommand>();
-            Register<DownCommand>();
-            Register<HomeCommand>();
-            Register<EndCommand>();
-            Register<InsertNewLineCommand>();
-            Register<DeleteBackCommand>();
-            Register<DeleteCommand>();
-            Register<PageDownCommand>();
-            Register<PageUpCommand>();
-            Register<ExtendLeftCommand>();
-            Register<ExtendRightCommand>();
-            Register<ExtendUpCommand>();
-            Register<ExtendDownCommand>();
-            Register<ExtendEndCommand>();
-            Register<ExtendHomeCommand>();
-            Register<WordLeftCommand>();
-            Register<WordRightCommand>();
-            Register<ExtendWordRightCommandCommand>();
-            Register<ExtendWordLeftCommandCommand>();
-            Register<ExtendPageDownCommand>();
-            Register<ExtendPageUpCommand>();
-            Register<DocumentHomeCommand>();
-            Register<DocumentEndCommand>();
-            Register<ExtendDocumentHomeCommand>();
-            Register<ExtendDocumentEndCommand>();
-            Register<OvertypeCommand>();
-            Register<InsertRangeCommand>();
-            Register<DeleteRangeCommand>();
         }
 
         public IEditorLock ObtainLock()
@@ -237,18 +179,12 @@ namespace CodeBox
             }
         }
 
-        public void Register<T>() where T : ICommand, new() => commands.Add(typeof(T), new T());
+        public bool Bind<T>(Keys keys) where T : ICommand, new() => Bind<T>(MouseEvents.None, keys);
 
-        public bool Bind<T>(Keys keys) where T : ICommand => Bind<T>(MouseEvents.None, keys);
-
-        public bool Bind<T>(MouseEvents mouse, Keys keys) where T : ICommand
+        public bool Bind<T>(MouseEvents mouse, Keys keys) where T : ICommand, new()
         {
             var type = typeof(T);
-            ICommand ci;
-
-            if (!commands.TryGetValue(type, out ci))
-                return false;
-
+            var ci = new T();
             var ck = new CommandKeys(mouse, keys);
             List<ICommand> cl;
 
@@ -262,26 +198,18 @@ namespace CodeBox
             return true;
         }
 
-        public void Run<T>(CommandArgument arg) where T : ICommand
-        {
-            ICommand ci;
+        public void Run(Keys keys) => Run(MouseEvents.None, keys);
 
-            if (commands.TryGetValue(typeof(T), out ci))
-                InternalRun(arg, ci);
-        }
-
-        public void Run(Keys keys, CommandArgument arg) => Run(MouseEvents.None, keys, arg);
-
-        public void Run(MouseEvents mouse, Keys keys, CommandArgument arg)
+        public void Run(MouseEvents mouse, Keys keys)
         {
             List<ICommand> seq;
 
             if (commandsByKeys.TryGetValue(new CommandKeys(mouse, keys), out seq))
                 foreach (var ci in seq)
-                    InternalRun(arg, ci);
+                    Run(ci.Clone());
         }
 
-        private void InternalRun(CommandArgument arg, ICommand cmd)
+        public void Run(ICommand cmd)
         {
             FirstEditLine = int.MaxValue;
             LastEditLine = 0;
@@ -292,7 +220,8 @@ namespace CodeBox
             if (modify && (editor.ReadOnly || editorLock != null))
                 return;
 
-            var qry = editor.Buffer.Selections.Count == 1 ? null
+            var selCount = editor.Buffer.Selections.Count;
+            var qry = selCount == 1 ? null
                 : editor.Buffer.Selections.OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
             var exp = None;
             var thisUndo = false;
@@ -302,9 +231,9 @@ namespace CodeBox
             {
                 FirstEditLine = lastSel.GetFirstLine();
                 LastEditLine = lastSel.GetLastLine();
-                cmd = cmd.Clone();
+                //cmd = cmd.Clone();
                 cmd.Context = editor.Context;
-                exp = cmd.Execute(arg, lastSel);
+                exp = cmd.Execute(lastSel);
 
                 if (!atomic || !exp.Has(AtomicChange))
                     thisUndo = BeginUndoAction();
@@ -318,6 +247,7 @@ namespace CodeBox
             else
             {
                 thisUndo = BeginUndoAction();
+                var cc = 0;
 
                 foreach (var sel in qry)
                 {
@@ -331,9 +261,8 @@ namespace CodeBox
                     if (lel > LastEditLine)
                         LastEditLine = lel;
 
-                    cmd = cmd.Clone();
                     cmd.Context = editor.Context;
-                    var e = cmd.Execute(arg, sel);
+                    var e = cmd.Execute(sel);
 
                     exp |= e;
 
@@ -347,6 +276,9 @@ namespace CodeBox
                         break;
 
                     lastSel = sel;
+
+                    if (++cc < selCount)
+                        cmd = cmd.Clone();
                 }
             }
 

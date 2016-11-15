@@ -10,7 +10,7 @@ namespace CodeBox.Commands
 {
     public abstract class Command : ICommand
     {
-        public abstract ActionResults Execute(CommandArgument arg, Selection sel);
+        public abstract ActionResults Execute(Selection sel);
 
         public virtual ActionResults Undo(out Pos pos)
         {

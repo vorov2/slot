@@ -21,7 +21,7 @@ namespace CodeBox.Lexing
 
         private void Parse(State state, Range rng)
         {
-            Console.WriteLine($"Start{{}} parse from {rng.Start}");
+            Console.WriteLine($"Start parse from {rng.Start}");
             var lss = 0;
             var len = Context.Buffer.Document.Lines.Count;
             var pst = new ParseState();
@@ -215,7 +215,7 @@ namespace CodeBox.Lexing
                     return Fetch(sect.Id, sect);
                 }
                 else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
-                        && (backm.EscapeChar == '\0' || backm.EscapeChar != last || (i >= 1 && backm.EscapeChar == ln.CharAt(i - 2))))
+                    && (backm.EscapeChar == '\0' || backm.EscapeChar != last || (i >= 1 && backm.EscapeChar == ln.CharAt(i - 2))))
                 {
                     if (backm.Style != 0)
                     {
@@ -276,9 +276,9 @@ namespace CodeBox.Lexing
             return c == ' ' || c == '\t';
         }
 
-        private State Fetch(int sectionId, GrammarSection par, bool matchAnyState = false)
+        private State Fetch(int sectionId, GrammarSection sect, bool matchAnyState = false)
         {
-            return new State(sectionId, par.GrammarKey, matchAnyState);
+            return new State(sectionId, sect.GrammarKey, matchAnyState);
         }
 
         private bool Overlap(IEnumerable<GrammarSection> seq, Line ln, int col, GrammarSection sect)

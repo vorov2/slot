@@ -14,7 +14,7 @@ namespace CodeBox.Commands
         private int indent;
         private IEnumerable<Character> unindent;
 
-        public override ActionResults Execute(CommandArgument arg, Selection selection)
+        public override ActionResults Execute(Selection selection)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
@@ -52,7 +52,7 @@ namespace CodeBox.Commands
         {
             @string = null;
             var sel = redoSel;
-            Execute(CommandArgument.Empty, sel);
+            Execute(sel);
             pos = sel.Caret;
             return Change;
         }

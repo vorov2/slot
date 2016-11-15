@@ -14,7 +14,7 @@ namespace CodeBox.Commands
             Word
         }
         
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             var caret = sel.Caret;
             var range = SelectWord(Context, caret);

@@ -8,10 +8,11 @@ namespace CodeBox.Commands
 {
     public sealed class FollowLinkCommand : Command
     {
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
-            var ln = Document.Lines[arg.Pos.Line];
-            var a = ln.FindHyperlink(arg.Pos.Col);
+            var pos = Context.Caret;
+            var ln = Document.Lines[pos.Line];
+            var a = ln.FindHyperlink(pos.Col);
 
             if (a != AppliedStyle.Empty)
             {

@@ -10,7 +10,7 @@ namespace CodeBox.Commands
     {
         private bool undoIndent;
 
-        public override ActionResults Execute(CommandArgument arg, Selection sel)
+        public override ActionResults Execute(Selection sel)
         {
             var indent = Context.UseTabs ? "\t" : new string(' ', Context.TabSize);
             
@@ -35,8 +35,8 @@ namespace CodeBox.Commands
                         indent = new string(' ', newIndent);
                 }
 
-                arg = new CommandArgument(indent);
-                base.Execute(arg, sel);
+                base.insertString = indent.MakeCharacters();
+                base.Execute(sel);
                 return Modify | Scroll;
             }
         }
@@ -86,7 +86,7 @@ namespace CodeBox.Commands
             if (undoIndent)
             {
                 var sel = redoSel;
-                Execute(CommandArgument.Empty, sel);
+                Execute(sel);
                 pos = sel.End;
                 return Change;
             }
