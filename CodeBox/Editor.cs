@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.Commands;
 using CodeBox.Margins;
@@ -55,10 +52,9 @@ namespace CodeBox
             Scroll = new ScrollingManager(this);
             Styles = new StyleManager(this);
             Commands = new CommandManager(this);
-            Locations = new LocationManager(this);
+            Locations = new LocationManager(this);//+
             Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
             CallTips = new CallTipManager(this);
-            Indents = new IndentManager(this);
             MatchBrakets = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
@@ -743,9 +739,6 @@ namespace CodeBox
 
         [Browsable(false)]
         public CallTipManager CallTips { get; }
-
-        [Browsable(false)]
-        public IndentManager Indents { get; }
 
         [Browsable(false)]
         internal MatchBracketManager MatchBrakets { get; }

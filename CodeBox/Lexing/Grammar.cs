@@ -21,7 +21,7 @@ namespace CodeBox.Lexing
 
         public NumberLiteral NumberLiteral { get; set; }
 
-        public string IndentProviderKey { get; set; }
+        public string IndentComponentKey { get; set; }
         #endregion
 
         public string Key { get; set; }

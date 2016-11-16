@@ -1,13 +1,14 @@
-﻿using System;
+﻿using CodeBox.ComponentModel;
+using System;
 using System.ComponentModel.Composition;
 
 namespace CodeBox.Indentation
 {
-    [Export(typeof(IDentProvider))]
-    [ExportMetadata("Key", "indent.block")]
-    public sealed class BlockDentProvider : IDentProvider
+    [Export(typeof(IComponent))]
+    [ComponentData("indent.block")]
+    public sealed class BlockDentProvider : IDentComponent
     {
-        public int Calculate(int lineIndex, IEditorContext ctx)
+        public int CalculateIndentation(IEditorContext ctx, int lineIndex)
         {
             if (lineIndex > 0)
             {

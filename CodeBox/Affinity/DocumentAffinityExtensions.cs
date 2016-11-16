@@ -20,9 +20,9 @@ namespace CodeBox.Affinity
             return aff.BracketSymbols ?? ctx.Settings.BracketSymbols;
         }
 
-        public static string GetIndentProvider(this IDocumentAffinity aff, IEditorContext ctx, Pos pos)
+        public static string GetIndentComponentKey(this IDocumentAffinity aff, IEditorContext ctx, Pos pos)
         {
-            return aff.IndentProviderKey ?? ctx.Settings.IndentProviderKey;
+            return aff.IndentComponentKey ?? ctx.Settings.IndentComponentKey;
         }
     }
 }

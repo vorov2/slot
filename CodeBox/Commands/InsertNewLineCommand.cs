@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeBox.ObjectModel;
+using CodeBox.ComponentModel;
+using CodeBox.Affinity;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
@@ -24,7 +26,12 @@ namespace CodeBox.Commands
             
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
-            indent = Context.Indents.CalculateIndentation(pos.Line);
+
+
+            var indentKey = Context.AffinityManager.GetAffinity(pos).GetIndentComponentKey(Context,
+                new Pos(pos.Line,  0));
+            var comp = (IDentComponent)ComponentCatalog.Instance.GetComponent(indentKey);
+            indent = comp != null ? comp.CalculateIndentation(Context, pos.Line) : 0;
 
             if (indent > 0)
             {

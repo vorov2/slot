@@ -23,8 +23,6 @@ namespace CodeBox
 
         FoldingManager Folding { get; }
 
-        IndentManager Indents { get; }
-
         ScrollingManager Scroll { get; }
 
         CommandManager Commands { get; }

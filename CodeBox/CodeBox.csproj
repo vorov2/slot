@@ -118,10 +118,11 @@
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
-    <Compile Include="ComponentCatalog.cs" />
+    <Compile Include="ComponentModel\ComponentCatalog.cs" />
+    <Compile Include="ComponentModel\ComponentDataAttribute.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="FieldNameAttribute.cs" />
-    <Compile Include="IComponentMetadata.cs" />
+    <Compile Include="ComponentModel\IComponentMetadata.cs" />
     <Compile Include="IEditorLock.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
     <Compile Include="Drawing\CachedFont.cs" />
@@ -137,8 +138,6 @@
     <Compile Include="Folding\IndentFoldingProvider.cs" />
     <Compile Include="Indentation\BlockDentProvider.cs" />
     <Compile Include="Indentation\CurlyDentProvider.cs" />
-    <Compile Include="Indentation\IDentProvider.cs" />
-    <Compile Include="Indentation\IndentManager.cs" />
     <Compile Include="Lexing\EnumerableExtensions.cs" />
     <Compile Include="Lexing\Grammar.cs" />
     <Compile Include="Lexing\GrammarProvider.cs" />
@@ -180,6 +179,8 @@
     <Compile Include="ObjectModel\Range.cs" />
     <Compile Include="ObjectModel\Selection.cs" />
     <Compile Include="ObjectModel\SelectionList.cs" />
+    <Compile Include="ComponentModel\IDentComponent.cs" />
+    <Compile Include="ComponentModel\IComponent.cs" />
     <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="CallTips\CallTip.cs" />

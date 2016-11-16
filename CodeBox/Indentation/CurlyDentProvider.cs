@@ -1,13 +1,14 @@
-﻿using System;
+﻿using CodeBox.ComponentModel;
+using System;
 using System.ComponentModel.Composition;
 
 namespace CodeBox.Indentation
 {
-    [Export(typeof(IDentProvider))]
-    [ExportMetadata("Key", "indent.curly")]
-    public sealed class CurlyDentProvider : IDentProvider
+    [Export(typeof(IComponent))]
+    [ComponentData("indent.curly")]
+    public sealed class CurlyDentProvider : IDentComponent
     {
-        public int Calculate(int lineIndex, IEditorContext ctx)
+        public int CalculateIndentation(IEditorContext ctx, int lineIndex)
         {
             if (lineIndex > 0)
             {

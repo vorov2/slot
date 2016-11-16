@@ -17,6 +17,6 @@ namespace CodeBox.Affinity
 
         NumberLiteral NumberLiteral { get; }
 
-        string IndentProviderKey { get; set; }
+        string IndentComponentKey { get; set; }
     }
 }
