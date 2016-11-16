@@ -193,7 +193,7 @@ namespace CodeBox.CallTips
 
                 foreach (var c in ln)
                 {
-                    x += c.Char == '\t' ? editor.TabSize * editor.Info.CharWidth : editor.Info.CharWidth;
+                    x += c.Char == '\t' ? editor.IndentSize * editor.Info.CharWidth : editor.Info.CharWidth;
 
                     if (p++ == pos.Col)
                         break;

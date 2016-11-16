@@ -25,7 +25,7 @@ namespace CodeBox.Commands
                 res = Change;
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
             }
-            else if (!Context.UseTabs && caret.Col >= Context.TabSize
+            else if (!Context.UseTabs && caret.Col >= Context.IndentSize
                 && ln.CharAt(caret.Col - 1) == ' ' && ln.CharAt(caret.Col - 2) == ' '
                 && ln.CharAt(caret.Col - 3) == ' ' && ln.CharAt(caret.Col - 4) == ' ')
             {

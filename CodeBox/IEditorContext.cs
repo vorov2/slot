@@ -37,7 +37,7 @@ namespace CodeBox
 
         bool UseTabs { get; }
 
-        int TabSize { get; }
+        int IndentSize { get; }
 
         bool Overtype { get; set; }
 

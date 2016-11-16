@@ -237,7 +237,7 @@ namespace CodeBox
                 for (var i = oldcut; i < cut; i++)
                 {
                     var c = line.CharAt(i);
-                    var xw = c == '\t' ? Context.TabSize * Info.CharWidth : Info.CharWidth;
+                    var xw = c == '\t' ? Context.IndentSize * Info.CharWidth : Info.CharWidth;
                     var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth
                         && y + Scroll.Y >= tmarg;
 
@@ -618,14 +618,14 @@ namespace CodeBox
         }
 
         [Browsable(false)]
-        public int TabSize
+        public int IndentSize
         {
             get
             {
-                if (Buffer.TabSize != null)
-                    return Buffer.TabSize.Value;
+                if (Buffer.IndentSize != null)
+                    return Buffer.IndentSize.Value;
                 else
-                    return Settings.TabSize;
+                    return Settings.IndentSize;
             }
         }
 

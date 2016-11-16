@@ -44,7 +44,7 @@ namespace CodeBox.ObjectModel
 
         public bool? UseTabs { get; set; }
 
-        public int? TabSize { get; set; }
+        public int? IndentSize { get; set; }
 
         public bool? ShowEol { get; set; }
 

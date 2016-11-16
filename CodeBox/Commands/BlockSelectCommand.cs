@@ -25,8 +25,8 @@ namespace CodeBox.Commands
             if (lines[pline].Length == 0)
                 return;
 
-            var tabSize = Context.TabSize;
-            var startTetra = lines[start.Line].GetTetras(start.Col, tabSize);
+            var indentSize = Context.IndentSize;
+            var startTetra = lines[start.Line].GetTetras(start.Col, indentSize);
             var maxLen = p.Col;
             Buffer.Selections.Clear();
 
@@ -35,7 +35,7 @@ namespace CodeBox.Commands
                 for (var i = start.Line; i > pline - 1; i--)
                 {
                     var ln = lines[i];
-                    var lnt = ln.GetTetras(tabSize);
+                    var lnt = ln.GetTetras(indentSize);
                     var min = tetra > startTetra ? startTetra : tetra;
 
                     if (lnt < min)
@@ -45,8 +45,8 @@ namespace CodeBox.Commands
                     var endCol = tetra > startCol && tetra > lnt ? lnt : tetra;
 
                     var sel = new Selection(
-                        new Pos(i, ln.GetColumnForTetra(startCol, tabSize)),
-                        new Pos(i, ln.GetColumnForTetra(endCol, tabSize)));
+                        new Pos(i, ln.GetColumnForTetra(startCol, indentSize)),
+                        new Pos(i, ln.GetColumnForTetra(endCol, indentSize)));
 
                     AddSelection(i, start, p, sel);
                 }
@@ -56,7 +56,7 @@ namespace CodeBox.Commands
                 for (var i = start.Line; i < pline + 1; i++)
                 {
                     var ln = lines[i];
-                    var lnt = ln.GetTetras(tabSize);
+                    var lnt = ln.GetTetras(indentSize);
 
                     if (lnt < startTetra)
                         continue;
@@ -64,8 +64,8 @@ namespace CodeBox.Commands
                     var endCol = tetra > lnt ? lnt : tetra;
 
                     var sel = new Selection(
-                        new Pos(i, ln.GetColumnForTetra(startTetra, tabSize)),
-                        new Pos(i, ln.GetColumnForTetra(endCol, tabSize)));
+                        new Pos(i, ln.GetColumnForTetra(startTetra, indentSize)),
+                        new Pos(i, ln.GetColumnForTetra(endCol, indentSize)));
 
                     AddSelection(i, start, p, sel);
                 }

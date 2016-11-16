@@ -12,7 +12,7 @@ namespace CodeBox.Commands
 
         public override ActionResults Execute(Selection sel)
         {
-            var indent = Context.UseTabs ? "\t" : new string(' ', Context.TabSize);
+            var indent = Context.UseTabs ? "\t" : new string(' ', Context.IndentSize);
             
             if (sel.Start.Line != sel.End.Line)
             {
@@ -44,6 +44,7 @@ namespace CodeBox.Commands
         private int FindIndent(bool backward, int line, int indent)
         {
             var first = -1;
+            var firstIndent = -1;
             
             for (var i = line
                 ; backward ? i > -1 : i < Document.Lines.Count
@@ -52,9 +53,12 @@ namespace CodeBox.Commands
                 var sp = CountSpaces(i);
 
                 if (first == -1)
+                {
                     first = sp < indent ? indent : sp;
+                    firstIndent = sp;
+                }
                 else if (sp > first)
-                    return sp;
+                    return sp - firstIndent;
                 else
                     return -1;
             }
@@ -71,7 +75,7 @@ namespace CodeBox.Commands
                 if (c.Char == ' ')
                     spaces++;
                 else if (c.Char == '\t')
-                    spaces += Context.TabSize;
+                    spaces += Context.IndentSize;
                 else
                     return spaces;
 
@@ -127,7 +131,7 @@ namespace CodeBox.Commands
                 }
                 else
                 {
-                    var st = pos.Col - ctx.TabSize;
+                    var st = pos.Col - ctx.IndentSize;
                     st = st < 0 ? 0 : st;
                     line.RemoveRange(st, pos.Col - st);
                     change = true;

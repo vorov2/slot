@@ -32,7 +32,7 @@ namespace CodeBox.Commands
 
         public override ActionResults Undo(out Pos pos)
         {
-            var indent = Context.UseTabs ? "\t" : new string(' ', Context.TabSize);
+            var indent = Context.UseTabs ? "\t" : new string(' ', Context.IndentSize);
             TabCommand.Indent(Context, redoSel, indent.MakeCharacters());
             ShiftSel(redoSel);
             pos = redoSel.Caret;
@@ -41,7 +41,7 @@ namespace CodeBox.Commands
 
         private void ShiftSel(Selection sel)
         {
-            var indent = Context.UseTabs ? 1 : Context.TabSize;
+            var indent = Context.UseTabs ? 1 : Context.IndentSize;
             sel.Start = new Pos(sel.Start.Line, sel.Start.Col - indent);
             sel.End = new Pos(sel.End.Line, sel.End.Col - indent);
         }

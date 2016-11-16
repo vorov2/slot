@@ -5,7 +5,12 @@ namespace CodeBox.Commands
 {
     public class HomeCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveHome(Document, sel.Caret);
+        protected override Pos GetPosition(Selection sel)
+        {
+            var pos = MoveHome(Document, sel.Caret);
+            sel.SetToRestore(pos);
+            return pos;
+        }
 
         internal static Pos MoveHome(Document doc, Pos pos)
         {

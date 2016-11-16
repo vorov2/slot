@@ -14,7 +14,7 @@ namespace CodeBox
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
         private const string BRACKETS = "()[]{}";
-        private const int TABSIZE = 4;
+        private const int INDENTSIZE = 4;
         private readonly Editor editor;
 
         public EditorSettings(Editor editor)
@@ -31,7 +31,7 @@ namespace CodeBox
             ShowLineLength = true;
             CurrentLineIndicator = true;
             CurrentLineIndicatorColor = ColorTranslator.FromHtml("#262626");//161616
-            TabSize = TABSIZE;
+            IndentSize = INDENTSIZE;
             LinePadding = .1;
             ShowWhitespace = true;
             Font = new Font("Consolas", 11f);
@@ -77,7 +77,7 @@ namespace CodeBox
 
         public bool UseTabs { get; set; }
 
-        public int TabSize { get; set; }
+        public int IndentSize { get; set; }
 
         public double LinePadding { get; set; }
 

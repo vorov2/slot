@@ -46,7 +46,7 @@ namespace CodeBox.Commands
                     }
                 }
 
-                var str = Context.UseTabs ? new string('\t', indent / Context.TabSize)
+                var str = Context.UseTabs ? new string('\t', indent / Context.IndentSize)
                     : new string(' ', indent);
                 Document.Lines[pos.Line].Insert(0, str.MakeCharacters());
                 selection.Clear(new Pos(pos.Line, pos.Col + str.Length));
@@ -77,7 +77,7 @@ namespace CodeBox.Commands
 
             if (indent > 0)
             {
-                var real = Context.UseTabs ? indent / Context.TabSize : indent;
+                var real = Context.UseTabs ? indent / Context.IndentSize : indent;
                 nextLine.RemoveRange(0, real);
             }
 

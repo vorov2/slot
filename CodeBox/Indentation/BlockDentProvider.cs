@@ -19,7 +19,7 @@ namespace CodeBox.Indentation
                     if (c.Char == ' ')
                         indent++;
                     else if (c.Char == '\t')
-                        indent += ctx.TabSize;
+                        indent += ctx.IndentSize;
                     else
                         break;
 
