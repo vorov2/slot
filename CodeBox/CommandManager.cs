@@ -277,7 +277,7 @@ namespace CodeBox
 
                     lastSel = sel;
 
-                    if (++cc < selCount)
+                    if (e.Has(Modify) && ++cc < selCount)
                         cmd = cmd.Clone();
                 }
             }
@@ -293,6 +293,8 @@ namespace CodeBox
 
             if (exp.Has(AutocompleteKeep) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.UpdateAutocomplete();
+            else if (exp.Has(AutocompleteShow))
+                editor.Autocomplete.ShowAutocomplete(lastSel.Caret);
             else if (!exp.Has(AutocompleteShow) && editor.Autocomplete.WindowShown)
                 editor.Autocomplete.HideAutocomplete();
 

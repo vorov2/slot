@@ -37,7 +37,7 @@ namespace CodeBox.ComponentModel
             return container;
         }
 
-        public IComponent GetComponent(string key)
+        public T GetComponent<T>(string key) where T : class, IComponent
         {
             IComponent ret;
 
@@ -51,10 +51,10 @@ namespace CodeBox.ComponentModel
                     ret = comp.Value;
                 }
                 else
-                    return null;
+                    return default(T);
             }
 
-            return ret;
+            return ret as T;
         }
 
         public static ComponentCatalog Instance { get; } = new ComponentCatalog();

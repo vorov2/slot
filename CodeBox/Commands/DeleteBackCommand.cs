@@ -15,19 +15,25 @@ namespace CodeBox.Commands
         public override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
-            var res = Pure;
+            var res = Clean;
+            var lines = Document.Lines;
+            var caret = sel.Caret;
+            var ln = lines[caret.Line];
 
             if (!sel.IsEmpty)
             {
                 res = Change;
                 @string = DeleteRangeCommand.DeleteRange(Context, sel);
             }
+            else if (!Context.UseTabs && caret.Col >= Context.TabSize
+                && ln.CharAt(caret.Col - 1) == ' ' && ln.CharAt(caret.Col - 2) == ' '
+                && ln.CharAt(caret.Col - 3) == ' ' && ln.CharAt(caret.Col - 4) == ' ')
+            {
+                res = Change;
+                @string = DeleteRangeCommand.DeleteRange(Context, new Selection(caret, new Pos(caret.Line, caret.Col - 4)));
+            }
             else
             {
-                var lines = Document.Lines;
-                var caret = sel.Caret;
-                var ln = lines[caret.Line];
-
                 if (caret.Col > 0)
                 {
                     @char = ln.CharacterAt(caret.Col - 1);

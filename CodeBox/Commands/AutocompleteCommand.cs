@@ -7,13 +7,8 @@ namespace CodeBox.Commands
 {
     public sealed class AutocompleteCommand : Command
     {
-        private DocumentCompleteSource completeSource = new DocumentCompleteSource();
-
         public override ActionResults Execute(Selection sel)
         {
-            completeSource.Initialize(Context);
-            var list = completeSource.GetItems();
-            Context.Autocomplete.ShowAutocomplete(sel.Caret, list);
             return Pure | SingleRun | AutocompleteShow;
         }
     }

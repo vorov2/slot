@@ -46,13 +46,22 @@ namespace CodeBox.Autocomplete
             HideAutocomplete();
         }
 
+        private DocumentCompleteSource completeSource = new DocumentCompleteSource();
+
+        public void ShowAutocomplete(Pos pos)
+        {
+            completeSource.Initialize(editor);
+            var list = completeSource.GetItems();
+            ShowAutocomplete(pos, list);
+        }
+
         public void ShowAutocomplete(Pos pos, IEnumerable<string> items)
         {
             this.items = items;
             InitializeWindow();
             FindCompleteString();
             var prefix = completeString.ToString();
-            var newItems = items.Where(i => i.StartsWith(prefix));
+            var newItems = items.Where(i => i != prefix && i.StartsWith(prefix));
 
             if (!newItems.Any())
             {

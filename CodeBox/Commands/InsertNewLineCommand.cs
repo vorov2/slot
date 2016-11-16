@@ -30,7 +30,7 @@ namespace CodeBox.Commands
 
             var indentKey = Context.AffinityManager.GetAffinity(pos).GetIndentComponentKey(Context,
                 new Pos(pos.Line,  0));
-            var comp = (IDentComponent)ComponentCatalog.Instance.GetComponent(indentKey);
+            var comp = ComponentCatalog.Instance.GetComponent<IDentComponent>(indentKey);
             indent = comp != null ? comp.CalculateIndentation(Context, pos.Line) : 0;
 
             if (indent > 0)

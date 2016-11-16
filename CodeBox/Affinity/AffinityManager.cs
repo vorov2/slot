@@ -52,7 +52,7 @@ namespace CodeBox.Affinity
 
             if (id != 0)
             {
-                var prov = editor.Styles.Provider as ConfigurableLexer;
+                var prov = editor.Styles.Styler as ConfigurableLexer;
 
                 if (prov != null)
                     grm = prov.GrammarProvider.GetGrammar(id);

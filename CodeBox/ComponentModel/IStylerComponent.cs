@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Styling
+namespace CodeBox.ComponentModel
 {
-    public interface IStylingProvider
+    public interface IStylerComponent : IComponent
     {
         void Style(IEditorContext context, Range range);
     }

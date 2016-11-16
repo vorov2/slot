@@ -7,6 +7,7 @@ using CodeBox.Styling;
 using System.Drawing;
 using CodeBox.ObjectModel;
 using CodeBox.Lexing;
+using CodeBox.ComponentModel;
 
 namespace CodeBox.Styling
 {
@@ -168,8 +169,8 @@ namespace CodeBox.Styling
             if (range.End.Line < 0)
                 return;
 
-            if(Provider != null)
-                Provider.Style(editor.Context, range);
+            if(Styler != null)
+                Styler.Style(editor.Context, range);
             else
                 OnStyleNeeded(range);
         }
@@ -178,7 +179,21 @@ namespace CodeBox.Styling
         private void OnStyleNeeded(Range range) =>
             StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
 
-        public IStylingProvider Provider { get; set; }
+        public IStylerComponent Styler { get; private set; }
+
+        private string _stylerKey;
+        public string StylerKey
+        {
+            get { return _stylerKey; }
+            set
+            {
+                if (value != _stylerKey)
+                {
+                    _stylerKey = value;
+                    Styler = ComponentCatalog.Instance.GetComponent<IStylerComponent>(value);
+                }
+            }
+        }
 
         #region Standard styles
         public Style Default { get; private set; }

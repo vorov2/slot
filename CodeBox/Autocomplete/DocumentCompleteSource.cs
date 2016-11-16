@@ -13,8 +13,8 @@ namespace CodeBox.Autocomplete
     {
         private Dictionary<int, Dictionary<string, object>> completes = new Dictionary<int, Dictionary<string, object>>();
         private volatile bool busy;
-        private volatile int lastUpdate;
-        private volatile int lastEdits = -1;
+        private DateTime lastUpdate;
+        private int lastEdits = -1;
         private IEditorContext context;
         private const string SEPS = " \r\n\t`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?";
 
@@ -27,9 +27,12 @@ namespace CodeBox.Autocomplete
         {
             var t = default(Task);
 
-            if (!busy && 
-                (lastUpdate == 0 || DateTime.Now - new DateTime(lastUpdate * TimeSpan.TicksPerMillisecond) > TimeSpan.FromSeconds(10)))
+            if (!busy &&
+                (lastUpdate == DateTime.MinValue || DateTime.Now - lastUpdate > TimeSpan.FromSeconds(10)))
+            {
+                Console.WriteLine("Generate CompleteSource");
                 t = Task.Run(() => WalkDocument(context));
+            }
 
             if (completes.Count == 0 && t != null)
                 t.Wait();
@@ -80,7 +83,7 @@ namespace CodeBox.Autocomplete
                 }
             }
 
-            lastUpdate = DateTime.Now.Millisecond;
+            lastUpdate = DateTime.Now;
             busy = false;
         }
     }

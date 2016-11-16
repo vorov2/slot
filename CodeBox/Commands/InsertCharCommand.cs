@@ -34,7 +34,10 @@ namespace CodeBox.Commands
                 line.RemoveAt(sel.Caret.Col);
             }
             else
-                res |= AtomicChange | AutocompleteKeep;
+            {
+                var app = char.IsLetter(insertChar.Char) ? AutocompleteShow : AutocompleteKeep;
+                res |= AtomicChange | app;
+            }
 
             Document.Lines[sel.Caret.Line].Insert(sel.Caret.Col, insertChar);
             sel.Clear(new Pos(sel.Caret.Line, sel.Caret.Col + 1));

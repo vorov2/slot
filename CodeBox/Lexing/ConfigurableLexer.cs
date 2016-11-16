@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Lexing
 {
-    public sealed class ConfigurableLexer : IStylingProvider
+    [Export(typeof(IComponent))]
+    [ComponentData("styler.lexer")]
+    public sealed class ConfigurableLexer : IStylerComponent
     {
         private char contextChar;
 

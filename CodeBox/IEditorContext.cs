@@ -13,13 +13,11 @@ namespace CodeBox
     {
         AffinityManager AffinityManager { get; }
 
-        CallTipManager CallTips { get; }
+        CallTipManager CallTips { get; }//?
 
-        StyleManager Styles { get; }
+        StyleManager Styles { get; }//?
 
         AutocompleteManager Autocomplete { get; }
-
-        LocationManager Locations { get; }
 
         FoldingManager Folding { get; }
 

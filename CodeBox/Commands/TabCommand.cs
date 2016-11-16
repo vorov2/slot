@@ -49,15 +49,12 @@ namespace CodeBox.Commands
                 ; backward ? i > -1 : i < Document.Lines.Count
                 ; i += backward ? -1 : 1)
             {
-                if (Document.Lines[i].Length == 0)
-                    continue;
-
                 var sp = CountSpaces(i);
-                
+
                 if (first == -1)
-                    first = sp;
+                    first = sp < indent ? indent : sp;
                 else if (sp > first)
-                    return sp - first;
+                    return sp;
                 else
                     return -1;
             }

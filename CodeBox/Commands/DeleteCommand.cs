@@ -15,7 +15,7 @@ namespace CodeBox.Commands
         public override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
-            var res = Pure;
+            var res = Clean;
 
             if (!sel.IsEmpty)
             {

@@ -35,12 +35,12 @@ namespace CodeBox.Test
         {
             BindCommands();
 
-            var lexer = new ConfigurableLexer();
             //lexer.GrammarProvider.RegisterGrammar(HtmlGrammar2());
             //lexer.GrammarProvider.RegisterGrammar(CsGrammar());
             //lexer.GrammarProvider.RegisterGrammar(CssGrammar());
             //lexer.GrammarKey = "html";
-            ed.Styles.Provider = lexer;
+            ed.Styles.StylerKey = "styler.lexer";
+            var lexer = (ConfigurableLexer)ed.Styles.Styler;
             var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
             var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
             var html = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\html.grammar.json")));
@@ -108,7 +108,6 @@ namespace CodeBox.Test
         private void BindCommands()
         {
             ed.Commands.Bind<ToggleFoldingCommand>(Keys.Control | Keys.K);
-            ed.Commands.Bind<AutocompleteCommand>(Keys.Control | Keys.Space);
             ed.Commands.Bind<AutocompleteCommand>(Keys.Control | Keys.Space);
             ed.Commands.Bind<FollowLinkCommand>(MouseEvents.Click, Keys.Control);
             ed.Commands.Bind<DeleteWordBackCommand>(Keys.Control | Keys.Back);

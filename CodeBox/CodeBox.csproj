@@ -184,7 +184,7 @@
     <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="CallTips\CallTip.cs" />
-    <Compile Include="Styling\IStylingProvider.cs" />
+    <Compile Include="ComponentModel\IStylerComponent.cs" />
     <Compile Include="Styling\MarkerStyle.cs" />
     <Compile Include="Styling\SelectionStyle.cs" />
     <Compile Include="Styling\StandardStyle.cs" />
