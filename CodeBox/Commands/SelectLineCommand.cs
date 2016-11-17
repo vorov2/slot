@@ -1,10 +1,14 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class SelectLineCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.selectline")]
+    public sealed class SelectLineCommand : EditorCommand
     {
         private Pos pos;
 

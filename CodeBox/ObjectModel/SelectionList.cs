@@ -94,10 +94,10 @@ namespace CodeBox.ObjectModel
 
         IEnumerator IEnumerable.GetEnumerator() => sels.GetEnumerator();
 
-        internal Selection GetSelection(Pos pos, Selection except = null)
+        internal Selection GetIntersection(Selection except)
         {
             foreach (var r in sels)
-                if (r.InRange(pos) && r != except)
+                if (r != except && (r.InRange(except.Caret) || except.InRange(r.Caret)))
                     return r;
 
             return null;

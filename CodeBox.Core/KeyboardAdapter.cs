@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Test
+namespace CodeBox.Core
 {
     using MAP = Dictionary<KeyInput, object>;
 
@@ -15,6 +15,39 @@ namespace CodeBox.Test
         Unrecognized,
         Chord,
         Complete
+    }
+
+    public static class KeymapReader
+    {
+        public static void Read(string source, KeyboardAdapter adapter)
+        {
+            var dict = new Json.JsonParser(source).Parse() as Dictionary<string, object>;
+
+            if (dict != null)
+            {
+                foreach (var kv in dict)
+                {
+                    var lst = kv.Value as List<object>;
+
+                    if (lst != null)
+                    {
+                        foreach (var o in lst)
+                        {
+                            var str = o as string;
+
+                            if (str != null)
+                                adapter.RegisterInput(kv.Key, str);
+                        }
+                    }
+                    else
+                    {
+                        var str = kv.Value as string;
+                        if (str != null)
+                            adapter.RegisterInput(kv.Key, str);
+                    }
+                }
+            }
+        }
     }
 
     public sealed class KeyboardAdapter
@@ -57,45 +90,54 @@ namespace CodeBox.Test
 
             for (var i = 0; i < arr.Length; i++)
             {
+                var mod = Modifiers.None;
                 var a = arr[i];
                 var last = i == arr.Length - 1;
                 var arr2 = a.Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
-                var mod = Modifier.None;
 
-                if (arr2.Length > 1)
-                    mod =
-                          Eq(arr2[0], "Ctrl") ? Modifier.Ctrl
-                        : Eq(arr2[0], "Alt") ? Modifier.Alt
-                        : Eq(arr2[0], "Shift") ? Modifier.Shift
-                        : Eq(arr2[0], "Win") ? Modifier.Cmd
-                        : Eq(arr2[0], "Cmd") ? Modifier.Cmd
-                        : Modifier.None;
-
-                var ch = arr2.Length > 1 ? arr2[1] : arr2[0];
-                var input = ch.Length == 1 ? new KeyInput(mod, ch[0])
-                    : new KeyInput(mod, ParseSpecialKey(ch));
-
-                object obj;
-                var found = dict.TryGetValue(input, out obj);
-
-                if (found && last)
-                    dict[input] = key;
-                else if (found && !last)
+                for (var j = 0; j < arr2.Length; j++)
                 {
-                    var dict2 = obj as MAP;
+                    var ch = arr2[j];
 
-                    if (dict2 == null)
-                        dict2 = new MAP();
-                    
-                    dict = dict2;
-                }
-                else if (!found && last)
-                    dict.Add(input, key);
-                else if (!found && !last)
-                {
-                    var dict2 = new MAP();
-                    dict.Add(input, dict2);
-                    dict = dict2;
+                    if (j != arr2.Length - 1)
+                    {
+                        mod |=
+                              Eq(ch, "Ctrl") ? Modifiers.Ctrl
+                            : Eq(ch, "Alt") ? Modifiers.Alt
+                            : Eq(ch, "Shift") ? Modifiers.Shift
+                            : Eq(ch, "Win") ? Modifiers.Cmd
+                            : Eq(ch, "Cmd") ? Modifiers.Cmd
+                            : Eq(ch, "Move") ? Modifiers.Move
+                            : Modifiers.None;
+                    }
+                    else
+                    {
+                        var input = ch.Length == 1 ? new KeyInput(mod, ch[0])
+                            : new KeyInput(mod, ParseSpecialKey(ch));
+
+                        object obj;
+                        var found = dict.TryGetValue(input, out obj);
+
+                        if (found && last)
+                            dict[input] = key;
+                        else if (found && !last)
+                        {
+                            var dict2 = obj as MAP;
+
+                            if (dict2 == null)
+                                dict2 = new MAP();
+
+                            dict = dict2;
+                        }
+                        else if (!found && last)
+                            dict.Add(input, key);
+                        else if (!found && !last)
+                        {
+                            var dict2 = new MAP();
+                            dict.Add(input, dict2);
+                            dict = dict2;
+                        }
+                    }
                 }
             }
         }
@@ -111,7 +153,7 @@ namespace CodeBox.Test
         {
             if (specialKeys == null)
             {
-                specialKeys = new Dictionary<string, SpecialKey>(Json.DictionaryComparer.Instance);
+                specialKeys = new Dictionary<string, SpecialKey>(StringComparer.OrdinalIgnoreCase);
                 var names = typeof(SpecialKey).GetEnumNames();
                 var values = typeof(SpecialKey).GetEnumValues().Cast<SpecialKey>().ToList();
 
@@ -132,15 +174,15 @@ namespace CodeBox.Test
 
     public struct KeyInput : IEquatable<KeyInput>
     {
-        public static readonly KeyInput Empty = new KeyInput(Modifier.None, '\0');
+        public static readonly KeyInput Empty = new KeyInput(Modifiers.None, '\0');
 
-        public KeyInput(Modifier mod, char key)
+        public KeyInput(Modifiers mod, char key)
         {
             Modifier = mod;
-            Key = (int)key;
+            Key = (int)(char.ToUpper(key));
         }
 
-        public KeyInput(Modifier mod, SpecialKey key)
+        public KeyInput(Modifiers mod, SpecialKey key)
         {
             Modifier = mod;
             Key = (int)key;
@@ -148,7 +190,7 @@ namespace CodeBox.Test
 
         public bool IsEmpty()
         {
-            return Modifier == Modifier.None && Key == 0;
+            return Modifier == Modifiers.None && Key == 0;
         }
 
         public override int GetHashCode()
@@ -164,8 +206,8 @@ namespace CodeBox.Test
 
         public override string ToString()
         {
-            return Modifier == Modifier.None ? KeyToString()
-                : $"{Modifier}+{KeyToString()}";
+            return Modifier == Modifiers.None ? KeyToString()
+                : $"{Modifier.ToString().Replace(", ", "+")}+{KeyToString()}";
         }
 
         private string KeyToString()
@@ -184,29 +226,29 @@ namespace CodeBox.Test
             return obj is KeyInput && Equals((KeyInput)obj);
         }
 
-        public Modifier Modifier { get; }
+        public Modifiers Modifier { get; }
 
         public int Key { get; }
     }
 
     public static class KeysExtensions
     {
-        public static Modifier KeysToModifier(this Keys keys)
+        public static Modifiers KeysToModifier(this Keys keys)
         {
             switch (keys)
             {
                 case Keys.ControlKey:
                 case Keys.Control:
-                    return Modifier.Ctrl;
+                    return Modifiers.Ctrl;
                 case Keys.Shift:
-                    return Modifier.Shift;
+                    return Modifiers.Shift;
                 case Keys.Alt:
-                    return Modifier.Alt;
+                    return Modifiers.Alt;
                 case Keys.LWin:
                 case Keys.RWin:
-                    return Modifier.Cmd;
+                    return Modifiers.Cmd;
                 default:
-                    return Modifier.None;
+                    return Modifiers.None;
             }
         }
 
@@ -219,10 +261,10 @@ namespace CodeBox.Test
                 case Keys.Home: return SpecialKey.Home;
                 case Keys.End: return SpecialKey.End;
                 case Keys.Insert: return SpecialKey.Ins;
-                case Keys.Back: return SpecialKey.Backspace;
+                case Keys.Back: return SpecialKey.Back;
                 case Keys.PageUp: return SpecialKey.PageUp;
                 case Keys.PageDown: return SpecialKey.PageDown;
-                case Keys.Return: return SpecialKey.Return;
+                case Keys.Return: return SpecialKey.Enter;
                 case Keys.Escape: return SpecialKey.Esc;
                 case Keys.F1: return SpecialKey.F1;
                 case Keys.F2: return SpecialKey.F2;
@@ -245,13 +287,15 @@ namespace CodeBox.Test
         }
     }
 
-    public enum Modifier
+    [Flags]
+    public enum Modifiers
     {
-        None,
-        Ctrl,
-        Shift,
-        Alt,
-        Cmd
+        None = 0,
+        Ctrl = 0x01,
+        Shift = 0x02,
+        Alt = 0x04,
+        Cmd = 0x08,
+        Move = 0x10
     }
 
     public enum SpecialKey
@@ -262,10 +306,10 @@ namespace CodeBox.Test
         Home = 0x1003,
         End = 0x1004,
         Ins = 0x1005,
-        Backspace = 0x1006,
+        Back = 0x1006,
         PageUp = 0x1007,
         PageDown = 0x1008,
-        Return = 0x1009,
+        Enter = 0x1009,
         Esc = 0x1010,
         F1 = 0x1011,
         F2 = 0x1012,

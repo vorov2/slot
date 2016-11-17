@@ -4,11 +4,14 @@ using System.Linq;
 using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using CodeBox.Affinity;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class InsertNewLineCommand : Command, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.newline")]
+    public sealed class InsertNewLineCommand : EditorCommand
     {
         private IEnumerable<Character> @string;
         private Pos undoPos;
@@ -105,9 +108,11 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new InsertNewLineCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }

@@ -56,12 +56,12 @@ namespace CodeBox
 
         public bool MatchBrackets
         {
-            get { return editor.MatchBrakets.Enabled; }
+            get { return editor.MatchBrackets.Enabled; }
             set
             {
-                if (value != editor.MatchBrakets.Enabled)
+                if (value != editor.MatchBrackets.Enabled)
                 {
-                    editor.MatchBrakets.Enabled = value;
+                    editor.MatchBrackets.Enabled = value;
 
                     if (editor.Buffer != null)
                         editor.Styles.Restyle();

@@ -1,15 +1,28 @@
 ﻿using System;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
-    public sealed class AddCaretCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.caretadd")]
+    public sealed class AddCaretCommand : EditorCommand
     {
         public override ActionResults Execute(Selection sel)
         {
-            Buffer.Selections.Add(new Selection(Context.Caret));
-            return SingleRun | Clean;
+            var newSel = new Selection(Context.Caret);
+            Buffer.Selections.Add(newSel);
+
+            var osel = Buffer.Selections.GetIntersection(newSel);
+
+            if (osel != null)
+                Buffer.Selections.Remove(osel);
+
+            return Clean;
         }
+
+        public override bool SingleRun => true;
     }
 }

@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.down")]
     public class DownCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveDown(Context, sel);

@@ -2,11 +2,15 @@
 using System.Diagnostics;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class FollowLinkCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.followlink")]
+    public sealed class FollowLinkCommand : EditorCommand
     {
         public override ActionResults Execute(Selection sel)
         {
@@ -18,10 +22,12 @@ namespace CodeBox.Commands
             {
                 var link = ln.GetRange(a.Start, a.End - a.Start + 1).MakeString();
                 Process.Start(link);
-                return Clean | LeaveEditor | SingleRun | IdleCaret;
+                return Clean | LeaveEditor | IdleCaret;
             }
 
             return Pure;
         }
+
+        public override bool SingleRun => true;
     }
 }

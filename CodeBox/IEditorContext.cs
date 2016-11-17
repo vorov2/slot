@@ -9,7 +9,11 @@ using CodeBox.CallTips;
 
 namespace CodeBox
 {
-    public interface IEditorContext
+    public interface IExecutionContext
+    {
+
+    }
+    public interface IEditorContext : IExecutionContext
     {
         AffinityManager AffinityManager { get; }
 
@@ -42,5 +46,13 @@ namespace CodeBox
         bool Overtype { get; set; }
 
         Pos Caret { get; }
+
+
+
+        MatchBracketManager MatchBrackets { get; }
+
+        int FirstEditLine { get; set; }
+
+        int LastEditLine { get; set; }
     }
 }

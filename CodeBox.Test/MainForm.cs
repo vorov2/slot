@@ -24,11 +24,17 @@ namespace CodeBox.Test
         public MainForm()
         {
             InitializeComponent();
+            base.KeyPreview = true;
         }
 
         private Color HCol(string str)
         {
             return ColorTranslator.FromHtml(str);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -98,6 +104,7 @@ namespace CodeBox.Test
 
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 LocalFile("test.htm"));
+            ed.Commands.ReadKeymap(LocalFile("samples\\keymap.json"));
         }
 
         private string LocalFile(string fileName)
@@ -107,57 +114,57 @@ namespace CodeBox.Test
         
         private void BindCommands()
         {
-            ed.Commands.Bind<ToggleFoldingCommand>(Keys.Control | Keys.K);
-            ed.Commands.Bind<AutocompleteCommand>(Keys.Control | Keys.Space);
-            ed.Commands.Bind<FollowLinkCommand>(MouseEvents.Click, Keys.Control);
-            ed.Commands.Bind<DeleteWordBackCommand>(Keys.Control | Keys.Back);
-            ed.Commands.Bind<DeleteWordCommand>(Keys.Control | Keys.Delete);
-            ed.Commands.Bind<ScrollLineUpCommand>(Keys.Control | Keys.Up);
-            ed.Commands.Bind<ScrollLineDownCommand>(Keys.Control | Keys.Down);
-            ed.Commands.Bind<RedoCommand>(Keys.Control | Keys.Y);
-            ed.Commands.Bind<UndoCommand>(Keys.Control | Keys.Z);
-            ed.Commands.Bind<SelectAllCommand>(Keys.Control | Keys.A);
-            ed.Commands.Bind<PasteCommand>(Keys.Control | Keys.V);
-            ed.Commands.Bind<CutCommand>(Keys.Control | Keys.X);
-            ed.Commands.Bind<CopyCommand>(Keys.Control | Keys.C);
-            ed.Commands.Bind<SetCaretCommand>(MouseEvents.Click, Keys.Alt);
-            ed.Commands.Bind<SetCaretCommand>(MouseEvents.Click, Keys.None);
-            ed.Commands.Bind<AddCaretCommand>(MouseEvents.Click, Keys.Control);
-            ed.Commands.Bind<NormalSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.Control);
-            ed.Commands.Bind<NormalSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.None);
-            ed.Commands.Bind<BlockSelectCommand>(MouseEvents.Move | MouseEvents.Click, Keys.Alt);
-            ed.Commands.Bind<SelectWordCommand>(MouseEvents.DoubleClick, Keys.None);
-            ed.Commands.Bind<ShiftTabCommand>(Keys.Shift | Keys.Tab);
-            ed.Commands.Bind<TabCommand>(Keys.Tab);
-            ed.Commands.Bind<ClearSelectionCommand>(Keys.Escape);
-            ed.Commands.Bind<LeftCommand>(Keys.Left);
-            ed.Commands.Bind<RightCommand>(Keys.Right);
-            ed.Commands.Bind<UpCommand>(Keys.Up);
-            ed.Commands.Bind<DownCommand>(Keys.Down);
-            ed.Commands.Bind<HomeCommand>(Keys.Home);
-            ed.Commands.Bind<EndCommand>(Keys.End);
-            ed.Commands.Bind<InsertNewLineCommand>(Keys.Enter);
-            ed.Commands.Bind<DeleteBackCommand>(Keys.Back);
-            ed.Commands.Bind<DeleteCommand>(Keys.Delete);
-            ed.Commands.Bind<PageDownCommand>(Keys.PageDown);
-            ed.Commands.Bind<PageUpCommand>(Keys.PageUp);
-            ed.Commands.Bind<ExtendLeftCommand>(Keys.Shift | Keys.Left);
-            ed.Commands.Bind<ExtendRightCommand>(Keys.Shift | Keys.Right);
-            ed.Commands.Bind<ExtendUpCommand>(Keys.Shift | Keys.Up);
-            ed.Commands.Bind<ExtendDownCommand>(Keys.Shift | Keys.Down);
-            ed.Commands.Bind<ExtendEndCommand>(Keys.Shift | Keys.End);
-            ed.Commands.Bind<ExtendHomeCommand>(Keys.Shift | Keys.Home);
-            ed.Commands.Bind<WordLeftCommand>(Keys.Control | Keys.Left);
-            ed.Commands.Bind<WordRightCommand>(Keys.Control | Keys.Right);
-            ed.Commands.Bind<ExtendWordRightCommandCommand>(Keys.Control | Keys.Shift | Keys.Right);
-            ed.Commands.Bind<ExtendWordLeftCommandCommand>(Keys.Control | Keys.Shift | Keys.Left);
-            ed.Commands.Bind<ExtendPageDownCommand>(Keys.Shift | Keys.PageDown);
-            ed.Commands.Bind<ExtendPageUpCommand>(Keys.Shift | Keys.PageUp);
-            ed.Commands.Bind<DocumentHomeCommand>(Keys.Control | Keys.Home);
-            ed.Commands.Bind<DocumentEndCommand>(Keys.Control | Keys.End);
-            ed.Commands.Bind<ExtendDocumentHomeCommand>(Keys.Control | Keys.Shift | Keys.Home);
-            ed.Commands.Bind<ExtendDocumentEndCommand>(Keys.Control | Keys.Shift | Keys.End);
-            ed.Commands.Bind<OvertypeCommand>(Keys.Insert);
+            //ed.Commands.Bind("command.editor.togglefolding", Keys.Control | Keys.K);
+            //ed.Commands.Bind("command.editor.autocomplete", Keys.Control | Keys.Space);
+            //ed.Commands.Bind("command.editor.followlink", MouseEvents.Click, Keys.Control);
+            //ed.Commands.Bind("command.editor.deletewordback", Keys.Control | Keys.Back);
+            //ed.Commands.Bind("command.editor.deleteword", Keys.Control | Keys.Delete);
+            //ed.Commands.Bind("command.editor.scrollup", Keys.Control | Keys.Up);
+            //ed.Commands.Bind("command.editor.scrolldown", Keys.Control | Keys.Down);
+            //ed.Commands.Bind("command.editor.redo", Keys.Control | Keys.Y);
+            //ed.Commands.Bind("command.editor.undo", Keys.Control | Keys.Z);
+            //ed.Commands.Bind("command.editor.selectall", Keys.Control | Keys.A);
+            //ed.Commands.Bind("command.editor.paste", Keys.Control | Keys.V);
+            //ed.Commands.Bind("command.editor.cut", Keys.Control | Keys.X);
+            //ed.Commands.Bind("command.editor.copy", Keys.Control | Keys.C);
+            //ed.Commands.Bind("command.editor.caretset", MouseEvents.Click, Keys.Alt);
+            //ed.Commands.Bind("command.editor.caretset", MouseEvents.Click, Keys.None);
+            //ed.Commands.Bind("command.editor.caretadd", MouseEvents.Click, Keys.Control);
+            //ed.Commands.Bind("command.editor.selectnormal", MouseEvents.Move | MouseEvents.Click, Keys.Control);
+            //ed.Commands.Bind("command.editor.selectnormal", MouseEvents.Move | MouseEvents.Click, Keys.None);
+            //ed.Commands.Bind("command.editor.selectblock", MouseEvents.Move | MouseEvents.Click, Keys.Alt);
+            //ed.Commands.Bind("command.editor.selectword", MouseEvents.DoubleClick, Keys.None);
+            //ed.Commands.Bind("command.editor.unindent", Keys.Shift | Keys.Tab);
+            //ed.Commands.Bind("command.editor.indent", Keys.Tab);
+            //ed.Commands.Bind("command.editor.selectionclear", Keys.Escape);
+            //ed.Commands.Bind("command.editor.left", Keys.Left);
+            //ed.Commands.Bind("command.editor.right", Keys.Right);
+            //ed.Commands.Bind("command.editor.up", Keys.Up);
+            //ed.Commands.Bind("command.editor.down", Keys.Down);
+            //ed.Commands.Bind("command.editor.home", Keys.Home);
+            //ed.Commands.Bind("command.editor.end", Keys.End);
+            //ed.Commands.Bind("command.editor.newline", Keys.Enter);
+            //ed.Commands.Bind("command.editor.deleteback", Keys.Back);
+            //ed.Commands.Bind("command.editor.delete", Keys.Delete);
+            //ed.Commands.Bind("command.editor.pagedown", Keys.PageDown);
+            //ed.Commands.Bind("command.editor.pageup", Keys.PageUp);
+            //ed.Commands.Bind("command.editor.extendleft", Keys.Shift | Keys.Left);
+            //ed.Commands.Bind("command.editor.extendright", Keys.Shift | Keys.Right);
+            //ed.Commands.Bind("command.editor.extendup", Keys.Shift | Keys.Up);
+            //ed.Commands.Bind("command.editor.extenddown", Keys.Shift | Keys.Down);
+            //ed.Commands.Bind("command.editor.extendend", Keys.Shift | Keys.End);
+            //ed.Commands.Bind("command.editor.extendhome", Keys.Shift | Keys.Home);
+            //ed.Commands.Bind("command.editor.wordleft", Keys.Control | Keys.Left);
+            //ed.Commands.Bind("command.editor.wordright", Keys.Control | Keys.Right);
+            //ed.Commands.Bind("command.editor.extendwordright", Keys.Control | Keys.Shift | Keys.Right);
+            //ed.Commands.Bind("command.editor.extendwordleft", Keys.Control | Keys.Shift | Keys.Left);
+            //ed.Commands.Bind("command.editor.extendpagedown", Keys.Shift | Keys.PageDown);
+            //ed.Commands.Bind("command.editor.extendpageup", Keys.Shift | Keys.PageUp);
+            //ed.Commands.Bind("command.editor.documenthome", Keys.Control | Keys.Home);
+            //ed.Commands.Bind("command.editor.documentend", Keys.Control | Keys.End);
+            //ed.Commands.Bind("command.editor.extenddocumenthome", Keys.Control | Keys.Shift | Keys.Home);
+            //ed.Commands.Bind("command.editor.extenddocumentend", Keys.Control | Keys.Shift | Keys.End);
+            //ed.Commands.Bind("command.editor.overtype", Keys.Insert);
         }
 
         private void Form1_Activated(object sender, EventArgs e)

@@ -1,10 +1,14 @@
 ﻿using System;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
-    public sealed class DeleteWordCommand : DeleteCommand, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.deleteword")]
+    public sealed class DeleteWordCommand : DeleteCommand
     {
         public override ActionResults Execute(Selection sel)
         {
@@ -20,9 +24,11 @@ namespace CodeBox.Commands
             return base.Execute(newSel);
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteWordCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }

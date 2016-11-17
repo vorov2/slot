@@ -10,7 +10,7 @@ using CodeBox.Affinity;
 
 namespace CodeBox
 {
-    internal sealed class MatchBracketManager
+    public sealed class MatchBracketManager
     {
         private readonly Editor editor;
         private bool markedParent;

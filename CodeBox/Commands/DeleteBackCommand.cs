@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
-    public class DeleteBackCommand : Command, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.deleteback")]
+    public class DeleteBackCommand : EditorCommand
     {
-        private IEnumerable<Character> @string;
-        private Character @char;
+        private IEnumerable<Character> deleteString;
+        private Character deleteChar;
         private Pos undoPos;
         private Selection redoSel;
 
@@ -23,20 +27,20 @@ namespace CodeBox.Commands
             if (!sel.IsEmpty)
             {
                 res = Change;
-                @string = DeleteRangeCommand.DeleteRange(Context, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
             }
             else if (!Context.UseTabs && caret.Col >= Context.IndentSize
                 && ln.CharAt(caret.Col - 1) == ' ' && ln.CharAt(caret.Col - 2) == ' '
                 && ln.CharAt(caret.Col - 3) == ' ' && ln.CharAt(caret.Col - 4) == ' ')
             {
                 res = Change;
-                @string = DeleteRangeCommand.DeleteRange(Context, new Selection(caret, new Pos(caret.Line, caret.Col - 4)));
+                deleteString = DeleteRangeCommand.DeleteRange(Context, new Selection(caret, new Pos(caret.Line, caret.Col - 4)));
             }
             else
             {
                 if (caret.Col > 0)
                 {
-                    @char = ln.CharacterAt(caret.Col - 1);
+                    deleteChar = ln.CharacterAt(caret.Col - 1);
                     ln.RemoveAt(caret.Col - 1);
                     sel.Clear(new Pos(caret.Line, caret.Col - 1));
                     res = Change | AutocompleteKeep;
@@ -45,7 +49,7 @@ namespace CodeBox.Commands
                 {
                     ln = lines[caret.Line - 1];
                     var col = ln.Length;
-                    @char = Character.NewLine;
+                    deleteChar = Character.NewLine;
                     var txt = lines[caret.Line];
                     lines.RemoveAt(caret.Line);
                     ln.Append(txt);
@@ -60,8 +64,8 @@ namespace CodeBox.Commands
 
         public override ActionResults Redo(out Pos pos)
         {
-            @string = null;
-            @char = Character.Empty;
+            deleteString = null;
+            deleteChar = Character.Empty;
             Execute(redoSel);
             pos = undoPos;
             return Change;
@@ -71,9 +75,9 @@ namespace CodeBox.Commands
         {
             pos = undoPos;
 
-            if (@string != null)
-                pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
-            else if (@char == Character.NewLine)
+            if (deleteString != null)
+                pos = InsertRangeCommand.InsertRange(Document, undoPos, deleteString);
+            else if (deleteChar == Character.NewLine)
             {
                 pos = new Pos(undoPos.Line, undoPos.Col);
                 var txt = DeleteRangeCommand.DeleteRange(Context, new Selection(pos,
@@ -88,16 +92,18 @@ namespace CodeBox.Commands
             else
             {
                 var ln = Document.Lines[undoPos.Line];
-                ln.Insert(undoPos.Col, @char);
+                ln.Insert(undoPos.Col, deleteChar);
                 pos = new Pos(undoPos.Line, undoPos.Col + 1);
             }
 
             return Change;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteBackCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }

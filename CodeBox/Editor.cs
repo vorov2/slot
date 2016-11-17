@@ -16,6 +16,7 @@ using CodeBox.Indentation;
 using CodeBox.Autocomplete;
 using CodeBox.Affinity;
 using CodeBox.CallTips;
+using CodeBox.Core;
 
 namespace CodeBox
 {
@@ -55,7 +56,7 @@ namespace CodeBox
             Locations = new LocationManager(this);//+
             Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
             CallTips = new CallTipManager(this);
-            MatchBrakets = new MatchBracketManager(this);
+            MatchBrackets = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
             Settings = new EditorSettings(this);
@@ -318,7 +319,7 @@ namespace CodeBox
                 && pos.Y <= Info.TextBottom)
             {
                 Caret = Locations.LocationToPosition(pos);
-                Commands.Run(MouseEvents.DoubleClick, Keys.None);
+                Commands.Run(new KeyInput(Modifiers.None, SpecialKey.DoubleClick));
             }
         }
 
@@ -362,10 +363,11 @@ namespace CodeBox
 
             if (!p.IsEmpty)
             {
-                if (Mouse != MouseEvents.None || LastKeys != Keys.None)
-                {
-                    Commands.Run(Mouse | MouseEvents.Move, LastKeys);
-                }
+                var keys = GetModifiers();
+                var mouse = GetMouseClick(e);
+
+                if (mouse != SpecialKey.None || keys != Modifiers.None)
+                    Commands.Run(new KeyInput(keys | Modifiers.Move, mouse));
 
                 timer.Start();
             }
@@ -385,8 +387,6 @@ namespace CodeBox
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            Mouse = MouseEvents.None;
-            LastKeys = Keys.None;
 
             if (mouseThief != null)
             {
@@ -406,12 +406,8 @@ namespace CodeBox
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-
-            if (e.Button == MouseButtons.Left)
-                Mouse = MouseEvents.Click;
-            else if (e.Button == MouseButtons.Right)
-                Mouse = MouseEvents.RightClick;
-
+            var mouse = GetMouseClick(e);
+            
             if (e.Button == MouseButtons.Left)
             {
                 var mlist = Locations.FindMargin(e.Location);
@@ -422,7 +418,7 @@ namespace CodeBox
                 {
                     var pos = Locations.LocationToPosition(e.Location);
                     Caret = pos.IsEmpty ? default(Pos) : pos;
-                    Commands.Run(Mouse, LastKeys);
+                    Commands.Run(new KeyInput(GetModifiers(), mouse));
                     var idx = Buffer.Selections.IndexOfCaret(pos);
 
                     if (idx != -1)
@@ -442,7 +438,7 @@ namespace CodeBox
         }
         
         protected override bool ProcessMnemonic(char charCode) =>
-            ProcessKey(charCode, LastKeys) || base.ProcessMnemonic(charCode);
+            ProcessKey(charCode, GetModifiers()) || base.ProcessMnemonic(charCode);
 
         protected override bool ProcessKeyMessage(ref Message m)
         {
@@ -452,9 +448,9 @@ namespace CodeBox
             return base.ProcessKeyMessage(ref m);
         }
 
-        private bool ProcessKey(char ch, Keys keys)
+        private bool ProcessKey(char ch, Modifiers keys)
         {
-            if (keys == Keys.None || keys == Keys.Shift)
+            if (keys == Modifiers.None || keys == Modifiers.Shift)
             {
                 switch (ch)
                 {
@@ -464,7 +460,7 @@ namespace CodeBox
                     case '\u001b': //Esc
                         return true;
                     default:
-                        Commands.Run(new InsertCharCommand(new Character(ch)));
+                        new InsertCharCommand(new Character(ch)).Run(this);
                         break;
                 }
 
@@ -472,12 +468,6 @@ namespace CodeBox
             }
 
             return false;
-        }
-
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            LastKeys = Keys.None;
         }
 
         internal void Redraw() => Invalidate();
@@ -517,8 +507,46 @@ namespace CodeBox
             if (Autocomplete.WindowShown && Autocomplete.ListenKeys(e.KeyData))
                 return;
 
-            LastKeys = e.Modifiers;
-            Commands.Run(LastKeys | e.KeyCode);
+            var keys = GetModifiers();
+
+            if (e.KeyValue == (int)Keys.ControlKey || e.KeyValue == (int)Keys.ShiftKey)
+                return;
+
+            var sc = e.KeyCode.KeysToSpecialKey();
+            Commands.Run(sc != SpecialKey.None 
+                ? new KeyInput(keys, sc)
+                : new KeyInput(keys, GetChar(e)));
+        }
+
+        private SpecialKey GetMouseClick(MouseEventArgs e)
+        {
+            return e.Button == MouseButtons.Left ? SpecialKey.Click
+                : e.Button == MouseButtons.Right ? SpecialKey.RightClick
+                : SpecialKey.None;
+        }
+
+        private Modifiers GetModifiers()
+        {
+            var ret = Modifiers.None;
+
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+                ret |= Modifiers.Ctrl;
+            if ((ModifierKeys & Keys.Alt) == Keys.Alt)
+                ret |= Modifiers.Alt;
+            if ((ModifierKeys & Keys.Shift) == Keys.Shift)
+                ret |= Modifiers.Shift;
+            if ((ModifierKeys & Keys.LWin) == Keys.LWin)
+                ret |= Modifiers.Cmd;
+
+            return ret;
+        }
+
+        private char GetChar(KeyEventArgs e)
+        {
+            var keyValue = e.KeyValue;
+            if (!e.Shift && keyValue >= (int)Keys.A && keyValue <= (int)Keys.Z)
+                return (char)(keyValue + 32);
+            return (char)keyValue;
         }
 
         [Browsable(false)]
@@ -534,7 +562,7 @@ namespace CodeBox
         {
             get
             {
-                var @lock = Commands.ObtainLock();
+                var @lock = Buffer.ObtainLock();
 
                 try
                 {
@@ -547,7 +575,7 @@ namespace CodeBox
             }
             set
             {
-                var @lock = Commands.ObtainLock();
+                var @lock = Buffer.ObtainLock();
 
                 try
                 {
@@ -686,10 +714,6 @@ namespace CodeBox
 
         internal IEditorContext Context => this;
 
-        internal Keys LastKeys { get; set; }
-
-        internal MouseEvents Mouse { get; set; }
-
         [Browsable(false)]
         public EditorInfo Info { get; }
 
@@ -741,12 +765,18 @@ namespace CodeBox
         public CallTipManager CallTips { get; }
 
         [Browsable(false)]
-        internal MatchBracketManager MatchBrakets { get; }
+        public MatchBracketManager MatchBrackets { get; }
 
         [Browsable(false)]
         public AutocompleteManager Autocomplete { get; }
 
         [Browsable(false)]
         public AffinityManager AffinityManager { get; }
+
+        [Browsable(false)]
+        public int FirstEditLine { get; set; }
+
+        [Browsable(false)]
+        public int LastEditLine { get; set; }
     }
 }

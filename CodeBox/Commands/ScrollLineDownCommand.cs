@@ -1,10 +1,14 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class ScrollLineDownCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.scrolldown")]
+    public sealed class ScrollLineDownCommand : EditorCommand
     {
         public override ActionResults Execute(Selection sel)
         {

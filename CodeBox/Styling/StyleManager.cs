@@ -143,8 +143,8 @@ namespace CodeBox.Styling
             if (editor.Lines.Count == 0)
                 return;
 
-            var fvl = editor.Commands.FirstEditLine < editor.Scroll.FirstVisibleLine
-                ? editor.Commands.FirstEditLine : editor.Scroll.FirstVisibleLine;
+            var fvl = editor.FirstEditLine < editor.Scroll.FirstVisibleLine
+                ? editor.FirstEditLine : editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
             var state = 0;
 

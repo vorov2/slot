@@ -5,7 +5,7 @@ using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public class InsertCharCommand : Command, IModifyContent
+    public class InsertCharCommand : EditorCommand
     {
         private Character deleteChar;
         private Character insertChar;
@@ -71,9 +71,11 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new InsertCharCommand(insertChar);
         }
+
+        public override bool ModifyContent => true;
     }
 }

@@ -1,11 +1,15 @@
 ﻿using System;
 using CodeBox.ObjectModel;
 using CodeBox.Affinity;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public class SelectWordCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.selectword")]
+    public class SelectWordCommand : EditorCommand
     {
         internal enum Strategy
         {

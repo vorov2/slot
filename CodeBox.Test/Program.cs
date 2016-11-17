@@ -17,13 +17,6 @@ namespace CodeBox.Test
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            var ka = new KeyboardAdapter();
-            ka.RegisterInput("a", "Ctrl+E,A");
-            ka.RegisterInput("b", "Ctrl+E,B");
-            ka.RegisterInput("c", "Ctrl+E,Ctrl+C,A");
-
-
             Application.Run(new MainForm());
         }
     }

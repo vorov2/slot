@@ -1,10 +1,14 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class SelectAllCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.selectall")]
+    public sealed class SelectAllCommand : EditorCommand
     {
         public override ActionResults Execute(Selection sel)
         {
@@ -12,7 +16,9 @@ namespace CodeBox.Commands
             var ln = Document.Lines[idx];
             sel.Start = default(Pos);
             sel.End = new Pos(idx, ln.Length);
-            return Clean | SingleRun;
+            return Clean;
         }
+
+        public override bool SingleRun => true;
     }
 }

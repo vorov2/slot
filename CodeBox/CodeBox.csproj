@@ -60,7 +60,6 @@
     <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
-    <Compile Include="Commands\CommandKeys.cs" />
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="Commands\HomeCommand.cs" />
     <Compile Include="Commands\InsertNewLineCommand.cs" />
     <Compile Include="Commands\InsertRangeCommand.cs" />
-    <Compile Include="Commands\IModifyContent.cs" />
     <Compile Include="Commands\NormalSelectCommand.cs" />
     <Compile Include="Commands\OvertypeCommand.cs" />
     <Compile Include="Commands\PageDownCommand.cs" />
@@ -110,8 +108,8 @@
     <Compile Include="Commands\SelectLineCommand.cs" />
     <Compile Include="Commands\SelectWordCommand.cs" />
     <Compile Include="Commands\SetCaretCommand.cs" />
-    <Compile Include="Commands\ShiftTabCommand.cs" />
-    <Compile Include="Commands\TabCommand.cs" />
+    <Compile Include="Commands\UnindentCommand.cs" />
+    <Compile Include="Commands\IndentCommand.cs" />
     <Compile Include="Commands\ToggleFoldingCommand.cs" />
     <Compile Include="Commands\UndoCommand.cs" />
     <Compile Include="Commands\WordLeftCommand.cs" />
@@ -160,12 +158,11 @@
     <Compile Include="Margins\MarginMethod.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
     <Compile Include="Margins\TopMargin.cs" />
-    <Compile Include="Commands\MouseEvents.cs" />
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="MatchBracketManager.cs" />
     <Compile Include="ObjectModel\DocumentBuffer.cs" />
     <Compile Include="ObjectModel\Character.cs" />
-    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\IEditorCommand.cs" />
     <Compile Include="Commands\LeftCommand.cs" />
     <Compile Include="Commands\UpCommand.cs" />
     <Compile Include="Commands\RightCommand.cs" />
@@ -216,6 +213,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">
+      <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
+      <Name>CodeBox.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Util\Json\Json.csproj">
       <Project>{2c727444-c7dd-4db3-8546-964f4b354242}</Project>
       <Name>Json</Name>

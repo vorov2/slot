@@ -1,17 +1,21 @@
 ﻿using System;
 using CodeBox.ObjectModel;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class ShiftTabCommand : Command, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.unindent")]
+    public sealed class UnindentCommand : EditorCommand
     {
         private Selection redoSel;
 
         public override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
-            var change = TabCommand.Unindent(Context, sel);
+            var change = IndentCommand.Unindent(Context, sel);
 
             if (change)
             {
@@ -33,7 +37,7 @@ namespace CodeBox.Commands
         public override ActionResults Undo(out Pos pos)
         {
             var indent = Context.UseTabs ? "\t" : new string(' ', Context.IndentSize);
-            TabCommand.Indent(Context, redoSel, indent.MakeCharacters());
+            IndentCommand.Indent(Context, redoSel, indent.MakeCharacters());
             ShiftSel(redoSel);
             pos = redoSel.Caret;
             return Change;
@@ -46,9 +50,11 @@ namespace CodeBox.Commands
             sel.End = new Pos(sel.End.Line, sel.End.Col - indent);
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
-            return new ShiftTabCommand();
+            return new UnindentCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }

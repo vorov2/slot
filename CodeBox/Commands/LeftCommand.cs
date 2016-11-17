@@ -1,9 +1,13 @@
 ﻿using System;
 using CodeBox.ObjectModel;
 using CodeBox.Folding;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.left")]
     public class LeftCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveLeft(Document, sel);

@@ -6,6 +6,6 @@ namespace CodeBox.Commands
     {
         public int Id { get; set; }
 
-        public ICommand Command { get; set; }
+        public IEditorCommand Command { get; set; }
     }
 }

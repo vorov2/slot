@@ -2,10 +2,14 @@
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
-    public sealed class CutCommand : DeleteRangeCommand, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.cut")]
+    public sealed class CutCommand : DeleteRangeCommand
     {
         public override ActionResults Execute(Selection sel)
         {
@@ -28,9 +32,11 @@ namespace CodeBox.Commands
             return res;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new CutCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }

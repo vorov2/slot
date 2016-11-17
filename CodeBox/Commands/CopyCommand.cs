@@ -3,10 +3,14 @@ using System.Text;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
-    public sealed class CopyCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.copy")]
+    public sealed class CopyCommand : EditorCommand
     {
         public override ActionResults Execute(Selection sel)
         {
@@ -24,7 +28,7 @@ namespace CodeBox.Commands
             if (sb.Length > 0)
                 Clipboard.SetText(sb.ToString(), TextDataFormat.UnicodeText);
 
-            return SingleRun | Pure;
+            return Pure;
         }
 
         internal static string GetTextRange(IEditorContext ctx, Range rangesr)
@@ -68,5 +72,7 @@ namespace CodeBox.Commands
 
             return str;
         }
+
+        public override bool SingleRun => true;
     }
 }

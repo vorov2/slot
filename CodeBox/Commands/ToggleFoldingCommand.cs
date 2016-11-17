@@ -1,11 +1,15 @@
 ﻿using System;
 using CodeBox.ObjectModel;
 using CodeBox.Folding;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class ToggleFoldingCommand : Command, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.foldingtoggle")]
+    public sealed class ToggleFoldingCommand : EditorCommand
     {
         private int undoLine;
         private Pos undoCaret;
@@ -45,26 +49,28 @@ namespace CodeBox.Commands
                 ln--;
             }
 
-            return SingleRun | Modify | ShallowChange;
+            return Modify | ShallowChange;
         }
 
         public override ActionResults Undo(out Pos pos)
         {
             Context.Folding.ToggleExpand(undoLine);
             pos = undoCaret;
-            return SingleRun | Modify | ShallowChange;
+            return Modify | ShallowChange;
         }
 
         public override ActionResults Redo(out Pos pos)
         {
             Context.Folding.ToggleExpand(undoLine);
             pos = undoCaret;
-            return SingleRun | Modify | ShallowChange;
+            return Modify | ShallowChange;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new ToggleFoldingCommand(togglePos);
         }
+
+        public override bool SingleRun => true;
     }
 }

@@ -3,15 +3,19 @@ using System.Drawing;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
-    public sealed class BlockSelectCommand : Command
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.selectblock")]
+    public sealed class BlockSelectCommand : EditorCommand
     {
         public override ActionResults Execute(Selection sel)
         {
             DoSelection(Context.Caret, ((Editor)Context).PointToClient(Cursor.Position));
-            return Scroll | SingleRun | Clean;
+            return Scroll | Clean;
         }
 
         private void DoSelection(Pos p, Point loc)
@@ -78,13 +82,15 @@ namespace CodeBox.Commands
                 Buffer.Selections.Set(sel);
             else
             {
-                var osel = Buffer.Selections.GetSelection(p);
+                //var osel = Buffer.Selections.GetSelection(p);
 
-                if (osel != null)
-                    Buffer.Selections.Remove(osel);
+                //if (osel != null)
+                //    Buffer.Selections.Remove(osel);
 
                 Buffer.Selections.AddFirst(sel);
             }
         }
+
+        public override bool SingleRun => true;
     }
 }

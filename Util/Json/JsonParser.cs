@@ -18,9 +18,9 @@ namespace Json
         public JsonParser(string source) 
         {
             this.source = source;
-            this.buffer = source.ToCharArray();
-            this.len = buffer.Length;
-            DictionaryComparer = Json.DictionaryComparer.Instance;
+            buffer = source.ToCharArray();
+            len = buffer.Length;
+            DictionaryComparer = StringComparer.OrdinalIgnoreCase;
         }
 
         public object Parse()

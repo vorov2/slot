@@ -1,9 +1,13 @@
 ﻿using System;
 using CodeBox.ObjectModel;
 using CodeBox.Affinity;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.wordleft")]
     public sealed class WordLeftCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel)

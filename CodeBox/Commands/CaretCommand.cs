@@ -4,7 +4,7 @@ using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public abstract class CaretCommand : Command
+    public abstract class CaretCommand : EditorCommand
     {
         public override ActionResults Execute(Selection sel)
         {

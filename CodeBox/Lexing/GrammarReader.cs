@@ -164,7 +164,7 @@ namespace CodeBox.Lexing
         {
             if (styles == null)
             {
-                styles = new Dictionary<string, StandardStyle>(Json.DictionaryComparer.Instance);
+                styles = new Dictionary<string, StandardStyle>(StringComparer.OrdinalIgnoreCase);
 
                 foreach (var fi in typeof(StandardStyle).GetFields(BindingFlags.Public | BindingFlags.Static))
                 {

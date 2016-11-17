@@ -10,6 +10,27 @@ namespace CodeBox.ObjectModel
 {
     public sealed class DocumentBuffer
     {
+        private int counter;
+        private bool undoGroup;
+        private EditorLock editorLock;
+
+        private sealed class EditorLock : IEditorLock
+        {
+            private readonly DocumentBuffer man;
+            internal volatile int RefCount;
+
+            internal EditorLock(DocumentBuffer man)
+            {
+                this.man = man;
+            }
+
+            public void Release()
+            {
+                if (--RefCount == 0)
+                    man.editorLock = null;
+            }
+        }
+
         internal DocumentBuffer(Document doc)
         {
             Document = doc;
@@ -23,6 +44,38 @@ namespace CodeBox.ObjectModel
             string.Join(Eol.AsString(), Document.Lines.Select(ln => ln.Text));
 
         public string[] GetLines() => Document.Lines.Select(ln => ln.Text).ToArray();
+
+        public IEditorLock ObtainLock()
+        {
+            if (editorLock == null)
+                return editorLock = new EditorLock(this);
+            else
+            {
+                editorLock.RefCount++;
+                return editorLock;
+            }
+        }
+
+        public bool BeginUndoAction()
+        {
+            if (!undoGroup)
+            {
+                counter++;
+                undoGroup = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void EndUndoAction() => undoGroup = false;
+
+        internal void AddCommand(IEditorCommand cmd) =>
+            UndoStack.Push(new CommandInfo { Id = counter, Command = cmd });
+
+        internal bool LastAtomicChange { get; set; }
+
+        public bool Locked => editorLock != null;
 
         internal List<CallTip> Tips { get; }
 

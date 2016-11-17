@@ -1,9 +1,13 @@
 ﻿using System;
 using CodeBox.ObjectModel;
 using CodeBox.Folding;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.up")]
     public class UpCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveUp(Context, sel);

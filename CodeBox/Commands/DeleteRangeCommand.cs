@@ -5,7 +5,7 @@ using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public class DeleteRangeCommand : Command, IModifyContent
+    public class DeleteRangeCommand : EditorCommand
     {
         protected IEnumerable<Character> data;
         private Pos undoPos;
@@ -34,7 +34,7 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteRangeCommand();
         }
@@ -86,5 +86,7 @@ namespace CodeBox.Commands
             selection.Clear(sel.Start);
             return range;
         }
+
+        public override bool ModifyContent => true;
     }
 }

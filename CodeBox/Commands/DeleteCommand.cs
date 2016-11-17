@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Commands
 {
-    public class DeleteCommand : Command, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.delete")]
+    public class DeleteCommand : EditorCommand
     {
         private IEnumerable<Character> @string;
         private Character @char;
@@ -74,9 +78,11 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }

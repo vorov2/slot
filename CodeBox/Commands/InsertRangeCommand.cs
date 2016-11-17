@@ -6,7 +6,7 @@ using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public class InsertRangeCommand : Command, IModifyContent
+    public class InsertRangeCommand : EditorCommand
     {
         private Selection undo;
         protected Selection redoSel;
@@ -110,9 +110,11 @@ namespace CodeBox.Commands
             return Pos.Empty;
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
             return new InsertRangeCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }

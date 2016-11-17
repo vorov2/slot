@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeBox.ObjectModel;
+using CodeBox.ComponentModel;
+using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
-    public sealed class TabCommand : InsertRangeCommand, IModifyContent
+    [Export(typeof(IComponent))]
+    [ComponentData("command.editor.indent")]
+    public sealed class IndentCommand : InsertRangeCommand
     {
         private bool undoIndent;
 
@@ -156,9 +160,11 @@ namespace CodeBox.Commands
             sel.End = new Pos(sel.End.Line, sel.End.Col + indent.Count());
         }
 
-        public override ICommand Clone()
+        internal override EditorCommand Clone()
         {
-            return new TabCommand();
+            return new IndentCommand();
         }
+
+        public override bool ModifyContent => true;
     }
 }
