@@ -56,6 +56,7 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyboardAdapter.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -115,6 +116,10 @@
     <ProjectReference Include="..\CodeBox\CodeBox.csproj">
       <Project>{a12ac5fd-fddb-4253-ac43-92f305ac9d56}</Project>
       <Name>CodeBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Util\Json\Json.csproj">
+      <Project>{2c727444-c7dd-4db3-8546-964f4b354242}</Project>
+      <Name>Json</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

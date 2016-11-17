@@ -79,6 +79,7 @@ namespace CodeBox.Lexing
             var last = '\0';
             var term = '\0';
             var lastNonIdent = true;
+            var lineStart = i == 0;
 
             for (; i < ln.Length + 1; i++)
             {
@@ -144,7 +145,7 @@ namespace CodeBox.Lexing
 
                 if (sect != null 
                     && (sect.Start == null || 
-                    (!Overlap(mys.Sections, ln, i, sect) 
+                    (!Overlap(mys.Sections, ln, i, sect) && (!sect.OnLineStartOnly || lineStart)
                         && (sect.Start.Length > 1 || IsNonIdent(sect.Start.First(), wordSep) || IsNonIdent(last, wordSep)))))
                 {
                     if (i < ln.Length - 1 && sect.TerminatorChar == ln.CharAt(i + 1))
@@ -260,7 +261,10 @@ namespace CodeBox.Lexing
                 }
 
                 if (!ws)
+                {
                     term = c;
+                    lineStart = false;
+                }
 
                 last = c;
                 lastNonIdent = nonIdent;

@@ -19,6 +19,12 @@
             "style": "comment.multiline"
         },
         {
+            "key": "test",
+            "lineStartOnly": true,
+            "start": "#",
+            "style": "regex"
+        },
+        {
             "key": "tag",
             "start": "<",
             "end": ">",

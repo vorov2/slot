@@ -6,7 +6,12 @@ namespace CodeBox.Commands
 {
     public sealed class WordRightCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => WordRight(Context, sel);
+        protected override Pos GetPosition(Selection sel)
+        {
+            var pos = WordRight(Context, sel);
+            sel.SetToRestore(pos);
+            return pos;
+        }
 
         internal static Pos WordRight(IEditorContext ctx, Selection sel)
         {
