@@ -22,6 +22,7 @@ namespace CodeBox
 {
     public class Editor : Control, IEditorContext
     {
+        public readonly static bool Mono = Type.GetType("Mono.Runtime") != null;
         private const int WM_POINTERDOWN = 0x0246;
         private const int WM_POINTERUP = 0x0247;
         private const int WM_POINTERUPDATE = 0x0245;
@@ -188,7 +189,8 @@ namespace CodeBox
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            if (Autocomplete.WindowShown && Autocomplete.InWindowLocation(e.Location))
+            if (Autocomplete.WindowShown && Autocomplete.InWindowLocation(
+                Mono ? PointToClient(e.Location) : e.Location))
                 return;
 
             base.OnMouseWheel(e);
@@ -310,19 +312,6 @@ namespace CodeBox
 
         public override Color ForeColor => Styles.Default.ForeColor;
 
-        protected override void OnDoubleClick(EventArgs e)
-        {
-            var pos = PointToClient(Cursor.Position);
-            if (pos.X >= Info.TextLeft
-                && pos.X <= Info.TextRight
-                && pos.Y >= Info.TextTop
-                && pos.Y <= Info.TextBottom)
-            {
-                Caret = Locations.LocationToPosition(pos);
-                Commands.Run(new KeyInput(Modifiers.None, SpecialKey.DoubleClick));
-            }
-        }
-
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -363,7 +352,7 @@ namespace CodeBox
 
             if (!p.IsEmpty)
             {
-                var keys = GetModifiers();
+                var keys = ModifierKeys.ToModifiers();
                 var mouse = GetMouseClick(e);
 
                 if (mouse != SpecialKey.None || keys != Modifiers.None)
@@ -418,7 +407,7 @@ namespace CodeBox
                 {
                     var pos = Locations.LocationToPosition(e.Location);
                     Caret = pos.IsEmpty ? default(Pos) : pos;
-                    Commands.Run(new KeyInput(GetModifiers(), mouse));
+                    Commands.Run(new KeyInput(ModifierKeys.ToModifiers(), mouse));
                     var idx = Buffer.Selections.IndexOfCaret(pos);
 
                     if (idx != -1)
@@ -438,7 +427,7 @@ namespace CodeBox
         }
         
         protected override bool ProcessMnemonic(char charCode) =>
-            ProcessKey(charCode, GetModifiers()) || base.ProcessMnemonic(charCode);
+            ProcessKey(charCode, ModifierKeys.ToModifiers()) || base.ProcessMnemonic(charCode);
 
         protected override bool ProcessKeyMessage(ref Message m)
         {
@@ -483,6 +472,10 @@ namespace CodeBox
                 case Keys.Up:
                 case Keys.Down:
                 case Keys.Insert:
+                case Keys.Control | Keys.Right:
+                case Keys.Control | Keys.Left:
+                case Keys.Control | Keys.Up:
+                case Keys.Control | Keys.Down:
                 case Keys.Shift | Keys.Right:
                 case Keys.Shift | Keys.Left:
                 case Keys.Shift | Keys.Up:
@@ -507,12 +500,14 @@ namespace CodeBox
             if (Autocomplete.WindowShown && Autocomplete.ListenKeys(e.KeyData))
                 return;
 
-            var keys = GetModifiers();
+            var keys = ModifierKeys.ToModifiers();
 
-            if (e.KeyValue == (int)Keys.ControlKey || e.KeyValue == (int)Keys.ShiftKey)
+            if (e.KeyValue == (int)Keys.ControlKey || e.KeyValue == (int)Keys.ShiftKey
+                || e.KeyValue == (int)Keys.Control || e.KeyValue == (int)Keys.Shift)
                 return;
 
-            var sc = e.KeyCode.KeysToSpecialKey();
+            Console.WriteLine($"KeyData: {e.KeyData} and KeyCode: {e.KeyCode} and KeyValue: {e.KeyValue}");
+            var sc = e.KeyCode.ToSpecialKey();
             Commands.Run(sc != SpecialKey.None 
                 ? new KeyInput(keys, sc)
                 : new KeyInput(keys, GetChar(e)));
@@ -520,25 +515,10 @@ namespace CodeBox
 
         private SpecialKey GetMouseClick(MouseEventArgs e)
         {
-            return e.Button == MouseButtons.Left ? SpecialKey.Click
+            return e.Button == MouseButtons.Left && e.Clicks == 2 ? SpecialKey.DoubleClick 
+                : e.Button == MouseButtons.Left ? SpecialKey.Click
                 : e.Button == MouseButtons.Right ? SpecialKey.RightClick
                 : SpecialKey.None;
-        }
-
-        private Modifiers GetModifiers()
-        {
-            var ret = Modifiers.None;
-
-            if ((ModifierKeys & Keys.Control) == Keys.Control)
-                ret |= Modifiers.Ctrl;
-            if ((ModifierKeys & Keys.Alt) == Keys.Alt)
-                ret |= Modifiers.Alt;
-            if ((ModifierKeys & Keys.Shift) == Keys.Shift)
-                ret |= Modifiers.Shift;
-            if ((ModifierKeys & Keys.LWin) == Keys.LWin)
-                ret |= Modifiers.Cmd;
-
-            return ret;
         }
 
         private char GetChar(KeyEventArgs e)

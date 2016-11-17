@@ -17,6 +17,7 @@
     "command.editor.selectnormal": [ "move+click", "ctrl+move+click" ],
     "command.editor.selectblock": "alt+move+click",
     "command.editor.selectword": "doubleclick",
+    "command.editor.selectwordadd": "ctrl+doubleclick",
     "command.editor.unindent": "shift+tab",
     "command.editor.indent": "tab",
     "command.editor.selectionclear": "esc",

@@ -108,7 +108,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new InsertNewLineCommand();
         }

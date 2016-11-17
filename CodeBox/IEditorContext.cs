@@ -27,8 +27,6 @@ namespace CodeBox
 
         ScrollingManager Scroll { get; }
 
-        CommandManager Commands { get; }
-
         DocumentBuffer Buffer { get; }
 
         EditorInfo Info { get; }

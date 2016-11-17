@@ -20,6 +20,9 @@ namespace CodeBox.Commands
         
         public override ActionResults Execute(Selection sel)
         {
+            if (sel.Caret != Context.Caret)
+                return Clean;
+
             var caret = sel.Caret;
             var range = SelectWord(Context, caret);
             
@@ -34,14 +37,14 @@ namespace CodeBox.Commands
 
             if (range != null)
             {
-                //if (sel.IsEmpty)
-                //    Buffer.Selections.Remove(sel);
-
-                Buffer.Selections.Set(Selection.FromRange(range));
+                Buffer.Selections.Remove(sel);
+                Select(range);
             }
 
             return Clean | Scroll;
         }
+
+        protected virtual void Select(Range range) => Buffer.Selections.Set(Selection.FromRange(range));
 
         internal static Range SelectWord(IEditorContext ctx, Pos caret)
         {
@@ -96,7 +99,7 @@ namespace CodeBox.Commands
                 if (strat == Strategy.Word && (nonWord || ws))
                     return pos;
                 else if (strat == Strategy.Ws && !ws)
-                    return pos;
+                    strat = nonWord ? Strategy.NonWord : Strategy.Word;
                 else if (strat == Strategy.NonWord && !nonWord)
                     return pos;
 
@@ -118,9 +121,10 @@ namespace CodeBox.Commands
                 c = line.CharAt(pos);
                 var nonWord = seps.IndexOf(c) != -1;
                 var ws = char.IsWhiteSpace(c) || c == '\t';
+                var nextWs = char.IsWhiteSpace(line.CharAt(pos + 1));
 
-                if (strat == Strategy.Word && (nonWord || (!nonWord && hadWs)))
-                    return pos;
+                if (strat == Strategy.Word && (nonWord || (!nonWord && hadWs && !nextWs)))
+                    return pos == line.Length - 1 ? line.Length : pos;
                 else if (strat == Strategy.Ws && !ws)
                     return pos;
                 else if (strat == Strategy.NonWord && ((!nonWord && !ws) || (nonWord && hadWs)))

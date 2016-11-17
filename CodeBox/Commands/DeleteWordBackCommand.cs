@@ -24,7 +24,7 @@ namespace CodeBox.Commands
             return base.Execute(sel);
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new DeleteWordBackCommand();
         }

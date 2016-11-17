@@ -233,29 +233,27 @@ namespace CodeBox.Core
 
     public static class KeysExtensions
     {
-        public static Modifiers KeysToModifier(this Keys keys)
+        public static Modifiers ToModifiers(this Keys keys)
         {
-            switch (keys)
-            {
-                case Keys.ControlKey:
-                case Keys.Control:
-                    return Modifiers.Ctrl;
-                case Keys.Shift:
-                    return Modifiers.Shift;
-                case Keys.Alt:
-                    return Modifiers.Alt;
-                case Keys.LWin:
-                case Keys.RWin:
-                    return Modifiers.Cmd;
-                default:
-                    return Modifiers.None;
-            }
+            var ret = Modifiers.None;
+
+            if ((keys & Keys.Control) == Keys.Control)
+                ret |= Modifiers.Ctrl;
+            if ((keys & Keys.Alt) == Keys.Alt)
+                ret |= Modifiers.Alt;
+            if ((keys & Keys.Shift) == Keys.Shift)
+                ret |= Modifiers.Shift;
+            if ((keys & Keys.LWin) == Keys.LWin)
+                ret |= Modifiers.Cmd;
+
+            return ret;
         }
 
-        public static SpecialKey KeysToSpecialKey(this Keys keys)
+        public static SpecialKey ToSpecialKey(this Keys keys)
         {
             switch (keys)
             {
+                case Keys.Space: return SpecialKey.Space;
                 case Keys.Delete: return SpecialKey.Del;
                 case Keys.Tab: return SpecialKey.Tab;
                 case Keys.Home: return SpecialKey.Home;
@@ -301,6 +299,7 @@ namespace CodeBox.Core
     public enum SpecialKey
     {
         None = 0,
+        Space = 0x1000,
         Del = 0x1001,
         Tab = 0x1002,
         Home = 0x1003,
@@ -327,7 +326,6 @@ namespace CodeBox.Core
         Down = 0x1024,
         Left = 0x1025,
         Right = 0x1026,
-
         Click = 0x1027,
         RightClick = 0x1028,
         DoubleClick = 0x1029,

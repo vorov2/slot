@@ -32,7 +32,7 @@ namespace CodeBox.Commands
             return res;
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new CutCommand();
         }

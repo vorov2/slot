@@ -13,11 +13,11 @@ namespace CodeBox.ObjectModel
         private int counter;
         private bool undoGroup;
         private EditorLock editorLock;
+        private volatile int lockCount;
 
         private sealed class EditorLock : IEditorLock
         {
             private readonly DocumentBuffer man;
-            internal volatile int RefCount;
 
             internal EditorLock(DocumentBuffer man)
             {
@@ -26,8 +26,7 @@ namespace CodeBox.ObjectModel
 
             public void Release()
             {
-                if (--RefCount == 0)
-                    man.editorLock = null;
+                man.lockCount--;
             }
         }
 
@@ -38,6 +37,7 @@ namespace CodeBox.ObjectModel
             UndoStack = new LimitedStack<CommandInfo>();
             RedoStack = new LimitedStack<CommandInfo>();
             Tips = new List<CallTip>();
+            editorLock = new EditorLock(this);
         }
 
         internal string GetText() =>
@@ -47,13 +47,8 @@ namespace CodeBox.ObjectModel
 
         public IEditorLock ObtainLock()
         {
-            if (editorLock == null)
-                return editorLock = new EditorLock(this);
-            else
-            {
-                editorLock.RefCount++;
-                return editorLock;
-            }
+            lockCount++;
+            return editorLock;
         }
 
         public bool BeginUndoAction()
@@ -75,7 +70,7 @@ namespace CodeBox.ObjectModel
 
         internal bool LastAtomicChange { get; set; }
 
-        public bool Locked => editorLock != null;
+        public bool Locked => lockCount > 0;
 
         internal List<CallTip> Tips { get; }
 

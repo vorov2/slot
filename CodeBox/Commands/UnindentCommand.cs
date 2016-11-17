@@ -50,7 +50,7 @@ namespace CodeBox.Commands
             sel.End = new Pos(sel.End.Line, sel.End.Col - indent);
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new UnindentCommand();
         }

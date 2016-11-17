@@ -22,7 +22,7 @@ namespace CodeBox.Commands
 
             if (modify && (Buffer.ReadOnly || Buffer.Locked))
                 return;
-
+            
             var selCount = Buffer.Selections.Count;
             var qry = selCount == 1 ? null
                 : Buffer.Selections.OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
@@ -36,7 +36,7 @@ namespace CodeBox.Commands
                 ctx.LastEditLine = lastSel.GetLastLine();
                 exp = Execute(lastSel);
 
-                if (!Buffer.LastAtomicChange || !exp.Has(AtomicChange))
+                if (exp.Has(Modify) && (!Buffer.LastAtomicChange || !exp.Has(AtomicChange)))
                     thisUndo = Buffer.BeginUndoAction();
 
                 if (exp.Has(Modify))
@@ -49,7 +49,7 @@ namespace CodeBox.Commands
             {
                 thisUndo = Buffer.BeginUndoAction();
                 var cc = 0;
-                EditorCommand cmd = this;
+                IEditorCommand cmd = this;
 
                 foreach (var sel in qry)
                 {
@@ -228,7 +228,7 @@ namespace CodeBox.Commands
                 Context.Buffer.Selections.Truncate();
         }
 
-        internal virtual EditorCommand Clone() => this;
+        public virtual IEditorCommand Clone() => this;
 
         public IEditorContext Context { get; set; }
 

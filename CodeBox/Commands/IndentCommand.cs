@@ -160,7 +160,7 @@ namespace CodeBox.Commands
             sel.End = new Pos(sel.End.Line, sel.End.Col + indent.Count());
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new IndentCommand();
         }

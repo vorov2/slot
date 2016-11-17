@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using CodeBox.ObjectModel;
 using CodeBox.Commands;
-using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using CodeBox.Core;
 using System.IO;
@@ -31,12 +30,13 @@ namespace CodeBox
 
         public void Run(KeyInput input)
         {
-            Console.WriteLine("KeyInput: " + input);
+            Console.WriteLine($"KeyInput: {input}.");
+
             if (adapter.ProcessInput(input) == InputState.Complete)
             {
                 var cmd = ComponentCatalog.Instance.GetComponent<IEditorCommand>(adapter.LastKey);
                 if (cmd != null)
-                    ((EditorCommand)cmd).Clone().Run(editor);
+                    cmd.Clone().Run(editor);
             }
         }
     }

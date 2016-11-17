@@ -18,5 +18,7 @@ namespace CodeBox.Commands
         ActionResults Redo(out Pos pos);
 
         IEditorContext Context { get; set; }
+
+        IEditorCommand Clone();
     }
 }

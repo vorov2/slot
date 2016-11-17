@@ -106,6 +106,7 @@
     <Compile Include="Commands\SelectAllCommand.cs" />
     <Compile Include="Commands\SelectionCommand.cs" />
     <Compile Include="Commands\SelectLineCommand.cs" />
+    <Compile Include="Commands\SelectWordAddCommand.cs" />
     <Compile Include="Commands\SelectWordCommand.cs" />
     <Compile Include="Commands\SetCaretCommand.cs" />
     <Compile Include="Commands\UnindentCommand.cs" />

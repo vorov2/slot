@@ -66,7 +66,7 @@ namespace CodeBox.Commands
             return Modify | ShallowChange;
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new ToggleFoldingCommand(togglePos);
         }

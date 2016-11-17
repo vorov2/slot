@@ -34,7 +34,7 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new DeleteRangeCommand();
         }

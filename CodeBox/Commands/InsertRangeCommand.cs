@@ -110,7 +110,7 @@ namespace CodeBox.Commands
             return Pos.Empty;
         }
 
-        internal override EditorCommand Clone()
+        public override IEditorCommand Clone()
         {
             return new InsertRangeCommand();
         }
