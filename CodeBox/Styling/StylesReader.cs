@@ -37,7 +37,7 @@ namespace CodeBox.Styling
             set.LineNumbersForeColor = dict.Color("color");
             set.LineNumbersBackColor = dict.Color("backColor");
             set.LineNumbersCurrentForeColor = dict.Color("currentColor");
-            set.LineNumbersCurrentBackColor = dict.Color("correntBackColor");
+            set.LineNumbersCurrentBackColor = dict.Color("currentBackColor");
         }
 
         private static void ReadFoldingStyles(MAP dict, EditorSettings set)

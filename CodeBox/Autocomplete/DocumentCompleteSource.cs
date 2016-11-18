@@ -70,7 +70,7 @@ namespace CodeBox.Autocomplete
                     continue;
 
                 var grm = ctx.AffinityManager.GetAffinityId(new Pos(i, 0));
-                var seps = ctx.AffinityManager.GetAffinity(new Pos(i, 0)).GetNonWordSymbols(ctx, new Pos(i, 0));
+                var seps = ctx.AffinityManager.GetAffinity(new Pos(i, 0)).GetNonWordSymbols(ctx);
                 var dict = default(Dictionary<string, object>);
 
                 if (!completes.TryGetValue(grm, out dict))

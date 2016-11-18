@@ -14,7 +14,7 @@ namespace CodeBox.Commands
         private IEnumerable<Character> deleteString;
         private Character deleteChar;
         private Pos undoPos;
-        private Selection redoSel;
+        protected Selection redoSel;
         private int unindent;
 
         public override ActionResults Execute(Selection sel)
@@ -29,6 +29,7 @@ namespace CodeBox.Commands
 
             if (!sel.IsEmpty)
             {
+                unindent = 0;
                 res = Change;
                 deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
             }
@@ -41,6 +42,8 @@ namespace CodeBox.Commands
             }
             else
             {
+                unindent = 0;
+
                 if (caret.Col > 0)
                 {
                     deleteChar = ln.CharacterAt(caret.Col - 1);

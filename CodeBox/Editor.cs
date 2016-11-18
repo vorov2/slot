@@ -506,11 +506,9 @@ namespace CodeBox
 
             var keys = ModifierKeys.ToModifiers();
 
-            if (e.KeyValue == (int)Keys.ControlKey || e.KeyValue == (int)Keys.ShiftKey
-                || e.KeyValue == (int)Keys.Control || e.KeyValue == (int)Keys.Shift)
+            if (e.KeyValue == (int)Keys.ControlKey || e.KeyValue == (int)Keys.ShiftKey)
                 return;
 
-            Console.WriteLine($"KeyData: {e.KeyData} and KeyCode: {e.KeyCode} and KeyValue: {e.KeyValue}");
             var sc = e.KeyCode.ToSpecialKey();
             Commands.Run(sc != SpecialKey.None 
                 ? new KeyInput(keys, sc)

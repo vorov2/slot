@@ -34,12 +34,14 @@
             // ed
             // 
             this.ed.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.ed.FirstEditLine = 0;
             this.ed.Font = new System.Drawing.Font("Consolas", 11F);
-            this.ed.Location = new System.Drawing.Point(145, 53);
+            this.ed.LastEditLine = 0;
+            this.ed.Location = new System.Drawing.Point(33, 54);
             this.ed.Name = "ed";
             this.ed.Overtype = false;
             this.ed.ReadOnly = false;
-            this.ed.Size = new System.Drawing.Size(212, 23);
+            this.ed.Size = new System.Drawing.Size(396, 25);
             this.ed.TabIndex = 0;
             // 
             // Form2

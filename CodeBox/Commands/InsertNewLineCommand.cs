@@ -31,8 +31,7 @@ namespace CodeBox.Commands
             selection.Clear(pos);
 
 
-            var indentKey = Context.AffinityManager.GetAffinity(pos).GetIndentComponentKey(Context,
-                new Pos(pos.Line,  0));
+            var indentKey = Context.AffinityManager.GetAffinity(new Pos(pos.Line, 0)).GetIndentComponentKey(Context);
             var comp = ComponentCatalog.Instance.GetComponent<IDentComponent>(indentKey);
             indent = comp != null ? comp.CalculateIndentation(Context, pos.Line) : 0;
 

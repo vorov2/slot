@@ -24,6 +24,13 @@ namespace CodeBox.Commands
             return base.Execute(sel);
         }
 
+        public override ActionResults Redo(out Pos pos)
+        {
+            Execute(new Selection(redoSel.Start));
+            pos = redoSel.Caret;
+            return Change;
+        }
+
         public override IEditorCommand Clone()
         {
             return new DeleteWordBackCommand();

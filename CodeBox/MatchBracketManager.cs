@@ -68,8 +68,8 @@ namespace CodeBox
                 var ln = editor.Lines[sel.Caret.Line];
                 var grm1 = editor.AffinityManager.GetAffinity(sel.Caret);
                 var grm2 = editor.AffinityManager.GetAffinity(new Pos(sel.Caret.Line, sel.Caret.Col - 1));
-                var bracketsForward = grm1.GetBracketSymbols(editor, sel.Caret);
-                var bracketsBackward = grm2.GetBracketSymbols(editor, new Pos(sel.Caret.Line, sel.Caret.Col - 1));
+                var bracketsForward = grm1.GetBracketSymbols(editor);
+                var bracketsBackward = grm2.GetBracketSymbols(editor);
                 var pi = -1;
 
                 if (sel.Caret.Col < ln.Length

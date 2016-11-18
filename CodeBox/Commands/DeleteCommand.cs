@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox.Commands
 {
@@ -11,10 +11,10 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.delete")]
     public class DeleteCommand : EditorCommand
     {
-        private IEnumerable<Character> @string;
-        private Character @char;
+        private IEnumerable<Character> deleteString;
+        private Character deleteChar;
         private Selection redoSel;
-        private Pos undoPos;
+        protected Pos undoPos;
 
         public override ActionResults Execute(Selection sel)
         {
@@ -24,7 +24,7 @@ namespace CodeBox.Commands
             if (!sel.IsEmpty)
             {
                 res = Change;
-                @string = DeleteRangeCommand.DeleteRange(Context, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
             }
             else
             {
@@ -34,14 +34,14 @@ namespace CodeBox.Commands
 
                 if (caret.Col < ln.Length)
                 {
-                    @char = ln.CharacterAt(caret.Col);
+                    deleteChar = ln.CharacterAt(caret.Col);
                     ln.RemoveAt(caret.Col);
                     res = Change;
                 }
                 else if (caret.Line < lines.Count - 1)
                 {
                     var nl = lines[caret.Line + 1];
-                    @char = Character.NewLine;
+                    deleteChar = Character.NewLine;
                     lines.Remove(nl);
                     ln.Append(nl);
                     res = Change;
@@ -54,8 +54,8 @@ namespace CodeBox.Commands
 
         public override ActionResults Redo(out Pos pos)
         {
-            @string = null;
-            @char = Character.Empty;
+            deleteString = null;
+            deleteChar = Character.Empty;
             Execute(redoSel);
             pos = undoPos;
             return Change;
@@ -65,14 +65,14 @@ namespace CodeBox.Commands
         {
             pos = undoPos;
 
-            if (@string != null)
-                pos = InsertRangeCommand.InsertRange(Document, undoPos, @string);
-            else if (@char == Character.NewLine)
+            if (deleteString != null)
+                pos = InsertRangeCommand.InsertRange(Document, undoPos, deleteString);
+            else if (deleteChar == Character.NewLine)
                 InsertNewLineCommand.InsertNewLine(Document, undoPos);
             else
             {
                 var ln = Document.Lines[undoPos.Line];
-                ln.Insert(undoPos.Col, @char);
+                ln.Insert(undoPos.Col, deleteChar);
             }
 
             return Change;

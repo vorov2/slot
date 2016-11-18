@@ -37,6 +37,8 @@ namespace CodeBox
         string IDocumentAffinity.CommentMask { get; }
 
         public string IndentComponentKey { get; set; }
+
+        public string AutocompleteSymbols { get; set; }
         #endregion
 
         public bool MatchBrackets

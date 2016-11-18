@@ -26,7 +26,8 @@ namespace CodeBox.Lexing
                     NonWordSymbols = dict.String("delimeters"),
                     CommentMask = dict.String("commentMask"),
                     NumberLiteral = (tmp = dict.String("numbers")) != null ? new NumberLiteral(tmp) :null,
-                    IndentComponentKey = dict.String("indentProvider")
+                    IndentComponentKey = dict.String("indentProvider"),
+                    AutocompleteSymbols = dict.String("autocompleteSymbols")
                 };
 
                 var rt = ProcessSection(grammar.Key, dict);

@@ -15,6 +15,8 @@ namespace CodeBox.Affinity
 
         string CommentMask { get; }
 
+        string AutocompleteSymbols { get; }
+
         NumberLiteral NumberLiteral { get; }
 
         string IndentComponentKey { get; set; }

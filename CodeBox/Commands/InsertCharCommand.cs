@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Affinity;
 
 namespace CodeBox.Commands
 {
@@ -35,13 +36,21 @@ namespace CodeBox.Commands
             }
             else
             {
-                var app = char.IsLetter(insertChar.Char) ? AutocompleteShow : AutocompleteKeep;
+                var app = !Buffer.Overtype && CanShowAutocomplete(sel, insertChar.Char) ? AutocompleteShow : AutocompleteKeep;
                 res |= AtomicChange | app;
             }
 
             Document.Lines[sel.Caret.Line].Insert(sel.Caret.Col, insertChar);
             sel.Clear(new Pos(sel.Caret.Line, sel.Caret.Col + 1));
             return res;
+        }
+
+        //TODO: check performance
+        private bool CanShowAutocomplete(Selection sel, char c)
+        {
+            var aff = Context.AffinityManager.GetAffinity(sel.Caret);
+            var sym = aff.GetAutocompleteSymbols(Context);
+            return (sym != null ? sym.IndexOf(c) != -1 : false) || char.IsLetter(c);
         }
 
         public override ActionResults Redo(out Pos pos)

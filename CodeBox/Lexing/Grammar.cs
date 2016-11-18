@@ -22,6 +22,8 @@ namespace CodeBox.Lexing
         public NumberLiteral NumberLiteral { get; set; }
 
         public string IndentComponentKey { get; set; }
+
+        public string AutocompleteSymbols { get; set; }
         #endregion
 
         public string Key { get; set; }
