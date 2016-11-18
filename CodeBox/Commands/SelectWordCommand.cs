@@ -99,7 +99,12 @@ namespace CodeBox.Commands
                 if (strat == Strategy.Word && (nonWord || ws))
                     return pos;
                 else if (strat == Strategy.Ws && !ws)
-                    strat = nonWord ? Strategy.NonWord : Strategy.Word;
+                {
+                    if (nonWord)
+                        return pos;
+                    else
+                        strat = Strategy.Word;
+                }
                 else if (strat == Strategy.NonWord && !nonWord)
                     return pos;
 

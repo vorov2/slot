@@ -1,0 +1,106 @@
+﻿{
+    "currentLineColor": "#E2E2E2",
+    "caretColor": "black",
+    "lineNumbers": {
+        "color": "#6D6D6D",
+        "backColor": "white",
+        "currentColor": "black",
+        "currentBackColor": "#E2E2E2"
+    },
+    "folding": {
+        "color": "#6D6D6D",
+        "backColor": "white",
+        "activeColor": "#4800FF"
+    },
+    "popup": {
+        "color": "black",
+        "backColor": "white",
+        "hoverColor": "#BCBCBC",
+        "selectedColor": "#ADD6FF",
+        "borderColor": "darkgray"
+    },
+    "scrollBars": {
+        "color": "#969696",
+        "backColor": "white",
+        "activeColor": "#6D6D6D"
+    },
+    "styles": [
+        {
+            "key": "default",
+            "color": "black",
+            "backColor": "white"
+        },
+        {
+            "key": "symbol.special",
+            "color": "#6D6D6D"
+        },
+        {
+            "key": "selection",
+            "backColor": "#ADD6FF"
+        },
+        {
+            "key": "bracket.matched",
+            "underline": true
+        },
+        {
+            "key": "number",
+            "color": "red"
+        },
+        {
+            "key": "bracket",
+            "color": "#6D6D6D"
+        },
+        {
+            "key": "keyword",
+            "color": "blue"
+        },
+        {
+            "key": "keyword.special",
+            "color": "#0072C4"
+        },
+        {
+            "key": "keyword.typename",
+            "color": "#4800FF"
+        },
+        {
+            "key": "keyword.literal",
+            "color": "teal"
+        },
+        {
+            "key": "comment",
+            "color": "darkgreen"
+        },
+        {
+            "key": "comment.multiline",
+            "color": "darkgreen"
+        },
+        {
+            "key": "comment.document",
+            "color": "darkgreen"
+        },
+        {
+            "key": "char",
+            "color": "maroon"
+        },
+        {
+            "key": "string",
+            "color": "maroon"
+        },
+        {
+            "key": "string.multiline",
+            "color": "maroon"
+        },
+        {
+            "key": "string.macro",
+            "color": "maroon"
+        },
+        {
+            "key": "regex",
+            "color": "#FF00DC"
+        },
+        {
+            "key": "preprocessor",
+            "color": "gray"
+        }
+    ]
+}
