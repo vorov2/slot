@@ -3,7 +3,7 @@
     "caretColor": "black",
     "lineNumbers": {
         "color": "#6D6D6D",
-        "backColor": "white",
+        "backColor": "#F2F2F2",
         "currentColor": "black",
         "currentBackColor": "#E2E2E2"
     },
@@ -14,14 +14,14 @@
     },
     "popup": {
         "color": "black",
-        "backColor": "white",
+        "backColor": "#F2F2F2",
         "hoverColor": "#BCBCBC",
         "selectedColor": "#ADD6FF",
         "borderColor": "darkgray"
     },
     "scrollBars": {
-        "color": "#969696",
-        "backColor": "white",
+        "color": "#ADADAD",
+        "backColor": "#F2F2F2",
         "activeColor": "#6D6D6D"
     },
     "styles": [
