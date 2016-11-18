@@ -237,10 +237,14 @@ namespace CodeBox
                 if (cut == line.Length)
                     cut++;
 
+                var tet = 0;
+
                 for (var i = oldcut; i < cut; i++)
                 {
                     var c = line.CharAt(i);
-                    var xw = c == '\t' ? Context.IndentSize * Info.CharWidth : Info.CharWidth;
+                    var ct = c == '\t' ? Line.GetIndentationSize(tet, Context.IndentSize) : 1;
+                    tet += ct;
+                    var xw = ct * Info.CharWidth;
                     var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth
                         && y + Scroll.Y >= tmarg;
 

@@ -74,6 +74,27 @@ namespace CodeBox.ObjectModel
             return true;
         }
 
+        public bool WhiteSpaceBefore(int col)
+        {
+            if (col < 0)
+                throw new CodeBoxException($"Negative value for the {nameof(col)} argument is not allowed.");
+
+            for (var i = 0; i < col; i++)
+                if (chars[i].Char != ' ')
+                    return false;
+
+            return true;
+        }
+
+        public int GetFirstNonIndentChar()
+        {
+            for (var i = 0; i < Length; i++)
+                if (chars[i].Char != ' ' && chars[i].Char != '\t')
+                    return i;
+
+            return 0;
+        }
+
         public char CharAt(int index) => chars.Count > index ? chars[index].Char : '\0';
 
         public Character CharacterAt(int index) => chars[index];
@@ -185,7 +206,7 @@ namespace CodeBox.ObjectModel
             for (var i = 0; i < max; i++)
             {
                 var c = chars[i];
-                tetra += c.Char == '\t' ? tabSize : 1;
+                tetra += c.Char == '\t' ? GetIndentationSize(tetra, tabSize) : 1;
             }
 
             return tetra;
@@ -204,17 +225,20 @@ namespace CodeBox.ObjectModel
                 cuts.Clear();
 
             var width = 0;
+            var tetra = 0;
 
             for (var i = 0; i < chars.Count; i++)
             {
                 var c = chars[i];
-                var w = c.Char == '\t' ? tabSize * charWidth : charWidth;
+                var ct = c.Char == '\t' ? GetIndentationSize(tetra, tabSize) : 1;
+                tetra += ct;
+                var w = ct * charWidth;
 
                 width += w;
 
                 if (c.Char == ' ' || c.Char == '\t')
                 {
-                    var tet = GetNextWordTetras(i + 1, tabSize);
+                    var tet = GetNextWordTetras(i + 1, tetra, tabSize);
 
                     if (width + tet * charWidth > limit)
                     {
@@ -227,23 +251,16 @@ namespace CodeBox.ObjectModel
             Invalidated = true;
         }
 
-        private int GetNextWordTetras(int index, int tabSize)
+        private int GetNextWordTetras(int index, int tetras, int tabSize)
         {
-            var tetras = 0;
-
             for (var i = index; i < chars.Count; i++)
             {
                 var c = chars[i];
+                var ct = c.Char == '\t' ? GetTetras(i, tabSize) : 1;
+                tetras += ct;
 
                 if (c.Char == '\t' || c.Char == ' ')
-                {
-                    if (tetras == 0)
-                        tetras = c.Char == '\t' ? tabSize : 1;
-
                     break;
-                }
-
-                tetras++;
             }
 
             return tetras;
@@ -278,9 +295,11 @@ namespace CodeBox.ObjectModel
 
             for (var i = 0; i < chars.Count; i++)
                 if (chars[i].Char == '\t')
+                    c += GetIndentationSize(c, tabSize);
+                else
                     c++;
 
-            return _tetras = chars.Count - c + c * tabSize;
+            return _tetras = c;
         }
 
         internal int GetColumnForTetra(int tetra, int tabSize)
@@ -288,20 +307,25 @@ namespace CodeBox.ObjectModel
             if (tetra == 0)
                 return 0;
 
+            var oldtetra = 0;
+
             for (var i = 0; i < chars.Count; i++)
             {
-                if (chars[i].Char == '\t')
-                    tetra -= tabSize;
-                else
-                    tetra--;
+                var c = chars[i].Char;
+                oldtetra += c == '\t' ? GetIndentationSize(oldtetra, tabSize) : 1;
 
-                if (tetra <= 0)
+                if (oldtetra >= tetra)
                     return i+1;
             }
 
             return tetra;
         }
-        
+
+        internal static int GetIndentationSize(int tet, int tabSize)
+        {
+            return tabSize - tet % tabSize;
+        }
+
         private void AddCut(int cut)
         {
             if (cuts == null)

@@ -42,7 +42,6 @@
             this.ed.Overtype = false;
             this.ed.Size = new System.Drawing.Size(1108, 602);
             this.ed.TabIndex = 0;
-            this.ed.Text = "editor1";
             // 
             // MainForm
             // 

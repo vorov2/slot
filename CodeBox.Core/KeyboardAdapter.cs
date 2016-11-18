@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 namespace CodeBox.Core
 {
+    using System.Reflection;
     using MAP = Dictionary<KeyInput, object>;
 
     public enum InputState
@@ -143,6 +144,7 @@ namespace CodeBox.Core
         }
 
         private static Dictionary<string, SpecialKey> specialKeys;
+        internal static Dictionary<SpecialKey, string> SpecialKeysToString { get; private set; }
 
         private static bool Eq(string fst, string snd)
         {
@@ -154,11 +156,17 @@ namespace CodeBox.Core
             if (specialKeys == null)
             {
                 specialKeys = new Dictionary<string, SpecialKey>(StringComparer.OrdinalIgnoreCase);
-                var names = typeof(SpecialKey).GetEnumNames();
-                var values = typeof(SpecialKey).GetEnumValues().Cast<SpecialKey>().ToList();
+                SpecialKeysToString = new Dictionary<SpecialKey, string>();
+                var fields = typeof(SpecialKey).GetFields(BindingFlags.Public | BindingFlags.Static);
 
-                for (var i = 0; i < names.Length; i++)
-                    specialKeys.Add(names[i], values[i]);
+                foreach (var fi in fields)
+                {
+                    var nam = Attribute.GetCustomAttribute(fi, typeof(FieldNameAttribute))
+                        ?.ToString() ?? fi.Name;
+                    var val = (SpecialKey)fi.GetValue(null);
+                    specialKeys.Add(nam, val);
+                    SpecialKeysToString.Add(val, nam);
+                }
             }
 
             SpecialKey ret;
@@ -213,7 +221,9 @@ namespace CodeBox.Core
         private string KeyToString()
         {
             return Key >= (int)SpecialKey.Del
-                ? ((SpecialKey)Key).ToString() : ((char)Key).ToString();
+                ? KeyboardAdapter.SpecialKeysToString != null ? 
+                    KeyboardAdapter.SpecialKeysToString[(SpecialKey)Key]
+                        : ((SpecialKey)Key).ToString() : ((char)Key).ToString();
         }
 
         public bool Equals(KeyInput other)
@@ -280,6 +290,17 @@ namespace CodeBox.Core
                 case Keys.Down: return SpecialKey.Down;
                 case Keys.Left: return SpecialKey.Left;
                 case Keys.Right: return SpecialKey.Right;
+                case Keys.OemPeriod: return SpecialKey.Greater;
+                case Keys.Oemcomma: return SpecialKey.Lesser;
+                case Keys.Oemplus: return SpecialKey.Equal;
+                case Keys.OemMinus: return SpecialKey.Minus;
+                case Keys.OemQuestion: return SpecialKey.Question;
+                case Keys.Oem5: return SpecialKey.Slash;
+                case Keys.OemOpenBrackets: return SpecialKey.LeftBracket;
+                case Keys.Oem6: return SpecialKey.RightBracket;
+                case Keys.Oem7: return SpecialKey.Quote;
+                case Keys.Oem1: return SpecialKey.Semicolon;
+                case Keys.Oemtilde: return SpecialKey.Tilde;
                 default: return SpecialKey.None;
             }
         }
@@ -326,9 +347,22 @@ namespace CodeBox.Core
         Down = 0x1024,
         Left = 0x1025,
         Right = 0x1026,
-        Click = 0x1027,
-        RightClick = 0x1028,
-        DoubleClick = 0x1029,
-        Move = 0x1030
+        
+        [FieldName(">")] Greater = 0x1027,
+        [FieldName("<")] Lesser = 0x1028,
+        [FieldName("=")] Equal = 0x1029,
+        [FieldName("-")] Minus = 0x1030,
+        [FieldName("?")] Question = 0x1033,
+        [FieldName("\\")] Slash = 0x1034,
+        [FieldName("[")] LeftBracket = 0x1035,
+        [FieldName("]")] RightBracket = 0x1036,
+        [FieldName("'")] Quote = 0x1037,
+        [FieldName(";")] Semicolon = 0x1038,
+        [FieldName("~")] Tilde = 0x1039,
+
+        Click = 0x2000,
+        RightClick = 0x2001,
+        DoubleClick = 0x2002,
+        Move = 0x2003
     }
 }

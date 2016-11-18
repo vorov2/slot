@@ -483,7 +483,7 @@ namespace Json
 
         public bool ThrowErrors { get; set; } = true;
 
-        public bool SkipNulls { get; set; }
+        public bool SkipNulls { get; set; } = true;
 
         public IEqualityComparer<string> DictionaryComparer { get; set; }
     }

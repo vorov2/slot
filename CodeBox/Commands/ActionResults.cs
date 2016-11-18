@@ -24,7 +24,7 @@ namespace CodeBox.Commands
 
         SingleRun = 0x08,
 
-        //ClearSelections = 0x10,
+        KeepRedo = 0x10,
 
         Clean = 0x20,
 

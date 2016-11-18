@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox
+namespace CodeBox.Core
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public sealed class FieldNameAttribute : Attribute

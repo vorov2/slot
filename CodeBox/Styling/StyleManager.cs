@@ -21,7 +21,7 @@ namespace CodeBox.Styling
             Alignment = StringAlignment.Near,
             Trimming = StringTrimming.None
         };
-        
+
         public StyleManager(Editor editor)
         {
             this.editor = editor;
@@ -41,13 +41,15 @@ namespace CodeBox.Styling
             Register(StandardStyle.Char, new TextStyle());
             Register(StandardStyle.String, new TextStyle());
             Register(StandardStyle.StringMultiline, new TextStyle());
-            Register(StandardStyle.StringSplice, new TextStyle());
+            Register(StandardStyle.StringMacro, new TextStyle());
             Register(StandardStyle.Preprocessor, new TextStyle());
             Register(StandardStyle.Literal, new TextStyle());
             Register(StandardStyle.Regex, new TextStyle());
         }
 
         public Style GetStyle(int styleId) => styles[styleId];
+
+        public Style GetStyle(StandardStyle style) => styles[(int)style];
 
         private void Register(StandardStyle styleId, Style style)
         {
@@ -103,8 +105,8 @@ namespace CodeBox.Styling
                 case StandardStyle.StringMultiline:
                     StringMultiline = style;
                     break;
-                case StandardStyle.StringSplice:
-                    StringSplice = style;
+                case StandardStyle.StringMacro:
+                    StringMacro = style;
                     break;
                 case StandardStyle.Char:
                     Char = style;
@@ -226,7 +228,7 @@ namespace CodeBox.Styling
 
         public Style StringMultiline { get; private set; }
 
-        public Style StringSplice { get; private set; }
+        public Style StringMacro { get; private set; }
 
         public Style Char { get; private set; }
 

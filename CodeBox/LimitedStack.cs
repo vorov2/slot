@@ -53,6 +53,15 @@ namespace CodeBox
             return items[idx];
         }
 
+        internal void Clear()
+        {
+            if (count > 0)
+            {
+                items = new T[items.Length];
+                count = 0;
+            }
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return items.Take(top).GetEnumerator();

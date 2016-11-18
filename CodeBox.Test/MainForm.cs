@@ -63,55 +63,19 @@ namespace CodeBox.Test
             ed.RightMargins.Add(new ScrollBarMargin(ed, Orientation.Vertical));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new TopMargin(ed));
-            ed.Styles.Default.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
-            ed.Styles.Default.BackColor = ColorTranslator.FromHtml("#1E1E1E");
-            ed.Styles.SpecialSymbol.ForeColor = ColorTranslator.FromHtml("#505050");
 
-            ed.Styles.Selection.BackColor = ColorTranslator.FromHtml("#264F78");
-            ed.Styles.MatchBracket.BackColor = ColorTranslator.FromHtml("#264F78");
-
-            ed.Styles.Number.ForeColor = ColorTranslator.FromHtml("#B5CEA8");
-            ed.Styles.Bracket.ForeColor = ColorTranslator.FromHtml("#A5A5A5");
-
-            ed.Styles.Keyword.ForeColor = HCol("#569CD6");
-            ed.Styles.KeywordSpecial.ForeColor = HCol("#8CDCDB");
-            ed.Styles.TypeName.ForeColor = HCol("#44C7AE");
-            ed.Styles.Literal.ForeColor = HCol("#B8D7A3");
-            ed.Styles.Comment.ForeColor = HCol("#579032");
-            ed.Styles.CommentMultiline.ForeColor = HCol("#579032");
-            ed.Styles.CommentDocument.ForeColor = HCol("#579032");
-            ed.Styles.Char.ForeColor = HCol("#D69D85");
-            ed.Styles.String.ForeColor = HCol("#D69D85");
-            ed.Styles.StringMultiline.ForeColor = HCol("#D69D85");
-            ed.Styles.StringSplice.ForeColor = HCol("#D69D85");
-            ed.Styles.Regex.ForeColor = HCol("#FF7CDC");
-            ed.Styles.Preprocessor.ForeColor = HCol("#7F7F7F");
-
-            ed.Settings.LineNumbersForeColor = ColorTranslator.FromHtml("#505050");
-            ed.Settings.LineNumbersBackColor = ColorTranslator.FromHtml("#1E1E1E");
-            ed.Settings.LineNumbersCurrentForeColor = ColorTranslator.FromHtml("#848484");
-            ed.Settings.LineNumbersCurrentBackColor = ColorTranslator.FromHtml("#262626");
-
-            ed.Settings.FoldingBackColor = ColorTranslator.FromHtml("#1E1E1E");
-            ed.Settings.FoldingForeColor = ColorTranslator.FromHtml("#505050");
-            ed.Settings.FoldingActiveForeColor = ColorTranslator.FromHtml("#C0AAF7");
-
-            ed.Settings.PopupForeColor = ColorTranslator.FromHtml("#DCDCDC");
-            ed.Settings.PopupBackColor = ColorTranslator.FromHtml("#2D2D30");
-            ed.Settings.PopupHoverColor = ColorTranslator.FromHtml("#3E3E42");
-            ed.Settings.PopupSelectedColor = ColorTranslator.FromHtml("#264F78");
-            ed.Settings.PopupBorderColor = ColorTranslator.FromHtml("#5F5F66");
-
+            StylesReader.Read(File.ReadAllText("samples\\theme.json"), ed);
+            SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
+            ed.Commands.ReadKeymap(LocalFile("samples\\keymap.json"));
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 LocalFile("test.htm"));
-            ed.Commands.ReadKeymap(LocalFile("samples\\keymap.json"));
         }
 
         private string LocalFile(string fileName)
         {
             return Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, fileName);
         }
-        
+
         private void BindCommands()
         {
             //ed.Commands.Bind("command.editor.togglefolding", Keys.Control | Keys.K);
@@ -169,13 +133,12 @@ namespace CodeBox.Test
 
         private void Form1_Activated(object sender, EventArgs e)
         {
-            ed.Focus();
+            //ed.Focus();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            Focus();
+            //Focus();
         }
-        
     }
 }

@@ -12,23 +12,27 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.indent")]
     public sealed class IndentCommand : InsertRangeCommand
     {
-        private bool undoIndent;
+        private List<int> undoIndents;
+        private bool useTab;
 
         public override ActionResults Execute(Selection sel)
         {
-            var indent = Context.UseTabs ? "\t" : new string(' ', Context.IndentSize);
-            
+            var startLine = Document.Lines[sel.Start.Line];
+
             if (sel.Start.Line != sel.End.Line)
             {
-                undoIndent = true;
                 redoSel = sel.Clone();
-                var str = indent.MakeCharacters();
-                Indent(Context, sel, str);
+                useTab = Settings.UseTabs;
+                undoIndents = Indent(Context, sel);
                 return Modify | Scroll;
             }
             else
             {
-                if (!Context.UseTabs)
+                var indent = Context.UseTabs ? "\t"
+                    : new string(' ', Line.GetIndentationSize(startLine.GetTetras(
+                        sel.Start.Col, Context.IndentSize), Context.IndentSize));
+
+                if (!Context.UseTabs && startLine.WhiteSpaceBefore(sel.Start.Col))
                 {
                     var newIndent = FindIndent(true, sel.Caret.Line, indent.Length);
 
@@ -88,11 +92,21 @@ namespace CodeBox.Commands
 
         public override ActionResults Redo(out Pos pos)
         {
-            if (undoIndent)
+            if (undoIndents != null)
             {
-                var sel = redoSel;
-                Execute(sel);
-                pos = sel.End;
+                var norm = redoSel.Normalize();
+                var c = norm.Start.Line;
+                pos = redoSel.Caret;
+
+                foreach (var i in undoIndents)
+                {
+                    var str = new string(useTab ? '\t' : ' ', i);
+                    Document.Lines[c++].Insert(0, str.MakeCharacters());
+
+                    if (c - 1 == pos.Line)
+                        pos = new Pos(pos.Line, pos.Col + str.Length);
+                }
+
                 return Change;
             }
             else
@@ -101,9 +115,14 @@ namespace CodeBox.Commands
 
         public override ActionResults Undo(out Pos pos)
         {
-            if (undoIndent)
+            if (undoIndents != null)
             {
-                var change = Unindent(Context, redoSel);
+                var norm = redoSel.Normalize();
+                var c = norm.Start.Line;
+
+                foreach (var i in undoIndents)
+                    Document.Lines[c++].RemoveRange(0, i);
+
                 pos = redoSel.Caret;
                 return Change;
             }
@@ -111,53 +130,29 @@ namespace CodeBox.Commands
                 return base.Undo(out pos);
         }
 
-        internal static bool Unindent(IEditorContext ctx, Selection sel)
+        internal static List<int> Indent(IEditorContext ctx, Selection sel)
         {
             var norm = sel.Normalize();
-            var change = false;
-
+            var undos = new List<int>();
+            
             for (var i = norm.Start.Line; i < norm.End.Line + 1; i++)
             {
                 var line = ctx.Buffer.Document.Lines[i];
+                var indent = ctx.UseTabs ? "\t"
+                    : new string(' ', Line.GetIndentationSize(line.GetTetras(
+                        line.GetFirstNonIndentChar(), ctx.IndentSize), ctx.IndentSize));
+                undos.Add(indent.Length);
                 var pos = HomeCommand.MoveHome(ctx.Buffer.Document, new Pos(i, line.Length));
+                line.Insert(pos.Col, indent.MakeCharacters());
 
-                if (pos.Col == 0 && line.All(c => c.Char == ' ' || c.Char == '\t'))
-                    pos = new Pos(pos.Line, line.Length);
-                else if (pos.Col == 0 && (line.CharAt(0) == ' ' || line.CharAt(0) == '\t'))
-                    pos = HomeCommand.MoveHome(ctx.Buffer.Document, pos);
-
-                if (pos.Col == 0)
-                    continue;
-                else if (line[pos.Col - 1].Char == '\t')
+                if (i == norm.Start.Line)
                 {
-                    line.RemoveAt(pos.Col - 1);
-                    change = true;
-                }
-                else
-                {
-                    var st = pos.Col - ctx.IndentSize;
-                    st = st < 0 ? 0 : st;
-                    line.RemoveRange(st, pos.Col - st);
-                    change = true;
+                    sel.Start = new Pos(sel.Start.Line, sel.Start.Col + indent.Length);
+                    sel.End = new Pos(sel.End.Line, sel.End.Col + indent.Length);
                 }
             }
 
-            return change;
-        }
-
-        internal static void Indent(IEditorContext ctx, Selection sel, IEnumerable<Character> indent)
-        {
-            var norm = sel.Normalize();
-
-            for (var i = norm.Start.Line; i < norm.End.Line + 1; i++)
-            {
-                var line = ctx.Buffer.Document.Lines[i];
-                var pos = HomeCommand.MoveHome(ctx.Buffer.Document, new Pos(i, line.Length));
-                line.Insert(pos.Col, indent);
-            }
-
-            sel.Start = new Pos(sel.Start.Line, sel.Start.Col + indent.Count());
-            sel.End = new Pos(sel.End.Line, sel.End.Col + indent.Count());
+            return undos;
         }
 
         public override IEditorCommand Clone()

@@ -1,0 +1,18 @@
+﻿{
+    "editor.font": "Consolas",
+    "editor.fontSize": 11,
+    "editor.linePadding": 0.1,
+    "editor.showWhitespace": true,
+    "editor.showEol": false,
+    "editor.showLineLength": true,
+    "editor.currentLineIndicator": true,
+    "editor.delimeters": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+    "editor.brackets": "(){}[]",
+    "editor.matchBrackets": true,
+    "editor.useTabs": false,
+    "editor.indentSize": 4,
+    "editor.wordWrap": false,
+    "editor.wordWrapColumn": 80,
+    "editor.lineEndings": "auto",
+    "editor.longLineIndicators": [ 25, 80, 100 ]
+}

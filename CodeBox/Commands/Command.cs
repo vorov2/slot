@@ -203,6 +203,9 @@ namespace CodeBox.Commands
 
                 if (!exp.Has(ShallowChange))
                     Context.Buffer.Edits++;
+
+                if (!exp.Has(KeepRedo))
+                    Context.Buffer.RedoStack.Clear();
             }
 
             if (exp.Has(RestoreCaret))

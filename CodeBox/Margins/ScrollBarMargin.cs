@@ -79,7 +79,7 @@ namespace CodeBox.Margins
                 return false;
 
             var sc = new Rectangle(Editor.Scroll.X, Editor.Scroll.Y, Editor.Scroll.XMax, Editor.Scroll.YMax);
-            g.FillRectangle(Editor.Styles.Default.BackBrush, bounds);
+            g.FillRectangle(Editor.CachedBrush.Create(Editor.Settings.ScrollBackColor), bounds);
 
             if (Orientation == Orientation.Horizontal)
             {
@@ -92,7 +92,7 @@ namespace CodeBox.Margins
                 var curpos = sc.Width != 0 ? (int)Math.Floor(Math.Floor(sc.X / (sc.Width / 100d)) * perc) : 0;
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
+                g.FillRectangle(Editor.CachedBrush.Create(mouseDown ? Editor.Settings.ScrollActiveForeColor : Editor.Settings.ScrollForeColor),
                     new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, lastCaretSize, bounds.Height));
                 lastCaretPos = bounds.X + Math.Abs(curpos);
             }
@@ -113,7 +113,7 @@ namespace CodeBox.Margins
                     pos = Editor.ClientSize.Height - lastCaretSize;
 
                 g.FillRectangle(Editor.CachedBrush.Create(
-                    mouseDown ? Editor.Settings.ScrollActiveThumbColor : Editor.Settings.ScrollThumbColor),
+                    mouseDown ? Editor.Settings.ScrollActiveForeColor : Editor.Settings.ScrollForeColor),
                     new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
                 lastCaretPos = pos;
                 var caretLine = Editor.Buffer.Selections.Main.Caret.Line;

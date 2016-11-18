@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeBox.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -54,8 +55,8 @@ namespace CodeBox.Styling
         [FieldName("string.multiline")]
         StringMultiline = 17,
 
-        [FieldName("string.splice")]
-        StringSplice = 18,
+        [FieldName("string.macro")]
+        StringMacro = 18,
 
         [FieldName("char")]
         Char = 19,

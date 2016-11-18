@@ -119,8 +119,8 @@
     <Compile Include="Affinity\IDocumentAffinity.cs" />
     <Compile Include="ComponentModel\ComponentCatalog.cs" />
     <Compile Include="ComponentModel\ComponentDataAttribute.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
-    <Compile Include="FieldNameAttribute.cs" />
     <Compile Include="ComponentModel\IComponentMetadata.cs" />
     <Compile Include="IEditorLock.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
@@ -179,6 +179,7 @@
     <Compile Include="ObjectModel\SelectionList.cs" />
     <Compile Include="ComponentModel\IDentComponent.cs" />
     <Compile Include="ComponentModel\IComponent.cs" />
+    <Compile Include="SettingsReader.cs" />
     <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="CallTips\CallTip.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Drawing\CachedBrush.cs" />
     <Compile Include="ScrollingManager.cs" />
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
+    <Compile Include="Styling\StylesReader.cs" />
     <Compile Include="Styling\TextStyle.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -13,7 +13,7 @@ namespace CodeBox.Commands
         public override ActionResults Execute(Selection sel)
         {
             Redo();
-            return Pure;
+            return Pure | KeepRedo;
         }
 
         private void Redo()
@@ -24,7 +24,7 @@ namespace CodeBox.Commands
                 int count;
                 var exp = Redo(Buffer.RedoStack.Peek().Id, out count, out pos);
                 SetEditLines();
-                DoAftermath(exp, count, pos);
+                DoAftermath(exp | KeepRedo, count, pos);
             }
         }
 

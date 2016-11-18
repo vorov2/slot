@@ -1,4 +1,5 @@
 ﻿using CodeBox.Affinity;
+using CodeBox.Core;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -125,63 +126,6 @@ namespace CodeBox.Lexing
             }
 
             return keys;
-        }
-    }
-
-    internal static class DictionaryExtensions
-    {
-        public static object Object(this Dictionary<string, object> dict, string key)
-        {
-            object res;
-            dict.TryGetValue(key, out res);
-            return res;
-        }
-
-        public static string String(this Dictionary<string, object> dict, string key)
-        {
-            var res = Object(dict, key);
-            return res != null ? res.ToString() : null;
-        }
-
-        public static bool Bool(this Dictionary<string, object> dict, string key)
-        {
-            object res;
-            dict.TryGetValue(key, out res);
-            return res != null && res is bool ? (bool)res
-                : res != null ? res.ToString().Equals(bool.TrueString, StringComparison.OrdinalIgnoreCase)
-                : false;
-        }
-
-        public static char Char(this Dictionary<string, object> dict, string key)
-        {
-            object res;
-            dict.TryGetValue(key, out res);
-            return res != null ? res.ToString()[0] : '\0';
-        }
-
-        private static Dictionary<string, StandardStyle> styles;
-        public static StandardStyle Style(this Dictionary<string, object> dict, string key)
-        {
-            if (styles == null)
-            {
-                styles = new Dictionary<string, StandardStyle>(StringComparer.OrdinalIgnoreCase);
-
-                foreach (var fi in typeof(StandardStyle).GetFields(BindingFlags.Public | BindingFlags.Static))
-                {
-                    var attr = Attribute.GetCustomAttribute(fi, typeof(FieldNameAttribute));
-                    var val = (StandardStyle)fi.GetValue(null);
-                    var ekey = attr != null ? attr.ToString() : fi.Name;
-                    styles.Add(ekey, val);
-                }
-            }
-
-            var str = String(dict, key);
-            var ret = StandardStyle.Default;
-
-            if (str != null)
-                styles.TryGetValue(str, out ret);
-
-            return ret;
         }
     }
 }

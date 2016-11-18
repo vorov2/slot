@@ -14,7 +14,6 @@ namespace CodeBox
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
         private const string BRACKETS = "()[]{}";
-        private const int INDENTSIZE = 4;
         private readonly Editor editor;
 
         public EditorSettings(Editor editor)
@@ -24,22 +23,8 @@ namespace CodeBox
             //Defaults
             NonWordSymbols = SEPS;
             BracketSymbols = BRACKETS;
-            //WordWrap = true;
-            WordWrapColumn = 80;
-            //UseTabs = true;
-            MatchBrackets = true;
-            ShowLineLength = true;
-            CurrentLineIndicator = true;
-            CurrentLineIndicatorColor = ColorTranslator.FromHtml("#262626");//161616
-            IndentSize = INDENTSIZE;
-            LinePadding = .1;
-            ShowWhitespace = true;
-            Font = new Font("Consolas", 11f);
-            CaretColor = Color.White;
-            ScrollThumbColor = ColorTranslator.FromHtml("#505050");
-            ScrollActiveThumbColor = Color.White;
+            Font = new Font(FontFamily.GenericMonospace, 11);
             LongLineIndicators = new List<int>();
-            LongLineIndicators.AddRange(new int[] { 25, 80, 100 });
         }
 
         #region IDocumentAffinity
@@ -89,8 +74,6 @@ namespace CodeBox
 
         public bool CurrentLineIndicator { get; set; }
 
-        public Color CurrentLineIndicatorColor { get; set; }
-
         public Font Font
         {
             get { return editor.Font; }
@@ -108,7 +91,7 @@ namespace CodeBox
 
                     using (var g = editor.CreateGraphics())
                     {
-                        var size1 = g.MeasureString("<F>", value);
+                        var size1 = g.MeasureString("<W>", value);
                         var size2 = g.MeasureString("<>", value);
                         editor.Info.CharWidth = (int)(size1.Width - size2.Width);
                         editor.Info.CharHeight = (int)value.GetHeight(g);
@@ -142,16 +125,20 @@ namespace CodeBox
                 }
             }
         }
-
-        public Color CaretColor { get; set; }
-
-        public Color ScrollThumbColor { get; set; }
-
-        public Color ScrollActiveThumbColor { get; set; }
-
+        
         public List<int> LongLineIndicators { get; }
 
         #region Styles
+        public Color CurrentLineIndicatorColor { get; set; }
+
+        public Color CaretColor { get; set; }
+
+        public Color ScrollForeColor { get; set; }
+
+        public Color ScrollActiveForeColor { get; set; }
+
+        public Color ScrollBackColor { get; set; }
+
         public Color FoldingBackColor { get; set; }
 
         public Color FoldingForeColor { get; set; }

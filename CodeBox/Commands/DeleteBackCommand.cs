@@ -15,6 +15,7 @@ namespace CodeBox.Commands
         private Character deleteChar;
         private Pos undoPos;
         private Selection redoSel;
+        private int unindent;
 
         public override ActionResults Execute(Selection sel)
         {
@@ -23,18 +24,20 @@ namespace CodeBox.Commands
             var lines = Document.Lines;
             var caret = sel.Caret;
             var ln = lines[caret.Line];
+            var indentSize = Line.GetIndentationSize(ln.GetTetras(caret.Col, Context.IndentSize), Context.IndentSize);
+            unindent = indentSize == Context.IndentSize ? indentSize : Context.IndentSize - indentSize;
 
             if (!sel.IsEmpty)
             {
                 res = Change;
                 deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
             }
-            else if (!Context.UseTabs && caret.Col >= Context.IndentSize
-                && ln.CharAt(caret.Col - 1) == ' ' && ln.CharAt(caret.Col - 2) == ' '
-                && ln.CharAt(caret.Col - 3) == ' ' && ln.CharAt(caret.Col - 4) == ' ')
+            else if (!Context.UseTabs && (unindent = GetMaximum(ln, caret.Col, unindent)) > 1 && caret.Col >= unindent)
             {
                 res = Change;
-                deleteString = DeleteRangeCommand.DeleteRange(Context, new Selection(caret, new Pos(caret.Line, caret.Col - 4)));
+                var np = new Pos(caret.Line, caret.Col - unindent);
+                deleteString = DeleteRangeCommand.DeleteRange(Context, new Selection(caret, np));
+                sel.Clear(np);
             }
             else
             {
@@ -62,11 +65,33 @@ namespace CodeBox.Commands
             return res;
         }
 
+        private int GetMaximum(Line ln, int col, int num)
+        {
+            var c = 0;
+
+            for (var i = col - 1; i > -1; i--)
+                if (ln.CharAt(i) != ' ')
+                    return c > num ? num : c;
+                else
+                    c++;
+
+            return c > num ? num : c;
+        }
+
         public override ActionResults Redo(out Pos pos)
         {
-            deleteString = null;
             deleteChar = Character.Empty;
-            Execute(redoSel);
+            deleteString = null;
+
+            if (unindent != 0)
+            {
+                var caret = redoSel.Caret;
+                var np = new Pos(caret.Line, caret.Col - unindent);
+                DeleteRangeCommand.DeleteRange(Context, new Selection(caret, np));
+            }
+            else
+                Execute(redoSel);
+
             pos = undoPos;
             return Change;
         }

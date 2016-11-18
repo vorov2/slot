@@ -71,7 +71,7 @@ namespace CodeBox.Autocomplete
 
             var scY = window.ScrollPosition;
             var scHeight = window.ScrollMax;
-            g.FillRectangle(editor.Styles.Default.BackBrush, bounds);
+            g.FillRectangle(editor.CachedBrush.Create(editor.Settings.ScrollBackColor), bounds);
 
             var caretSize = ((double)bounds.Height / (bounds.Height + scHeight)) * bounds.Height;
 
@@ -88,7 +88,7 @@ namespace CodeBox.Autocomplete
                 pos = window.ClientSize.Height - lastCaretSize;
 
             g.FillRectangle(editor.CachedBrush.Create(
-                IsMouseDown ? editor.Settings.ScrollActiveThumbColor : editor.Settings.ScrollThumbColor),
+                IsMouseDown ? editor.Settings.ScrollActiveForeColor : editor.Settings.ScrollForeColor),
                 new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
             lastCaretPos = pos;
         }
