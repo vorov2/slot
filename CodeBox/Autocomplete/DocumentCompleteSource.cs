@@ -60,6 +60,7 @@ namespace CodeBox.Autocomplete
                 return;
 
             busy = true;
+            completes.Clear();
             var arr = ctx.Buffer.Document.Lines.ToList();
 
             for (var i = 0; i < arr.Count; i++)

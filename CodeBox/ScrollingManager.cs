@@ -6,18 +6,17 @@ using CodeBox.Commands;
 
 namespace CodeBox
 {
+    [Flags]
+    public enum InvalidateFlags
+    {
+        None = 0x00,
+        Atomic = 0x01,
+        Force = 0x02
+    }
     public sealed class ScrollingManager
     {
         private readonly Editor editor;
         private Point pointer;
-
-        [Flags]
-        internal enum InvalidateFlags
-        {
-            None = 0x00,
-            Atomic = 0x01,
-            Force = 0x02
-        }
 
         internal ScrollingManager(Editor editor)
         {
@@ -68,7 +67,7 @@ namespace CodeBox
         private int IsColumnVisible(Pos pos)
         {
             var tetras = editor.Lines[pos.Line].GetTetras(pos.Col, editor.IndentSize);
-            var curpos = tetras * editor.Info.CharWidth + editor.Info.TextLeft + X;
+            var curpos = tetras * editor.Info.CharWidth + editor.Info.TextLeft + ScrollPosition.X;
 
             if (curpos > editor.Info.TextRight)
             {
@@ -86,7 +85,7 @@ namespace CodeBox
         {
             var ln = editor.Document.Lines[pos.Line];
             var stripe = ln.GetStripe(pos.Col);
-            var cy = editor.Info.TextTop + ln.Y + stripe * editor.Info.LineHeight + Y;
+            var cy = editor.Info.TextTop + ln.Y + stripe * editor.Info.LineHeight + ScrollPosition.Y;
 
             if (cy < editor.Info.TextTop)
                 return -(cy / editor.Info.LineHeight - 1);
@@ -96,23 +95,23 @@ namespace CodeBox
                 return 0;
         }
 
-        public void ScrollY(int times) => SetScrollPositionY(Y + times * editor.Info.LineHeight);
+        public void ScrollY(int times) => SetScrollPositionY(ScrollPosition.Y + times * editor.Info.LineHeight);
 
-        public void ScrollX(int times) => SetScrollPositionX(X + times * editor.Info.CharWidth);
+        public void ScrollX(int times) => SetScrollPositionX(ScrollPosition.X + times * editor.Info.CharWidth);
 
         public void SetScrollPositionY(int value)
         {
             if (value > 0)
                 value = 0;
 
-            if (value < -YMax)
-                value = -YMax;
+            if (value < -ScrollBounds.Height)
+                value = -ScrollBounds.Height;
 
             //scroll by whole lines
             var lines = (int)Math.Round((double)value / editor.Info.LineHeight);
             value = lines * editor.Info.LineHeight;
-            var change = Y - value;
-            Y = value;
+            var change = ScrollPosition.Y - value;
+            ScrollPosition = new Point(ScrollPosition.X, value);
             ResetFirstLast();
             OnScroll(0, change);
         }
@@ -122,14 +121,14 @@ namespace CodeBox
             if (value > 0)
                 value = 0;
 
-            if (value < -XMax)
-                value = -XMax;
+            if (value < -ScrollBounds.Width)
+                value = -ScrollBounds.Width;
 
             //scroll by whole chars
             var chars = (int)Math.Round((double)value / editor.Info.CharWidth);
             value = chars * editor.Info.CharWidth;
-            var change = X - value;
-            X = value;
+            var change = ScrollPosition.X - value;
+            ScrollPosition = new Point(value, ScrollPosition.Y);
             OnScroll(change, 0);
         }
 
@@ -146,7 +145,7 @@ namespace CodeBox
 
         private int CalculateFirstVisibleLine()
         {
-            var stripes = Math.Abs(Y / editor.Info.LineHeight);
+            var stripes = Math.Abs(ScrollPosition.Y / editor.Info.LineHeight);
 
             if (stripes == 0)
                 return -1;
@@ -176,7 +175,7 @@ namespace CodeBox
         {
             var len = editor.Document.Lines.Count;
             var lh = editor.Info.LineHeight;
-            var maxh = editor.Info.TextBottom - editor.Info.TextTop - Y;
+            var maxh = editor.Info.TextBottom - editor.Info.TextTop - ScrollPosition.Y;
 
             for (var i = FirstVisibleLine; i < len; i++)
             {
@@ -194,14 +193,14 @@ namespace CodeBox
             return len > FirstVisibleLine ? (int?)len - 1 : null;
         }
 
-        public void FastInvalidateLines()
+        private void FastInvalidateLines()
         {
             var ln = editor.Lines[editor.Buffer.Selections.Main.Caret.Line];
             var w = ln.GetTetras(editor.IndentSize) * editor.Info.CharWidth
                 - editor.Info.TextWidth + editor.Info.CharWidth * 5;
 
-            if (w > XMax)
-                XMax = w;
+            if (w > ScrollBounds.Width)
+                ScrollBounds = new Size(w, ScrollBounds.Height);
         }
 
         internal void InvalidateLines(InvalidateFlags flags = InvalidateFlags.None)
@@ -241,9 +240,8 @@ namespace CodeBox
                     maxHeight += editor.Info.LineHeight;
                 }
 
-                XMax = maxWidth - editor.Info.TextWidth + editor.Info.CharWidth * 5;
-                XMax = XMax < 0 ? 0 : XMax;
-                YMax = maxHeight;
+                var xmax = maxWidth - editor.Info.TextWidth + editor.Info.CharWidth * 5;
+                ScrollBounds = new Size(xmax < 0 ? 0 : xmax, maxHeight);
             }
             else
             {
@@ -264,13 +262,12 @@ namespace CodeBox
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
                 }
 
-                XMax = 0;
-                YMax = maxHeight;
+                ScrollBounds = new Size(0, maxHeight);
                 ResetFirstLast();
             }
 
-            YMax = YMax - editor.Info.TextHeight + editor.Info.LineHeight * 5;
-            YMax = YMax < 0 ? 0 : YMax;
+            var ymax = ScrollBounds.Height - editor.Info.TextHeight + editor.Info.LineHeight * 5;
+            ScrollBounds = new Size(ScrollBounds.Width, ymax < 0 ? 0 : ymax);
             _firstVisibleLine = null;
             _lastVisibleLine = null;
         }
@@ -335,13 +332,9 @@ namespace CodeBox
             }
         }
 
-        public int Y { get; private set; }
+        public Point ScrollPosition { get; private set; }
 
-        public int X { get; private set; }
-
-        internal int XMax { get; set; }
-
-        internal int YMax { get; set; }
+        public Size ScrollBounds { get; private set; }
 
         internal bool SuppressOnScroll { get; set; }
     }

@@ -34,7 +34,7 @@ namespace CodeBox.ObjectModel
         public int Id { get; private set; }
 
         internal int Y { get; set; }
-        
+
         public int Length => chars.Count;
 
         public int State { get; set; }
@@ -192,7 +192,7 @@ namespace CodeBox.ObjectModel
                 }
             }
 
-            ret = ret ?? man.GetStyle((int)StandardStyle.Default);
+            ret = ret ?? man.GetStyle(StandardStyle.Default);
             return ret;
         }
         #endregion

@@ -23,7 +23,7 @@ namespace CodeBox
 
         public int TextWidth => TextRight - TextLeft;
 
-        public int TextIntegralHeight => (TextHeight / LineHeight) * LineHeight - editor.Scroll.Y;
+        public int TextIntegralHeight => (TextHeight / LineHeight) * LineHeight - editor.Scroll.ScrollPosition.Y;
 
         public int StripesPerScreen => TextHeight / LineHeight;
 

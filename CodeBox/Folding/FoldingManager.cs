@@ -1,6 +1,7 @@
 ﻿using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 
@@ -18,41 +19,41 @@ namespace CodeBox.Folding
 
         public void ExpandAll()
         {
-            foreach (var ln in editor.Lines)
+            foreach (var ln in Lines)
                 ln.Folding &= ~FoldingStates.Invisible;
         }
 
         public void CollapseAll()
         {
-            foreach (var ln in editor.Lines)
+            foreach (var ln in Lines)
                 if (!ln.Folding.Has(FoldingStates.Header))
                     ln.Folding |= FoldingStates.Invisible;
         }
 
         public bool IsCollapsedHeader(int lineIndex)
         {
-            if (lineIndex + 1 >= editor.Lines.Count)
+            if (lineIndex + 1 >= Lines.Count)
                 return false;
 
-            var ln = editor.Lines[lineIndex];
-            return ln.Folding.Has(FoldingStates.Header) && lineIndex < editor.Lines.Count
-                && editor.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible);
+            var ln = Lines[lineIndex];
+            return ln.Folding.Has(FoldingStates.Header) && lineIndex < Lines.Count
+                && Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible);
         }
 
         public void ToggleExpand(int lineIndex)
         {
-            var ln = editor.Lines[lineIndex];
-            var vis = lineIndex < editor.Lines.Count
-                ? editor.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible) : true;
+            var ln = Lines[lineIndex];
+            var vis = lineIndex < Lines.Count
+                ? Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible) : true;
 
             if (ln.Folding.Has(FoldingStates.Header))
             {
                 var foldLevel = ln.FoldingLevel;
                 var selPos = new Pos(lineIndex, ln.Length);
 
-                for (var i = lineIndex + 1; i < editor.Lines.Count; i++)
+                for (var i = lineIndex + 1; i < Lines.Count; i++)
                 {
-                    var cln = editor.Lines[i];
+                    var cln = Lines[i];
 
                     if (cln.FoldingLevel <= foldLevel && cln.FoldingLevel != 0)
                         break;
@@ -80,12 +81,12 @@ namespace CodeBox.Folding
 
         internal void RebuildFolding(bool full = false)
         {
-            if (editor.Lines.Count == 0 || busy)
+            if (Lines.Count == 0 || busy)
                 return;
 
             RunRebuild(
                 full ? 0 : editor.Scroll.FirstVisibleLine,
-                full ? editor.Lines.Count - 1 : editor.Scroll.LastVisibleLine);
+                full ? Lines.Count - 1 : editor.Scroll.LastVisibleLine);
         }
 
         private void RunRebuild(int fvl, int lvl)
@@ -102,14 +103,13 @@ namespace CodeBox.Folding
 
                 var range = new Range(
                         new Pos(fvl, 0),
-                        new Pos(lvl, editor.Lines[lvl].Length - 1));
+                        new Pos(lvl, Lines[lvl].Length - 1));
                 var fp = Provider;
-                Console.WriteLine($"RebuildFolding: {fvl} - {lvl}");
 
                 if (fp == null)
                     OnFoldingNeeded(range);
                 else
-                    fp.Fold(editor.Context, range);
+                    fp.Fold(editor, range);
             }
             finally
             {
@@ -117,35 +117,26 @@ namespace CodeBox.Folding
             }
         }
 
-        internal int DrawFoldingIndicator(Graphics g, int x, int y)
-        {
-            var w = editor.Info.CharWidth * 3;
-            g.FillRectangle(editor.CachedBrush.Create(editor.Settings.FoldingActiveForeColor),
-                new Rectangle(x, y + editor.Info.LineHeight / 4, w, editor.Info.LineHeight / 2));
-            g.DrawString("···", editor.Styles.Default.Font,
-                editor.CachedBrush.Create(editor.Settings.FoldingBackColor),
-                new Point(x, y), Style.Format);
-            return w;
-        }
-
         public void SetFoldingLevel(int line, int level)
         {
-            var ln = editor.Lines[line];
+            var ln = Lines[line];
             ln.Folding &= ~FoldingStates.Header;
             ln.FoldingLevel = (byte)(level + 1);
         }
 
         public void SetFoldingHeader(int line)
         {
-            var ln = editor.Lines[line];
+            var ln = Lines[line];
             ln.Folding = FoldingStates.Header
                 | (ln.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
         }
 
-        public bool IsFoldingHeader(int line) => editor.Lines[line].Folding.Has(FoldingStates.Header);
+        public bool IsFoldingHeader(int line) => Lines[line].Folding.Has(FoldingStates.Header);
 
         public event EventHandler<FoldingNeededEventArgs> FoldingNeeded;
         private void OnFoldingNeeded(Range range) => FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range));
+
+        internal List<Line> Lines => editor.Lines;
 
         public IFoldingProvider Provider { get; set; }
     }

@@ -20,7 +20,7 @@ namespace CodeBox.Margins
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
             OnSizeChanged();
-            var sc = new Point(Editor.Scroll.X, Editor.Scroll.Y);
+            var sc = Editor.Scroll.ScrollPosition;
 
             var lines = Editor.Document.Lines;
             var info = Editor.Info;

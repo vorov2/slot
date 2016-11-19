@@ -136,7 +136,7 @@ namespace CodeBox
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             DrawMargins(0, e.Graphics, TopMargins);
             DrawMargins(0, e.Graphics, LeftMargins);
-            e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
+            e.Graphics.TranslateTransform(Scroll.ScrollPosition.X, Scroll.ScrollPosition.Y);
 
             var carets = new List<CaretData>();
             DrawLines(e.Graphics, carets);
@@ -149,7 +149,7 @@ namespace CodeBox
             Renderer.DrawLongLineIndicators(e.Graphics);
             Renderer.DrawWordWrapColumn(e.Graphics);
 
-            e.Graphics.TranslateTransform(Scroll.X, Scroll.Y);
+            e.Graphics.TranslateTransform(Scroll.ScrollPosition.X, Scroll.ScrollPosition.Y);
             foreach (var c in carets)
                 CaretRenderer.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
 
@@ -180,7 +180,7 @@ namespace CodeBox
 
         protected override void OnResize(EventArgs eventargs)
         {
-            Scroll.InvalidateLines(ScrollingManager.InvalidateFlags.Force);
+            Scroll.InvalidateLines(InvalidateFlags.Force);
             Styles.Restyle();
             Invalidate();
             Autocomplete.HideAutocomplete();
@@ -219,6 +219,8 @@ namespace CodeBox
             var y = tmarg + line.Y;
             var oldcut = 0;
             var sel = Buffer.Selections.IsLineSelected(lineIndex);
+            var showEol = ShowEol;
+            var showWs = ShowWhitespace;
 
             for (var j = 0; j < line.Stripes; j++)
             {
@@ -229,7 +231,7 @@ namespace CodeBox
                 if (curline)
                 {
                     g.FillRectangle(CachedBrush.Create(Settings.CurrentLineIndicatorColor),
-                          new Rectangle(lmarg - Scroll.X, y, Info.TextWidth, Info.LineHeight));
+                          new Rectangle(lmarg - Scroll.ScrollPosition.X, y, Info.TextWidth, Info.LineHeight));
                 }
 
                 var cut = line.GetCut(j);
@@ -245,8 +247,8 @@ namespace CodeBox
                     var ct = c == '\t' ? Line.GetIndentationSize(tet, Context.IndentSize) : 1;
                     tet += ct;
                     var xw = ct * Info.CharWidth;
-                    var visible = x + Scroll.X >= lmarg && x + Scroll.X + xw <= cwidth
-                        && y + Scroll.Y >= tmarg;
+                    var visible = x + Scroll.ScrollPosition.X >= lmarg && x + Scroll.ScrollPosition.X + xw <= cwidth
+                        && y + Scroll.ScrollPosition.Y >= tmarg;
 
                     if (visible)
                     {
@@ -255,19 +257,22 @@ namespace CodeBox
                         var pos = new Pos(lineIndex, i);
                         var high = sel && Buffer.Selections.IsSelected(pos);
 
-                        if (c == '\0' || c == '\t' || c == ' ')
+                        if (c == '\0' && showEol || (c == '\t' || c == ' ') && showWs)
+                        {
+                            c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
                             style = /*line.GetStyle(i, Styles)
                                 .Combine(*/Styles.GetStyle((int)StandardStyle.SpecialSymbol);//);
+                        }
                         else
                             style = line.GetStyle(i, Styles);
 
                         if (high)
                         {
-                            var sstyle = Styles.GetStyle((int)StandardStyle.Selection);
+                            var sstyle = Styles.GetStyle(StandardStyle.Selection);
                             style = sstyle.Combine(style);
                         }
 
-                        style.DrawAll(g, rect, pos);
+                        style.DrawAll(g, rect, c, pos);
 
                         if (Buffer.Selections.HasCaret(pos))
                         {
@@ -279,7 +284,7 @@ namespace CodeBox
                                 var cg = CaretRenderer.GetDrawingSurface();
                                 cg.Clear(high ? Styles.Selection.BackColor 
                                     : curline ? Settings.CurrentLineIndicatorColor : Styles.Default.BackColor);
-                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), pos);
+                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
 
                                 if (Settings.LongLineIndicators.Any(ind => ind == i) || (WordWrap && WordWrapColumn == i))
                                 {
@@ -304,7 +309,7 @@ namespace CodeBox
 
                 if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < Lines.Count &&
                     Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
-                    Folding.DrawFoldingIndicator(g, x + addedWidth, y);
+                    Renderer.DrawFoldingIndicator(g, x + addedWidth, y);
                 
                 oldcut = cut;
                 y += Info.LineHeight;
@@ -339,7 +344,7 @@ namespace CodeBox
 
             if (leftMouseDown && p.IsEmpty)
             {
-                if (e.Y - Scroll.Y > Info.TextIntegralHeight && Scroll.LastVisibleLine < Lines.Count - 1)
+                if (e.Y - Scroll.ScrollPosition.Y > Info.TextIntegralHeight && Scroll.LastVisibleLine < Lines.Count - 1)
                     p = new Pos(Scroll.LastVisibleLine + 1, Lines[Scroll.LastVisibleLine + 1].Length);
                 else if (e.Y < Info.TextTop && Scroll.FirstVisibleLine > 0)
                     p = new Pos(Scroll.FirstVisibleLine - 1, 0);
@@ -586,106 +591,33 @@ namespace CodeBox
                 {
                     Buffer.Overtype = value;
                     CaretRenderer.BlockCaret = value;
-                    Redraw();
                 }
             }
         }
 
         [Browsable(false)]
-        public bool WordWrap
-        {
-            get
-            {
-                if (Buffer.WordWrap != null)
-                    return Buffer.WordWrap.Value;
-                else
-                    return Settings.WordWrap;
-            }
-        }
+        public bool WordWrap => Buffer.WordWrap ?? Settings.WordWrap;
 
         [Browsable(false)]
-        public int WordWrapColumn
-        {
-            get
-            {
-                if (Buffer.WordWrapColumn != null)
-                    return Buffer.WordWrapColumn.Value;
-                else
-                    return Settings.WordWrapColumn;
-            }
-        }
+        public int WordWrapColumn => Buffer.WordWrapColumn ?? Settings.WordWrapColumn;
 
         [Browsable(false)]
-        public bool UseTabs
-        {
-            get
-            {
-                if (Buffer.UseTabs != null)
-                    return Buffer.UseTabs.Value;
-                else
-                    return Settings.UseTabs;
-            }
-        }
+        public bool UseTabs => Buffer.UseTabs ?? Settings.UseTabs;
 
         [Browsable(false)]
-        public int IndentSize
-        {
-            get
-            {
-                if (Buffer.IndentSize != null)
-                    return Buffer.IndentSize.Value;
-                else
-                    return Settings.IndentSize;
-            }
-        }
+        public int IndentSize => Buffer.IndentSize ?? Settings.IndentSize;
 
         [Browsable(false)]
-        public bool ShowEol
-        {
-            get
-            {
-                if (Buffer.ShowEol != null)
-                    return Buffer.ShowEol.Value;
-                else
-                    return Settings.ShowEol;
-            }
-        }
+        public bool ShowEol => Buffer.ShowEol ?? Settings.ShowEol;
 
         [Browsable(false)]
-        public bool ShowWhitespace
-        {
-            get
-            {
-                if (Buffer.ShowWhitespace != null)
-                    return Buffer.ShowWhitespace.Value;
-                else
-                    return Settings.ShowWhitespace;
-            }
-        }
+        public bool ShowWhitespace => Buffer.ShowWhitespace ?? Settings.ShowWhitespace;
 
         [Browsable(false)]
-        public bool ShowLineLength
-        {
-            get
-            {
-                if (Buffer.ShowLineLength != null)
-                    return Buffer.ShowLineLength.Value;
-                else
-                    return Settings.ShowLineLength;
-            }
-        }
+        public bool ShowLineLength => Buffer.ShowLineLength ?? Settings.ShowLineLength;
 
         [Browsable(false)]
-        public bool CurrentLineIndicator
-        {
-            get
-            {
-                if (Buffer.CurrentLineIndicator != null)
-                    return Buffer.CurrentLineIndicator.Value;
-                else
-                    return Settings.CurrentLineIndicator;
-            }
-        }
+        public bool CurrentLineIndicator => Buffer.CurrentLineIndicator ?? Settings.CurrentLineIndicator;
 
         [Browsable(false)]
         public bool ReadOnly

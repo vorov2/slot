@@ -56,6 +56,7 @@ namespace CodeBox.Styling
             style.Editor = editor;
             style.Cloned = style.FullClone();
             style.Cloned.Editor = editor;
+            style.Cloned.Default = false;
             styles.Add((int)styleId, style);
 
             switch (styleId)
@@ -128,6 +129,7 @@ namespace CodeBox.Styling
             style.Editor = editor;
             style.Cloned = style.FullClone();
             style.Cloned.Editor = editor;
+            style.Cloned.Default = false;
             styles.Remove(styleId);
             styles.Add(styleId, style);
         }
@@ -145,8 +147,8 @@ namespace CodeBox.Styling
             if (editor.Lines.Count == 0)
                 return;
 
-            var fvl = editor.FirstEditLine < editor.Scroll.FirstVisibleLine
-                ? editor.FirstEditLine : editor.Scroll.FirstVisibleLine;
+            var fvl = editor.FirstEditLine;/*editor.FirstEditLine < editor.Scroll.FirstVisibleLine
+                ? editor.FirstEditLine : editor.Scroll.FirstVisibleLine;*/
             var lvl = editor.Scroll.LastVisibleLine;
             var state = 0;
 
@@ -172,7 +174,7 @@ namespace CodeBox.Styling
                 return;
 
             if(Styler != null)
-                Styler.Style(editor.Context, range);
+                Styler.Style(editor, range);
             else
                 OnStyleNeeded(range);
         }

@@ -52,8 +52,8 @@ namespace CodeBox.Drawing
                 return;
 
             var rect = editor.CallTips.TipRectangle;
-            var cx = caretX + editor.Scroll.X;
-            var cy = caretY + editor.Scroll.Y;
+            var cx = caretX + editor.Scroll.ScrollPosition.X;
+            var cy = caretY + editor.Scroll.ScrollPosition.Y;
 
             if (cx >= rect.X && cx <= rect.X + rect.Width
                 && cy >= rect.Y && cy <= rect.Y + rect.Height)
@@ -61,7 +61,7 @@ namespace CodeBox.Drawing
 
             using (var g = editor.CreateGraphics())
             {
-                g.TranslateTransform(editor.Scroll.X, editor.Scroll.Y);
+                g.TranslateTransform(editor.Scroll.ScrollPosition.X, editor.Scroll.ScrollPosition.Y);
 
                 if (timerDraw && timerBitmap != null)
                     DrawSurface(g, caretX, caretY);
@@ -96,9 +96,9 @@ namespace CodeBox.Drawing
 
         private void DrawSurface(Graphics g, int x, int y)
         {
-            if (x >= editor.Info.TextLeft - editor.Scroll.X
-                && x < editor.Info.TextRight - editor.Scroll.X
-                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.Y)
+            if (x >= editor.Info.TextLeft - editor.Scroll.ScrollPosition.X
+                && x < editor.Info.TextRight - editor.Scroll.ScrollPosition.X
+                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.ScrollPosition.Y)
             {
                 g.DrawImage(timerBitmap, caretX, caretY);
             }
@@ -115,9 +115,9 @@ namespace CodeBox.Drawing
             if (!main && BlockCaret)
                 h /= 2;
 
-            if (x >= editor.Info.TextLeft - editor.Scroll.X
-                && x < editor.Info.TextRight - editor.Scroll.X
-                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.Y)
+            if (x >= editor.Info.TextLeft - editor.Scroll.ScrollPosition.X
+                && x < editor.Info.TextRight - editor.Scroll.ScrollPosition.X
+                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.ScrollPosition.Y)
             {
                 if (main)
                 {

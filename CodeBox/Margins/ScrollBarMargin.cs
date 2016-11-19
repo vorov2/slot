@@ -78,7 +78,7 @@ namespace CodeBox.Margins
             if (!Enabled)
                 return false;
 
-            var sc = new Rectangle(Editor.Scroll.X, Editor.Scroll.Y, Editor.Scroll.XMax, Editor.Scroll.YMax);
+            var sc = new Rectangle(Editor.Scroll.ScrollPosition, Editor.Scroll.ScrollBounds);
             g.FillRectangle(Editor.CachedBrush.Create(Editor.Settings.ScrollBackColor), bounds);
 
             if (Orientation == Orientation.Horizontal)
@@ -135,14 +135,14 @@ namespace CodeBox.Margins
         {
             if (Orientation == Orientation.Horizontal)
             {
-                if (Editor.Scroll.XMax == 0)
+                if (Editor.Scroll.ScrollBounds.Width == 0)
                     return 0;
                 else
                     return Editor.Info.CharWidth;
             }
             else
             {
-                if (Editor.Scroll.YMax == 0)
+                if (Editor.Scroll.ScrollBounds.Height == 0)
                     return 0;
                 else
                     return (int)(Editor.Info.CharWidth*1.5);
@@ -176,9 +176,9 @@ namespace CodeBox.Margins
         private int GetMaximum()
         {
             if (Orientation == Orientation.Horizontal)
-                return Editor.Scroll.XMax;
+                return Editor.Scroll.ScrollBounds.Width;
             else
-                return Editor.Scroll.YMax;
+                return Editor.Scroll.ScrollBounds.Height;
         }
 
         public Orientation Orientation { get; set; }

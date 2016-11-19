@@ -172,6 +172,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IEditorContext.cs" />
+    <Compile Include="ObjectModel\IEditorView.cs" />
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />
     <Compile Include="ObjectModel\Pos.cs" />

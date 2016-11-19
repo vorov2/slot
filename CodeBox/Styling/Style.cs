@@ -17,22 +17,16 @@ namespace CodeBox.Styling
             Trimming = StringTrimming.None
         };
 
-        internal void DrawAll(Graphics g, Rectangle rect, Pos pos)
+        internal void DrawAll(Graphics g, Rectangle rect, char ch, Pos pos)
         {
             DrawBackground(g, rect, pos);
-            DrawText(g, rect, pos);
+            DrawText(g, rect, ch, pos);
             DrawAdornment(g, rect, pos);
         }
 
-        public virtual void DrawText(Graphics g, Rectangle rect, Pos pos)
+        public virtual void DrawText(Graphics g, Rectangle rect, char ch, Pos pos)
         {
             var fc = ForeColor.IsEmpty ? Editor.ForeColor : ForeColor;
-            var ch = Editor.Lines[pos.Line].CharAt(pos.Col);
-
-            if (ch == '\0' && Editor.ShowEol) ch = '\u00B6';
-            else if (ch == '\t' && Editor.ShowWhitespace) ch = '\u2192';
-            else if (ch == ' ' && Editor.ShowWhitespace) ch = '·';
-
             g.DrawString(ch.ToString(),
                 Font,
                 Editor.CachedBrush.Create(fc),
@@ -46,7 +40,7 @@ namespace CodeBox.Styling
 
         public virtual void DrawBackground(Graphics g, Rectangle rect, Pos pos)
         {
-            if (!BackColor.IsEmpty && BackColor != Editor.Styles.Default.BackColor)
+            if (!BackColor.IsEmpty && !Default)
                 g.FillRectangle(Editor.CachedBrush.Create(BackColor), rect);
         }
 

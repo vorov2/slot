@@ -18,7 +18,7 @@ namespace CodeBox
 
         public int FindLineByLocation(int locY)
         {
-            locY = locY - editor.Scroll.Y;
+            locY = locY - editor.Scroll.ScrollPosition.Y;
 
             for (var i = editor.Scroll.FirstVisibleLine; i < editor.Scroll.LastVisibleLine + 1; i++)
             {
@@ -34,7 +34,7 @@ namespace CodeBox
                     return i;
             }
 
-            return locY + editor.Scroll.Y < editor.Info.TextTop ? 0 : editor.Lines.Count - 1;
+            return locY + editor.Scroll.ScrollPosition.Y < editor.Info.TextTop ? 0 : editor.Lines.Count - 1;
         }
 
         public Pos LocationToPosition(Point loc)
@@ -55,17 +55,17 @@ namespace CodeBox
                 + editor.Info.TextTop;
             var x = line.GetTetras(pos.Col, editor.IndentSize) * editor.Info.CharWidth
                 + editor.Info.TextLeft;
-            return new Point(x + editor.Scroll.X, y + editor.Scroll.Y);
+            return new Point(x + editor.Scroll.ScrollPosition.X, y + editor.Scroll.ScrollPosition.Y);
         }
 
         private int FindColumnByLocation(Line line, Point loc)
         {
-            var stripe = (int)Math.Ceiling((loc.Y - editor.Info.TextTop - line.Y - editor.Scroll.Y)
+            var stripe = (int)Math.Ceiling((loc.Y - editor.Info.TextTop - line.Y - editor.Scroll.ScrollPosition.Y)
                 / (double)editor.Info.LineHeight) - 1;
             var cut = line.GetCut(stripe);
             var sc = stripe > 0 ? line.GetCut(stripe - 1) + 1 : 0;
             var width = editor.Info.TextLeft;
-            var locX = loc.X - editor.Scroll.X;
+            var locX = loc.X - editor.Scroll.ScrollPosition.X;
             var app = editor.Info.CharWidth * .15;
 
             for (var i = sc; i < cut + 1; i++)

@@ -195,10 +195,9 @@ namespace CodeBox.Commands
             if (exp.Has(Modify))
             {
                 Context.Scroll.InvalidateLines(
-                    exp.Has(AtomicChange) ? ScrollingManager.InvalidateFlags.Atomic
-                    : ScrollingManager.InvalidateFlags.None);
+                    exp.Has(AtomicChange) ? InvalidateFlags.Atomic : InvalidateFlags.None);
 
-                if (Context.Scroll.Y + Context.Info.TextHeight < -Context.Scroll.YMax)
+                if (Context.Scroll.ScrollPosition.Y + Context.Info.TextHeight < -Context.Scroll.ScrollBounds.Height)
                     exp |= Scroll;
 
                 if (!exp.Has(ShallowChange))

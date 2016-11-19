@@ -40,7 +40,7 @@ namespace CodeBox.Margins
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
             {
                 var ln = Editor.Lines[i];
-                var y = ln.Y + Editor.Info.TextTop + Editor.Scroll.Y;
+                var y = ln.Y + Editor.Info.TextTop + Editor.Scroll.ScrollPosition.Y;
                 y += (h - side) / 2;
 
                 if (ln.Folding.Has(FoldingStates.Header) && !ln.Folding.Has(FoldingStates.Invisible))

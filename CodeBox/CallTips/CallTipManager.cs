@@ -174,13 +174,13 @@ namespace CodeBox.CallTips
             };
         }
 
-        public void ShowCallTip(Pos pos, Size size, Action<Graphics,Point> draw)
+        private void ShowCallTip(Pos pos, Size size, Action<Graphics,Point> draw)
         {
             using (var g = editor.CreateGraphics())
                 ShowCallTip(g, pos, size, draw);
         }
 
-        public void ShowCallTip(Graphics g, Pos pos, Size size, Action<Graphics,Point> draw)
+        private void ShowCallTip(Graphics g, Pos pos, Size size, Action<Graphics,Point> draw)
         {
             if (shownTip != Pos.Empty && shownTip != pos)
                 HideCallTip();
@@ -199,8 +199,8 @@ namespace CodeBox.CallTips
                         break;
                 }
 
-                x = x + editor.Info.TextLeft + editor.Scroll.X;
-                var y = ln.Y + editor.Info.TextTop + editor.Scroll.Y + editor.Info.LineHeight;
+                x = x + editor.Info.TextLeft + editor.Scroll.ScrollPosition.X;
+                var y = ln.Y + editor.Info.TextTop + editor.Scroll.ScrollPosition.Y + editor.Info.LineHeight;
 
                 if (y + size.Height > editor.Info.TextHeight)
                     y -= editor.Info.LineHeight + size.Height;

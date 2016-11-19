@@ -25,7 +25,7 @@ namespace CodeBox.Drawing
 
         internal int DrawLineLengthIndicator(Graphics g, int len, int x, int y)
         {
-            if (x + editor.Scroll.X < editor.Info.TextLeft)
+            if (x + editor.Scroll.ScrollPosition.X < editor.Info.TextLeft)
                 return 0;
 
             var shift = editor.ShowEol ? editor.Info.CharWidth / 2 : 0;
@@ -44,7 +44,7 @@ namespace CodeBox.Drawing
             foreach (var i in editor.Settings.LongLineIndicators)
             {
                 var x = editor.Info.TextLeft + i * editor.Info.CharWidth
-                    + editor.Scroll.X;
+                    + editor.Scroll.ScrollPosition.X;
 
                 if (x <= editor.Info.TextLeft)
                     continue;
@@ -60,11 +60,22 @@ namespace CodeBox.Drawing
                 return;
 
             var x = editor.Info.TextLeft + editor.WordWrapColumn 
-                * editor.Info.CharWidth + editor.Scroll.X;
+                * editor.Info.CharWidth + editor.Scroll.ScrollPosition.X;
 
             if (x > editor.Info.TextLeft)
                 g.DrawLine(editor.CachedPen.Create(editor.Styles.SpecialSymbol.ForeColor),
                     x, editor.Info.TextTop, x, editor.Info.TextBottom);
+        }
+
+        internal int DrawFoldingIndicator(Graphics g, int x, int y)
+        {
+            var w = editor.Info.CharWidth * 3;
+            g.FillRectangle(editor.CachedBrush.Create(editor.Settings.FoldingActiveForeColor),
+                new Rectangle(x, y + editor.Info.LineHeight / 4, w, editor.Info.LineHeight / 2));
+            g.DrawString("···", editor.Styles.Default.Font,
+                editor.CachedBrush.Create(editor.Settings.FoldingBackColor),
+                new Point(x, y), Style.Format);
+            return w;
         }
     }
 }
