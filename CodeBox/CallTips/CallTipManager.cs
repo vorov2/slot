@@ -1,4 +1,5 @@
-﻿using CodeBox.ObjectModel;
+﻿using CodeBox.Drawing;
+using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -67,9 +68,8 @@ namespace CodeBox.CallTips
             {
                 foreach (var c in ln)
                 {
-                    var font = editor.CachedSmallFont.Create(c.Style);
-                    var brush = editor.CachedBrush.Create(c.Color);
-                    g.DrawString(c.Val.ToString(), font, brush, x, y, format);
+                    var font = editor.Settings.SmallFont.Get(c.Style);
+                    g.DrawString(c.Val.ToString(), font, c.Color.Brush(), x, y, format);
                     x += editor.Info.SmallCharWidth;
                 }
 
@@ -210,8 +210,8 @@ namespace CodeBox.CallTips
 
                 var pt = new Point(x, y);
                 lastTipRectangle = new Rectangle(pt, size);
-                g.FillRectangle(editor.CachedBrush.Create(editor.Settings.PopupBackColor), lastTipRectangle);
-                g.DrawRectangle(editor.CachedPen.Create(editor.Settings.PopupBorderColor), lastTipRectangle);
+                g.FillRectangle(editor.Settings.PopupBackColor.Brush(), lastTipRectangle);
+                g.DrawRectangle(editor.Settings.PopupBorderColor.Pen(), lastTipRectangle);
                 draw(g, pt);
                 shownTip = pos;
             }

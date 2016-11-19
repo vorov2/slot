@@ -8,6 +8,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Folding;
 using CodeBox.Commands;
+using CodeBox.Drawing;
 
 namespace CodeBox.Margins
 {
@@ -30,7 +31,7 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(Editor.CachedBrush.Create(Editor.Settings.FoldingBackColor), bounds);
+            g.FillRectangle(Editor.Settings.FoldingBackColor.Brush(), bounds);
             var lp = (int)(Editor.Info.CharWidth * .5);
             var h = (Editor.Info.LineHeight / 2) * 2;
             var w = ((bounds.Width - lp*2) / 2) * 2;
@@ -46,7 +47,7 @@ namespace CodeBox.Margins
                 if (ln.Folding.Has(FoldingStates.Header) && !ln.Folding.Has(FoldingStates.Invisible))
                 {
                     var arrow = default(Point[]);
-                    var b = Editor.CachedBrush.Create(Editor.Settings.FoldingForeColor);
+                    var b = Editor.Settings.FoldingForeColor.Brush();
 
                     if (Editor.Lines.Count > i + 1 && !Editor.Lines[i + 1].Folding.Has(FoldingStates.Invisible))
                     {
@@ -59,7 +60,7 @@ namespace CodeBox.Margins
                     }
                     else
                     {
-                        b = Editor.CachedBrush.Create(Editor.Settings.FoldingActiveForeColor);
+                        b = Editor.Settings.FoldingActiveForeColor.Brush();
                         arrow = new Point[]
                         {
                             new Point(x, y),

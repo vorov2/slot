@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
+using CodeBox.Drawing;
 
 namespace CodeBox.Margins
 {
@@ -18,7 +19,7 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(Editor.CachedBrush.Create(Editor.Settings.PopupBackColor), bounds);
+            g.FillRectangle(Editor.Settings.PopupBackColor.Brush(), bounds);
             return true;
         }
 

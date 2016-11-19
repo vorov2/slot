@@ -53,10 +53,10 @@ namespace CodeBox.Styling
 
         private void Register(StandardStyle styleId, Style style)
         {
-            style.Editor = editor;
             style.Cloned = style.FullClone();
-            style.Cloned.Editor = editor;
+            style.DefaultStyle = Default;
             style.Cloned.Default = false;
+            style.Cloned.DefaultStyle = Default;
             styles.Add((int)styleId, style);
 
             switch (styleId)
@@ -126,10 +126,10 @@ namespace CodeBox.Styling
 
         public void Register(StyleId styleId, Style style)
         {
-            style.Editor = editor;
             style.Cloned = style.FullClone();
-            style.Cloned.Editor = editor;
+            style.DefaultStyle = Default;
             style.Cloned.Default = false;
+            style.Cloned.DefaultStyle = Default;
             styles.Remove(styleId);
             styles.Add(styleId, style);
         }

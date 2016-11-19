@@ -1,4 +1,5 @@
-﻿using CodeBox.ObjectModel;
+﻿using CodeBox.Drawing;
+using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,10 +27,10 @@ namespace CodeBox.Styling
 
         public virtual void DrawText(Graphics g, Rectangle rect, char ch, Pos pos)
         {
-            var fc = ForeColor.IsEmpty ? Editor.ForeColor : ForeColor;
+            var fc = ForeColor.IsEmpty && DefaultStyle != null ? DefaultStyle.ForeColor : ForeColor;
             g.DrawString(ch.ToString(),
-                Font,
-                Editor.CachedBrush.Create(fc),
+                Editor.CurrentFont.Get(FontStyle),
+                fc.Brush(),
                 rect.Location, Format);
         }
 
@@ -41,7 +42,7 @@ namespace CodeBox.Styling
         public virtual void DrawBackground(Graphics g, Rectangle rect, Pos pos)
         {
             if (!BackColor.IsEmpty && !Default)
-                g.FillRectangle(Editor.CachedBrush.Create(BackColor), rect);
+                g.FillRectangle(BackColor.Brush(), rect);
         }
 
         internal virtual Style Combine(Style other) => this;
@@ -50,7 +51,7 @@ namespace CodeBox.Styling
 
         internal virtual Style FullClone() => (Style)MemberwiseClone();
 
-        internal Editor Editor { get; set; }
+        internal Style DefaultStyle { get; set; }
 
         internal Style Cloned { get; set; }
 
@@ -61,11 +62,5 @@ namespace CodeBox.Styling
         public FontStyle FontStyle { get; set; }
 
         internal bool Default { get; set; }
-
-        internal Brush ForeBrush => Editor.CachedBrush.Create(ForeColor);
-
-        internal Brush BackBrush => Editor.CachedBrush.Create(BackColor);
-
-        internal Font Font => Editor.CachedFont.Create(FontStyle);
     }
 }

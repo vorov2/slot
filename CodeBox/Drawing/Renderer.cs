@@ -31,7 +31,7 @@ namespace CodeBox.Drawing
             var shift = editor.ShowEol ? editor.Info.CharWidth / 2 : 0;
             x += shift;
             var str = len.ToString();
-            g.DrawString(str, editor.Settings.SmallFont, editor.Styles.SpecialSymbol.ForeBrush,
+            g.DrawString(str, editor.Settings.SmallFont, editor.Styles.SpecialSymbol.ForeColor.Brush(),
                 new PointF(x, y), Style.Format);
             return shift + (str.Length + 1) * editor.Info.CharWidth;
         }
@@ -49,7 +49,7 @@ namespace CodeBox.Drawing
                 if (x <= editor.Info.TextLeft)
                     continue;
 
-                g.DrawLine(editor.CachedPen.Create(editor.Styles.SpecialSymbol.ForeColor),
+                g.DrawLine(editor.Styles.SpecialSymbol.ForeColor.Pen(),
                     x, editor.Info.TextTop, x, editor.Info.TextBottom);
             }
         }
@@ -63,17 +63,17 @@ namespace CodeBox.Drawing
                 * editor.Info.CharWidth + editor.Scroll.ScrollPosition.X;
 
             if (x > editor.Info.TextLeft)
-                g.DrawLine(editor.CachedPen.Create(editor.Styles.SpecialSymbol.ForeColor),
+                g.DrawLine(editor.Styles.SpecialSymbol.ForeColor.Pen(),
                     x, editor.Info.TextTop, x, editor.Info.TextBottom);
         }
 
         internal int DrawFoldingIndicator(Graphics g, int x, int y)
         {
             var w = editor.Info.CharWidth * 3;
-            g.FillRectangle(editor.CachedBrush.Create(editor.Settings.FoldingActiveForeColor),
+            g.FillRectangle(editor.Settings.FoldingActiveForeColor.Brush(),
                 new Rectangle(x, y + editor.Info.LineHeight / 4, w, editor.Info.LineHeight / 2));
-            g.DrawString("···", editor.Styles.Default.Font,
-                editor.CachedBrush.Create(editor.Settings.FoldingBackColor),
+            g.DrawString("···", editor.Settings.Font.Get(editor.Styles.Default.FontStyle),
+                editor.Settings.FoldingBackColor.Brush(),
                 new Point(x, y), Style.Format);
             return w;
         }

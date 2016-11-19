@@ -9,12 +9,14 @@ using System.Reflection;
 
 namespace CodeBox.Styling
 {
+    using Drawing;
     using MAP = Dictionary<string, object>;
 
     public static class StylesReader
     {
         public static void Read(string source, IEditorContext ctx)
         {
+            ColorExtensions.Clean();
             var styles = ctx.Styles;
             var settings = ctx.Settings;
             var json = new Json.JsonParser(source) { SkipNulls = true };

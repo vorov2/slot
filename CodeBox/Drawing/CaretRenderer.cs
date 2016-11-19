@@ -125,7 +125,7 @@ namespace CodeBox.Drawing
                     caretY = y;
                 }
 
-                g.FillRectangle(editor.CachedBrush.Create(editor.Settings.CaretColor), x, 
+                g.FillRectangle(editor.Settings.CaretColor.Brush(), x, 
                     BlockCaret ? y + editor.Info.LineHeight - h : y, w, h);
             }
         }

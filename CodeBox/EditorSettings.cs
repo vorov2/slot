@@ -83,12 +83,8 @@ namespace CodeBox
             {
                 if (value != editor.Font)
                 {
+                    FontExtensions.Clean(editor.Font);
                     editor.Font = value;
-
-                    if (editor.CachedFont != null)
-                        editor.CachedFont.Dispose();
-
-                    editor.CachedFont = new CachedFont(value);
                     SmallFont = new Font(value.Name, value.Size - 1, value.Style);
 
                     using (var g = editor.CreateGraphics())
@@ -110,12 +106,8 @@ namespace CodeBox
             {
                 if (value != _smallFont)
                 {
+                    FontExtensions.Clean(editor.Font);
                     _smallFont = value;
-
-                    if (editor.CachedSmallFont != null)
-                        editor.CachedSmallFont.Dispose();
-
-                    editor.CachedSmallFont = new CachedFont(value);
 
                     using (var g = editor.CreateGraphics())
                     {

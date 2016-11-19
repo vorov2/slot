@@ -125,8 +125,7 @@
     <Compile Include="ComponentModel\IComponentMetadata.cs" />
     <Compile Include="IEditorLock.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
-    <Compile Include="Drawing\CachedFont.cs" />
-    <Compile Include="Drawing\CachedPen.cs" />
+    <Compile Include="Drawing\FontExtensions.cs" />
     <Compile Include="Drawing\CaretData.cs" />
     <Compile Include="Drawing\CaretRenderer.cs" />
     <Compile Include="EditorInfo.cs" />
@@ -192,7 +191,7 @@
     <Compile Include="Styling\Style.cs" />
     <Compile Include="Styling\StyleId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Drawing\CachedBrush.cs" />
+    <Compile Include="Drawing\ColorExtensions.cs" />
     <Compile Include="ScrollingManager.cs" />
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
     <Compile Include="Styling\StylesReader.cs" />

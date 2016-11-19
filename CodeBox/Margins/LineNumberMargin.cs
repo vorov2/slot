@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Folding;
+using CodeBox.Drawing;
 
 namespace CodeBox.Margins
 {
@@ -26,7 +27,7 @@ namespace CodeBox.Margins
             var info = Editor.Info;
             var len = lines.Count.ToString().Length;
             var caret = Editor.Buffer.Selections.Main.Caret;
-            var backBrush = Editor.CachedBrush.Create(Editor.Settings.LineNumbersBackColor);
+            var backBrush = Editor.Settings.LineNumbersBackColor.Brush();
             var font = Editor.Settings.Font;
             g.FillRectangle(backBrush, bounds);
 
@@ -42,16 +43,16 @@ namespace CodeBox.Margins
                 {
                     var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth*2;
-                    var col = Editor.CachedBrush.Create(Editor.Settings.LineNumbersForeColor);
+                    var col = Editor.Settings.LineNumbersForeColor.Brush();
 
                     if (i == caret.Line && MarkCurrentLine)
                     {
-                        var selBrush = Editor.CachedBrush.Create(Editor.Settings.LineNumbersCurrentBackColor);
+                        var selBrush = Editor.Settings.LineNumbersCurrentBackColor.Brush();
 
                         if (selBrush != backBrush)
                             g.FillRectangle(selBrush, new Rectangle(bounds.X + info.CharWidth, y, bounds.Width, info.LineHeight));
 
-                        col = Editor.CachedBrush.Create(Editor.Settings.LineNumbersCurrentForeColor);
+                        col = Editor.Settings.LineNumbersCurrentForeColor.Brush();
                     }
 
                     g.DrawString(str, font, col, x, y);

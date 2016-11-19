@@ -49,10 +49,7 @@ namespace CodeBox
 
             CaretRenderer = new CaretRenderer(this);
             Renderer = new Renderer(this);
-            CachedBrush = new CachedBrush();
-            CachedPen = new CachedPen();
             Scroll = new ScrollingManager(this);
-            Styles = new StyleManager(this);
             Commands = new CommandManager(this);
             Locations = new LocationManager(this);//+
             Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
@@ -61,6 +58,7 @@ namespace CodeBox
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
             Settings = new EditorSettings(this);
+            Styles = new StyleManager(this);
 
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
@@ -74,11 +72,7 @@ namespace CodeBox
                 return;
 
             if (disposing)
-            {
                 CaretRenderer.Dispose();
-                CachedBrush.Dispose();
-                CachedFont.Dispose();
-            }
 
             disposed = true;
         }
@@ -130,7 +124,7 @@ namespace CodeBox
 
             var dt = DateTime.Now;
 
-            e.Graphics.FillRectangle(Styles.Default.BackBrush,
+            e.Graphics.FillRectangle(Styles.Default.BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -197,8 +191,10 @@ namespace CodeBox
             Scroll.ScrollY((e.Delta / 120) * 2);
         }
 
+        internal static Font CurrentFont { get; private set; }
         private void DrawLines(Graphics g, List<CaretData> carets)
         {
+            CurrentFont = Settings.Font;
             var fvl = Scroll.FirstVisibleLine;
             var lvl = Scroll.LastVisibleLine;
 
@@ -230,7 +226,7 @@ namespace CodeBox
 
                 if (curline)
                 {
-                    g.FillRectangle(CachedBrush.Create(Settings.CurrentLineIndicatorColor),
+                    g.FillRectangle(Settings.CurrentLineIndicatorColor.Brush(),
                           new Rectangle(lmarg - Scroll.ScrollPosition.X, y, Info.TextWidth, Info.LineHeight));
                 }
 
@@ -287,10 +283,7 @@ namespace CodeBox
                                 style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
 
                                 if (Settings.LongLineIndicators.Any(ind => ind == i) || (WordWrap && WordWrapColumn == i))
-                                {
-                                    cg.DrawLine(CachedPen.Create(Styles.SpecialSymbol.ForeColor),
-                                        0, 0, 0, rect.Size.Height);
-                                }
+                                    cg.DrawLine(Styles.SpecialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
 
                                 CaretRenderer.Resume();
                             }
@@ -645,14 +638,6 @@ namespace CodeBox
 
         [Browsable(false)]
         public MarginList BottomMargins { get; }
-
-        internal CachedBrush CachedBrush { get; private set; }
-
-        internal CachedPen CachedPen { get; private set; }
-
-        internal CachedFont CachedFont { get; set; }
-
-        internal CachedFont CachedSmallFont { get; set; }
 
         internal CaretRenderer CaretRenderer { get; }
 
