@@ -64,7 +64,7 @@
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
-    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\EditorCommand.cs" />
     <Compile Include="Commands\ActionResults.cs" />
     <Compile Include="Commands\CopyCommand.cs" />
     <Compile Include="Commands\CutCommand.cs" />
@@ -119,6 +119,7 @@
     <Compile Include="Affinity\IDocumentAffinity.cs" />
     <Compile Include="ComponentModel\ComponentCatalog.cs" />
     <Compile Include="ComponentModel\ComponentDataAttribute.cs" />
+    <Compile Include="ComponentModel\ICommandComponent.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="ComponentModel\IComponentMetadata.cs" />

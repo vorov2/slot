@@ -4,11 +4,6 @@ using CodeBox.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    public interface ICommandComponent : IComponent
-    {
-        void Run(IExecutionContext context);
-    }
-
     public interface IEditorCommand : ICommandComponent
     {
         ActionResults Execute(Selection sel);
