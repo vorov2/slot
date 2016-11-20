@@ -182,6 +182,9 @@ namespace CodeBox
             return num != -1 && num % 2 != 0;
         }
 
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get { return editor.Settings.MatchBrackets; }
+        }
     }
 }

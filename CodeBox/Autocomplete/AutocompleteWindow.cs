@@ -65,8 +65,9 @@ namespace CodeBox.Autocomplete
             base.OnPaint(e);
             var g = e.Graphics;
 
-            var borderPen = editor.Settings.PopupBorderColor.Pen();
-            g.FillRectangle(editor.Settings.PopupBackColor.Brush(), e.ClipRectangle);
+            var ps = (PopupStyle)editor.Styles.Styles.GetStyle(StandardStyle.Popup);
+            var borderPen = ps.BorderColor.Pen();
+            g.FillRectangle(ps.BackColor.Brush(), e.ClipRectangle);
             g.DrawRectangle(borderPen,
                 e.ClipRectangle.Location.X, e.ClipRectangle.Location.Y,
                 e.ClipRectangle.Width - borderPen.Width, e.ClipRectangle.Height - borderPen.Width);
@@ -82,14 +83,13 @@ namespace CodeBox.Autocomplete
                     {
                         if (hoverLine == i || selectedLine == i)
                         {
-                            g.FillRectangle((selectedLine == i ? editor.Settings.PopupSelectedColor 
-                                    : editor.Settings.PopupHoverColor).Brush(),
+                            g.FillRectangle((selectedLine == i ? ps.SelectedColor : ps.HoverColor).Brush(),
                                 new Rectangle(0, y, Width - editor.Info.CharWidth, editor.Info.LineHeight));
                         }
 
-                        g.DrawString(s.Text, Font, editor.Settings.PopupForeColor.Brush(),
+                        g.DrawString(s.Text, Font, ps.ForeColor.Brush(),
                             new Rectangle(editor.Info.CharWidth, y, Width - editor.Info.CharWidth*2, editor.Info.LineHeight),
-                            Style.Format);
+                            TextStyle.Format);
                     }
                 }
             }

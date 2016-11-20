@@ -68,6 +68,24 @@ namespace CodeBox.Styling
         Literal = 21,
 
         [FieldName("regex")]
-        Regex = 22
+        Regex = 22,
+
+        [FieldName("margin.linenumbers")]
+        LineNumbers = 23,
+
+        [FieldName("margin.scrollbar")]
+        ScrollBars = 24,
+
+        [FieldName("margin.folding")]
+        Folding = 25,
+
+        [FieldName("popup")]
+        Popup = 26,
+
+        [FieldName("caret")]
+        Caret = 27,
+        
+        [FieldName("currentline")]
+        CurrentLine = 26,
     }
 }

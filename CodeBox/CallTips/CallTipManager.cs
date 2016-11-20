@@ -91,6 +91,7 @@ namespace CodeBox.CallTips
             var style = default(FontStyle);
             var color = default(Color);
 
+            var ps = (PopupStyle)editor.Styles.Styles.GetStyle(StandardStyle.Popup);
             var doc = new XmlDocument();
             doc.LoadXml("<tip>" + text.Replace("<br>", "<br/>") + "</tip>");
             var node = doc.FirstChild;
@@ -106,7 +107,7 @@ namespace CodeBox.CallTips
                 {
                     str = cn.Value;
                     style = FontStyle.Regular;
-                    color = editor.Settings.PopupForeColor;
+                    color = ps.ForeColor;
                 }
                 else if (cn.NodeType == XmlNodeType.Element)
                 {
@@ -115,12 +116,12 @@ namespace CodeBox.CallTips
                     if (cn.Name.Equals("b", StringComparison.OrdinalIgnoreCase))
                     {
                         style = FontStyle.Bold;
-                        color = editor.Settings.PopupForeColor;
+                        color = ps.ForeColor;
                     }
                     else if (cn.Name.Equals("i", StringComparison.OrdinalIgnoreCase))
                     {
                         style = FontStyle.Italic;
-                        color = editor.Settings.PopupForeColor;
+                        color = ps.ForeColor;
                     }
                     else if (!cn.Name.Equals("br", StringComparison.OrdinalIgnoreCase))
                     {
@@ -128,7 +129,7 @@ namespace CodeBox.CallTips
 
                         if (Enum.TryParse(cn.Name, true, out ss))
                         {
-                            var so = editor.Styles.GetStyle((int)ss);
+                            var so = editor.Styles.Styles.GetStyle(ss);
                             style = so.FontStyle;
                             color = so.ForeColor;
                         }
@@ -210,8 +211,9 @@ namespace CodeBox.CallTips
 
                 var pt = new Point(x, y);
                 lastTipRectangle = new Rectangle(pt, size);
-                g.FillRectangle(editor.Settings.PopupBackColor.Brush(), lastTipRectangle);
-                g.DrawRectangle(editor.Settings.PopupBorderColor.Pen(), lastTipRectangle);
+                var ps = (PopupStyle)editor.Styles.Styles.GetStyle(StandardStyle.Popup);
+                g.FillRectangle(ps.BackColor.Brush(), lastTipRectangle);
+                g.DrawRectangle(ps.BorderColor.Pen(), lastTipRectangle);
                 draw(g, pt);
                 shownTip = pos;
             }

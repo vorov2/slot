@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeBox.Styling;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -125,7 +126,8 @@ namespace CodeBox.Drawing
                     caretY = y;
                 }
 
-                g.FillRectangle(editor.Settings.CaretColor.Brush(), x, 
+                var cs = editor.Styles.Styles.GetStyle(StandardStyle.Caret);
+                g.FillRectangle(cs.ForeColor.Brush(), x, 
                     BlockCaret ? y + editor.Info.LineHeight - h : y, w, h);
             }
         }

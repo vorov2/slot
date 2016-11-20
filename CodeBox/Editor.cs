@@ -34,7 +34,12 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor()
+        public Editor() : this(new EditorSettings(), new StyleCollection())
+        {
+
+        }
+
+        public Editor(EditorSettings settings, StyleCollection styles)
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw 
@@ -58,8 +63,8 @@ namespace CodeBox
             MatchBrackets = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
-            Settings = new EditorSettings(this);
-            Styles = new StyleManager(this);
+            Settings = settings;
+            Styles = new StyleManager(this, styles);
 
             Buffer = new DocumentBuffer(Document.Read(""));
             InitializeBuffer(Buffer);
@@ -125,7 +130,7 @@ namespace CodeBox
 
             var dt = DateTime.Now;
 
-            e.Graphics.FillRectangle(Styles.Default.BackColor.Brush(),
+            e.Graphics.FillRectangle(Styles.Styles.DefaultStyle.BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -170,10 +175,6 @@ namespace CodeBox
             base.OnMouseWheel(e);
             Scroll.ScrollY((e.Delta / 120) * 2);
         }
-
-        public override Color BackColor => Styles.Default.BackColor;
-
-        public override Color ForeColor => Styles.Default.ForeColor;
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
@@ -368,6 +369,12 @@ namespace CodeBox
             if (!inp.IsEmpty())
                 Commands.Run(inp);
         }
+
+        public override Color BackColor => Styles.Styles.DefaultStyle.BackColor;
+
+        public override Color ForeColor => Styles.Styles.DefaultStyle.ForeColor;
+
+        public override Font Font => Settings.Font;
 
         [Browsable(false)]
         public DocumentBuffer Buffer { get; private set; }

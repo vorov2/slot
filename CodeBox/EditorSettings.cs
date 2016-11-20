@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.Indentation;
+using System.Windows.Forms;
 
 namespace CodeBox
 {
@@ -14,12 +15,9 @@ namespace CodeBox
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
         private const string BRACKETS = "()[]{}";
-        private readonly Editor editor;
 
-        public EditorSettings(Editor editor)
+        public EditorSettings()
         {
-            this.editor = editor;
-
             //Defaults
             NonWordSymbols = SEPS;
             BracketSymbols = BRACKETS;
@@ -41,20 +39,7 @@ namespace CodeBox
         public string AutocompleteSymbols { get; set; }
         #endregion
 
-        public bool MatchBrackets
-        {
-            get { return editor.MatchBrackets.Enabled; }
-            set
-            {
-                if (value != editor.MatchBrackets.Enabled)
-                {
-                    editor.MatchBrackets.Enabled = value;
-
-                    if (editor.Buffer != null)
-                        editor.Styles.Restyle();
-                }
-            }
-        }
+        public bool MatchBrackets { get; set; }
 
         public bool WordWrap { get; set; }
 
@@ -76,23 +61,30 @@ namespace CodeBox
 
         public bool CurrentLineIndicator { get; set; }
 
+        internal int CharWidth { get; private set; }
+        internal int CharHeight { get; private set; }
+        internal int SmallCharWidth { get; private set; }
+        internal int SmallCharHeight { get; private set; }
+
+        private Font _font = SystemFonts.DefaultFont;
         public Font Font
         {
-            get { return editor.Font; }
+            get { return _font; }
             set
             {
-                if (value != editor.Font)
+                if (value != _font)
                 {
-                    FontExtensions.Clean(editor.Font);
-                    editor.Font = value;
+                    FontExtensions.Clean(_font);
+                    _font = value;
                     SmallFont = new Font(value.Name, value.Size - 1, value.Style);
 
-                    using (var g = editor.CreateGraphics())
+                    using (var ctl = new Control())
+                    using (var g = ctl.CreateGraphics())
                     {
                         var size1 = g.MeasureString("<W>", value);
                         var size2 = g.MeasureString("<>", value);
-                        editor.Info.CharWidth = (int)(size1.Width - size2.Width);
-                        editor.Info.CharHeight = (int)value.GetHeight(g);
+                        CharWidth = (int)(size1.Width - size2.Width);
+                        CharHeight = (int)value.GetHeight(g);
                     }
                 }
             }
@@ -106,57 +98,22 @@ namespace CodeBox
             {
                 if (value != _smallFont)
                 {
-                    FontExtensions.Clean(editor.Font);
+                    FontExtensions.Clean(_smallFont);
                     _smallFont = value;
 
-                    using (var g = editor.CreateGraphics())
+                    using (var ctl = new Control())
+                    using (var g = ctl.CreateGraphics())
                     {
                         var size1 = g.MeasureString("<F>", value);
                         var size2 = g.MeasureString("<>", value);
-                        editor.Info.SmallCharWidth = (int)(size1.Width - size2.Width);
-                        editor.Info.SmallCharHeight = (int)value.GetHeight(g);
+                        SmallCharWidth = (int)(size1.Width - size2.Width);
+                        SmallCharHeight = (int)value.GetHeight(g);
                     }
                 }
             }
         }
         
         public List<int> LongLineIndicators { get; }
-
-        #region Styles
-        public Color CurrentLineIndicatorColor { get; set; }
-
-        public Color CaretColor { get; set; }
-
-        public Color ScrollForeColor { get; set; }
-
-        public Color ScrollActiveForeColor { get; set; }
-
-        public Color ScrollBackColor { get; set; }
-
-        public Color FoldingBackColor { get; set; }
-
-        public Color FoldingForeColor { get; set; }
-
-        public Color FoldingActiveForeColor { get; set; }
-        
-        public Color PopupBackColor { get; set; }
-
-        public Color PopupBorderColor { get; set; }
-
-        public Color PopupForeColor { get; set; }
-
-        public Color PopupHoverColor { get; set; }
-
-        public Color PopupSelectedColor { get; set; }
-
-        public Color LineNumbersBackColor { get; set; }
-
-        public Color LineNumbersForeColor { get; set; }
-
-        public Color LineNumbersCurrentForeColor { get; set; }
-
-        public Color LineNumbersCurrentBackColor { get; set; }
-        #endregion
     }
 
     public enum Eol

@@ -31,7 +31,8 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(Editor.Settings.FoldingBackColor.Brush(), bounds);
+            var fs = (MarginStyle)Editor.Styles.Styles.GetStyle(StandardStyle.Folding);
+            g.FillRectangle(fs.BackColor.Brush(), bounds);
             var lp = (int)(Editor.Info.CharWidth * .5);
             var h = (Editor.Info.LineHeight / 2) * 2;
             var w = ((bounds.Width - lp*2) / 2) * 2;
@@ -47,7 +48,7 @@ namespace CodeBox.Margins
                 if (ln.Folding.Has(FoldingStates.Header) && !ln.Folding.Has(FoldingStates.Invisible))
                 {
                     var arrow = default(Point[]);
-                    var b = Editor.Settings.FoldingForeColor.Brush();
+                    var b = fs.ForeColor.Brush();
 
                     if (Editor.Lines.Count > i + 1 && !Editor.Lines[i + 1].Folding.Has(FoldingStates.Invisible))
                     {
@@ -60,7 +61,7 @@ namespace CodeBox.Margins
                     }
                     else
                     {
-                        b = Editor.Settings.FoldingActiveForeColor.Brush();
+                        b = fs.ActiveForeColor.Brush();
                         arrow = new Point[]
                         {
                             new Point(x, y),

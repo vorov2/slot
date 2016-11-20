@@ -27,13 +27,13 @@ namespace CodeBox
 
         public int StripesPerScreen => TextHeight / LineHeight;
 
-        public int CharWidth { get; internal set; }
+        public int CharWidth => editor.Settings.CharWidth;
 
-        public int CharHeight { get; internal set; }
+        public int CharHeight => editor.Settings.CharHeight;
 
-        public int SmallCharWidth { get; internal set; }
+        public int SmallCharWidth => editor.Settings.SmallCharWidth;
 
-        public int SmallCharHeight { get; internal set; }
+        public int SmallCharHeight => editor.Settings.SmallCharHeight;
 
         public int LineHeight =>
             CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);

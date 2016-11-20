@@ -53,7 +53,8 @@ namespace CodeBox.Test
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            StylesReader.Read(File.ReadAllText("samples\\theme2.json"), ed);
+            var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
+            ed.Styles.Styles = coll;
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             ed.Commands.ReadKeymap(LocalFile("samples\\keymap.json"));
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");

@@ -80,7 +80,8 @@ namespace CodeBox.Margins
                 return false;
 
             var sc = new Rectangle(Editor.Scroll.ScrollPosition, Editor.Scroll.ScrollBounds);
-            g.FillRectangle(Editor.Settings.ScrollBackColor.Brush(), bounds);
+            var sbs = (MarginStyle)Editor.Styles.Styles.GetStyle(StandardStyle.ScrollBars);
+            g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             if (Orientation == Orientation.Horizontal)
             {
@@ -93,7 +94,7 @@ namespace CodeBox.Margins
                 var curpos = sc.Width != 0 ? (int)Math.Floor(Math.Floor(sc.X / (sc.Width / 100d)) * perc) : 0;
 
                 lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle((mouseDown ? Editor.Settings.ScrollActiveForeColor : Editor.Settings.ScrollForeColor).Brush(),
+                g.FillRectangle((mouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
                     new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, lastCaretSize, bounds.Height));
                 lastCaretPos = bounds.X + Math.Abs(curpos);
             }
@@ -113,8 +114,7 @@ namespace CodeBox.Margins
                 if (pos + lastCaretSize > Editor.ClientSize.Height)
                     pos = Editor.ClientSize.Height - lastCaretSize;
 
-                g.FillRectangle((mouseDown ? Editor.Settings.ScrollActiveForeColor 
-                    : Editor.Settings.ScrollForeColor).Brush(),
+                g.FillRectangle((mouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
                     new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
                 lastCaretPos = pos;
                 var caretLine = Editor.Buffer.Selections.Main.Caret.Line;
@@ -124,7 +124,7 @@ namespace CodeBox.Margins
                     var linePos = s.Caret.Line / (Editor.Lines.Count / 100d);
                     var caretY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
 
-                    g.FillRectangle(Editor.Styles.Default.ForeColor.Brush(), new Rectangle(bounds.X, (int)caretY, bounds.Width,
+                    g.FillRectangle(Editor.Styles.Styles.DefaultStyle.ForeColor.Brush(), new Rectangle(bounds.X, (int)caretY, bounds.Width,
                         (int)Math.Round(g.DpiY / 96f) * s.Caret.Line == caretLine ? 2 : 1));
                 }
             }

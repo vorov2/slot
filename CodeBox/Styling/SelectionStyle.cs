@@ -9,12 +9,12 @@ using CodeBox.Drawing;
 
 namespace CodeBox.Styling
 {
-    public sealed class SelectionStyle : Style
+    public sealed class SelectionStyle : TextStyle
     {
         public override void DrawBackground(Graphics g, Rectangle rect, Pos pos) =>
             g.FillRectangle(BackColor.Brush(), rect);
 
-        internal override Style Combine(Style other)
+        internal override TextStyle Combine(TextStyle other)
         {
             var hidden = other.Clone();
             hidden.ForeColor = other.ForeColor;

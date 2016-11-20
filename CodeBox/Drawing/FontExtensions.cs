@@ -13,6 +13,9 @@ namespace CodeBox.Drawing
 
         public static void Clean(Font baseFont)
         {
+            if (baseFont == null)
+                return;
+
             Dictionary<FontStyle, Font> fcache;
 
             if (!cache.TryGetValue(baseFont, out fcache))

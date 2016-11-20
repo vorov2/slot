@@ -21,9 +21,7 @@ namespace CodeBox.Test
         private void Form2_Load(object sender, EventArgs e)
         {
 
-            ed.Styles.Selection.BackColor = ColorTranslator.FromHtml("#264F78");
-            ed.Styles.Default.ForeColor = ColorTranslator.FromHtml("#DCDCDC");
-            ed.Styles.Default.BackColor = ColorTranslator.FromHtml("#1E1E1E");
+            
             ed.Settings.CurrentLineIndicator = false;
             ed.Settings.MatchBrackets = false;
             ed.Settings.ShowEol = false;

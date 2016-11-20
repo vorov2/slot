@@ -22,13 +22,14 @@ namespace CodeBox.Margins
         {
             OnSizeChanged();
             var sc = Editor.Scroll.ScrollPosition;
+            var lns = (MarginStyle)Editor.Styles.Styles.GetStyle(StandardStyle.LineNumbers);
 
             var lines = Editor.Document.Lines;
             var info = Editor.Info;
             var len = lines.Count.ToString().Length;
             var caret = Editor.Buffer.Selections.Main.Caret;
-            var backBrush = Editor.Settings.LineNumbersBackColor.Brush();
-            var font = Editor.Settings.Font;
+            var backBrush = lns.BackColor.Brush();
+            var font = Editor.Settings.Font.Get(lns.FontStyle);
             g.FillRectangle(backBrush, bounds);
 
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)
@@ -43,16 +44,16 @@ namespace CodeBox.Margins
                 {
                     var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth*2;
-                    var col = Editor.Settings.LineNumbersForeColor.Brush();
+                    var col = lns.ForeColor.Brush();
 
                     if (i == caret.Line && MarkCurrentLine)
                     {
-                        var selBrush = Editor.Settings.LineNumbersCurrentBackColor.Brush();
+                        var selBrush = lns.ActiveBackColor.Brush();
 
                         if (selBrush != backBrush)
                             g.FillRectangle(selBrush, new Rectangle(bounds.X + info.CharWidth, y, bounds.Width, info.LineHeight));
 
-                        col = Editor.Settings.LineNumbersCurrentForeColor.Brush();
+                        col = lns.ActiveForeColor.Brush();
                     }
 
                     g.DrawString(str, font, col, x, y);

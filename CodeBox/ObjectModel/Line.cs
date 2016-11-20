@@ -174,25 +174,25 @@ namespace CodeBox.ObjectModel
             return AppliedStyle.Empty;
         }
 
-        internal Style GetStyle(int index, StyleManager man)
+        internal TextStyle GetStyle(int index, StyleManager man)
         {
-            var ret = default(Style);
+            var ret = default(TextStyle);
 
             foreach (var a in AppliedStyles)
             {
                 if (index >= a.Start && index <= a.End)
                 {
                     if (ret == null)
-                        ret = man.GetStyle(a.StyleId);
+                        ret = (TextStyle)man.Styles.GetStyle(a.StyleId);
                     else
                     {
-                        var next = man.GetStyle(a.StyleId);
+                        var next = (TextStyle)man.Styles.GetStyle(a.StyleId);
                         ret = ret.Combine(next);
                     }
                 }
             }
 
-            ret = ret ?? man.GetStyle(StandardStyle.Default);
+            ret = ret ?? man.Styles.DefaultStyle;
             return ret;
         }
         #endregion

@@ -34,8 +34,8 @@ namespace CodeBox.Drawing
             var shift = editor.ShowEol ? editor.Info.CharWidth / 2 : 0;
             x += shift;
             var str = len.ToString();
-            g.DrawString(str, editor.Settings.SmallFont, editor.Styles.SpecialSymbol.ForeColor.Brush(),
-                new PointF(x, y), Style.Format);
+            g.DrawString(str, editor.Settings.SmallFont, editor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush(),
+                new PointF(x, y), TextStyle.Format);
             return shift + (str.Length + 1) * editor.Info.CharWidth;
         }
 
@@ -52,7 +52,7 @@ namespace CodeBox.Drawing
                 if (x <= editor.Info.TextLeft)
                     continue;
 
-                g.DrawLine(editor.Styles.SpecialSymbol.ForeColor.Pen(),
+                g.DrawLine(editor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Pen(),
                     x, editor.Info.TextTop, x, editor.Info.TextBottom);
             }
         }
@@ -66,18 +66,19 @@ namespace CodeBox.Drawing
                 * editor.Info.CharWidth + editor.Scroll.ScrollPosition.X;
 
             if (x > editor.Info.TextLeft)
-                g.DrawLine(editor.Styles.SpecialSymbol.ForeColor.Pen(),
+                g.DrawLine(editor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Pen(),
                     x, editor.Info.TextTop, x, editor.Info.TextBottom);
         }
 
         internal int DrawFoldingIndicator(Graphics g, int x, int y)
         {
+            var fs = (MarginStyle)editor.Styles.Styles.GetStyle(StandardStyle.Folding);
             var w = editor.Info.CharWidth * 3;
-            g.FillRectangle(editor.Settings.FoldingActiveForeColor.Brush(),
+            g.FillRectangle(fs.ActiveForeColor.Brush(),
                 new Rectangle(x, y + editor.Info.LineHeight / 4, w, editor.Info.LineHeight / 2));
-            g.DrawString("···", editor.Settings.Font.Get(editor.Styles.Default.FontStyle),
-                editor.Settings.FoldingBackColor.Brush(),
-                new Point(x, y), Style.Format);
+            g.DrawString("···", editor.Settings.Font.Get(editor.Styles.Styles.DefaultStyle.FontStyle),
+                fs.BackColor.Brush(),
+                new Point(x, y), TextStyle.Format);
             return w;
         }
 
@@ -87,7 +88,8 @@ namespace CodeBox.Drawing
                 (!editor.Buffer.Selections.Main.IsEmpty && editor.Buffer.Selections.Main.Start.Line != editor.Buffer.Selections.Main.End.Line))
                 return false;
 
-            g.FillRectangle(editor.Settings.CurrentLineIndicatorColor.Brush(),
+            var ccs = editor.Styles.Styles.GetStyle(StandardStyle.CurrentLine);
+            g.FillRectangle(ccs.BackColor.Brush(),
                 new Rectangle(editor.Info.TextLeft - editor.Scroll.ScrollPosition.X,
                     y, editor.Info.TextWidth, editor.Info.LineHeight));
             return true;
@@ -144,7 +146,7 @@ namespace CodeBox.Drawing
 
                     if (visible)
                     {
-                        var style = default(Style);
+                        var style = default(TextStyle);
                         var rect = new Rectangle(x, y, xw, editor.Info.LineHeight);
                         var pos = new Pos(lineIndex, i);
                         var high = sel && editor.Buffer.Selections.IsSelected(pos);
@@ -152,15 +154,14 @@ namespace CodeBox.Drawing
                         if (c == '\0' && showEol || (c == '\t' || c == ' ') && showWs)
                         {
                             c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
-                            style = /*line.GetStyle(i, Styles)
-                                .Combine(*/editor.Styles.GetStyle((int)StandardStyle.SpecialSymbol);//);
+                            style = (TextStyle)editor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol);//);
                         }
                         else
                             style = line.GetStyle(i, editor.Styles);
 
                         if (high)
                         {
-                            var sstyle = editor.Styles.GetStyle(StandardStyle.Selection);
+                            var sstyle = (TextStyle)editor.Styles.Styles.GetStyle(StandardStyle.Selection);
                             style = sstyle.Combine(style);
                         }
 
@@ -174,12 +175,13 @@ namespace CodeBox.Drawing
                             if (blink)
                             {
                                 var cg = editor.CaretRenderer.GetDrawingSurface();
-                                cg.Clear(high ? editor.Styles.Selection.BackColor
-                                    : curline ? editor.Settings.CurrentLineIndicatorColor : editor.Styles.Default.BackColor);
+                                cg.Clear(high ? editor.Styles.Styles.GetStyle(StandardStyle.Selection).BackColor
+                                    : curline ? editor.Styles.Styles.GetStyle(StandardStyle.CurrentLine).BackColor
+                                    : editor.Styles.Styles.DefaultStyle.BackColor);
                                 style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
 
                                 if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
-                                    cg.DrawLine(editor.Styles.SpecialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
+                                    cg.DrawLine(editor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
 
                                 editor.CaretRenderer.Resume();
                             }

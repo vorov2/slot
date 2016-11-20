@@ -19,7 +19,8 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(Editor.Settings.PopupBackColor.Brush(), bounds);
+            var ps = (PopupStyle)Editor.Styles.Styles.GetStyle(StandardStyle.Popup);
+            g.FillRectangle(ps.BackColor.Brush(), bounds);
             return true;
         }
 

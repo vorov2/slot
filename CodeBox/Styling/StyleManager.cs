@@ -14,125 +14,12 @@ namespace CodeBox.Styling
 {
     public sealed class StyleManager
     {
-        private readonly Dictionary<int, Style> styles = new Dictionary<int, Style>();
         private readonly Editor editor;
-        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
-        {
-            LineAlignment = StringAlignment.Near,
-            Alignment = StringAlignment.Near,
-            Trimming = StringTrimming.None
-        };
 
-        public StyleManager(Editor editor)
+        public StyleManager(Editor editor, StyleCollection styles)
         {
             this.editor = editor;
-            Register(StandardStyle.Default, new TextStyle { Default = true });
-            Register(StandardStyle.Selection, new SelectionStyle());
-            Register(StandardStyle.SpecialSymbol, new TextStyle());
-            Register(StandardStyle.Hyperlink, new TextStyle { FontStyle = FontStyle.Underline });
-            Register(StandardStyle.MatchedBracket, new TextStyle());
-            Register(StandardStyle.Number, new TextStyle());
-            Register(StandardStyle.Bracket, new TextStyle());
-            Register(StandardStyle.Keyword, new TextStyle());
-            Register(StandardStyle.KeywordSpecial, new TextStyle());
-            Register(StandardStyle.TypeName, new TextStyle());
-            Register(StandardStyle.Comment, new TextStyle());
-            Register(StandardStyle.CommentMultiline, new TextStyle());
-            Register(StandardStyle.CommentDocument, new TextStyle());
-            Register(StandardStyle.Char, new TextStyle());
-            Register(StandardStyle.String, new TextStyle());
-            Register(StandardStyle.StringMultiline, new TextStyle());
-            Register(StandardStyle.StringMacro, new TextStyle());
-            Register(StandardStyle.Preprocessor, new TextStyle());
-            Register(StandardStyle.Literal, new TextStyle());
-            Register(StandardStyle.Regex, new TextStyle());
-        }
-
-        public Style GetStyle(int styleId) => styles[styleId];
-
-        public Style GetStyle(StandardStyle style) => styles[(int)style];
-
-        private void Register(StandardStyle styleId, Style style)
-        {
-            style.Cloned = style.FullClone();
-            style.DefaultStyle = Default;
-            style.Cloned.Default = false;
-            style.Cloned.DefaultStyle = Default;
-            styles.Add((int)styleId, style);
-
-            switch (styleId)
-            {
-                case StandardStyle.Default:
-                    Default = style;
-                    break;
-                case StandardStyle.SpecialSymbol:
-                    SpecialSymbol = style;
-                    break;
-                case StandardStyle.Selection:
-                    Selection = style;
-                    break;
-                case StandardStyle.Hyperlink:
-                    Hyperlink = style;
-                    break;
-                case StandardStyle.MatchedBracket:
-                    MatchBracket = style;
-                    break;
-                case StandardStyle.Number:
-                    Number = style;
-                    break;
-                case StandardStyle.Bracket:
-                    Bracket = style;
-                    break;
-                case StandardStyle.Keyword:
-                    Keyword = style;
-                    break;
-                case StandardStyle.KeywordSpecial:
-                    KeywordSpecial = style;
-                    break;
-                case StandardStyle.TypeName:
-                    TypeName = style;
-                    break;
-                case StandardStyle.Comment:
-                    Comment = style;
-                    break;
-                case StandardStyle.CommentMultiline:
-                    CommentMultiline = style;
-                    break;
-                case StandardStyle.CommentDocument:
-                    CommentDocument = style;
-                    break;
-                case StandardStyle.String:
-                    String = style;
-                    break;
-                case StandardStyle.StringMultiline:
-                    StringMultiline = style;
-                    break;
-                case StandardStyle.StringMacro:
-                    StringMacro = style;
-                    break;
-                case StandardStyle.Char:
-                    Char = style;
-                    break;
-                case StandardStyle.Preprocessor:
-                    Preprocessor = style;
-                    break;
-                case StandardStyle.Literal:
-                    Literal = style;
-                    break;
-                case StandardStyle.Regex:
-                    Regex = style;
-                    break;
-            }
-        }
-
-        public void Register(StyleId styleId, Style style)
-        {
-            style.Cloned = style.FullClone();
-            style.DefaultStyle = Default;
-            style.Cloned.Default = false;
-            style.Cloned.DefaultStyle = Default;
-            styles.Remove(styleId);
-            styles.Add(styleId, style);
+            Styles = styles;
         }
 
         public void ClearStyles(int line) => editor.Lines[line].AppliedStyles.Clear();
@@ -200,46 +87,6 @@ namespace CodeBox.Styling
             }
         }
 
-        #region Standard styles
-        public Style Default { get; private set; }
-
-        public Style Selection { get; private set; }
-
-        public Style SpecialSymbol { get; private set; }
-        
-        public Style Hyperlink { get; private set; }
-
-        public Style MatchBracket { get; private set; }
-
-        public Style Number { get; private set; }
-
-        public Style Bracket { get; private set; }
-
-        public Style Keyword { get; private set; }
-
-        public Style KeywordSpecial { get; private set; }
-
-        public Style TypeName { get; private set; }
-
-        public Style Comment { get; private set; }
-
-        public Style CommentMultiline { get; private set; }
-
-        public Style CommentDocument { get; private set; }
-
-        public Style String { get; private set; }
-
-        public Style StringMultiline { get; private set; }
-
-        public Style StringMacro { get; private set; }
-
-        public Style Char { get; private set; }
-
-        public Style Preprocessor { get; private set; }
-
-        public Style Literal { get; private set; }
-
-        public Style Regex { get; private set; }
-        #endregion
+        public StyleCollection Styles { get; set; }
     }
 }
