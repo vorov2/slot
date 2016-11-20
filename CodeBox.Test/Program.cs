@@ -17,7 +17,11 @@ namespace CodeBox.Test
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form2());
+
+            var cp = new CommandParser();
+            var stmt = cp.Parse("fo file.txt;delline 12 ; fsa 'c:\\test\\long file name.txt'").ToArray();
+
+            Application.Run(new MainForm());
         }
     }
 }

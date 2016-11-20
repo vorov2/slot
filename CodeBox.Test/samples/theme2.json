@@ -24,11 +24,17 @@
             "borderColor": "darkgray"
         },
         {
+            "key": "margin.commands",
+            "color": "black",
+            "backColor": "#BFBFBF",
+            "bold": true,
+        },
+        {
             "key": "margin.linenumbers",
             "color": "#6D6D6D",
             "backColor": "#F2F2F2",
             "activeColor": "black",
-            "activeBackColor": "#E2E2E2"
+            "activeBackColor": "#F2F2F2" //E2E2E2
         },
         {
             "key": "margin.scrollbar",

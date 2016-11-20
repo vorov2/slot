@@ -86,6 +86,9 @@ namespace CodeBox.Styling
         Caret = 27,
         
         [FieldName("currentline")]
-        CurrentLine = 26,
+        CurrentLine = 28,
+
+        [FieldName("margin.commands")]
+        CommandBar = 29
     }
 }

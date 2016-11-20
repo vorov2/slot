@@ -24,6 +24,11 @@
             "borderColor": "#5F5F66"
         },
         {
+            "key": "margin.commands",
+            "color": "white",
+            "backColor": "#2D2D30"
+        },
+        {
             "key": "margin.linenumbers",
             "color": "#505050",
             "backColor": "#1E1E1E",

@@ -48,5 +48,6 @@
     "command.editor.documentend": "ctrl+end",
     "command.editor.extenddocumenthome": "ctrl+shift+home",
     "command.editor.extenddocumentend": "ctrl+shift+end",
-    "command.editor.overtype": "ins"
+    "command.editor.overtype": "ins",
+    "command.editor.commandbartoggle": "f2"
 }

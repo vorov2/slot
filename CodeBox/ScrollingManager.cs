@@ -85,10 +85,10 @@ namespace CodeBox
         {
             var ln = editor.Document.Lines[pos.Line];
             var stripe = ln.GetStripe(pos.Col);
-            var cy = editor.Info.TextTop + ln.Y + stripe * editor.Info.LineHeight + ScrollPosition.Y;
+            var cy = ln.Y + stripe * editor.Info.LineHeight + ScrollPosition.Y;
 
-            if (cy < editor.Info.TextTop)
-                return -(cy / editor.Info.LineHeight - 1);
+            if (cy < 0)
+                return -(cy / editor.Info.LineHeight);
             else if (cy + editor.Info.LineHeight > editor.Info.TextBottom)
                 return -((cy - editor.Info.TextTop) / editor.Info.LineHeight);
             else

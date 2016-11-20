@@ -52,9 +52,10 @@ namespace CodeBox.Test
             ed.LeftMargins.Add(new FoldingMargin(ed));
             ed.RightMargins.Add(new ScrollBarMargin(ed, Orientation.Vertical));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
+            ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
+            var coll = StylesReader.Read(File.ReadAllText("samples\\theme.json"));
             ed.Styles.Styles = coll;
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), ed.KeyboardAdapter);

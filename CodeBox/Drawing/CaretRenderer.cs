@@ -56,7 +56,8 @@ namespace CodeBox.Drawing
             var cx = caretX + editor.Scroll.ScrollPosition.X;
             var cy = caretY + editor.Scroll.ScrollPosition.Y;
 
-            if (cx >= rect.X && cx <= rect.X + rect.Width
+            if (!rect.IsEmpty 
+                && cx >= rect.X && cx <= rect.X + rect.Width
                 && cy >= rect.Y && cy <= rect.Y + rect.Height)
                 return;
 
@@ -99,7 +100,7 @@ namespace CodeBox.Drawing
         {
             if (x >= editor.Info.TextLeft - editor.Scroll.ScrollPosition.X
                 && x < editor.Info.TextRight - editor.Scroll.ScrollPosition.X
-                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.ScrollPosition.Y)
+                && y + editor.Info.LineHeight <= editor.Info.TextBottom - editor.Scroll.ScrollPosition.Y)
             {
                 g.DrawImage(timerBitmap, caretX, caretY);
             }
@@ -118,7 +119,7 @@ namespace CodeBox.Drawing
 
             if (x >= editor.Info.TextLeft - editor.Scroll.ScrollPosition.X
                 && x < editor.Info.TextRight - editor.Scroll.ScrollPosition.X
-                && y + editor.Info.LineHeight < editor.Info.TextBottom - editor.Scroll.ScrollPosition.Y)
+                && y + editor.Info.LineHeight <= editor.Info.TextBottom - editor.Scroll.ScrollPosition.Y)
             {
                 if (main)
                 {

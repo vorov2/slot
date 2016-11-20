@@ -108,6 +108,7 @@
     <Compile Include="Commands\SelectWordAddCommand.cs" />
     <Compile Include="Commands\SelectWordCommand.cs" />
     <Compile Include="Commands\SetCaretCommand.cs" />
+    <Compile Include="Commands\ToggleCommandBar.cs" />
     <Compile Include="Commands\UnindentCommand.cs" />
     <Compile Include="Commands\IndentCommand.cs" />
     <Compile Include="Commands\ToggleFoldingCommand.cs" />
@@ -153,8 +154,9 @@
     <Compile Include="Margins\MarginList.cs" />
     <Compile Include="Margins\MarginMethod.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
-    <Compile Include="Margins\TopMargin.cs" />
+    <Compile Include="Margins\CommandMargin.cs" />
     <Compile Include="Commands\CommandInfo.cs" />
+    <Compile Include="Margins\TopMargin.cs" />
     <Compile Include="MatchBracketManager.cs" />
     <Compile Include="ObjectModel\DocumentBuffer.cs" />
     <Compile Include="ObjectModel\Character.cs" />

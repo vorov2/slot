@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Drawing;
+using System.Windows.Forms;
+using CodeBox.Core.ComponentModel;
+using CodeBox.Commands;
 
 namespace CodeBox.Margins
 {
-    public class TopMargin : Margin
+    public sealed class TopMargin : Margin
     {
         public TopMargin(Editor editor) : base(editor)
         {
@@ -19,11 +22,11 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            var ps = (PopupStyle)Editor.Styles.Styles.GetStyle(StandardStyle.Popup);
-            g.FillRectangle(ps.BackColor.Brush(), bounds);
+            var cs = Editor.Styles.Styles.GetStyle(StandardStyle.Default);
+            g.FillRectangle(cs.BackColor.Brush(), bounds);
             return true;
         }
 
-        public override int CalculateSize() => Editor.Info.LineHeight;
+        public override int CalculateSize() => (int)Math.Round(Editor.Info.LineHeight * .1);
     }
 }
