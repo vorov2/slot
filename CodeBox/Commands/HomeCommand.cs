@@ -35,5 +35,7 @@ namespace CodeBox.Commands
 
             return new Pos(pos.Line, 0);
         }
+
+        public override bool SupportLimitedMode => true;
     }
 }

@@ -13,23 +13,23 @@ namespace CodeBox.Commands
 {
     public abstract class EditorCommand : ICommandComponent
     {
-        public void Run(IExecutionContext ctx)
+        public bool Run(IExecutionContext ctx)
         {
             View = ctx as IEditorView;
 
-            if (View == null)
-                return;
+            if (View == null || View.LimitedMode && !SupportLimitedMode)
+                return false;
 
-            View.FirstEditLine = int.MaxValue;
-            View.LastEditLine = 0;
-            var lines = Document.Lines;
             var modify = ModifyContent;
 
             if (modify && (Buffer.ReadOnly || Buffer.Locked))
-                return;
-            
+                return false;
+
+            var lines = Document.Lines;
+            View.FirstEditLine = int.MaxValue;
+            View.LastEditLine = 0;
             var selCount = Buffer.Selections.Count;
-            var qry = selCount == 1 ? null
+            var qry = selCount == 1 || View.LimitedMode ? null
                 : Buffer.Selections.OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
             var exp = None;
             var thisUndo = false;
@@ -41,10 +41,10 @@ namespace CodeBox.Commands
                 View.LastEditLine = lastSel.GetLastLine();
                 exp = Execute(lastSel);
 
-                if (exp.Has(Modify) && (!Buffer.LastAtomicChange || !exp.Has(AtomicChange)))
+                if (exp.Has(Modify) && (!Buffer.LastAtomicChange || !exp.Has(AtomicChange)) && !View.LimitedMode)
                     thisUndo = Buffer.BeginUndoAction();
 
-                if (exp.Has(Modify))
+                if (exp.Has(Modify) && !View.LimitedMode)
                     Buffer.AddCommand(this);
 
                 if (exp.Has(RestoreCaret))
@@ -94,22 +94,28 @@ namespace CodeBox.Commands
             if (exp != None)
                 DoAftermath(exp, Buffer.Selections.Count, lastSel.Caret);
 
-            if (!exp.Has(IdleCaret))
+            if (!exp.Has(IdleCaret) && !View.LimitedMode)
                 View.MatchBrackets.Match();
 
-            if (exp.Has(AutocompleteKeep) && View.Autocomplete.WindowShown)
-                View.Autocomplete.UpdateAutocomplete();
-            else if (qry == null && exp.Has(AutocompleteShow))
-                View.Autocomplete.ShowAutocomplete(lastSel.Caret);
-            else if (!exp.Has(AutocompleteShow) && View.Autocomplete.WindowShown)
-                View.Autocomplete.HideAutocomplete();
+            if (!View.LimitedMode)
+            {
+                if (exp.Has(AutocompleteKeep) && View.Autocomplete.WindowShown)
+                    View.Autocomplete.UpdateAutocomplete();
+                else if (qry == null && exp.Has(AutocompleteShow))
+                    View.Autocomplete.ShowAutocomplete(lastSel.Caret);
+                else if (!exp.Has(AutocompleteShow) && View.Autocomplete.WindowShown)
+                    View.Autocomplete.HideAutocomplete();
+            }
 
             Buffer.LastAtomicChange = qry == null && exp.Has(AtomicChange);
+            return true;
         }
 
         public virtual bool SingleRun => false;
 
         public virtual bool ModifyContent => false;
+
+        public virtual bool SupportLimitedMode => false;
 
         protected abstract ActionResults Execute(Selection sel);
 

@@ -129,7 +129,7 @@
     <Compile Include="Folding\FoldingManager.cs" />
     <Compile Include="Folding\FoldingNeededEventArgs.cs" />
     <Compile Include="Folding\FoldingStates.cs" />
-    <Compile Include="Folding\IFoldingProvider.cs" />
+    <Compile Include="ComponentModel\IFoldingComponent.cs" />
     <Compile Include="Folding\IndentFoldingProvider.cs" />
     <Compile Include="Indentation\BlockDentProvider.cs" />
     <Compile Include="Indentation\CurlyDentProvider.cs" />
@@ -165,7 +165,7 @@
     <Compile Include="Editor.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="IEditorContext.cs" />
+    <Compile Include="IEditorView.cs" />
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />
     <Compile Include="ObjectModel\Pos.cs" />

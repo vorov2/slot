@@ -27,6 +27,7 @@ namespace CodeBox.Lexing
                     CommentMask = dict.String("commentMask"),
                     NumberLiteral = (tmp = dict.String("numbers")) != null ? new NumberLiteral(tmp) :null,
                     IndentComponentKey = dict.String("indentProvider"),
+                    FoldingComponentKey = dict.String("foldingProvider"),
                     AutocompleteSymbols = dict.String("autocompleteSymbols")
                 };
 

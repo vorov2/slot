@@ -36,6 +36,8 @@ namespace CodeBox
 
         public string IndentComponentKey { get; set; }
 
+        public string FoldingComponentKey { get; set; }
+
         public string AutocompleteSymbols { get; set; }
         #endregion
 

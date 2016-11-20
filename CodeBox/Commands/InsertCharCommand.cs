@@ -86,5 +86,7 @@ namespace CodeBox.Commands
         }
 
         public override bool ModifyContent => true;
+
+        public override bool SupportLimitedMode => true;
     }
 }

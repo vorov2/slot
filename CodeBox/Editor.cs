@@ -58,7 +58,7 @@ namespace CodeBox
             Scroll = new ScrollingManager(this);
             Commands = new CommandManager(this);
             Locations = new LocationManager(this);//+
-            Folding = new FoldingManager(this) { Provider = new IndentFoldingProvider() };
+            Folding = new FoldingManager(this);
             CallTips = new CallTipManager(this);
             MatchBrackets = new MatchBracketManager(this);
             Autocomplete = new AutocompleteManager(this);
@@ -522,5 +522,8 @@ namespace CodeBox
 
         [Browsable(false)]
         public int LastEditLine { get; set; }
+
+        [Browsable(false)]
+        public bool LimitedMode { get; set; }
     }
 }

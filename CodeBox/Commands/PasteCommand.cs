@@ -22,5 +22,7 @@ namespace CodeBox.Commands
         {
             return new PasteCommand();
         }
+
+        public override bool SupportLimitedMode => true;
     }
 }

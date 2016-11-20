@@ -5,10 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Commands;
+using CodeBox.ComponentModel;
+using CodeBox.Core.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Folding
 {
-    public sealed class IndentFoldingProvider : IFoldingProvider
+    [Export(typeof(IComponent))]
+    [ComponentData("folding.indent")]
+    public sealed class IndentFoldingProvider : IFoldingComponent
     {
         public void Fold(IEditorView ctx, Range range)
         {

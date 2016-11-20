@@ -15,6 +15,9 @@ namespace CodeBox.Commands
     {
         protected override ActionResults Execute(Selection sel)
         {
+            if (View.WordWrap)
+                return Pure;
+
             DoSelection(View.Caret, ((Editor)View).PointToClient(Cursor.Position));
             return Scroll | Clean;
         }

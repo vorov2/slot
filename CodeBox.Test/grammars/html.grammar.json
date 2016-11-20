@@ -3,6 +3,7 @@
     "delimeters": "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
     "brackets": "<>",
     "indentProvider": "indent.block",
+    "foldingProvider": "folding.indent",
     "autocompleteSymbols": "</",
     "sections": [
         {

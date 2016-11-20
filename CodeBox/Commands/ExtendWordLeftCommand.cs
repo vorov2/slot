@@ -11,5 +11,7 @@ namespace CodeBox.Commands
     public sealed class ExtendWordLeftCommandCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => WordLeftCommand.WordLeft(View, sel);
+
+        public override bool SupportLimitedMode => true;
     }
 }

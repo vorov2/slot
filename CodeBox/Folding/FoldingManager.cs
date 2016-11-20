@@ -1,4 +1,6 @@
-﻿using CodeBox.ObjectModel;
+﻿using CodeBox.ComponentModel;
+using CodeBox.Core.ComponentModel;
+using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -104,12 +106,20 @@ namespace CodeBox.Folding
                 var range = new Range(
                         new Pos(fvl, 0),
                         new Pos(lvl, Lines[lvl].Length - 1));
-                var fp = Provider;
 
-                if (fp == null)
-                    OnFoldingNeeded(range);
+                if (FoldingNeeded != null)
+                    FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range));
                 else
-                    fp.Fold(editor, range);
+                {
+                    var aff = editor.AffinityManager.GetRootAffinity();
+                    var key = aff.FoldingComponentKey ?? editor.Settings.FoldingComponentKey;
+
+                    if (key != null)
+                    {
+                        var fp = ComponentCatalog.Instance.GetComponent<IFoldingComponent>(key);
+                        fp.Fold(editor, range);
+                    }
+                }
             }
             finally
             {
@@ -134,10 +144,7 @@ namespace CodeBox.Folding
         public bool IsFoldingHeader(int line) => Lines[line].Folding.Has(FoldingStates.Header);
 
         public event EventHandler<FoldingNeededEventArgs> FoldingNeeded;
-        private void OnFoldingNeeded(Range range) => FoldingNeeded?.Invoke(this, new FoldingNeededEventArgs(range));
 
         internal List<Line> Lines => editor.Lines;
-
-        public IFoldingProvider Provider { get; set; }
     }
 }

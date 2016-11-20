@@ -11,5 +11,7 @@ namespace CodeBox.Commands
     public sealed class ExtendRightCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => RightCommand.MoveRight(View, sel);
+
+        public override bool SupportLimitedMode => true;
     }
 }

@@ -40,6 +40,16 @@ namespace CodeBox.Affinity
             grammars.Remove(line);
         }
 
+        public IDocumentAffinity GetRootAffinity()
+        {
+            var prov = editor.Styles.Styler as ConfigurableLexer;
+
+            if (prov != null)
+                return prov.GrammarProvider.GetGrammar(prov.GrammarKey);
+
+            return null;
+        }
+
         public IDocumentAffinity GetAffinity(Pos pos)
         {
             return GetAffinity(pos.Line, pos.Col);

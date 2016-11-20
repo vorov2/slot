@@ -55,5 +55,7 @@ namespace CodeBox
         int FirstEditLine { get; set; }
 
         int LastEditLine { get; set; }
+
+        bool LimitedMode { get; }
     }
 }

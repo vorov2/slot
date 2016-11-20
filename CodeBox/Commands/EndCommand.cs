@@ -22,5 +22,7 @@ namespace CodeBox.Commands
             var ln = doc.Lines[pos.Line];
             return new Pos(pos.Line, ln.Length);
         }
+
+        public override bool SupportLimitedMode => true;
     }
 }

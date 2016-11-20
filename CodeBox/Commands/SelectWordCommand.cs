@@ -143,5 +143,7 @@ namespace CodeBox.Commands
 
             return pos;
         }
+
+        public override bool SupportLimitedMode => true;
     }
 }

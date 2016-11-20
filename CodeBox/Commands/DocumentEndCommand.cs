@@ -15,5 +15,7 @@ namespace CodeBox.Commands
             var idx = Document.Lines.Count - 1;
             return new Pos(idx, Document.Lines[idx].Length);
         }
+
+        public override bool SupportLimitedMode => true;
     }
 }

@@ -38,5 +38,7 @@ namespace CodeBox.Commands
             else
                 return LeftCommand.MoveLeft(ctx.Buffer.Document, sel);
         }
+
+        public override bool SupportLimitedMode => true;
     }
 }

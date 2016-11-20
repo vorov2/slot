@@ -43,5 +43,7 @@ namespace CodeBox.Commands
             sel.SetToRestore(pos);
             return pos;
         }
+
+        public override bool SupportLimitedMode => true;
     }
 }

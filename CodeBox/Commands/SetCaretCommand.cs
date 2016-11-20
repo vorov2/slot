@@ -30,5 +30,7 @@ namespace CodeBox.Commands
         }
 
         public override bool SingleRun => true;
+
+        public override bool SupportLimitedMode => true;
     }
 }

@@ -11,5 +11,7 @@ namespace CodeBox.Commands
     public sealed class DocumentHomeCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => default(Pos);
+
+        public override bool SupportLimitedMode => true;
     }
 }
