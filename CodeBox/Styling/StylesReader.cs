@@ -18,8 +18,12 @@ namespace CodeBox.Styling
         {
             ColorExtensions.Clean();
             var json = new Json.JsonParser(source) { SkipNulls = true };
-            var list = json.Parse() as List<object>;
-            return ReadStyles(list);
+            var dict = json.Parse() as MAP;
+
+            if (dict != null)
+                return ReadStyles(dict.Object("styles") as List<object>);
+
+            return null;
         }
 
         private static StyleCollection ReadStyles(List<object> styles)
