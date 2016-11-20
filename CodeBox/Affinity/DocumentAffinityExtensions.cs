@@ -10,22 +10,22 @@ namespace CodeBox.Affinity
 {
     public static class DocumentAffinityExtensions
     {
-        public static string GetNonWordSymbols(this IDocumentAffinity aff, IEditorContext ctx)
+        public static string GetNonWordSymbols(this IDocumentAffinity aff, IEditorView ctx)
         {
             return aff.NonWordSymbols ?? ctx.Settings.NonWordSymbols;
         }
 
-        public static string GetBracketSymbols(this IDocumentAffinity aff, IEditorContext ctx)
+        public static string GetBracketSymbols(this IDocumentAffinity aff, IEditorView ctx)
         {
             return aff.BracketSymbols ?? ctx.Settings.BracketSymbols;
         }
 
-        public static string GetAutocompleteSymbols(this IDocumentAffinity aff, IEditorContext ctx)
+        public static string GetAutocompleteSymbols(this IDocumentAffinity aff, IEditorView ctx)
         {
             return aff.AutocompleteSymbols ?? ctx.Settings.AutocompleteSymbols;
         }
 
-        public static string GetIndentComponentKey(this IDocumentAffinity aff, IEditorContext ctx)
+        public static string GetIndentComponentKey(this IDocumentAffinity aff, IEditorView ctx)
         {
             return aff.IndentComponentKey ?? ctx.Settings.IndentComponentKey;
         }

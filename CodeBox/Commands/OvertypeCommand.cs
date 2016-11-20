@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -10,9 +11,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.overtype")]
     public sealed class OvertypeCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
-            Context.Overtype = !Context.Overtype;
+            View.Overtype = !View.Overtype;
             return Clean;
         }
 

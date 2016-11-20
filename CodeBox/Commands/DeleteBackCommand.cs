@@ -4,6 +4,7 @@ using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -17,27 +18,27 @@ namespace CodeBox.Commands
         protected Selection redoSel;
         private int unindent;
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
             var res = Clean;
             var lines = Document.Lines;
             var caret = sel.Caret;
             var ln = lines[caret.Line];
-            var indentSize = Line.GetIndentationSize(ln.GetTetras(caret.Col, Context.IndentSize), Context.IndentSize);
-            unindent = indentSize == Context.IndentSize ? indentSize : Context.IndentSize - indentSize;
+            var indentSize = Line.GetIndentationSize(ln.GetTetras(caret.Col, View.IndentSize), View.IndentSize);
+            unindent = indentSize == View.IndentSize ? indentSize : View.IndentSize - indentSize;
 
             if (!sel.IsEmpty)
             {
                 unindent = 0;
                 res = Change;
-                deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(View, sel);
             }
-            else if (!Context.UseTabs && (unindent = GetMaximum(ln, caret.Col, unindent)) > 1 && caret.Col >= unindent)
+            else if (!View.UseTabs && (unindent = GetMaximum(ln, caret.Col, unindent)) > 1 && caret.Col >= unindent)
             {
                 res = Change;
                 var np = new Pos(caret.Line, caret.Col - unindent);
-                deleteString = DeleteRangeCommand.DeleteRange(Context, new Selection(caret, np));
+                deleteString = DeleteRangeCommand.DeleteRange(View, new Selection(caret, np));
                 sel.Clear(np);
             }
             else
@@ -90,7 +91,7 @@ namespace CodeBox.Commands
             {
                 var caret = redoSel.Caret;
                 var np = new Pos(caret.Line, caret.Col - unindent);
-                DeleteRangeCommand.DeleteRange(Context, new Selection(caret, np));
+                DeleteRangeCommand.DeleteRange(View, new Selection(caret, np));
             }
             else
                 Execute(redoSel);
@@ -108,7 +109,7 @@ namespace CodeBox.Commands
             else if (deleteChar == Character.NewLine)
             {
                 pos = new Pos(undoPos.Line, undoPos.Col);
-                var txt = DeleteRangeCommand.DeleteRange(Context, new Selection(pos,
+                var txt = DeleteRangeCommand.DeleteRange(View, new Selection(pos,
                     new Pos(pos.Line, Document.Lines[pos.Line].Length)));
                 var ipos = InsertNewLineCommand.InsertNewLine(Document, pos);
 
@@ -127,7 +128,7 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteBackCommand();
         }

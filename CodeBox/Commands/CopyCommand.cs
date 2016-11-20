@@ -5,6 +5,7 @@ using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -12,14 +13,14 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.copy")]
     public sealed class CopyCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             var sb = new StringBuilder();
 
             for (var i = 0; i < Buffer.Selections.Count; i++)
             {
                 var s = Buffer.Selections[i];
-                var str = GetTextRange(Context, s);
+                var str = GetTextRange(View, s);
                 sb.Append(str);
                 if (i != Buffer.Selections.Count - 1)
                     sb.Append(Buffer.Eol.AsString());
@@ -31,7 +32,7 @@ namespace CodeBox.Commands
             return Pure;
         }
 
-        internal static string GetTextRange(IEditorContext ctx, Range rangesr)
+        internal static string GetTextRange(IEditorView ctx, Range rangesr)
         {
             var doc = ctx.Buffer.Document;
             var sel = rangesr.Normalize();

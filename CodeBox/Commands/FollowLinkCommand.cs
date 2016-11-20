@@ -5,6 +5,7 @@ using CodeBox.Styling;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -12,9 +13,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.followlink")]
     public sealed class FollowLinkCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
-            var pos = Context.Caret;
+            var pos = View.Caret;
             var ln = Document.Lines[pos.Line];
             var a = ln.FindHyperlink(pos.Col);
 

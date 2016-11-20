@@ -11,10 +11,10 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
-            data = DeleteRange(Context, sel);
+            data = DeleteRange(View, sel);
             undoPos = sel.Caret;
             return data != null ? Change : Pure;
         }
@@ -34,12 +34,12 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteRangeCommand();
         }
 
-        internal static IEnumerable<Character> DeleteRange(IEditorContext ctx, Selection selection)
+        internal static IEnumerable<Character> DeleteRange(IEditorView ctx, Selection selection)
         {
             var doc = ctx.Buffer.Document;
             var sel = selection.Normalize();

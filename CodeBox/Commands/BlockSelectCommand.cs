@@ -5,6 +5,7 @@ using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -12,9 +13,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.selectblock")]
     public sealed class BlockSelectCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
-            DoSelection(Context.Caret, ((Editor)Context).PointToClient(Cursor.Position));
+            DoSelection(View.Caret, ((Editor)View).PointToClient(Cursor.Position));
             return Scroll | Clean;
         }
 
@@ -22,14 +23,14 @@ namespace CodeBox.Commands
         {
             var start = Buffer.Selections[Buffer.Selections.Count - 1].Start;
             var pline = p.Line;
-            var tetra = (loc.X - Context.Info.TextLeft) / Context.Info.CharWidth;
+            var tetra = (loc.X - View.Info.TextLeft) / View.Info.CharWidth;
             tetra = tetra < 0 ? 0 : tetra;
             var lines = Document.Lines;
 
             if (lines[pline].Length == 0)
                 return;
 
-            var indentSize = Context.IndentSize;
+            var indentSize = View.IndentSize;
             var startTetra = lines[start.Line].GetTetras(start.Col, indentSize);
             var maxLen = p.Col;
             Buffer.Selections.Clear();

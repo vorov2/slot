@@ -2,6 +2,7 @@
 using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -9,6 +10,6 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.extendwordright")]
     public sealed class ExtendWordRightCommandCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => WordRightCommand.WordRight(Context, sel);
+        protected override Pos Select(Selection sel) => WordRightCommand.WordRight(View, sel);
     }
 }

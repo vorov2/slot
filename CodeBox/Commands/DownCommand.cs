@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -13,9 +14,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.down")]
     public class DownCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveDown(Context, sel);
+        protected override Pos GetPosition(Selection sel) => MoveDown(View, sel);
 
-        internal static Pos MoveDown(IEditorContext ctx, Selection sel)
+        internal static Pos MoveDown(IEditorView ctx, Selection sel)
         {
             var pos = sel.Caret;
 
@@ -27,7 +28,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        private static Pos InternalMoveDown(IEditorContext ctx, Selection sel, Pos pos)
+        private static Pos InternalMoveDown(IEditorView ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
 

@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace CodeBox.ComponentModel
+namespace CodeBox.Core.ComponentModel
 {
     public interface ICommandComponent : IComponent
     {
-        void Run(IExecutionContext context);
+        void Run(IExecutionContext ctx);
     }
 }

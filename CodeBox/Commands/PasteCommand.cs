@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -10,14 +11,14 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.paste")]
     public sealed class PasteCommand : InsertRangeCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             var str = Clipboard.GetText();
             base.insertString = str.MakeCharacters();
             return base.Execute(sel);
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new PasteCommand();
         }

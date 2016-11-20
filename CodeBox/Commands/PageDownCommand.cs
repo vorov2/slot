@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Folding;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -10,9 +11,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.pagedown")]
     public sealed class PageDownCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => PageDown(Context);
+        protected override Pos GetPosition(Selection sel) => PageDown(View);
 
-        internal static Pos PageDown(IEditorContext ctx)
+        internal static Pos PageDown(IEditorView ctx)
         {
             var lines = ctx.Buffer.Document.Lines;
             var caret = ctx.Buffer.Selections.Main.Caret;

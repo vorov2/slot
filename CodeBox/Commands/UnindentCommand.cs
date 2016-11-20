@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 using System.Linq;
 using System.Collections.Generic;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -16,11 +17,11 @@ namespace CodeBox.Commands
         private List<int> undoIndents;
         private bool useTab;
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
-            useTab = Context.UseTabs;
-            undoIndents = Unindent(Context, sel);
+            useTab = View.UseTabs;
+            undoIndents = Unindent(View, sel);
 
             if (undoIndents.Sum() > 0)
             {
@@ -82,12 +83,12 @@ namespace CodeBox.Commands
             sel.End = new Pos(sel.End.Line, sel.End.Col - undoIndents[undoIndents.Count - 1]);
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new UnindentCommand();
         }
 
-        internal static List<int> Unindent(IEditorContext ctx, Selection sel)
+        internal static List<int> Unindent(IEditorView ctx, Selection sel)
         {
             var norm = sel.Normalize();
             var indents = new List<int>();

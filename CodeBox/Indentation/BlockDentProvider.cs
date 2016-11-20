@@ -1,6 +1,7 @@
 ﻿using CodeBox.ComponentModel;
 using System;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Indentation
 {
@@ -8,7 +9,7 @@ namespace CodeBox.Indentation
     [ComponentData("indent.block")]
     public sealed class BlockDentProvider : IDentComponent
     {
-        public int CalculateIndentation(IEditorContext ctx, int lineIndex)
+        public int CalculateIndentation(IEditorView ctx, int lineIndex)
         {
             if (lineIndex > 0)
             {

@@ -4,6 +4,7 @@ using CodeBox.Affinity;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {

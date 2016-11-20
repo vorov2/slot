@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Folding;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -10,9 +11,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.up")]
     public class UpCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveUp(Context, sel);
+        protected override Pos GetPosition(Selection sel) => MoveUp(View, sel);
 
-        internal static Pos MoveUp(IEditorContext ctx, Selection sel)
+        internal static Pos MoveUp(IEditorView ctx, Selection sel)
         {
             var pos = sel.Caret;
 
@@ -24,7 +25,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        private static Pos InternalMoveUp(IEditorContext ctx, Selection sel, Pos pos)
+        private static Pos InternalMoveUp(IEditorView ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.ComponentModel
+namespace CodeBox.Core.ComponentModel
 {
     public interface IComponentMetadata
     {

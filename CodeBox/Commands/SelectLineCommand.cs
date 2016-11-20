@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -22,9 +23,9 @@ namespace CodeBox.Commands
             pos = Pos.Empty;
         }
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
-            var p = pos == Pos.Empty ? Context.Caret : pos;
+            var p = pos == Pos.Empty ? View.Caret : pos;
 
             if (p.Line > -1)
             {

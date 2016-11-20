@@ -10,6 +10,6 @@ namespace CodeBox.Folding
 {
     public interface IFoldingProvider
     {
-        void Fold(IEditorContext ctx, Range range);
+        void Fold(IEditorView ctx, Range range);
     }
 }

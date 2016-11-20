@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -41,8 +42,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComponentModel\ComponentCatalog.cs" />
+    <Compile Include="ComponentModel\ComponentDataAttribute.cs" />
+    <Compile Include="ComponentModel\ICommandComponent.cs" />
+    <Compile Include="ComponentModel\IComponent.cs" />
+    <Compile Include="ComponentModel\IComponentMetadata.cs" />
+    <Compile Include="ComponentModel\IExecutionContext.cs" />
     <Compile Include="FieldNameAttribute.cs" />
-    <Compile Include="KeyboardAdapter.cs" />
+    <Compile Include="Keyboard\InputState.cs" />
+    <Compile Include="Keyboard\KeyboardAdapter.cs" />
+    <Compile Include="Keyboard\KeyExtensions.cs" />
+    <Compile Include="Keyboard\KeyInput.cs" />
+    <Compile Include="Keyboard\KeymapReader.cs" />
+    <Compile Include="Keyboard\Modifiers.cs" />
+    <Compile Include="Keyboard\SpecialKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

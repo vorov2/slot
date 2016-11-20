@@ -8,6 +8,7 @@ using System.Drawing;
 using CodeBox.ObjectModel;
 using CodeBox.Lexing;
 using CodeBox.ComponentModel;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Styling
 {

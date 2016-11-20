@@ -13,7 +13,7 @@ namespace CodeBox
 
     public static class SettingsReader
     {
-        public static void Read(string source, IEditorContext ctx)
+        public static void Read(string source, IEditorView ctx)
         {
             var set = ctx.Settings;
             var json = new Json.JsonParser(source) { SkipNulls = true };

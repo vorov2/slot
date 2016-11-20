@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Affinity;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -12,12 +13,12 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel)
         {
-            var pos = WordRight(Context, sel);
+            var pos = WordRight(View, sel);
             sel.SetToRestore(pos);
             return pos;
         }
 
-        internal static Pos WordRight(IEditorContext ctx, Selection sel)
+        internal static Pos WordRight(IEditorView ctx, Selection sel)
         {
             var caret = sel.Caret;
             var line = ctx.Buffer.Document.Lines[caret.Line];

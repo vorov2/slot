@@ -4,6 +4,7 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -16,7 +17,7 @@ namespace CodeBox.Commands
         private Selection redoSel;
         protected Pos undoPos;
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
             var res = Clean;
@@ -24,7 +25,7 @@ namespace CodeBox.Commands
             if (!sel.IsEmpty)
             {
                 res = Change;
-                deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(View, sel);
             }
             else
             {
@@ -78,7 +79,7 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteCommand();
         }

@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -10,9 +11,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.scrollup")]
     public sealed class ScrollLineUpCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
-            Context.Scroll.ScrollY(1);
+            View.Scroll.ScrollY(1);
             return Clean | AutocompleteKeep;
         }
     }

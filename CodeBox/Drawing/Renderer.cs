@@ -1,4 +1,7 @@
-﻿using CodeBox.Styling;
+﻿using CodeBox.Folding;
+using CodeBox.Margins;
+using CodeBox.ObjectModel;
+using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -77,5 +80,154 @@ namespace CodeBox.Drawing
                 new Point(x, y), Style.Format);
             return w;
         }
+
+        internal bool DrawCurrentLineIndicator(Graphics g, int y)
+        {
+            if (!editor.CurrentLineIndicator ||
+                (!editor.Buffer.Selections.Main.IsEmpty && editor.Buffer.Selections.Main.Start.Line != editor.Buffer.Selections.Main.End.Line))
+                return false;
+
+            g.FillRectangle(editor.Settings.CurrentLineIndicatorColor.Brush(),
+                new Rectangle(editor.Info.TextLeft - editor.Scroll.ScrollPosition.X,
+                    y, editor.Info.TextWidth, editor.Info.LineHeight));
+            return true;
+        }
+
+        internal void DrawLines(Graphics g, List<CaretData> carets)
+        {
+            CurrentFont = editor.Settings.Font;
+            var fvl = editor.Scroll.FirstVisibleLine;
+            var lvl = editor.Scroll.LastVisibleLine;
+
+            for (var i = fvl; i < lvl + 1; i++)
+            {
+                var ln = editor.Buffer.Document.Lines[i];
+                if (!ln.Folding.Has(FoldingStates.Invisible))
+                    DrawLine(g, ln, i, carets);
+            }
+        }
+
+        private void DrawLine(Graphics g, Line line, int lineIndex, List<CaretData> carets)
+        {
+            var lmarg = editor.Info.TextLeft;
+            var tmarg = editor.Info.TextTop;
+            var cwidth = editor.Info.TextRight;
+            var x = lmarg;
+            var y = tmarg + line.Y;
+            var oldcut = 0;
+            var sel = editor.Buffer.Selections.IsLineSelected(lineIndex);
+            var showEol = editor.ShowEol;
+            var showWs = editor.ShowWhitespace;
+
+            for (var j = 0; j < line.Stripes; j++)
+            {
+                var curline = false;
+
+                if (lineIndex == editor.Buffer.Selections.Main.Caret.Line)
+                    curline = DrawCurrentLineIndicator(g, y);
+
+                var cut = line.GetCut(j);
+
+                if (cut == line.Length)
+                    cut++;
+
+                var tet = 0;
+
+                for (var i = oldcut; i < cut; i++)
+                {
+                    var c = line.CharAt(i);
+                    var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : 1;
+                    tet += ct;
+                    var xw = ct * editor.Info.CharWidth;
+                    var visible = x + editor.Scroll.ScrollPosition.X >= lmarg && x + editor.Scroll.ScrollPosition.X + xw <= cwidth
+                        && y + editor.Scroll.ScrollPosition.Y >= tmarg;
+
+                    if (visible)
+                    {
+                        var style = default(Style);
+                        var rect = new Rectangle(x, y, xw, editor.Info.LineHeight);
+                        var pos = new Pos(lineIndex, i);
+                        var high = sel && editor.Buffer.Selections.IsSelected(pos);
+
+                        if (c == '\0' && showEol || (c == '\t' || c == ' ') && showWs)
+                        {
+                            c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
+                            style = /*line.GetStyle(i, Styles)
+                                .Combine(*/editor.Styles.GetStyle((int)StandardStyle.SpecialSymbol);//);
+                        }
+                        else
+                            style = line.GetStyle(i, editor.Styles);
+
+                        if (high)
+                        {
+                            var sstyle = editor.Styles.GetStyle(StandardStyle.Selection);
+                            style = sstyle.Combine(style);
+                        }
+
+                        style.DrawAll(g, rect, c, pos);
+
+                        if (editor.Buffer.Selections.HasCaret(pos))
+                        {
+                            var blink = editor.Buffer.Selections.Main.Caret.Line == lineIndex
+                                && editor.Buffer.Selections.Main.Caret.Col == i;
+
+                            if (blink)
+                            {
+                                var cg = editor.CaretRenderer.GetDrawingSurface();
+                                cg.Clear(high ? editor.Styles.Selection.BackColor
+                                    : curline ? editor.Settings.CurrentLineIndicatorColor : editor.Styles.Default.BackColor);
+                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
+
+                                if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
+                                    cg.DrawLine(editor.Styles.SpecialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
+
+                                editor.CaretRenderer.Resume();
+                            }
+
+                            carets.Add(new CaretData(x, y, pos.Line, pos.Col, blink));
+                        }
+                    }
+
+                    x += xw;
+                }
+
+                var addedWidth = 0;
+
+                if (line.Length > 0 && editor.ShowLineLength)
+                    addedWidth = DrawLineLengthIndicator(g, line.Length, x, y);
+
+                if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < editor.Buffer.Document.Lines.Count &&
+                    editor.Buffer.Document.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
+                    DrawFoldingIndicator(g, x + addedWidth, y);
+
+                oldcut = cut;
+                y += editor.Info.LineHeight;
+                x = lmarg;
+            }
+        }
+
+        internal void DrawMargins(int start, Graphics g, MarginList margins)
+        {
+            var vertical = margins == editor.LeftMargins || margins == editor.RightMargins;
+            var top = margins == editor.TopMargins;
+
+            foreach (var m in margins)
+            {
+                var bounds = default(Rectangle);
+
+                if (vertical)
+                    bounds = new Rectangle(start, editor.Info.TextTop, m.CalculateSize(),
+                        editor.ClientSize.Height - editor.Info.TextTop);
+                else if (top)
+                    bounds = new Rectangle(0, start, editor.ClientSize.Width, m.CalculateSize());
+                else
+                    bounds = new Rectangle(editor.Info.TextLeft, start, editor.Info.TextWidth, m.CalculateSize());
+
+                m.Draw(g, bounds);
+                start += m.CalculateSize();
+            }
+        }
+
+        internal static Font CurrentFont { get; private set; }
     }
 }

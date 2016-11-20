@@ -124,6 +124,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">
+      <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
+      <Name>CodeBox.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeBox\CodeBox.csproj">
       <Project>{a12ac5fd-fddb-4253-ac43-92f305ac9d56}</Project>
       <Name>CodeBox</Name>

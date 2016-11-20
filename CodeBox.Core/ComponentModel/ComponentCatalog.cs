@@ -3,10 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.IO;
 
-namespace CodeBox.ComponentModel
+namespace CodeBox.Core.ComponentModel
 {
-    internal sealed class ComponentCatalog
+    public sealed class ComponentCatalog
     {
         private CompositionContainer container;
 
@@ -22,7 +23,7 @@ namespace CodeBox.ComponentModel
         private CompositionContainer CreateContainer()
         {
             var catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ComponentCatalog).Assembly));
+            catalog.Catalogs.Add(new DirectoryCatalog(new FileInfo(typeof(ComponentCatalog).Assembly.Location).DirectoryName));
             var container = new CompositionContainer(catalog);
 
             try
@@ -31,7 +32,7 @@ namespace CodeBox.ComponentModel
             }
             catch (CompositionException ex)
             {
-                throw new CodeBoxException("Composition error.", ex);
+                throw new Exception("Composition error.", ex);
             }
 
             return container;

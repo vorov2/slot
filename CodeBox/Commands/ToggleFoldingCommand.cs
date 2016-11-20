@@ -4,6 +4,7 @@ using CodeBox.Folding;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -25,10 +26,10 @@ namespace CodeBox.Commands
             togglePos = Pos.Empty;
         }
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             undoCaret = sel.Caret;
-            var pos = togglePos == Pos.Empty ? Context.Caret : togglePos;
+            var pos = togglePos == Pos.Empty ? View.Caret : togglePos;
             var ln = pos.IsEmpty ? sel.Caret.Line : pos.Line;
             var level = -1;
 
@@ -39,7 +40,7 @@ namespace CodeBox.Commands
                 if (line.Folding.Has(FoldingStates.Header) && (level == -1 || line.FoldingLevel < level))
                 {
                     undoLine = ln;
-                    Context.Folding.ToggleExpand(undoLine);
+                    View.Folding.ToggleExpand(undoLine);
                     break;
                 }
 
@@ -54,19 +55,19 @@ namespace CodeBox.Commands
 
         public override ActionResults Undo(out Pos pos)
         {
-            Context.Folding.ToggleExpand(undoLine);
+            View.Folding.ToggleExpand(undoLine);
             pos = undoCaret;
             return Modify | ShallowChange;
         }
 
         public override ActionResults Redo(out Pos pos)
         {
-            Context.Folding.ToggleExpand(undoLine);
+            View.Folding.ToggleExpand(undoLine);
             pos = undoCaret;
             return Modify | ShallowChange;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new ToggleFoldingCommand(togglePos);
         }

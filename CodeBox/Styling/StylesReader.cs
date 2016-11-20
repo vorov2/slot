@@ -14,7 +14,7 @@ namespace CodeBox.Styling
 
     public static class StylesReader
     {
-        public static void Read(string source, IEditorContext ctx)
+        public static void Read(string source, IEditorView ctx)
         {
             ColorExtensions.Clean();
             var styles = ctx.Styles;

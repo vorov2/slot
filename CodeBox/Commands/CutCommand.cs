@@ -4,6 +4,7 @@ using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -11,7 +12,7 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.cut")]
     public sealed class CutCommand : DeleteRangeCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             var res = base.Execute(sel);
 
@@ -32,7 +33,7 @@ namespace CodeBox.Commands
             return res;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new CutCommand();
         }

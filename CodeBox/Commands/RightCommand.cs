@@ -2,6 +2,7 @@
 using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -9,9 +10,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.right")]
     public class RightCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveRight(Context, sel);
+        protected override Pos GetPosition(Selection sel) => MoveRight(View, sel);
 
-        internal static Pos MoveRight(IEditorContext ctx, Selection sel)
+        internal static Pos MoveRight(IEditorView ctx, Selection sel)
         {
             var pos = new Pos(sel.Caret.Line, sel.Caret.Col + 1);
 
@@ -28,7 +29,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        private static Pos InternalMoveRight(IEditorContext ctx, Selection sel, Pos pos)
+        private static Pos InternalMoveRight(IEditorView ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
             var line = doc.Lines[pos.Line];

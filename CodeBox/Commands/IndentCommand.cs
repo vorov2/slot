@@ -5,6 +5,7 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -15,7 +16,7 @@ namespace CodeBox.Commands
         private List<int> undoIndents;
         private bool useTab;
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             var startLine = Document.Lines[sel.Start.Line];
 
@@ -23,16 +24,16 @@ namespace CodeBox.Commands
             {
                 redoSel = sel.Clone();
                 useTab = Settings.UseTabs;
-                undoIndents = Indent(Context, sel);
+                undoIndents = Indent(View, sel);
                 return Modify | Scroll;
             }
             else
             {
-                var indent = Context.UseTabs ? "\t"
+                var indent = View.UseTabs ? "\t"
                     : new string(' ', Line.GetIndentationSize(startLine.GetTetras(
-                        sel.Start.Col, Context.IndentSize), Context.IndentSize));
+                        sel.Start.Col, View.IndentSize), View.IndentSize));
 
-                if (!Context.UseTabs && startLine.WhiteSpaceBefore(sel.Start.Col))
+                if (!View.UseTabs && startLine.WhiteSpaceBefore(sel.Start.Col))
                 {
                     var newIndent = FindIndent(true, sel.Caret.Line, indent.Length);
 
@@ -83,7 +84,7 @@ namespace CodeBox.Commands
                 if (c.Char == ' ')
                     spaces++;
                 else if (c.Char == '\t')
-                    spaces += Context.IndentSize;
+                    spaces += View.IndentSize;
                 else
                     return spaces;
 
@@ -130,7 +131,7 @@ namespace CodeBox.Commands
                 return base.Undo(out pos);
         }
 
-        internal static List<int> Indent(IEditorContext ctx, Selection sel)
+        internal static List<int> Indent(IEditorView ctx, Selection sel)
         {
             var norm = sel.Normalize();
             var undos = new List<int>();
@@ -155,7 +156,7 @@ namespace CodeBox.Commands
             return undos;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new IndentCommand();
         }

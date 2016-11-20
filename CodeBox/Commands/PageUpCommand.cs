@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Folding;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -10,9 +11,9 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.pageup")]
     public sealed class PageUpCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => PageUp(Context);
+        protected override Pos GetPosition(Selection sel) => PageUp(View);
 
-        internal static Pos PageUp(IEditorContext ctx)
+        internal static Pos PageUp(IEditorView ctx)
         {
             var lines = ctx.Buffer.Document.Lines;
             var caret = ctx.Buffer.Selections.Main.Caret;

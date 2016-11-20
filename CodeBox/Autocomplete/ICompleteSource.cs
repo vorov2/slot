@@ -9,7 +9,7 @@ namespace CodeBox.Autocomplete
 {
     public interface ICompleteSource
     {
-        void Initialize(IEditorContext context);
+        void Initialize(IEditorView context);
 
         IEnumerable<string> GetItems();
     }

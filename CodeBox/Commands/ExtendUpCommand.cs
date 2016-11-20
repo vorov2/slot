@@ -2,6 +2,7 @@
 using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -9,6 +10,6 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.extendup")]
     public sealed class ExtendUpCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => UpCommand.MoveUp(Context, sel);
+        protected override Pos Select(Selection sel) => UpCommand.MoveUp(View, sel);
     }
 }

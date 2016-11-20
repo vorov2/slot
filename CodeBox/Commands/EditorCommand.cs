@@ -6,17 +6,22 @@ using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
 using System.Windows.Forms;
+using CodeBox.ComponentModel;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    public abstract class EditorCommand : IEditorCommand
+    public abstract class EditorCommand : ICommandComponent
     {
-        public void Run(IExecutionContext context)
+        public void Run(IExecutionContext ctx)
         {
-            var ctx = (IEditorContext)context;
-            Context = ctx;
-            ctx.FirstEditLine = int.MaxValue;
-            ctx.LastEditLine = 0;
+            View = ctx as IEditorView;
+
+            if (View == null)
+                return;
+
+            View.FirstEditLine = int.MaxValue;
+            View.LastEditLine = 0;
             var lines = Document.Lines;
             var modify = ModifyContent;
 
@@ -32,8 +37,8 @@ namespace CodeBox.Commands
 
             if (qry == null || SingleRun)
             {
-                ctx.FirstEditLine = lastSel.GetFirstLine();
-                ctx.LastEditLine = lastSel.GetLastLine();
+                View.FirstEditLine = lastSel.GetFirstLine();
+                View.LastEditLine = lastSel.GetLastLine();
                 exp = Execute(lastSel);
 
                 if (exp.Has(Modify) && (!Buffer.LastAtomicChange || !exp.Has(AtomicChange)))
@@ -49,21 +54,20 @@ namespace CodeBox.Commands
             {
                 thisUndo = Buffer.BeginUndoAction();
                 var cc = 0;
-                IEditorCommand cmd = this;
+                EditorCommand cmd = this;
 
                 foreach (var sel in qry)
                 {
                     var fel = sel.GetFirstLine();
 
-                    if (fel < ctx.FirstEditLine)
-                        ctx.FirstEditLine = fel;
+                    if (fel < View.FirstEditLine)
+                        View.FirstEditLine = fel;
 
                     var lel = sel.GetLastLine();
 
-                    if (lel > ctx.LastEditLine)
-                        ctx.LastEditLine = lel;
+                    if (lel > View.LastEditLine)
+                        View.LastEditLine = lel;
 
-                    cmd.Context = ctx;
                     var e = cmd.Execute(sel);
 
                     exp |= e;
@@ -77,7 +81,10 @@ namespace CodeBox.Commands
                     lastSel = sel;
 
                     if (e.Has(Modify) && ++cc < selCount)
+                    {
                         cmd = cmd.Clone();
+                        cmd.View = View;
+                    }
                 }
             }
 
@@ -88,14 +95,14 @@ namespace CodeBox.Commands
                 DoAftermath(exp, Buffer.Selections.Count, lastSel.Caret);
 
             if (!exp.Has(IdleCaret))
-                ctx.MatchBrackets.Match();
+                View.MatchBrackets.Match();
 
-            if (exp.Has(AutocompleteKeep) && ctx.Autocomplete.WindowShown)
-                ctx.Autocomplete.UpdateAutocomplete();
+            if (exp.Has(AutocompleteKeep) && View.Autocomplete.WindowShown)
+                View.Autocomplete.UpdateAutocomplete();
             else if (qry == null && exp.Has(AutocompleteShow))
-                ctx.Autocomplete.ShowAutocomplete(lastSel.Caret);
-            else if (!exp.Has(AutocompleteShow) && ctx.Autocomplete.WindowShown)
-                ctx.Autocomplete.HideAutocomplete();
+                View.Autocomplete.ShowAutocomplete(lastSel.Caret);
+            else if (!exp.Has(AutocompleteShow) && View.Autocomplete.WindowShown)
+                View.Autocomplete.HideAutocomplete();
 
             Buffer.LastAtomicChange = qry == null && exp.Has(AtomicChange);
         }
@@ -104,7 +111,7 @@ namespace CodeBox.Commands
 
         public virtual bool ModifyContent => false;
 
-        public abstract ActionResults Execute(Selection sel);
+        protected abstract ActionResults Execute(Selection sel);
 
         public virtual ActionResults Undo(out Pos pos)
         {
@@ -120,20 +127,20 @@ namespace CodeBox.Commands
 
         protected void SetEditLines()
         {
-            Context.FirstEditLine = int.MaxValue;
-            Context.LastEditLine = 0;
+            View.FirstEditLine = int.MaxValue;
+            View.LastEditLine = 0;
 
             foreach (var s in Buffer.Selections)
             {
                 var ln = s.GetFirstLine();
 
-                if (ln < Context.FirstEditLine)
-                    Context.FirstEditLine = ln;
+                if (ln < View.FirstEditLine)
+                    View.FirstEditLine = ln;
 
                 ln = s.GetLastLine();
 
-                if (ln > Context.LastEditLine)
-                    Context.LastEditLine = ln;
+                if (ln > View.LastEditLine)
+                    View.LastEditLine = ln;
             }
         }
 
@@ -194,17 +201,17 @@ namespace CodeBox.Commands
 
             if (exp.Has(Modify))
             {
-                Context.Scroll.InvalidateLines(
+                View.Scroll.InvalidateLines(
                     exp.Has(AtomicChange) ? InvalidateFlags.Atomic : InvalidateFlags.None);
 
-                if (Context.Scroll.ScrollPosition.Y + Context.Info.TextHeight < -Context.Scroll.ScrollBounds.Height)
+                if (View.Scroll.ScrollPosition.Y + View.Info.TextHeight < -View.Scroll.ScrollBounds.Height)
                     exp |= Scroll;
 
                 if (!exp.Has(ShallowChange))
-                    Context.Buffer.Edits++;
+                    View.Buffer.Edits++;
 
                 if (!exp.Has(KeepRedo))
-                    Context.Buffer.RedoStack.Clear();
+                    View.Buffer.RedoStack.Clear();
             }
 
             if (exp.Has(RestoreCaret))
@@ -212,32 +219,32 @@ namespace CodeBox.Commands
 
             if (exp.Has(Scroll))
             {
-                Context.Scroll.SuppressOnScroll = true;
-                scrolled = Context.Scroll.UpdateVisibleRectangle();
-                Context.Scroll.SuppressOnScroll = false;
+                View.Scroll.SuppressOnScroll = true;
+                scrolled = View.Scroll.UpdateVisibleRectangle();
+                View.Scroll.SuppressOnScroll = false;
             }
 
             if (scrolled || exp.Has(Modify))
-                Context.Styles.Restyle();
+                View.Styles.Restyle();
 
             if (!exp.Has(Silent))
-                ((Editor)Context).Redraw();
+                ((Editor)View).Redraw();
 
             if (exp.Has(Modify))
-                Context.Folding.RebuildFolding();
+                View.Folding.RebuildFolding();
 
             if (exp.Has(LeaveEditor))
-                Context.Buffer.Selections.Truncate();
+                View.Buffer.Selections.Truncate();
         }
 
-        public virtual IEditorCommand Clone() => this;
+        internal virtual EditorCommand Clone() => this;
 
-        public IEditorContext Context { get; set; }
+        public IEditorView View { get; set; }
 
-        protected DocumentBuffer Buffer => Context.Buffer;
+        protected DocumentBuffer Buffer => View.Buffer;
 
-        protected Document Document => Context.Buffer.Document;
+        protected Document Document => View.Buffer.Document;
 
-        protected EditorSettings Settings => Context.Settings;
+        protected EditorSettings Settings => View.Settings;
     }
 }

@@ -17,10 +17,11 @@ using CodeBox.Autocomplete;
 using CodeBox.Affinity;
 using CodeBox.CallTips;
 using CodeBox.Core;
+using CodeBox.Core.Keyboard;
 
 namespace CodeBox
 {
-    public class Editor : Control, IEditorContext
+    public class Editor : Control, IEditorView
     {
         public readonly static bool Mono = Type.GetType("Mono.Runtime") != null;
         private const int WM_POINTERDOWN = 0x0246;
@@ -128,17 +129,17 @@ namespace CodeBox
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            DrawMargins(0, e.Graphics, TopMargins);
-            DrawMargins(0, e.Graphics, LeftMargins);
+            Renderer.DrawMargins(0, e.Graphics, TopMargins);
+            Renderer.DrawMargins(0, e.Graphics, LeftMargins);
             e.Graphics.TranslateTransform(Scroll.ScrollPosition.X, Scroll.ScrollPosition.Y);
 
             var carets = new List<CaretData>();
-            DrawLines(e.Graphics, carets);
+            Renderer.DrawLines(e.Graphics, carets);
             
             e.Graphics.ResetTransform();
-            DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
+            Renderer.DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
             if (RightMargins.Count > 0)
-                DrawMargins(ClientSize.Width - RightMargins.First().CalculateSize(), e.Graphics, RightMargins);
+                Renderer.DrawMargins(ClientSize.Width - RightMargins.First().CalculateSize(), e.Graphics, RightMargins);
 
             Renderer.DrawLongLineIndicators(e.Graphics);
             Renderer.DrawWordWrapColumn(e.Graphics);
@@ -149,27 +150,6 @@ namespace CodeBox
 
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
-        }
-
-        private void DrawMargins(int start, Graphics g, MarginList margins)
-        {
-            var vertical = margins == LeftMargins || margins == RightMargins;
-            var top = margins == TopMargins;
-
-            foreach (var m in margins)
-            {
-                var bounds = default(Rectangle);
-
-                if (vertical)
-                    bounds = new Rectangle(start, Info.TextTop, m.CalculateSize(), ClientSize.Height - Info.TextTop);
-                else if (top)
-                    bounds = new Rectangle(0, start, ClientSize.Width, m.CalculateSize());
-                else
-                    bounds = new Rectangle(Info.TextLeft, start, Info.TextWidth, m.CalculateSize());
-
-                m.Draw(g, bounds);
-                start += m.CalculateSize();
-            }
         }
 
         protected override void OnResize(EventArgs eventargs)
@@ -189,125 +169,6 @@ namespace CodeBox
 
             base.OnMouseWheel(e);
             Scroll.ScrollY((e.Delta / 120) * 2);
-        }
-
-        internal static Font CurrentFont { get; private set; }
-        private void DrawLines(Graphics g, List<CaretData> carets)
-        {
-            CurrentFont = Settings.Font;
-            var fvl = Scroll.FirstVisibleLine;
-            var lvl = Scroll.LastVisibleLine;
-
-            for (var i = fvl; i < lvl + 1; i++)
-            {
-                var ln = Document.Lines[i];
-                if (!ln.Folding.Has(FoldingStates.Invisible))
-                    DrawLine(g, ln, i, carets);
-            }
-        }
-
-        private void DrawLine(Graphics g, Line line, int lineIndex, List<CaretData> carets)
-        {
-            var lmarg = Info.TextLeft;
-            var tmarg = Info.TextTop;
-            var cwidth = Info.TextRight;
-            var x = lmarg;
-            var y = tmarg + line.Y;
-            var oldcut = 0;
-            var sel = Buffer.Selections.IsLineSelected(lineIndex);
-            var showEol = ShowEol;
-            var showWs = ShowWhitespace;
-
-            for (var j = 0; j < line.Stripes; j++)
-            {
-                var curline = CurrentLineIndicator 
-                    && (Buffer.Selections.Main.IsEmpty || Buffer.Selections.Main.Start.Line == Buffer.Selections.Main.End.Line)
-                    && lineIndex == Buffer.Selections.Main.Caret.Line;
-
-                if (curline)
-                {
-                    g.FillRectangle(Settings.CurrentLineIndicatorColor.Brush(),
-                          new Rectangle(lmarg - Scroll.ScrollPosition.X, y, Info.TextWidth, Info.LineHeight));
-                }
-
-                var cut = line.GetCut(j);
-
-                if (cut == line.Length)
-                    cut++;
-
-                var tet = 0;
-
-                for (var i = oldcut; i < cut; i++)
-                {
-                    var c = line.CharAt(i);
-                    var ct = c == '\t' ? Line.GetIndentationSize(tet, Context.IndentSize) : 1;
-                    tet += ct;
-                    var xw = ct * Info.CharWidth;
-                    var visible = x + Scroll.ScrollPosition.X >= lmarg && x + Scroll.ScrollPosition.X + xw <= cwidth
-                        && y + Scroll.ScrollPosition.Y >= tmarg;
-
-                    if (visible)
-                    {
-                        var style = default(Style);
-                        var rect = new Rectangle(x, y, xw, Info.LineHeight);
-                        var pos = new Pos(lineIndex, i);
-                        var high = sel && Buffer.Selections.IsSelected(pos);
-
-                        if (c == '\0' && showEol || (c == '\t' || c == ' ') && showWs)
-                        {
-                            c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
-                            style = /*line.GetStyle(i, Styles)
-                                .Combine(*/Styles.GetStyle((int)StandardStyle.SpecialSymbol);//);
-                        }
-                        else
-                            style = line.GetStyle(i, Styles);
-
-                        if (high)
-                        {
-                            var sstyle = Styles.GetStyle(StandardStyle.Selection);
-                            style = sstyle.Combine(style);
-                        }
-
-                        style.DrawAll(g, rect, c, pos);
-
-                        if (Buffer.Selections.HasCaret(pos))
-                        {
-                            var blink = Buffer.Selections.Main.Caret.Line == lineIndex
-                                && Buffer.Selections.Main.Caret.Col == i;
-
-                            if (blink)
-                            {
-                                var cg = CaretRenderer.GetDrawingSurface();
-                                cg.Clear(high ? Styles.Selection.BackColor 
-                                    : curline ? Settings.CurrentLineIndicatorColor : Styles.Default.BackColor);
-                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
-
-                                if (Settings.LongLineIndicators.Any(ind => ind == i) || (WordWrap && WordWrapColumn == i))
-                                    cg.DrawLine(Styles.SpecialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
-
-                                CaretRenderer.Resume();
-                            }
-
-                            carets.Add(new CaretData(x, y, pos.Line, pos.Col, blink));
-                        }
-                    }
-
-                    x += xw;
-                }
-
-                var addedWidth = 0;
-
-                if (line.Length > 0 && ShowLineLength)
-                    addedWidth = Renderer.DrawLineLengthIndicator(g, line.Length, x, y);
-
-                if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < Lines.Count &&
-                    Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
-                    Renderer.DrawFoldingIndicator(g, x + addedWidth, y);
-                
-                oldcut = cut;
-                y += Info.LineHeight;
-                x = lmarg;
-            }
         }
 
         public override Color BackColor => Styles.Default.BackColor;
@@ -355,7 +216,7 @@ namespace CodeBox
             if (!p.IsEmpty)
             {
                 var keys = ModifierKeys.ToModifiers();
-                var mouse = GetMouseClick(e);
+                var mouse = e.GetSpecialKey();
 
                 if (mouse != SpecialKey.None || keys != Modifiers.None)
                     Commands.Run(new KeyInput(keys | Modifiers.Move, mouse));
@@ -397,7 +258,7 @@ namespace CodeBox
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            var mouse = GetMouseClick(e);
+            var mouse = e.GetSpecialKey();
             
             if (e.Button == MouseButtons.Left)
             {
@@ -502,31 +363,10 @@ namespace CodeBox
             if (Autocomplete.WindowShown && Autocomplete.ListenKeys(e.KeyData))
                 return;
 
-            var keys = ModifierKeys.ToModifiers();
+            var inp = e.GetKeyInput();
 
-            if (e.KeyValue == (int)Keys.ControlKey || e.KeyValue == (int)Keys.ShiftKey)
-                return;
-
-            var sc = e.KeyCode.ToSpecialKey();
-            Commands.Run(sc != SpecialKey.None 
-                ? new KeyInput(keys, sc)
-                : new KeyInput(keys, GetChar(e)));
-        }
-
-        private SpecialKey GetMouseClick(MouseEventArgs e)
-        {
-            return e.Button == MouseButtons.Left && e.Clicks == 2 ? SpecialKey.DoubleClick 
-                : e.Button == MouseButtons.Left ? SpecialKey.Click
-                : e.Button == MouseButtons.Right ? SpecialKey.RightClick
-                : SpecialKey.None;
-        }
-
-        private char GetChar(KeyEventArgs e)
-        {
-            var keyValue = e.KeyValue;
-            if (!e.Shift && keyValue >= (int)Keys.A && keyValue <= (int)Keys.Z)
-                return (char)(keyValue + 32);
-            return (char)keyValue;
+            if (!inp.IsEmpty())
+                Commands.Run(inp);
         }
 
         [Browsable(false)]
@@ -618,8 +458,6 @@ namespace CodeBox
             get { return Buffer.ReadOnly; }
             set { Buffer.ReadOnly = value; }
         }
-
-        internal IEditorContext Context => this;
 
         [Browsable(false)]
         public EditorInfo Info { get; }

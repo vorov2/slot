@@ -23,12 +23,12 @@ namespace CodeBox.Commands
 
         }
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             redoSel = sel.Clone();
 
             if (!sel.IsEmpty)
-                deleteString = DeleteRangeCommand.DeleteRange(Context, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(View, sel);
 
             var pos = InsertRange(Document, sel.Start, insertString);
             undo = new Selection(sel.Start, pos);
@@ -47,7 +47,7 @@ namespace CodeBox.Commands
 
         public override ActionResults Undo(out Pos pos)
         {
-            DeleteRangeCommand.DeleteRange(Context, undo);
+            DeleteRangeCommand.DeleteRange(View, undo);
             pos = undo.Caret;
 
             if (deleteString != null)
@@ -110,7 +110,7 @@ namespace CodeBox.Commands
             return Pos.Empty;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new InsertRangeCommand();
         }

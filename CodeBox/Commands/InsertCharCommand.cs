@@ -19,7 +19,7 @@ namespace CodeBox.Commands
             this.insertChar = insertChar;
         }
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
@@ -27,7 +27,7 @@ namespace CodeBox.Commands
             var res = Change;
 
             if (!sel.IsEmpty)
-                insertString = DeleteRangeCommand.DeleteRange(Context, sel);
+                insertString = DeleteRangeCommand.DeleteRange(View, sel);
             else if (Buffer.Overtype && sel.Caret.Col < line.Length)
             {
                 res |= AtomicChange;
@@ -48,8 +48,8 @@ namespace CodeBox.Commands
         //TODO: check performance
         private bool CanShowAutocomplete(Selection sel, char c)
         {
-            var aff = Context.AffinityManager.GetAffinity(sel.Caret);
-            var sym = aff.GetAutocompleteSymbols(Context);
+            var aff = View.AffinityManager.GetAffinity(sel.Caret);
+            var sym = aff.GetAutocompleteSymbols(View);
             return (sym != null ? sym.IndexOf(c) != -1 : false) || char.IsLetter(c);
         }
 
@@ -80,7 +80,7 @@ namespace CodeBox.Commands
             return Change;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new InsertCharCommand(insertChar);
         }

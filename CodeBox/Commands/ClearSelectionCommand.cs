@@ -6,6 +6,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -13,7 +14,7 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.selectionclear")]
     public sealed class ClearSelectionCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             Buffer.Selections.Truncate();
             return Clean;

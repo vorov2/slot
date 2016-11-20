@@ -65,7 +65,7 @@ namespace CodeBox.ObjectModel
 
         public void EndUndoAction() => undoGroup = false;
 
-        internal void AddCommand(IEditorCommand cmd) =>
+        internal void AddCommand(EditorCommand cmd) =>
             UndoStack.Push(new CommandInfo { Id = counter, Command = cmd });
 
         internal bool LastAtomicChange { get; set; }

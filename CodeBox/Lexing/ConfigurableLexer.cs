@@ -4,6 +4,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Lexing
 {
@@ -18,7 +19,7 @@ namespace CodeBox.Lexing
 
         }
 
-        public void Style(IEditorContext context, Range range)
+        public void Style(IEditorView context, Range range)
         {
             Context = context;
             GrammarProvider.GetGrammar(GrammarKey).Sections.Reset();
@@ -316,7 +317,7 @@ namespace CodeBox.Lexing
 
         internal StyleManager Styles => Context.Styles;
 
-        public IEditorContext Context { get; private set; }
+        public IEditorView Context { get; private set; }
 
         public string GrammarKey { get; set; }
 

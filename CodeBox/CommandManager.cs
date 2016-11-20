@@ -8,6 +8,8 @@ using CodeBox.Commands;
 using CodeBox.ComponentModel;
 using CodeBox.Core;
 using System.IO;
+using CodeBox.Core.Keyboard;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox
 {
@@ -34,7 +36,7 @@ namespace CodeBox
 
             if (adapter.ProcessInput(input) == InputState.Complete)
             {
-                var cmd = ComponentCatalog.Instance.GetComponent<IEditorCommand>(adapter.LastKey);
+                var cmd = ComponentCatalog.Instance.GetComponent<EditorCommand>(adapter.LastKey);
                 if (cmd != null)
                     cmd.Clone().Run(editor);
             }

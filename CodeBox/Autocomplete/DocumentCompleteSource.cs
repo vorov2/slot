@@ -15,10 +15,10 @@ namespace CodeBox.Autocomplete
         private volatile bool busy;
         private DateTime lastUpdate;
         private int lastEdits = -1;
-        private IEditorContext context;
+        private IEditorView context;
         private const string SEPS = " \r\n\t`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?";
 
-        public void Initialize(IEditorContext context)
+        public void Initialize(IEditorView context)
         {
             this.context = context;
         }
@@ -54,7 +54,7 @@ namespace CodeBox.Autocomplete
             return Enumerable.Empty<string>();
         }
 
-        private void WalkDocument(IEditorContext ctx)
+        private void WalkDocument(IEditorView ctx)
         {
             if (ctx.Buffer.Edits == lastEdits)
                 return;

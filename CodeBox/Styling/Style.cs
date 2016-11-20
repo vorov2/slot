@@ -29,7 +29,7 @@ namespace CodeBox.Styling
         {
             var fc = ForeColor.IsEmpty && DefaultStyle != null ? DefaultStyle.ForeColor : ForeColor;
             g.DrawString(ch.ToString(),
-                Editor.CurrentFont.Get(FontStyle),
+                Renderer.CurrentFont.Get(FontStyle),
                 fc.Brush(),
                 rect.Location, Format);
         }

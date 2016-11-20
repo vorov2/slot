@@ -6,6 +6,7 @@ using CodeBox.ComponentModel;
 using CodeBox.Affinity;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -19,21 +20,21 @@ namespace CodeBox.Commands
         private int indent;
         private IEnumerable<Character> unindent;
 
-        public override ActionResults Execute(Selection selection)
+        protected override ActionResults Execute(Selection selection)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
 
             if (!selection.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(Context, selection);
+                @string = DeleteRangeCommand.DeleteRange(View, selection);
             
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
 
 
-            var indentKey = Context.AffinityManager.GetAffinity(new Pos(pos.Line, 0)).GetIndentComponentKey(Context);
+            var indentKey = View.AffinityManager.GetAffinity(new Pos(pos.Line, 0)).GetIndentComponentKey(View);
             var comp = ComponentCatalog.Instance.GetComponent<IDentComponent>(indentKey);
-            indent = comp != null ? comp.CalculateIndentation(Context, pos.Line) : 0;
+            indent = comp != null ? comp.CalculateIndentation(View, pos.Line) : 0;
 
             if (indent > 0)
             {
@@ -48,7 +49,7 @@ namespace CodeBox.Commands
                     }
                 }
 
-                var str = Context.UseTabs ? new string('\t', indent / Context.IndentSize)
+                var str = View.UseTabs ? new string('\t', indent / View.IndentSize)
                     : new string(' ', indent);
                 Document.Lines[pos.Line].Insert(0, str.MakeCharacters());
                 selection.Clear(new Pos(pos.Line, pos.Col + str.Length));
@@ -79,7 +80,7 @@ namespace CodeBox.Commands
 
             if (indent > 0)
             {
-                var real = Context.UseTabs ? indent / Context.IndentSize : indent;
+                var real = View.UseTabs ? indent / View.IndentSize : indent;
                 nextLine.RemoveRange(0, real);
             }
 
@@ -107,7 +108,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new InsertNewLineCommand();
         }

@@ -2,6 +2,7 @@
 using CodeBox.ObjectModel;
 using System.ComponentModel.Composition;
 using CodeBox.ComponentModel;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {

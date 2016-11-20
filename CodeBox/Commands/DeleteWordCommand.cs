@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -12,14 +13,14 @@ namespace CodeBox.Commands
     {
         private Selection redoSel;
 
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             var ln = Document.Lines[sel.Caret.Line];
 
             if (sel.Caret.Col == ln.Length)
                 return base.Execute(sel);
 
-            var seps = Context.Settings.NonWordSymbols;
+            var seps = View.Settings.NonWordSymbols;
             var st = SelectWordCommand.GetStrategy(seps, ln.CharAt(sel.Caret.Col));
             var col = SelectWordCommand.FindBoundRight(seps, ln, sel.Caret.Col, st);
             var newSel = new Selection(sel.Caret, new Pos(sel.Caret.Line, col));
@@ -27,7 +28,7 @@ namespace CodeBox.Commands
             return base.Execute(newSel);
         }
 
-        public override IEditorCommand Clone()
+        internal override EditorCommand Clone()
         {
             return new DeleteWordCommand();
         }

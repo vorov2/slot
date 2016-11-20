@@ -3,6 +3,7 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -10,7 +11,7 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.redo")]
     public sealed class RedoCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             Redo();
             return Pure | KeepRedo;
@@ -40,7 +41,7 @@ namespace CodeBox.Commands
 
                 if (cmd.Id == id)
                 {
-                    cmd.Command.Context = Context;
+                    cmd.Command.View = View;
                     Pos p;
                     var e = cmd.Command.Redo(out p);
                     pos = p;

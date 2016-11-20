@@ -4,6 +4,7 @@ using CodeBox.Autocomplete;
 using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -11,7 +12,7 @@ namespace CodeBox.Commands
     [ComponentData("command.editor.autocomplete")]
     public sealed class AutocompleteCommand : EditorCommand
     {
-        public override ActionResults Execute(Selection sel)
+        protected override ActionResults Execute(Selection sel)
         {
             return Pure | AutocompleteShow;
         }

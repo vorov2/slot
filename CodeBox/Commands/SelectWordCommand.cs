@@ -4,6 +4,7 @@ using CodeBox.Affinity;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
@@ -17,14 +18,14 @@ namespace CodeBox.Commands
             NonWord,
             Word
         }
-        
-        public override ActionResults Execute(Selection sel)
+
+        protected override ActionResults Execute(Selection sel)
         {
-            if (sel.Caret != Context.Caret)
+            if (sel.Caret != View.Caret)
                 return Clean;
 
             var caret = sel.Caret;
-            var range = SelectWord(Context, caret);
+            var range = SelectWord(View, caret);
             
             if (range == null)
             {
@@ -46,7 +47,7 @@ namespace CodeBox.Commands
 
         protected virtual void Select(Range range) => Buffer.Selections.Set(Selection.FromRange(range));
 
-        internal static Range SelectWord(IEditorContext ctx, Pos caret)
+        internal static Range SelectWord(IEditorView ctx, Pos caret)
         {
             var doc = ctx.Buffer.Document;
             var line = doc.Lines[caret.Line];

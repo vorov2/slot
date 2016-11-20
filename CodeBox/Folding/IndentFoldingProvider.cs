@@ -10,7 +10,7 @@ namespace CodeBox.Folding
 {
     public sealed class IndentFoldingProvider : IFoldingProvider
     {
-        public void Fold(IEditorContext ctx, Range range)
+        public void Fold(IEditorView ctx, Range range)
         {
             var prevIndent = 0;
             var li = range.Start.Line;

@@ -48,7 +48,7 @@ namespace CodeBox.Drawing
 
         private void Tick(object sender, EventArgs e)
         {
-            if (!editor.Focused)
+            if (!editor.Focused && timerDraw)
                 return;
 
             var rect = editor.CallTips.TipRectangle;

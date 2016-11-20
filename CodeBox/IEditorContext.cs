@@ -6,14 +6,11 @@ using CodeBox.Styling;
 using System;
 using CodeBox.Indentation;
 using CodeBox.CallTips;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox
 {
-    public interface IExecutionContext
-    {
-
-    }
-    public interface IEditorContext : IExecutionContext
+    public interface IEditorView : IExecutionContext
     {
         AffinityManager AffinityManager { get; }
 
@@ -43,9 +40,15 @@ namespace CodeBox
 
         bool Overtype { get; set; }
 
+        bool ShowEol { get; }
+
+        bool ShowWhitespace { get; }
+
+        bool CurrentLineIndicator { get; }
+
+        bool ShowLineLength { get; }
+
         Pos Caret { get; }
-
-
 
         MatchBracketManager MatchBrackets { get; }
 
