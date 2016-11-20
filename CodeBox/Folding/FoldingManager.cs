@@ -112,7 +112,7 @@ namespace CodeBox.Folding
                 else
                 {
                     var aff = editor.AffinityManager.GetRootAffinity();
-                    var key = aff.FoldingComponentKey ?? editor.Settings.FoldingComponentKey;
+                    var key = aff?.FoldingComponentKey ?? editor.Settings.FoldingComponentKey;
 
                     if (key != null)
                     {

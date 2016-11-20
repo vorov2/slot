@@ -18,6 +18,7 @@ using CodeBox.Affinity;
 using CodeBox.CallTips;
 using CodeBox.Core;
 using CodeBox.Core.Keyboard;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox
 {
@@ -34,12 +35,12 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor() : this(new EditorSettings(), new StyleCollection())
+        public Editor() : this(new EditorSettings(), new StyleCollection(), new KeyboardAdapter())
         {
 
         }
 
-        public Editor(EditorSettings settings, StyleCollection styles)
+        public Editor(EditorSettings settings, StyleCollection styles, KeyboardAdapter adapter)
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw 
@@ -47,6 +48,7 @@ namespace CodeBox
             Cursor = Cursors.IBeam;
             TabStop = true;
 
+            KeyboardAdapter = adapter;
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
             RightMargins = new MarginList(this);
@@ -56,7 +58,6 @@ namespace CodeBox
             CaretRenderer = new CaretRenderer(this);
             Renderer = new Renderer(this);
             Scroll = new ScrollingManager(this);
-            Commands = new CommandManager(this);
             Locations = new LocationManager(this);//+
             Folding = new FoldingManager(this);
             CallTips = new CallTipManager(this);
@@ -220,7 +221,7 @@ namespace CodeBox
                 var mouse = e.GetSpecialKey();
 
                 if (mouse != SpecialKey.None || keys != Modifiers.None)
-                    Commands.Run(new KeyInput(keys | Modifiers.Move, mouse));
+                    RunCommand(new KeyInput(keys | Modifiers.Move, mouse));
 
                 timer.Start();
             }
@@ -271,7 +272,7 @@ namespace CodeBox
                 {
                     var pos = Locations.LocationToPosition(e.Location);
                     Caret = pos.IsEmpty ? default(Pos) : pos;
-                    Commands.Run(new KeyInput(ModifierKeys.ToModifiers(), mouse));
+                    RunCommand(new KeyInput(ModifierKeys.ToModifiers(), mouse));
                     var idx = Buffer.Selections.IndexOfCaret(pos);
 
                     if (idx != -1)
@@ -303,7 +304,7 @@ namespace CodeBox
 
         private bool ProcessKey(char ch, Modifiers keys)
         {
-            if (keys == Modifiers.None || keys == Modifiers.Shift)
+            if (Focused && (keys == Modifiers.None || keys == Modifiers.Shift))
             {
                 switch (ch)
                 {
@@ -367,7 +368,21 @@ namespace CodeBox
             var inp = e.GetKeyInput();
 
             if (!inp.IsEmpty())
-                Commands.Run(inp);
+                RunCommand(inp);
+        }
+
+
+
+        public void RunCommand(KeyInput input)
+        {
+            Console.WriteLine($"KeyInput: {input}.");
+
+            if (KeyboardAdapter.ProcessInput(input) == InputState.Complete)
+            {
+                var cmd = ComponentCatalog.Instance.GetComponent<EditorCommand>(KeyboardAdapter.LastKey);
+                if (cmd != null)
+                    cmd.Clone().Run(this);
+            }
         }
 
         public override Color BackColor => Styles.Styles.DefaultStyle.BackColor;
@@ -491,7 +506,7 @@ namespace CodeBox
         public Pos Caret { get; private set; }
 
         [Browsable(false)]
-        public CommandManager Commands { get; }
+        public KeyboardAdapter KeyboardAdapter { get; }
 
         [Browsable(false)]
         public StyleManager Styles { get; }

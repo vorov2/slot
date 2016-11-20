@@ -16,6 +16,7 @@ using CodeBox.Folding;
 using CodeBox.Lexing;
 using CodeBox.Indentation;
 using CodeBox.Affinity;
+using CodeBox.Core.Keyboard;
 
 namespace CodeBox.Test
 {
@@ -56,7 +57,7 @@ namespace CodeBox.Test
             var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
             ed.Styles.Styles = coll;
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
-            ed.Commands.ReadKeymap(LocalFile("samples\\keymap.json"));
+            KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), ed.KeyboardAdapter);
             ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
                 LocalFile("test.htm"));
         }

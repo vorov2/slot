@@ -60,7 +60,6 @@
     <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
-    <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
