@@ -7,6 +7,7 @@ using System;
 using CodeBox.Indentation;
 using CodeBox.CallTips;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Lexing;
 
 namespace CodeBox
 {
@@ -23,6 +24,8 @@ namespace CodeBox
         FoldingManager Folding { get; }
 
         ScrollingManager Scroll { get; }
+
+        GrammarManager GrammarManager { get; }
 
         DocumentBuffer Buffer { get; }
 

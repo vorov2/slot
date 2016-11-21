@@ -1,10 +1,12 @@
 ﻿{
     "key": "csharp",
+    "extensions": [ "cs" ],
     "numbers": "(0123456789)[x]{0123456789.+-_abcdef}(lufdm)(ul)",
     "delimeters": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
     "brackets": "(){}[]",
     "commentMask": "/* */",
     "indentProvider": "indent.curly",
+    "foldingProvider": "folding.indent",
     "styleNumbers": true,
     "keywords": [
         {

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeBox.CallTips;
+using System.Text;
 
 namespace CodeBox.ObjectModel
 {
@@ -30,18 +31,31 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        internal DocumentBuffer(Document doc)
+        public DocumentBuffer(Document doc, string fileName, Encoding encoding)
         {
             Document = doc;
             Selections = new SelectionList();
             UndoStack = new LimitedStack<CommandInfo>();
             RedoStack = new LimitedStack<CommandInfo>();
             Tips = new List<CallTip>();
+            Encoding = encoding;
+            FileName = fileName;
             editorLock = new EditorLock(this);
         }
 
-        internal string GetText() =>
-            string.Join(Eol.AsString(), Document.Lines.Select(ln => ln.Text));
+        internal string GetText()
+        {
+            var @lock = ObtainLock();
+
+            try
+            {
+                return string.Join(Eol.AsString(), Document.Lines.Select(ln => ln.Text));
+            }
+            finally
+            {
+                @lock.Release();
+            }
+        }
 
         public string[] GetLines() => Document.Lines.Select(ln => ln.Text).ToArray();
 
@@ -118,5 +132,9 @@ namespace CodeBox.ObjectModel
             }
             set { _eol = value; }
         }
+
+        public string FileName { get; }
+
+        public Encoding Encoding { get; }
     }
 }

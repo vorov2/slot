@@ -1,4 +1,5 @@
 ﻿using CodeBox.Core.ComponentModel;
+using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -31,12 +32,20 @@ namespace CodeBox.Commands
             try
             {
                 if (pat.EndsWith("\\") || pat.EndsWith("//"))
-                    return Directory.EnumerateFileSystemEntries(pat).Select(sy => new ArgumentValue { Value = sy });
+                    return Directory.EnumerateFileSystemEntries(pat)
+                        .Where(v => v.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
+                        .Select(sy => new ArgumentValue { Value = sy });
                 else
                 {
                     var fi = new FileInfo(pat);
-                    return fi.Directory == null ? null
-                        : fi.Directory.EnumerateFileSystemInfos().Select(sy => new ArgumentValue { Value = sy.FullName });
+
+                    if (fi.Directory == null)
+                        return null;
+
+                    var loc = Environment.CurrentDirectory == fi.DirectoryName;
+                    return fi.Directory.EnumerateFileSystemInfos()
+                        .Where(v => (loc ? v.Name : v.FullName).StartsWith(pat, StringComparison.OrdinalIgnoreCase))
+                        .Select(sy => new ArgumentValue { Value = sy.FullName });
                 }
             }
             catch (Exception)
@@ -51,7 +60,8 @@ namespace CodeBox.Commands
                 return false;
 
             var fn = arg.ToString();
-            ((Editor)ctx).Text = File.ReadAllText(fn);
+            var txt = File.ReadAllText(fn, Encoding.UTF8);
+            ((Editor)ctx).AttachBuffer(new DocumentBuffer(Document.Read(txt), fn, Encoding.UTF8));
             return true;
         }
     }

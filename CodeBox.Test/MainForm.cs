@@ -41,11 +41,10 @@ namespace CodeBox.Test
             var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
             var html = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\html.grammar.json")));
             var css = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\css.grammar.json")));
-            lexer.GrammarProvider.RegisterGrammar(csharp);
-            lexer.GrammarProvider.RegisterGrammar(csharpExp);
-            lexer.GrammarProvider.RegisterGrammar(html);
-            lexer.GrammarProvider.RegisterGrammar(css);
-            lexer.GrammarKey = "html";
+            ed.GrammarManager.RegisterGrammar(csharp);
+            ed.GrammarManager.RegisterGrammar(csharpExp);
+            ed.GrammarManager.RegisterGrammar(html);
+            ed.GrammarManager.RegisterGrammar(css);
 
 
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
@@ -55,12 +54,12 @@ namespace CodeBox.Test
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
+            var coll = StylesReader.Read(File.ReadAllText("samples\\theme.json"));
             ed.Styles.Styles = coll;
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), ed.KeyboardAdapter);
-            ed.Text = File.ReadAllText(//@"C:\Test\bigcode.cs");
-                LocalFile("test.htm"));
+            var fl = LocalFile("test.htm");
+            ed.AttachBuffer(new DocumentBuffer(Document.Read(File.ReadAllText(fl)), fl, Encoding.UTF8));
         }
 
         private string LocalFile(string fileName)

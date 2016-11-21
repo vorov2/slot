@@ -25,7 +25,7 @@ namespace CodeBox.Commands
                 int count;
                 var exp = Undo(Buffer.UndoStack.Peek().Id, out count, out pos);
                 SetEditLines();
-                DoAftermath(exp | KeepRedo, count, pos);
+                DoAftermath(exp | KeepRedo, count, pos, -1);
             }
         }
 

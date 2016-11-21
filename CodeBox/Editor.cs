@@ -19,6 +19,9 @@ using CodeBox.CallTips;
 using CodeBox.Core;
 using CodeBox.Core.Keyboard;
 using CodeBox.Core.ComponentModel;
+using System.Text;
+using CodeBox.Lexing;
+using System.IO;
 
 namespace CodeBox
 {
@@ -35,19 +38,20 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor() : this(new EditorSettings(), new StyleCollection(), new KeyboardAdapter())
+        public Editor() : this(new EditorSettings(), new StyleCollection(), new KeyboardAdapter(), new GrammarManager())
         {
 
         }
 
-        public Editor(EditorSettings settings, StyleCollection styles, KeyboardAdapter adapter)
+        public Editor(EditorSettings settings, StyleCollection styles, KeyboardAdapter adapter, GrammarManager grammar)
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
-                | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw 
+                | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw
                 | ControlStyles.Selectable, true);
             Cursor = Cursors.IBeam;
             TabStop = true;
 
+            GrammarManager = grammar;
             KeyboardAdapter = adapter;
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
@@ -67,7 +71,7 @@ namespace CodeBox
             Settings = settings;
             Styles = new StyleManager(this, styles);
 
-            Buffer = new DocumentBuffer(Document.Read(""));
+            Text = "";
             InitializeBuffer(Buffer);
             timer.Tick += Tick;
         }
@@ -141,7 +145,7 @@ namespace CodeBox
 
             var carets = new List<CaretData>();
             Renderer.DrawLines(e.Graphics, carets);
-            
+
             e.Graphics.ResetTransform();
             Renderer.DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
             if (RightMargins.Count > 0)
@@ -264,7 +268,7 @@ namespace CodeBox
         {
             base.OnMouseDown(e);
             var mouse = e.GetSpecialKey();
-            
+
             if (e.Button == MouseButtons.Left)
             {
                 var mlist = Locations.FindMargin(e.Location);
@@ -293,7 +297,7 @@ namespace CodeBox
             if (!Focused)
                 Focus();
         }
-        
+
         protected override bool ProcessMnemonic(char charCode) =>
             ProcessKey(charCode, ModifierKeys.ToModifiers()) || base.ProcessMnemonic(charCode);
 
@@ -392,6 +396,27 @@ namespace CodeBox
 
         public override Font Font => Settings.Font;
 
+        public void AttachBuffer(DocumentBuffer buffer)
+        {
+            var @lock = Buffer?.ObtainLock();
+
+            try
+            {
+                Buffer = buffer;
+                GrammarManager.GrammarKey = GrammarManager.GetGrammarByFile(new FileInfo(buffer.FileName))?.Key;
+                InitializeBuffer(Buffer);
+                Scroll.InvalidateLines();
+                Styles.RestyleDocument();
+                Folding.RebuildFolding(full: true);
+                Redraw();
+            }
+            finally
+            {
+                if (@lock != null)
+                    @lock.Release();
+            }
+        }
+
         [Browsable(false)]
         public DocumentBuffer Buffer { get; private set; }
 
@@ -403,38 +428,12 @@ namespace CodeBox
         [Browsable(false)]
         public override string Text
         {
-            get
-            {
-                var @lock = Buffer.ObtainLock();
-
-                try
-                {
-                    return Buffer.GetText();
-                }
-                finally
-                {
-                    @lock.Release();
-                }
-            }
+            get { return Buffer?.GetText(); }
             set
             {
-                var @lock = Buffer.ObtainLock();
-
-                try
-                {
-                    base.Text = value;
-                    var doc = Document.Read(value);
-                    Buffer = new DocumentBuffer(doc);
-                    InitializeBuffer(Buffer);
-                    Scroll.InvalidateLines();
-                    Styles.RestyleDocument();
-                    Folding.RebuildFolding(full: true);
-                    Redraw();
-                }
-                finally
-                {
-                    @lock.Release();
-                }
+                var doc = Document.Read(value);
+                var buffer = new DocumentBuffer(doc, "untitled", Encoding.UTF8);
+                AttachBuffer(buffer);
             }
         }
 
@@ -535,6 +534,9 @@ namespace CodeBox
 
         [Browsable(false)]
         public AffinityManager AffinityManager { get; }
+
+        [Browsable(false)]
+        public GrammarManager GrammarManager { get; }
 
         [Browsable(false)]
         public int FirstEditLine { get; set; }

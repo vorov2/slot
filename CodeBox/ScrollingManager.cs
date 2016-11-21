@@ -89,8 +89,8 @@ namespace CodeBox
 
             if (cy < 0)
                 return -(cy / editor.Info.LineHeight);
-            else if (cy + editor.Info.LineHeight > editor.Info.TextBottom)
-                return -((cy - editor.Info.TextTop) / editor.Info.LineHeight);
+            else if (cy + editor.Info.LineHeight + editor.Info.TextTop > editor.Info.TextBottom)
+                return -(cy / editor.Info.LineHeight);
             else
                 return 0;
         }

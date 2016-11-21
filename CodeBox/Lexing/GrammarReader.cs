@@ -31,6 +31,11 @@ namespace CodeBox.Lexing
                     AutocompleteSymbols = dict.String("autocompleteSymbols")
                 };
 
+                var lst = dict.Object("extensions") as List<object>;
+
+                if (lst != null)
+                    grammar.Extensions.AddRange(lst.OfType<string>());
+
                 var rt = ProcessSection(grammar.Key, dict);
                 sectionMap.Add("root", rt);
                 grammar.Sections.Add(rt.Item3);

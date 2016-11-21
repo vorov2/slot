@@ -21,9 +21,12 @@ namespace CodeBox.Lexing
 
         public void Style(IEditorView context, Range range)
         {
+            if (context.GrammarManager.GrammarKey == null)
+                return;
+
             Context = context;
-            GrammarProvider.GetGrammar(GrammarKey).Sections.Reset();
-            Parse(new State(0, GrammarKey, false), range);
+            Context.GrammarManager.GetRootGrammar().Sections.Reset();
+            Parse(new State(0, Context.GrammarManager.GrammarKey, false), range);
         }
 
         private void Parse(State state, Range rng)
@@ -37,18 +40,18 @@ namespace CodeBox.Lexing
             {
                 var line = Lines[i];
                 Context.AffinityManager.ClearAssociations(i);
-                var grm = GrammarProvider.GetGrammar(state.GrammarKey);
+                var grm = Context.GrammarManager.GetGrammar(state.GrammarKey);
                 Styles.ClearStyles(i);
                 var col = 0;
                 var sect = grm.Sections[lss];
                 sect.Sections.ResetSelective();
                 state = ParseLine(sect, ref col, i);
-                grm = GrammarProvider.GetGrammar(state.GrammarKey);
-                var st = (sect.Id != 0 || sect.GrammarKey != GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
+                grm = Context.GrammarManager.GetGrammar(state.GrammarKey);
+                var st = (sect.Id != 0 || sect.GrammarKey != Context.GrammarManager.GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
 
                 while (col <= line.Length)
                 {
-                    grm = GrammarProvider.GetGrammar(state.GrammarKey);
+                    grm = Context.GrammarManager.GetGrammar(state.GrammarKey);
                     sect = grm.Sections[state.SectionId];
                     sect.Sections.ResetSelective();
                     state = ParseLine(sect, ref col, i);
@@ -65,7 +68,7 @@ namespace CodeBox.Lexing
 
         private int StateToBit(State state)
         {
-            return state.GrammarKey != GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
+            return state.GrammarKey != Context.GrammarManager.GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
         }
 
         private State ParseLine(GrammarSection mys, ref int i, int line)
@@ -73,7 +76,7 @@ namespace CodeBox.Lexing
             var start = i;
             var identStart = i;
             var ln = Lines[line];
-            var grammar = GrammarProvider.GetGrammar(mys.GrammarKey);
+            var grammar = Context.GrammarManager.GetGrammar(mys.GrammarKey);
             Context.AffinityManager.Associate(line, i, grammar.GlobalId);
             var wordSep = grammar.NonWordSymbols ?? Context.Settings.NonWordSymbols;
             var backm = mys.Id == 0 && mys.BackDelegate != null ? mys.BackDelegate : mys;
@@ -217,7 +220,7 @@ namespace CodeBox.Lexing
                     if (sect.ExternalGrammarKey != null)
                     {
                         var bd = sect;
-                        sect = GrammarProvider.GetGrammar(sect.ExternalGrammarKey).Sections[0];
+                        sect = Context.GrammarManager.GetGrammar(sect.ExternalGrammarKey).Sections[0];
                         sect.BackDelegate = bd;
                     }
 
@@ -249,7 +252,7 @@ namespace CodeBox.Lexing
                         parId = backm.ParentId;
 
                         if (parId != 0)
-                            GrammarProvider.GetGrammar(backm.GrammarKey).Sections[parId].Fallback = true;
+                            Context.GrammarManager.GetGrammar(backm.GrammarKey).Sections[parId].Fallback = true;
                     }
 
                     if (backm.DontStyleCompletely)
@@ -318,9 +321,5 @@ namespace CodeBox.Lexing
         internal StyleManager Styles => Context.Styles;
 
         public IEditorView Context { get; private set; }
-
-        public string GrammarKey { get; set; }
-
-        public GrammarProvider GrammarProvider { get; } = new GrammarProvider();
     }
 }

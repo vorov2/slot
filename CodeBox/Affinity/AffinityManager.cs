@@ -42,12 +42,7 @@ namespace CodeBox.Affinity
 
         public IDocumentAffinity GetRootAffinity()
         {
-            var prov = editor.Styles.Styler as ConfigurableLexer;
-
-            if (prov != null)
-                return prov.GrammarProvider.GetGrammar(prov.GrammarKey);
-
-            return null;
+            return editor.GrammarManager.GetRootGrammar();
         }
 
         public IDocumentAffinity GetAffinity(Pos pos)
@@ -61,12 +56,7 @@ namespace CodeBox.Affinity
             var id = GetAffinityId(line, col);
 
             if (id != 0)
-            {
-                var prov = editor.Styles.Styler as ConfigurableLexer;
-
-                if (prov != null)
-                    grm = prov.GrammarProvider.GetGrammar(id);
-            }
+                grm = editor.GrammarManager.GetGrammar(id);
 
             return grm;
         }

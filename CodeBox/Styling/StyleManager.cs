@@ -35,7 +35,8 @@ namespace CodeBox.Styling
             if (editor.Lines.Count == 0)
                 return;
 
-            var fvl = editor.FirstEditLine;/*editor.FirstEditLine < editor.Scroll.FirstVisibleLine
+            var fvl = editor.FirstEditLine < 0 ? editor.Scroll.FirstVisibleLine : editor.FirstEditLine;
+            /*editor.FirstEditLine < editor.Scroll.FirstVisibleLine
                 ? editor.FirstEditLine : editor.Scroll.FirstVisibleLine;*/
             var lvl = editor.Scroll.LastVisibleLine;
             var state = 0;

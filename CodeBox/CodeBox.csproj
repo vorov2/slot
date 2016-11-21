@@ -139,7 +139,7 @@
     <Compile Include="Indentation\CurlyDentProvider.cs" />
     <Compile Include="Lexing\EnumerableExtensions.cs" />
     <Compile Include="Lexing\Grammar.cs" />
-    <Compile Include="Lexing\GrammarProvider.cs" />
+    <Compile Include="Lexing\GrammarManager.cs" />
     <Compile Include="Lexing\GrammarReader.cs" />
     <Compile Include="Lexing\GrammarSection.cs" />
     <Compile Include="Lexing\GrammarSectionSettings.cs" />

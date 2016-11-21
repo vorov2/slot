@@ -16,6 +16,8 @@ namespace CodeBox.Commands
         public bool Run(IExecutionContext ctx, object arg = null)
         {
             View = ctx as IEditorView;
+            View.FirstEditLine = -1;
+            View.LastEditLine = -1;
 
             if (View == null || View.LimitedMode && !SupportLimitedMode)
                 return false;
@@ -26,8 +28,6 @@ namespace CodeBox.Commands
                 return false;
 
             var lines = Document.Lines;
-            View.FirstEditLine = int.MaxValue;
-            View.LastEditLine = 0;
             var selCount = Buffer.Selections.Count;
             var qry = selCount == 1 || View.LimitedMode ? null
                 : Buffer.Selections.OrderByDescending(s => s.End > s.Start ? s.Start : s.End);
@@ -37,15 +37,19 @@ namespace CodeBox.Commands
 
             if (qry == null || SingleRun)
             {
-                View.FirstEditLine = lastSel.GetFirstLine();
-                View.LastEditLine = lastSel.GetLastLine();
+                var fel = lastSel.GetFirstLine();
+                var lel = lastSel.GetLastLine();
                 exp = Execute(lastSel);
 
                 if (exp.Has(Modify) && (!Buffer.LastAtomicChange || !exp.Has(AtomicChange)) && !View.LimitedMode)
                     thisUndo = Buffer.BeginUndoAction();
 
                 if (exp.Has(Modify) && !View.LimitedMode)
+                {
                     Buffer.AddCommand(this);
+                    View.FirstEditLine = fel;
+                    View.LastEditLine = lel;
+                }
 
                 if (exp.Has(RestoreCaret))
                     AttachCaret(lastSel.Caret);
@@ -59,21 +63,18 @@ namespace CodeBox.Commands
                 foreach (var sel in qry)
                 {
                     var fel = sel.GetFirstLine();
-
-                    if (fel < View.FirstEditLine)
-                        View.FirstEditLine = fel;
-
                     var lel = sel.GetLastLine();
-
-                    if (lel > View.LastEditLine)
-                        View.LastEditLine = lel;
-
                     var e = cmd.Execute(sel);
-
                     exp |= e;
 
                     if (e.Has(Modify))
+                    {
                         Buffer.AddCommand(cmd);
+                        if (fel < View.FirstEditLine)
+                            View.FirstEditLine = fel;
+                        if (lel > View.LastEditLine)
+                            View.LastEditLine = lel;
+                    }
 
                     if (e.Has(RestoreCaret))
                         AttachCaret(sel.Caret);
@@ -92,7 +93,7 @@ namespace CodeBox.Commands
                 Buffer.EndUndoAction();
 
             if (exp != None)
-                DoAftermath(exp, Buffer.Selections.Count, lastSel.Caret);
+                DoAftermath(exp, Buffer.Selections.Count, lastSel.Caret, thisUndo ? 1 : 0);
 
             if (!exp.Has(IdleCaret) && !View.LimitedMode)
                 View.MatchBrackets.Match();
@@ -201,7 +202,7 @@ namespace CodeBox.Commands
             }
         }
 
-        protected void DoAftermath(ActionResults exp, int selCount, Pos caret)
+        protected void DoAftermath(ActionResults exp, int selCount, Pos caret, int edit = 0)
         {
             var scrolled = false;
 
@@ -214,7 +215,7 @@ namespace CodeBox.Commands
                     exp |= Scroll;
 
                 if (!exp.Has(ShallowChange))
-                    View.Buffer.Edits++;
+                    View.Buffer.Edits += edit;
 
                 if (!exp.Has(KeepRedo))
                     View.Buffer.RedoStack.Clear();

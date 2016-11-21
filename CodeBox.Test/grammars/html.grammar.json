@@ -1,5 +1,6 @@
 ﻿{
     "key": "html",
+    "extensions": [ "htm", "html" ],
     "delimeters": "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
     "brackets": "<>",
     "indentProvider": "indent.block",

@@ -39,7 +39,7 @@ namespace CodeBox.Margins
 
             if (!ed.Visible)
             {
-                g.DrawString(@"c:\directory\another directory\some test file.htm",
+                g.DrawString(Editor.Buffer.FileName + (Editor.Buffer.IsDirty ? "*" : ""),
                     Editor.Settings.SmallFont.Get(cs.FontStyle),
                     cs.ForeColor.Brush(),
                     Editor.Info.CharWidth * 2,//Editor.Info.TextLeft,
@@ -65,7 +65,7 @@ namespace CodeBox.Margins
         {
             if (commandEditor == null)
             {
-                commandEditor = new Editor(Editor.Settings, Editor.Styles.Styles, Editor.KeyboardAdapter);
+                commandEditor = new Editor(Editor.Settings, Editor.Styles.Styles, Editor.KeyboardAdapter, new Lexing.GrammarManager());
                 commandEditor.LimitedMode = true;
                 commandEditor.Visible = false;
                 commandEditor.Height = Editor.Info.LineHeight;
@@ -86,6 +86,7 @@ namespace CodeBox.Margins
             {
                 window = new AutocompleteWindow(Editor) { MaxItems = 15, SmallFont = true };
                 window.Visible = false;
+                window.Trimming = StringTrimming.EllipsisPath;
                 Editor.Controls.Add(window);
             }
 
@@ -98,7 +99,6 @@ namespace CodeBox.Margins
             var wnd = GetAutocompleteWindow();
             wnd.PreferredWidth = commandEditor.Width;
             var items = prov.EnumerateArgumentValues(lastLookupInput)
-                .Where(v => v.ToString().IndexOf(lastLookupInput, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(v => v.ToString());
 
             if (items.Any())
@@ -123,9 +123,12 @@ namespace CodeBox.Margins
 
         private void HideAutocompleteWindow()
         {
-            var wnd = GetAutocompleteWindow();
-            wnd.Visible = false;
-            Editor.LockMouseScrolling = false;
+            if (window != null && window.Visible)
+            {
+                window.Visible = false;
+                Editor.LockMouseScrolling = false;
+                Editor.Redraw();
+            }
         }
 
         private Statement statement;
@@ -290,7 +293,7 @@ namespace CodeBox.Margins
 
         private void HideEditor()
         {
-            if (commandEditor != null)
+            if (commandEditor != null && commandEditor.Visible)
             {
                 ResetBuffer();
                 commandEditor.Visible = false;

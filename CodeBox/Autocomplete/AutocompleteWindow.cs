@@ -17,6 +17,12 @@ namespace CodeBox.Autocomplete
         private readonly AutocompleteScrollBar scrollBar;
         private int hoverLine;
         private int selectedLine;
+        private StringFormat format = new StringFormat(StringFormat.GenericTypographic)
+        {
+            LineAlignment = StringAlignment.Near,
+            Alignment = StringAlignment.Near,
+            Trimming = StringTrimming.None
+        };
 
         class ItemInfo
         {
@@ -72,6 +78,7 @@ namespace CodeBox.Autocomplete
             g.DrawRectangle(borderPen,
                 e.ClipRectangle.Location.X, e.ClipRectangle.Location.Y,
                 e.ClipRectangle.Width - borderPen.Width, e.ClipRectangle.Height - borderPen.Width);
+            format.Trimming = Trimming;
 
             if (items != null)
             {
@@ -90,7 +97,7 @@ namespace CodeBox.Autocomplete
 
                         g.DrawString(s.Text, SmallFont ? editor.Settings.SmallFont : editor.Settings.Font, ps.ForeColor.Brush(),
                             new Rectangle(CharWidth, y, Width - CharWidth*2, LineHeight),
-                            TextStyle.Format);
+                            format);
                     }
                 }
             }
@@ -231,6 +238,8 @@ namespace CodeBox.Autocomplete
         internal int MaxItems { get; set; } = 10;
 
         internal bool SmallFont { get; set; } = true;
+
+        internal StringTrimming Trimming { get; set; } = StringTrimming.Character;
 
         internal int CharWidth => SmallFont ? editor.Info.SmallCharWidth : editor.Info.CharWidth;
 
