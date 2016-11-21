@@ -177,7 +177,7 @@ namespace CodeBox
                 Mono ? PointToClient(e.Location) : e.Location))
                 return;
 
-            if (LockMouseScrolling)
+            if (LockMouseScrolling || LimitedMode)
                 return;
 
             base.OnMouseWheel(e);

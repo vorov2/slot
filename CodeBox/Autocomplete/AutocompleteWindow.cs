@@ -237,7 +237,7 @@ namespace CodeBox.Autocomplete
 
         internal int MaxItems { get; set; } = 10;
 
-        internal bool SmallFont { get; set; } = true;
+        internal bool SmallFont { get; set; }
 
         internal StringTrimming Trimming { get; set; } = StringTrimming.Character;
 

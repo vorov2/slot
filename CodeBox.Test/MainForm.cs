@@ -41,10 +41,12 @@ namespace CodeBox.Test
             var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
             var html = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\html.grammar.json")));
             var css = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\css.grammar.json")));
+            var json = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\json.grammar.json")));
             ed.GrammarManager.RegisterGrammar(csharp);
             ed.GrammarManager.RegisterGrammar(csharpExp);
             ed.GrammarManager.RegisterGrammar(html);
             ed.GrammarManager.RegisterGrammar(css);
+            ed.GrammarManager.RegisterGrammar(json);
 
 
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
@@ -54,7 +56,7 @@ namespace CodeBox.Test
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            var coll = StylesReader.Read(File.ReadAllText("samples\\theme.json"));
+            var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
             ed.Styles.Styles = coll;
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), ed.KeyboardAdapter);

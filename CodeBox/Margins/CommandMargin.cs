@@ -121,14 +121,16 @@ namespace CodeBox.Margins
                 InsertCompleteString();
         }
 
-        private void HideAutocompleteWindow()
+        private bool HideAutocompleteWindow()
         {
             if (window != null && window.Visible)
             {
                 window.Visible = false;
                 Editor.LockMouseScrolling = false;
-                Editor.Redraw();
+                return true;
             }
+
+            return false;
         }
 
         private Statement statement;
@@ -284,6 +286,7 @@ namespace CodeBox.Margins
 
         private void ShowEditor()
         {
+            Editor.Redraw();
             var ed = GetEditor();
             ed.Top = (lastBounds.Height - ed.Height) / 2;
             ed.Left = Editor.ClientSize.Width / 20;
@@ -293,13 +296,17 @@ namespace CodeBox.Margins
 
         private void HideEditor()
         {
+            var hidden = false;
+
             if (commandEditor != null && commandEditor.Visible)
             {
                 ResetBuffer();
                 commandEditor.Visible = false;
+                hidden = true;
             }
 
-            HideAutocompleteWindow();
+            if (HideAutocompleteWindow() || hidden)
+                Editor.Redraw();
         }
 
         private void ExecuteCommand(string command)
