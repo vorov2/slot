@@ -12,7 +12,7 @@ namespace CodeBox.Commands
     [CommandData("editor.cut", "ebx")]
     public sealed class CutCommand : DeleteRangeCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var res = base.Execute(sel);
 
@@ -38,8 +38,8 @@ namespace CodeBox.Commands
             return new CutCommand();
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

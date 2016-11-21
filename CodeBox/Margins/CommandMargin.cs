@@ -254,7 +254,7 @@ namespace CodeBox.Margins
         {
             var len = (lastLookupInput ?? "").Length;
             var str = window.SelectedItem.Substring(len);
-            new InsertRangeCommand(str.MakeCharacters()).Run(commandEditor);
+            commandEditor.RunCommand("editor.insertrange", str.MakeCharacters());
             HideAutocompleteWindow();
         }
 

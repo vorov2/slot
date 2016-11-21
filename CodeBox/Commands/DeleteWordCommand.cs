@@ -13,14 +13,15 @@ namespace CodeBox.Commands
     {
         private Selection redoSel;
 
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var ln = Document.Lines[sel.Caret.Line];
 
             if (sel.Caret.Col == ln.Length)
                 return base.Execute(sel);
 
-            var seps = View.Settings.NonWordSymbols;
+            var aff = View.AffinityManager.GetAffinity(sel.Caret);
+            var seps = aff.NonWordSymbols ?? View.Settings.NonWordSymbols;
             var st = SelectWordCommand.GetStrategy(seps, ln.CharAt(sel.Caret.Col));
             var col = SelectWordCommand.FindBoundRight(seps, ln, sel.Caret.Col, st);
             var newSel = new Selection(sel.Caret, new Pos(sel.Caret.Line, col));
@@ -47,8 +48,8 @@ namespace CodeBox.Commands
             return ret;
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

@@ -44,6 +44,6 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

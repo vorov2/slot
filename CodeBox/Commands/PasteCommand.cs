@@ -11,7 +11,7 @@ namespace CodeBox.Commands
     [CommandData("editor.paste", "ebv")]
     public sealed class PasteCommand : InsertRangeCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var str = Clipboard.GetText();
             base.insertString = str.MakeCharacters();
@@ -23,6 +23,6 @@ namespace CodeBox.Commands
             return new PasteCommand();
         }
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

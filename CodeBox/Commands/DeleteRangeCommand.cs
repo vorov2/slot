@@ -11,7 +11,7 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             redoSel = sel.Clone();
             data = DeleteRange(View, sel);
@@ -87,6 +87,6 @@ namespace CodeBox.Commands
             return range;
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
     }
 }

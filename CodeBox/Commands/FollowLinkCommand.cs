@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     [CommandData("editor.followlink", "etl")]
     public sealed class FollowLinkCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var pos = View.Caret;
             var ln = Document.Lines[pos.Line];
@@ -29,6 +29,6 @@ namespace CodeBox.Commands
             return Pure;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
     }
 }

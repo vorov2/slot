@@ -6,11 +6,11 @@ namespace CodeBox.Commands
 {
     public abstract class CaretCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var pos = GetPosition(sel);
             sel.Clear(pos);
-            Buffer.Selections.ValidateCaret(sel, Document);
+            Buffer.Selections.ValidateCaret(sel);
             return Clean | Scroll;
         }
 

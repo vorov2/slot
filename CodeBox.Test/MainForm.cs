@@ -61,7 +61,7 @@ namespace CodeBox.Test
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), ed.KeyboardAdapter);
             var fl = LocalFile("test.htm");
-            ed.AttachBuffer(new DocumentBuffer(Document.Read(File.ReadAllText(fl)), fl, Encoding.UTF8));
+            ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), fl, Encoding.UTF8));
         }
 
         private string LocalFile(string fileName)

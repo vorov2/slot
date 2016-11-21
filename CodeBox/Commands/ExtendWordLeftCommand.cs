@@ -12,6 +12,6 @@ namespace CodeBox.Commands
     {
         protected override Pos Select(Selection sel) => WordLeftCommand.WordLeft(View, sel);
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

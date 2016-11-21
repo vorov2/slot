@@ -14,7 +14,7 @@ namespace CodeBox.Commands
     [CommandData("editor.selectionclear", "esc")]
     public sealed class ClearSelectionCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             Buffer.Selections.Truncate();
             return Clean;

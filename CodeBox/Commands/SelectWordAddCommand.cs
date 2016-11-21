@@ -17,7 +17,7 @@ namespace CodeBox.Commands
             if (Buffer.Selections.Count == 1 && Buffer.Selections.Main.IsEmpty)
                 base.Select(range);
             else
-                Buffer.Selections.Add(Selection.FromRange(range));
+                Buffer.Selections.AddFast(Selection.FromRange(range));
         }
     }
 }

@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
+    [Export(typeof(ICommand))]
+    [CommandData("editor.insertrange", "eeir")]
     public class InsertRangeCommand : EditorCommand
     {
         private Selection undo;
@@ -13,18 +17,13 @@ namespace CodeBox.Commands
         private IEnumerable<Character> deleteString;
         protected IEnumerable<Character> insertString;
 
-        public InsertRangeCommand(IEnumerable<Character> insertString)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
-            this.insertString = insertString;
-        }
+            insertString = insertString ?? arg as IEnumerable<Character>;
 
-        protected InsertRangeCommand()
-        {
+            if (insertString == null)
+                return Pure;
 
-        }
-
-        protected override ActionResults Execute(Selection sel)
-        {
             redoSel = sel.Clone();
 
             if (!sel.IsEmpty)
@@ -40,7 +39,7 @@ namespace CodeBox.Commands
         {
             deleteString = null;
             var sel = redoSel;
-            Execute(sel);
+            Execute(sel, insertString);
             pos = sel.Caret;
             return Change;
         }
@@ -115,8 +114,8 @@ namespace CodeBox.Commands
             return new InsertRangeCommand();
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

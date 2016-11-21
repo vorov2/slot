@@ -16,7 +16,7 @@ namespace CodeBox.ObjectModel
             Id = Guid.NewGuid();
         }
 
-        public static Document Read(string source)
+        public static Document FromString(string source)
         {
             var doc = new Document();
             doc.OriginalEol = source.IndexOf("\r\n") != -1 ? Eol.CrLf
@@ -30,13 +30,13 @@ namespace CodeBox.ObjectModel
             return doc;
         }
 
-        public Line NewLine(string str) => Line.FromString(str, ++lineSequence);
-
-        public Line NewLine(IEnumerable<Character> chars) => new Line(chars, ++lineSequence);
-
         public Guid Id { get; private set; }
 
-        public List<Line> Lines { get; private set; }
+        internal Line NewLine(string str) => Line.FromString(str, ++lineSequence);
+
+        internal Line NewLine(IEnumerable<Character> chars) => new Line(chars, ++lineSequence);
+
+        internal List<Line> Lines { get; private set; }
 
         internal Eol OriginalEol { get; private set; }
     }

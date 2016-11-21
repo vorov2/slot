@@ -22,9 +22,9 @@ namespace CodeBox.Commands
 
         Scroll = 0x04,
 
-        SingleRun = 0x08,
+        NeedUndo = 0x08,
 
-        KeepRedo = 0x10,
+        NeedRedo = 0x10,
 
         Clean = 0x20,
 
@@ -40,7 +40,9 @@ namespace CodeBox.Commands
 
         AutocompleteKeep = 0x800,
 
-        AutocompleteShow = 0x1000
+        AutocompleteShow = 0x1000,
+
+        KeepRedo = 0x2000,
     }
 
     public static class ActionResultsExtensions

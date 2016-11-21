@@ -10,22 +10,16 @@ namespace CodeBox.ObjectModel
     public sealed class SelectionList : IEnumerable<Selection>
     {
         private readonly List<Selection> sels;
-        
-        internal SelectionList(IEnumerable<Selection> seq)
-        {
-            sels = seq.ToList();
+        private readonly Document doc;
 
-            if (sels.Count == 0)
-                sels.Add(new Selection());
-        }
-
-        internal SelectionList()
+        internal SelectionList(Document doc)
         {
+            this.doc = doc;
             sels = new List<Selection>();
             sels.Add(new Selection());
         }
 
-        internal void ValidateCaret(Selection sel, Document doc)
+        internal void ValidateCaret(Selection sel)
         {
             var caret = sel.Caret;
             var len = sels.Count;
@@ -49,7 +43,22 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        public void Add(Selection sel) => sels.Add(sel);
+        public void Add(Selection sel)
+        {
+            AddFast(sel);
+
+            if (sel.IsEmpty)
+                ValidateCaret(sel);
+            else
+            {
+                var osel = GetIntersection(sel);
+
+                if (osel != null)
+                    Remove(osel);
+            }
+        }
+
+        internal void AddFast(Selection sel) => sels.Add(sel);
 
         internal void AddFirst(Selection sel) => sels.Insert(0, sel);
 
@@ -70,24 +79,15 @@ namespace CodeBox.ObjectModel
 
         public void Truncate()
         {
-            if (sels.Count == 1)
-                sels[0].Clear();
-            else
-            {
-                var sel = sels[sels.Count - 1];
-                sel.Clear();
-                Set(sel);
-            }
+            Set(Main);
         }
-
-        internal SelectionList Clone() => new SelectionList(sels.Select(s => s.Clone()));
 
         public void Remove(Selection sel)
         {
             if (sels.Count > 1)
                 sels.Remove(sel);
             else
-                sel.Clear(default(Pos));
+                sel.Clear(sel.Caret);
         }
 
         public IEnumerator<Selection> GetEnumerator() => sels.GetEnumerator();
@@ -114,7 +114,7 @@ namespace CodeBox.ObjectModel
 
         public bool HasCaret(Pos pos) => IndexOfCaret(pos) != -1;
 
-        public int IndexOfCaret(Pos pos)
+        internal int IndexOfCaret(Pos pos)
         {
             for (var i = 0; i < sels.Count; i++)
                 if (sels[i].Caret == pos)

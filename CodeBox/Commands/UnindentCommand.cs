@@ -17,7 +17,7 @@ namespace CodeBox.Commands
         private List<int> undoIndents;
         private bool useTab;
 
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             redoSel = sel.Clone();
             useTab = View.UseTabs;
@@ -114,6 +114,6 @@ namespace CodeBox.Commands
         }
 
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
     }
 }

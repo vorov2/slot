@@ -23,6 +23,6 @@ namespace CodeBox.Commands
             return new Pos(pos.Line, ln.Length);
         }
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

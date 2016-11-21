@@ -42,6 +42,6 @@ namespace CodeBox.Commands
                 return LeftCommand.MoveLeft(ctx.Buffer.Document, sel);
         }
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

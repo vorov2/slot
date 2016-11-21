@@ -16,6 +16,6 @@ namespace CodeBox.Commands
             return new Pos(idx, Document.Lines[idx].Length);
         }
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

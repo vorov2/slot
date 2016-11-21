@@ -14,22 +14,11 @@ namespace CodeBox.Commands
     {
         private int undoLine;
         private Pos undoCaret;
-        private Pos togglePos;
 
-        public ToggleFoldingCommand(Pos togglePos)
-        {
-            this.togglePos = togglePos;
-        }
-
-        public ToggleFoldingCommand()
-        {
-            togglePos = Pos.Empty;
-        }
-
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             undoCaret = sel.Caret;
-            var pos = togglePos == Pos.Empty ? View.Caret : togglePos;
+            var pos = arg == null || !(arg is Pos) ? View.Caret : (Pos)arg;
             var ln = pos.IsEmpty ? sel.Caret.Line : pos.Line;
             var level = -1;
 
@@ -69,9 +58,9 @@ namespace CodeBox.Commands
 
         internal override EditorCommand Clone()
         {
-            return new ToggleFoldingCommand(togglePos);
+            return new ToggleFoldingCommand();
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
     }
 }

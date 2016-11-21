@@ -11,7 +11,7 @@ namespace CodeBox.Commands
     [CommandData("editor.selectnormal", "esn")]
     public sealed class NormalSelectCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             DoSelection(View.Caret);
             return Clean | Scroll;
@@ -27,8 +27,8 @@ namespace CodeBox.Commands
                 Buffer.Selections.Remove(osel);
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

@@ -11,7 +11,7 @@ namespace CodeBox.Commands
     [CommandData("editor.caretset", "ecs")]
     public sealed class SetCaretCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var newsel = default(Selection);
             var range = default(Range);
@@ -29,8 +29,8 @@ namespace CodeBox.Commands
             return Clean;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

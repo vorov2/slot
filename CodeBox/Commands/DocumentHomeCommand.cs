@@ -12,6 +12,6 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => default(Pos);
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

@@ -14,7 +14,7 @@ namespace CodeBox.Commands
     [CommandData("editor.commandbartoggle", "acb")]
     public sealed class ToggleCommandBar : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var ed = View as Editor;
 
@@ -32,8 +32,8 @@ namespace CodeBox.Commands
             return ActionResults.Clean;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

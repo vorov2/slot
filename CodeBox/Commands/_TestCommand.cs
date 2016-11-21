@@ -61,7 +61,7 @@ namespace CodeBox.Commands
 
             var fn = arg.ToString();
             var txt = File.ReadAllText(fn, Encoding.UTF8);
-            ((Editor)ctx).AttachBuffer(new DocumentBuffer(Document.Read(txt), fn, Encoding.UTF8));
+            ((Editor)ctx).AttachBuffer(new DocumentBuffer(Document.FromString(txt), fn, Encoding.UTF8));
             return true;
         }
     }

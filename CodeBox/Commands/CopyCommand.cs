@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     [CommandData("editor.copy", "ebc")]
     public sealed class CopyCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var sb = new StringBuilder();
 
@@ -32,10 +32,10 @@ namespace CodeBox.Commands
             return Pure;
         }
 
-        internal static string GetTextRange(IEditorView ctx, Range rangesr)
+        internal static string GetTextRange(IEditorView ctx, Range range)
         {
             var doc = ctx.Buffer.Document;
-            var sel = rangesr.Normalize();
+            var sel = range.Normalize();
 
             if (sel.IsEmpty)
                 return null;
@@ -74,8 +74,8 @@ namespace CodeBox.Commands
             return str;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

@@ -47,6 +47,6 @@ namespace CodeBox.ObjectModel
 
         public Pos Caret => End;
 
-        public int RestoreCaretCol { get; private set; }
+        internal int RestoreCaretCol { get; private set; }
     }
 }

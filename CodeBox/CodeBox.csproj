@@ -121,6 +121,8 @@
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
     <Compile Include="Commands\_TestCommand.cs" />
+    <Compile Include="ComponentModel\ITextEditor.cs" />
+    <Compile Include="ComponentModel\IExecutorComponent.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="IEditorLock.cs" />

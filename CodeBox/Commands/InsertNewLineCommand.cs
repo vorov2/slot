@@ -20,7 +20,7 @@ namespace CodeBox.Commands
         private int indent;
         private IEnumerable<Character> unindent;
 
-        protected override ActionResults Execute(Selection selection)
+        internal override ActionResults Execute(Selection selection, object arg = null)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();
@@ -113,6 +113,6 @@ namespace CodeBox.Commands
             return new InsertNewLineCommand();
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
     }
 }

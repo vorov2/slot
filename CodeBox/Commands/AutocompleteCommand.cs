@@ -12,11 +12,11 @@ namespace CodeBox.Commands
     [CommandData("editor.autocomplete", "eea")]
     public sealed class AutocompleteCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             return Pure | AutocompleteShow;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
     }
 }

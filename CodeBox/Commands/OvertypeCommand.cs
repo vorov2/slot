@@ -11,12 +11,12 @@ namespace CodeBox.Commands
     [CommandData("editor.overtype", "edo")]
     public sealed class OvertypeCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             View.Overtype = !View.Overtype;
             return Clean;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
     }
 }

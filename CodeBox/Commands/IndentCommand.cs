@@ -16,7 +16,7 @@ namespace CodeBox.Commands
         private List<int> undoIndents;
         private bool useTab;
 
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var startLine = Document.Lines[sel.Start.Line];
 
@@ -143,7 +143,7 @@ namespace CodeBox.Commands
                     : new string(' ', Line.GetIndentationSize(line.GetTetras(
                         line.GetFirstNonIndentChar(), ctx.IndentSize), ctx.IndentSize));
                 undos.Add(indent.Length);
-                var pos = HomeCommand.MoveHome(ctx.Buffer.Document, new Pos(i, line.Length));
+                var pos = new Pos(i, 0);
                 line.Insert(pos.Col, indent.MakeCharacters());
 
                 if (i == norm.Start.Line)
@@ -161,8 +161,8 @@ namespace CodeBox.Commands
             return new IndentCommand();
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
 
-        public override bool SupportLimitedMode => false;
+        internal override bool SupportLimitedMode => false;
     }
 }

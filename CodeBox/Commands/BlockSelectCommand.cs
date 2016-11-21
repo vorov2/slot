@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     [CommandData("editor.selectblock", "esb")]
     public sealed class BlockSelectCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             if (View.WordWrap)
                 return Pure;
@@ -95,6 +95,6 @@ namespace CodeBox.Commands
             }
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
     }
 }

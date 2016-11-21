@@ -18,7 +18,7 @@ namespace CodeBox.Commands
         protected Selection redoSel;
         private int unindent;
 
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             redoSel = sel.Clone();
             var res = Clean;
@@ -133,8 +133,8 @@ namespace CodeBox.Commands
             return new DeleteBackCommand();
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

@@ -19,11 +19,11 @@ namespace CodeBox
 
         StyleManager Styles { get; }//?
 
-        AutocompleteManager Autocomplete { get; }
+        AutocompleteManager Autocomplete { get; } //-
 
         FoldingManager Folding { get; }
 
-        ScrollingManager Scroll { get; }
+        ScrollingManager Scroll { get; } //?
 
         GrammarManager GrammarManager { get; }
 
@@ -53,7 +53,7 @@ namespace CodeBox
 
         Pos Caret { get; }
 
-        MatchBracketManager MatchBrackets { get; }
+        MatchBracketManager MatchBrackets { get; } //-
 
         int FirstEditLine { get; set; }
 

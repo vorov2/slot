@@ -12,6 +12,6 @@ namespace CodeBox.Commands
     {
         protected override Pos Select(Selection sel) => EndCommand.MoveEnd(Document, sel.Caret);
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

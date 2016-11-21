@@ -11,21 +11,9 @@ namespace CodeBox.Commands
     [CommandData("editor.selectline", "esl")]
     public sealed class SelectLineCommand : EditorCommand
     {
-        private Pos pos;
-
-        public SelectLineCommand(Pos pos)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
-            this.pos = pos;
-        }
-
-        public SelectLineCommand()
-        {
-            pos = Pos.Empty;
-        }
-
-        protected override ActionResults Execute(Selection sel)
-        {
-            var p = pos == Pos.Empty ? View.Caret : pos;
+            var p = arg == null || !(arg is Pos) ? View.Caret : (Pos)arg;
 
             if (p.Line > -1)
             {

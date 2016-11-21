@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
 using CodeBox.Affinity;
+using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
+    [Export(typeof(ICommand))]
+    [CommandData("editor.insertchar", "eeic", ArgumentName = "char", ArgumentType = ArgumentType.String)]
     public class InsertCharCommand : EditorCommand
     {
         private Character deleteChar;
@@ -14,13 +18,22 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        public InsertCharCommand(Character insertChar)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
-            this.insertChar = insertChar;
-        }
+            if (arg is Character)
+                insertChar = (Character)arg;
+            else if (arg is string)
+            {
+                var s = (string)arg;
 
-        protected override ActionResults Execute(Selection sel)
-        {
+                if (s.Length == 0)
+                    return Pure;
+                else
+                    insertChar = new Character(s[0]);
+            }
+            else
+                return Pure;
+
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
             redoSel = sel.Clone();
@@ -57,7 +70,7 @@ namespace CodeBox.Commands
         {
             insertString = null;
             deleteChar = Character.Empty;
-            Execute(redoSel);
+            Execute(redoSel, insertChar);
             pos = new Pos(redoSel.Start.Line, redoSel.Start.Col + 1);
             return Change;
         }
@@ -82,11 +95,11 @@ namespace CodeBox.Commands
 
         internal override EditorCommand Clone()
         {
-            return new InsertCharCommand(insertChar);
+            return new InsertCharCommand();
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

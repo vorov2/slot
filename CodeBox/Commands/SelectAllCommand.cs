@@ -11,7 +11,7 @@ namespace CodeBox.Commands
     [CommandData("editor.selectall", "esa")]
     public sealed class SelectAllCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var idx = Document.Lines.Count - 1;
             var ln = Document.Lines[idx];
@@ -20,8 +20,8 @@ namespace CodeBox.Commands
             return Clean | Scroll;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

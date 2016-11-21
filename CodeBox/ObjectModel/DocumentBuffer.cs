@@ -34,7 +34,7 @@ namespace CodeBox.ObjectModel
         public DocumentBuffer(Document doc, string fileName, Encoding encoding)
         {
             Document = doc;
-            Selections = new SelectionList();
+            Selections = new SelectionList(doc);
             UndoStack = new LimitedStack<CommandInfo>();
             RedoStack = new LimitedStack<CommandInfo>();
             Tips = new List<CallTip>();
@@ -43,7 +43,7 @@ namespace CodeBox.ObjectModel
             editorLock = new EditorLock(this);
         }
 
-        internal string GetText()
+        public string GetText()
         {
             var @lock = ObtainLock();
 
@@ -56,8 +56,6 @@ namespace CodeBox.ObjectModel
                 @lock.Release();
             }
         }
-
-        public string[] GetLines() => Document.Lines.Select(ln => ln.Text).ToArray();
 
         public IEditorLock ObtainLock()
         {

@@ -42,7 +42,7 @@ namespace CodeBox.Autocomplete
         private void InsertCompleteString()
         {
             var str = window.SelectedItem.Substring(completeString.Length);
-            new InsertRangeCommand(str.MakeCharacters()).Run(editor);
+            editor.RunCommand("editor.insertrange", str.MakeCharacters());
             HideAutocomplete();
         }
 

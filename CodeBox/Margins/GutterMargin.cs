@@ -22,7 +22,7 @@ namespace CodeBox.Margins
         {
             var sel = Editor.Buffer.Selections.Main;
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
-            new SelectLineCommand(new Pos(lineIndex, 0)).Run(Editor);
+            Editor.RunCommand("editor.selectline", new Pos(lineIndex, 0));
             return MarginEffects.Redraw;
         }
 

@@ -11,10 +11,10 @@ namespace CodeBox.Commands
     [CommandData("editor.caretadd", "eca")]
     public sealed class AddCaretCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var newSel = new Selection(View.Caret);
-            Buffer.Selections.Add(newSel);
+            Buffer.Selections.AddFast(newSel);
 
             var osel = Buffer.Selections.GetIntersection(newSel);
 
@@ -24,6 +24,6 @@ namespace CodeBox.Commands
             return Clean;
         }
 
-        public override bool SingleRun => true;
+        internal override bool SingleRun => true;
     }
 }

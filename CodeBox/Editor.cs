@@ -321,7 +321,7 @@ namespace CodeBox
                     case '\u001b': //Esc
                         return true;
                     default:
-                        new InsertCharCommand(new Character(ch)).Run(this);
+                        RunCommand("editor.insertchar", new Character(ch));
                         break;
                 }
 
@@ -383,11 +383,14 @@ namespace CodeBox
             Console.WriteLine($"KeyInput: {input}.");
 
             if (KeyboardAdapter.ProcessInput(input) == InputState.Complete)
-            {
-                var cmd = ComponentCatalog.Instance.GetCommand(KeyboardAdapter.LastKey) as EditorCommand;
-                if (cmd != null)
-                    cmd.Clone().Run(this);
-            }
+                RunCommand(KeyboardAdapter.LastKey);
+        }
+
+        internal void RunCommand(string commandKey, object arg = null)
+        {
+            var exec = ComponentCatalog.Instance.GetComponent("executor.editor") as ComponentModel.IExecutorComponent;
+            if (exec != null)
+                exec.Execute(this, commandKey, arg);
         }
 
         public override Color BackColor => Styles.Styles.DefaultStyle.BackColor;
@@ -431,7 +434,7 @@ namespace CodeBox
             get { return Buffer?.GetText(); }
             set
             {
-                var doc = Document.Read(value);
+                var doc = Document.FromString(value);
                 var buffer = new DocumentBuffer(doc, "untitled", Encoding.UTF8);
                 AttachBuffer(buffer);
             }

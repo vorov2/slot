@@ -4,6 +4,7 @@ using static CodeBox.Commands.ActionResults;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Affinity;
 
 namespace CodeBox.Commands
 {
@@ -11,14 +12,15 @@ namespace CodeBox.Commands
     [CommandData("editor.deletewordback", "eedwb")]
     public sealed class DeleteWordBackCommand : DeleteBackCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             var ln = Document.Lines[sel.Caret.Line];
 
             if (sel.Caret.Col == 0)
                 return base.Execute(sel);
 
-            var seps = View.Settings.NonWordSymbols;
+            var aff = View.AffinityManager.GetAffinity(sel.Caret);
+            var seps = aff.NonWordSymbols ?? View.Settings.NonWordSymbols;
             var st = SelectWordCommand.GetStrategy(seps, ln.CharAt(sel.Caret.Col - 1));
             var col = SelectWordCommand.FindBoundLeft(seps, ln, sel.Caret.Col - 1, st);
             sel.End = new Pos(sel.Caret.Line, col != 0 ? col + 1 : col);
@@ -37,8 +39,8 @@ namespace CodeBox.Commands
             return new DeleteWordBackCommand();
         }
 
-        public override bool ModifyContent => true;
+        internal override bool ModifyContent => true;
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

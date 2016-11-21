@@ -35,6 +35,6 @@ namespace CodeBox.Commands
                 return RightCommand.MoveRight(ctx, sel);
         }
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }

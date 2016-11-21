@@ -11,7 +11,7 @@ namespace CodeBox.Commands
     [CommandData("editor.scrolldown", "emd")]
     public sealed class ScrollLineDownCommand : EditorCommand
     {
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             View.Scroll.ScrollY(-1);
             return Clean | AutocompleteKeep;

@@ -19,7 +19,7 @@ namespace CodeBox.Commands
             Word
         }
 
-        protected override ActionResults Execute(Selection sel)
+        internal override ActionResults Execute(Selection sel, object arg = null)
         {
             if (sel.Caret != View.Caret)
                 return Clean;
@@ -144,6 +144,6 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        public override bool SupportLimitedMode => true;
+        internal override bool SupportLimitedMode => true;
     }
 }
