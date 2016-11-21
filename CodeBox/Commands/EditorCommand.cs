@@ -11,9 +11,9 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    public abstract class EditorCommand : ICommandComponent
+    public abstract class EditorCommand : ICommand
     {
-        public bool Run(IExecutionContext ctx)
+        public bool Run(IExecutionContext ctx, object arg = null)
         {
             View = ctx as IEditorView;
 

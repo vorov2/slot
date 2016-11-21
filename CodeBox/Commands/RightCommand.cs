@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.right", "ecr")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.right", "ecr")]
     public class RightCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveRight(View, sel);

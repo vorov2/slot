@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.selectline", "esl")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.selectline", "esl")]
     public sealed class SelectLineCommand : EditorCommand
     {
         private Pos pos;

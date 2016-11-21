@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.extenddocumenthome", "esdh")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.extenddocumenthome", "esdh")]
     public sealed class ExtendDocumentHomeCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => default(Pos);

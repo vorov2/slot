@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.pageup", "ecpu")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.pageup", "ecpu")]
     public sealed class PageUpCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => PageUp(View);

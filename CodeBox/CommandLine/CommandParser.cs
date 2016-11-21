@@ -1,25 +1,24 @@
-﻿using System;
+﻿using CodeBox.Core.ComponentModel;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace CodeBox.CommandLine
 {
     public static class CommandParser
     {
-        public static IEnumerable<Statement> Parse(string command)
+        public static Statement Parse(string command)
         {
             var buffer = command.ToCharArray();
             var pos = 0;
 
-            do
-            {
-                var stmt = new Statement();
-                pos = ParseCommand(stmt, buffer, pos);
+            var stmt = new Statement();
+            pos = ParseCommand(stmt, buffer, pos);
 
-                if (stmt.Command != null)
-                    yield return stmt;
+            if (stmt.Command != null)
+                return stmt;
 
-            }
-            while (pos < buffer.Length);
+            return null;
         }
 
         private static int ParseCommand(Statement stmt, char[] buffer, int pos)
@@ -63,34 +62,16 @@ namespace CodeBox.CommandLine
                 var c = Lookup(buffer, pos);
                 var sep = IsSeparator(c);
 
-                if (start == -1 && (c == '"' || c == '\''))
-                {
-                    string str;
-                    var sp = pos;
-                    pos = ParseString(stmt, buffer, pos + 1, c, out str);
-
-                    if (str != null)
-                        stmt.Arguments.Add(new StatementArgument {
-                            Location = new Loc(sp, pos - 1), Value = str });
-
-                    start = -1;
-                }
-                else if (start == -1 && c == ';')
-                    return pos + 1;
-                else if (!sep && start == -1)
+                if (!sep && start == -1)
                     start = pos;
-                else if ((sep || c == ';') && start > -1)
+                else if (c == '\0' && start > -1)
                 {
                     var str = new string(buffer, start, pos - start);
-                    var obj = TryConvert(str);
-                    stmt.Arguments.Add(new StatementArgument {
-                        Location = new Loc(start, pos), Value = obj });
-                    start = -1;
-
-                    if (c == ';')
-                        return pos + 1;
+                    stmt.Argument = TryConvert(str);
+                    stmt.ArgumentType = stmt.Argument is double ? ArgumentType.Number : ArgumentType.String;
+                    stmt.ArgumentLocation = new Loc(start, pos);
+                    return pos;
                 }
-
             }
 
             return buffer.Length;
@@ -100,30 +81,10 @@ namespace CodeBox.CommandLine
         {
             double d;
 
-            if (double.TryParse(str, out d))
+            if (double.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out d))
                 return d;
             else
                 return str;
-        }
-
-        private static int ParseString(Statement stmt, char[] buffer, int pos, char end, out string val)
-        {
-            var start = pos;
-            val = null;
-
-            for (; pos < buffer.Length + 1; pos++)
-            {
-                var c = Lookup(buffer, pos);
-
-                if (c == end || c == '\0')
-                {
-                    var len = pos - start - (c == '\0' ? 1 : 0);
-                    val = new string(buffer, start, len < 0 ? 0 : len);
-                    return pos + 1;
-                }
-            }
-
-            return buffer.Length;
         }
 
         private static bool IsSeparator(char c)

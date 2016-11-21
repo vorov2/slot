@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.scrolldown", "emd")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.scrolldown", "emd")]
     public sealed class ScrollLineDownCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

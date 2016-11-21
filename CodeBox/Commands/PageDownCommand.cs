@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.pagedown", "ecpd")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.pagedown", "ecpd")]
     public sealed class PageDownCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => PageDown(View);

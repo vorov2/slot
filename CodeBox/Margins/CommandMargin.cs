@@ -11,12 +11,14 @@ using System.Windows.Forms;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Commands;
 using CodeBox.CommandLine;
+using CodeBox.Autocomplete;
 
 namespace CodeBox.Margins
 {
     public class CommandMargin : Margin
     {
         private Editor commandEditor;
+        private AutocompleteWindow window;
         private Rectangle lastBounds;
 
         public CommandMargin(Editor editor) : base(editor)
@@ -28,7 +30,7 @@ namespace CodeBox.Margins
         {
             var ed = GetEditor();
 
-            if (ed.Width != Editor.Info.TextWidth)
+            if (ed.Width != PreferredEditorWidth)
                 HideEditor();
 
             var cs = Editor.Styles.Styles.GetStyle(StandardStyle.CommandBar);
@@ -37,10 +39,10 @@ namespace CodeBox.Margins
 
             if (!ed.Visible)
             {
-                g.DrawString(@"• c:\directory\another directory\some test file.htm",
+                g.DrawString(@"c:\directory\another directory\some test file.htm",
                     Editor.Settings.SmallFont.Get(cs.FontStyle),
                     cs.ForeColor.Brush(),
-                    Editor.Info.TextLeft,
+                    Editor.Info.CharWidth * 2,//Editor.Info.TextLeft,
                     (bounds.Height - Editor.Info.SmallCharHeight) / 2);
             }
 
@@ -78,39 +80,88 @@ namespace CodeBox.Margins
             return commandEditor;
         }
 
-        private IEnumerable<Statement> statements;
+        private AutocompleteWindow GetAutocompleteWindow()
+        {
+            if (window == null)
+            {
+                window = new AutocompleteWindow(Editor) { MaxItems = 15, SmallFont = true };
+                window.Visible = false;
+                Editor.Controls.Add(window);
+            }
+
+            return window;
+        }
+
+        private string lastLookupInput;
+        private void ShowAutocompleteWindow(IArgumentValueProvider prov)
+        {
+            var wnd = GetAutocompleteWindow();
+            wnd.PreferredWidth = commandEditor.Width;
+            var items = prov.EnumerateArgumentValues(lastLookupInput)
+                .Where(v => v.ToString().IndexOf(lastLookupInput, StringComparison.OrdinalIgnoreCase) != -1)
+                .Select(v => v.ToString());
+
+            if (items.Any())
+            {
+                wnd.SetItems(items);
+                wnd.Left = commandEditor.Left;
+                wnd.Top = lastBounds.Top + lastBounds.Height;
+                wnd.Visible = true;
+                wnd.MouseDown += AutocompleteClick;
+                wnd.Invalidate();
+                Editor.LockMouseScrolling = true;
+            }
+            else
+                HideAutocompleteWindow();
+        }
+
+        private void AutocompleteClick(object sender, MouseEventArgs e)
+        {
+            if (window != null && window.Visible)
+                InsertCompleteString();
+        }
+
+        private void HideAutocompleteWindow()
+        {
+            var wnd = GetAutocompleteWindow();
+            wnd.Visible = false;
+            Editor.LockMouseScrolling = false;
+        }
+
+        private Statement statement;
         private void EditorStyleNeeded(object sender, StyleNeededEventArgs e)
         {
-            statements = CommandParser.Parse(commandEditor.Text);
+            statement = CommandParser.Parse(commandEditor.Text);
             commandEditor.Styles.ClearStyles(0);
 
-            foreach (var s in statements)
-            {
-                commandEditor.Styles.StyleRange(StandardStyle.Keyword, 0, s.Location.Start, s.Location.End);
+            if (statement == null)
+                return;
 
-                if (s.HasArguments)
-                {
-                    foreach (var a in s.Arguments)
-                    {
-                        var st = a.Value is string ? StandardStyle.String : StandardStyle.Number;
-                        commandEditor.Styles.StyleRange(st, 0, a.Location.Start, a.Location.End);
-                    }
-                }
+            commandEditor.Styles.StyleRange(StandardStyle.Keyword, 0,
+                statement.Location.Start, statement.Location.End);
+
+            if (statement.Argument != null)
+            {
+                var st = statement.ArgumentType == ArgumentType.String ? StandardStyle.String
+                        : statement.ArgumentType == ArgumentType.Number ? StandardStyle.Number
+                        : StandardStyle.Default;
+                commandEditor.Styles.StyleRange(st, 0,
+                    statement.ArgumentLocation.Start, statement.ArgumentLocation.End);
             }
         }
 
         private void EditorPaint(object sender, PaintEventArgs e)
         {
-            if (statements != null && statements.Any())
+            if (statement != null)
             {
-                var stmt = statements.Last();
+                var stmt = statement;
 
-                if (!stmt.HasArguments && !string.IsNullOrWhiteSpace(stmt.Command))
+                if (!string.IsNullOrWhiteSpace(stmt.Command))
                 {
                     var tetras = commandEditor.Lines[0].GetTetras(commandEditor.IndentSize);
                     var w = (tetras + 1) * commandEditor.Info.CharWidth;
                     var cmd = stmt.Command;
-                    var arr = 
+                    var arr =
                         ComponentCatalog.Instance.EnumerateCommands()
                         .Where(c => c.Alias.StartsWith(cmd))
                         .ToList();
@@ -121,7 +172,7 @@ namespace CodeBox.Margins
 
                     if (arr.Count == 0)
                         return;
-                    else if (arr.Count > 1)
+                    else if (arr.Count > 1 || stmt.Command.Length < arr[0].Alias.Length)
                     {
                         foreach (var a in arr)
                         {
@@ -138,14 +189,42 @@ namespace CodeBox.Margins
                                 w += len;
                             }
                         }
+
+                        HideAutocompleteWindow();
                     }
                     else
                     {
                         var a = arr[0];
-                        g.DrawString(a.Key, commandEditor.Font, st.ForeColor.Brush(), w, 0);
+                        var len = cw * (a.Key.Length + 1);
+
+                        if (w + len < commandEditor.Info.TextWidth)
+                            g.DrawString(a.Key, commandEditor.Font, st.ForeColor.Brush(), w, 0);
+
+                        if (a.ArgumentType != ArgumentType.None)
+                        {
+                            w += len;
+                            var str = $"({a.ArgumentName}:{a.ArgumentType.ToString().ToLower()})";
+
+                            if (w + (str.Length + 1) * cw < commandEditor.Info.TextWidth)
+                                g.DrawString(str, commandEditor.Font, st.ForeColor.Brush(), w, 0);
+                        }
+
+                        var obj = ComponentCatalog.Instance.GetCommandByAlias(a.Alias);
+                        var prov = obj as IArgumentValueProvider;
+
+                        if (prov != null)
+                        {
+                            var str = stmt.Argument != null ? stmt.Argument.ToString() : "";
+                            lastLookupInput = str;
+                            ShowAutocompleteWindow(prov);
+                        }
+                        else
+                            HideAutocompleteWindow();
                     }
                 }
             }
+            else
+                HideAutocompleteWindow();
         }
 
         private void EditorKeyDown(object sender, KeyEventArgs e)
@@ -158,6 +237,20 @@ namespace CodeBox.Margins
             }
             else if (e.KeyData == Keys.Escape)
                 HideEditor();
+            else if (e.KeyData == Keys.Tab && window != null && window.Visible)
+                InsertCompleteString();
+            else if (e.KeyData == Keys.Up && window != null && window.Visible)
+                window.SelectUp();
+            else if (e.KeyData == Keys.Down && window != null && window.Visible)
+                window.SelectDown();
+        }
+
+        private void InsertCompleteString()
+        {
+            var len = (lastLookupInput ?? "").Length;
+            var str = window.SelectedItem.Substring(len);
+            new InsertRangeCommand(str.MakeCharacters()).Run(commandEditor);
+            HideAutocompleteWindow();
         }
 
         private void ResetBuffer()
@@ -190,8 +283,8 @@ namespace CodeBox.Margins
         {
             var ed = GetEditor();
             ed.Top = (lastBounds.Height - ed.Height) / 2;
-            ed.Left = Editor.Info.TextLeft;
-            ed.Width = Editor.Info.TextWidth;
+            ed.Left = Editor.ClientSize.Width / 20;
+            ed.Width = PreferredEditorWidth;
             ed.Visible = true;
         }
 
@@ -202,15 +295,20 @@ namespace CodeBox.Margins
                 ResetBuffer();
                 commandEditor.Visible = false;
             }
+
+            HideAutocompleteWindow();
         }
 
         private void ExecuteCommand(string command)
         {
-            var cmd = ComponentCatalog.Instance.GetCommandByAlias(command) as EditorCommand;
+            var stat = CommandParser.Parse(command);
+            var cmd = ComponentCatalog.Instance.GetCommandByAlias(stat.Command);
 
             if (cmd != null)
-                cmd.Run(Editor);
+                cmd.Run(Editor, stat.Argument);
         }
+
+        internal int PreferredEditorWidth => Editor.ClientSize.Width - (Editor.ClientSize.Width / 10);
 
         public override int CalculateSize() => Editor.Info.LineHeight + Editor.Info.CharWidth;
     }

@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.selectall", "esa")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.selectall", "esa")]
     public sealed class SelectAllCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

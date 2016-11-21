@@ -173,6 +173,9 @@ namespace CodeBox
                 Mono ? PointToClient(e.Location) : e.Location))
                 return;
 
+            if (LockMouseScrolling)
+                return;
+
             base.OnMouseWheel(e);
             Scroll.ScrollY((e.Delta / 120) * 2);
         }
@@ -426,6 +429,7 @@ namespace CodeBox
                     Scroll.InvalidateLines();
                     Styles.RestyleDocument();
                     Folding.RebuildFolding(full: true);
+                    Redraw();
                 }
                 finally
                 {
@@ -500,6 +504,8 @@ namespace CodeBox
         internal CaretRenderer CaretRenderer { get; }
 
         internal Renderer Renderer { get; }
+
+        internal bool LockMouseScrolling { get; set; }
 
         public Pos Caret { get; private set; }
 

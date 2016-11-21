@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.scrollup", "emu")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.scrollup", "emu")]
     public sealed class ScrollLineUpCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

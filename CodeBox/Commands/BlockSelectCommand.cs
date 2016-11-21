@@ -9,8 +9,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.selectblock", "esb")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.selectblock", "esb")]
     public sealed class BlockSelectCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

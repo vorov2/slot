@@ -10,8 +10,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.selectionclear", "esc")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.selectionclear", "esc")]
     public sealed class ClearSelectionCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

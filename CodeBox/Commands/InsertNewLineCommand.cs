@@ -10,8 +10,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.newline", "ela")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.newline", "ela")]
     public sealed class InsertNewLineCommand : EditorCommand
     {
         private IEnumerable<Character> @string;

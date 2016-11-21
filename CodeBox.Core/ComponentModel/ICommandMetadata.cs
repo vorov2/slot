@@ -2,10 +2,14 @@
 
 namespace CodeBox.Core.ComponentModel
 {
-    public interface ICommandComponentMetadata
+    public interface ICommandMetadata
     {
         string Key { get; }
 
         string Alias { get; }
+
+        ArgumentType ArgumentType { get; }
+
+        string ArgumentName { get; }
     }
 }

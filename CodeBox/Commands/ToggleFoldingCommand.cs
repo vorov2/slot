@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.foldingtoggle", "eft")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.foldingtoggle", "eft")]
     public sealed class ToggleFoldingCommand : EditorCommand
     {
         private int undoLine;

@@ -5,9 +5,9 @@ namespace CodeBox.Core.ComponentModel
 {
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class CommandComponentDataAttribute : Attribute, ICommandComponentMetadata
+    public sealed class CommandDataAttribute : Attribute, ICommandMetadata
     {
-        public CommandComponentDataAttribute(string key, string alias)
+        public CommandDataAttribute(string key, string alias)
         {
             Key = key;
             Alias = alias;
@@ -16,5 +16,9 @@ namespace CodeBox.Core.ComponentModel
         public string Key { get; }
 
         public string Alias { get; }
+
+        public ArgumentType ArgumentType { get; set; }
+
+        public string ArgumentName { get; set; }
     }
 }

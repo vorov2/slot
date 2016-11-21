@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.extendhome", "esh")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.extendhome", "esh")]
     public sealed class ExtendHomeCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => HomeCommand.MoveHome(Document, sel.Caret);

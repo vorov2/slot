@@ -16,9 +16,9 @@ namespace CodeBox.Core.ComponentModel
         private Dictionary<string, IComponent> providerMap = new Dictionary<string, IComponent>();
 
         [ImportMany]
-        private IEnumerable<Lazy<ICommandComponent, ICommandComponentMetadata>> commands = null;
-        private Dictionary<string, ICommandComponent> commandMap = new Dictionary<string, ICommandComponent>();
-        private Dictionary<string, ICommandComponent> commandAliasMap = new Dictionary<string, ICommandComponent>();
+        private IEnumerable<Lazy<ICommand, ICommandMetadata>> commands = null;
+        private Dictionary<string, ICommand> commandMap = new Dictionary<string, ICommand>();
+        private Dictionary<string, ICommand> commandAliasMap = new Dictionary<string, ICommand>();
 
         private ComponentCatalog()
         {
@@ -48,7 +48,7 @@ namespace CodeBox.Core.ComponentModel
             return providers.Select(p => p.Metadata);
         }
 
-        public IEnumerable<ICommandComponentMetadata> EnumerateCommands()
+        public IEnumerable<ICommandMetadata> EnumerateCommands()
         {
             return commands.Select(p => p.Metadata);
         }
@@ -73,9 +73,9 @@ namespace CodeBox.Core.ComponentModel
             return ret;
         }
 
-        public ICommandComponent GetCommand(string key)
+        public ICommand GetCommand(string key)
         {
-            ICommandComponent ret;
+            ICommand ret;
 
             if (!commandMap.TryGetValue(key, out ret))
             {
@@ -93,9 +93,9 @@ namespace CodeBox.Core.ComponentModel
             return ret;
         }
 
-        public ICommandComponent GetCommandByAlias(string alias)
+        public ICommand GetCommandByAlias(string alias)
         {
-            ICommandComponent ret;
+            ICommand ret;
 
             if (!commandAliasMap.TryGetValue(alias, out ret))
             {

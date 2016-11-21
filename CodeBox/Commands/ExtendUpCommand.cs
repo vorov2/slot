@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommandComponent))]
-    [CommandComponentData("editor.extendup", "esu")]
+    [Export(typeof(ICommand))]
+    [CommandData("editor.extendup", "esu")]
     public sealed class ExtendUpCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => UpCommand.MoveUp(View, sel);

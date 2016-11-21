@@ -36,27 +36,28 @@ namespace CodeBox.Autocomplete
 
         private void InvalidateWindow()
         {
-            scrollBar.Size = editor.Info.CharWidth;
+            scrollBar.Size = CharWidth;
             var width = 0;
             var y = 0;
 
             foreach (var ii in items)
             {
-                var w = ii.Text.Length * editor.Info.CharWidth + editor.Info.CharWidth * 2;
+                var w = ii.Text.Length * CharWidth + CharWidth * 2;
                 ii.Y = y;
 
                 if (w > width)
                     width = w;
 
-                y += editor.Info.LineHeight;
+                y += LineHeight;
             }
 
-            width += editor.Info.CharWidth * 5;
+            width += CharWidth * 5;
             var maxw = editor.Info.TextWidth / 3;
-            Width = width > maxw ? maxw : width;
-            var fullHeight = editor.Info.CharWidth * 2 + items.Count * editor.Info.LineHeight;
-            Height = editor.Info.CharWidth * 2 + (items.Count > 10 ? 10 : items.Count) * editor.Info.LineHeight;
+            Width = PreferredWidth != null ? PreferredWidth.Value : width > maxw ? maxw : width;
+            var fullHeight = CharWidth * 2 + items.Count * LineHeight;
+            Height = CharWidth * 2 + (items.Count > MaxItems ? MaxItems : items.Count) * LineHeight;
             ScrollMax = fullHeight - Height;
+            ScrollPosition = 0;
             selectedLine = 0;
         }
 
@@ -77,29 +78,29 @@ namespace CodeBox.Autocomplete
                 for (var i = 0; i < items.Count; i++)
                 {
                     var s = items[i];
-                    var y = s.Y + editor.Info.CharWidth + ScrollPosition;
+                    var y = s.Y + CharWidth + ScrollPosition;
 
-                    if (y >= editor.Info.CharWidth && y + editor.Info.LineHeight < Height)
+                    if (y >= CharWidth && y + LineHeight < Height)
                     {
                         if (hoverLine == i || selectedLine == i)
                         {
                             g.FillRectangle((selectedLine == i ? ps.SelectedColor : ps.HoverColor).Brush(),
-                                new Rectangle(0, y, Width - editor.Info.CharWidth, editor.Info.LineHeight));
+                                new Rectangle(0, y, Width - CharWidth, LineHeight));
                         }
 
-                        g.DrawString(s.Text, Font, ps.ForeColor.Brush(),
-                            new Rectangle(editor.Info.CharWidth, y, Width - editor.Info.CharWidth*2, editor.Info.LineHeight),
+                        g.DrawString(s.Text, SmallFont ? editor.Settings.SmallFont : editor.Settings.Font, ps.ForeColor.Brush(),
+                            new Rectangle(CharWidth, y, Width - CharWidth*2, LineHeight),
                             TextStyle.Format);
                     }
                 }
             }
 
-            scrollBar.Size = editor.Info.CharWidth;
+            scrollBar.Size = CharWidth;
             var border = (int)Math.Round(borderPen.Width, MidpointRounding.AwayFromZero);
             scrollBar.Draw(g, new Rectangle(
-                Width - editor.Info.CharWidth - border,
+                Width - CharWidth - border,
                 border,
-                editor.Info.CharWidth,
+                CharWidth,
                 Height - border*2));
         }
 
@@ -133,8 +134,8 @@ namespace CodeBox.Autocomplete
 
         private void CheckLineVisible(int line)
         {
-            var linesPerScreen = (Height - editor.Info.CharWidth * 2) / editor.Info.LineHeight;
-            var fvl = Math.Abs(ScrollPosition / editor.Info.LineHeight);
+            var linesPerScreen = (Height - CharWidth * 2) / LineHeight;
+            var fvl = Math.Abs(ScrollPosition / LineHeight);
             var lvl = fvl + linesPerScreen - 1;
 
             if (line < fvl)
@@ -145,7 +146,7 @@ namespace CodeBox.Autocomplete
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (e.X >= Width - editor.Info.CharWidth)
+            if (e.X >= Width - CharWidth)
             {
                 scrollBar.MouseUp(e.Location);
                 Invalidate();
@@ -156,7 +157,7 @@ namespace CodeBox.Autocomplete
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (e.X >= Width - editor.Info.CharWidth)
+            if (e.X >= Width - CharWidth)
             {
                 scrollBar.MouseDown(e.Location);
                 Invalidate();
@@ -171,7 +172,7 @@ namespace CodeBox.Autocomplete
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.X >= Width - editor.Info.CharWidth || scrollBar.IsMouseDown)
+            if (e.X >= Width - CharWidth || scrollBar.IsMouseDown)
             {
                 if (e.Button != MouseButtons.Left)
                     scrollBar.MouseUp(e.Location);
@@ -193,12 +194,12 @@ namespace CodeBox.Autocomplete
 
         private int LocationToLine(int y)
         {
-            return (y - editor.Info.CharWidth - ScrollPosition) / editor.Info.LineHeight;
+            return (y - CharWidth - ScrollPosition) / LineHeight;
         }
 
         public void ScrollY(int times)
         {
-            SetScrollPositionY(ScrollPosition + times * editor.Info.LineHeight);
+            SetScrollPositionY(ScrollPosition + times * LineHeight);
         }
 
         public void SetScrollPositionY(int value)
@@ -209,8 +210,8 @@ namespace CodeBox.Autocomplete
             if (value < -ScrollMax)
                 value = -ScrollMax;
 
-            var lines = (int)Math.Round((double)value / editor.Info.LineHeight);
-            value = lines * editor.Info.LineHeight;
+            var lines = (int)Math.Round((double)value / LineHeight);
+            value = lines * LineHeight;
             ScrollPosition = value;
             Invalidate();
         }
@@ -224,6 +225,18 @@ namespace CodeBox.Autocomplete
         internal int ScrollPosition { get; private set; }
 
         internal int ScrollMax { get; private set; }
+
+        internal int? PreferredWidth { get; set; }
+
+        internal int MaxItems { get; set; } = 10;
+
+        internal bool SmallFont { get; set; } = true;
+
+        internal int CharWidth => SmallFont ? editor.Info.SmallCharWidth : editor.Info.CharWidth;
+
+        internal int CharHeight => SmallFont ? editor.Info.SmallCharHeight : editor.Info.CharHeight;
+
+        internal int LineHeight => CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
 
         internal string SelectedItem
         {
