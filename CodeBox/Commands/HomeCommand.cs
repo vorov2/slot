@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.home")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.home", "ech")]
     public class HomeCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel)

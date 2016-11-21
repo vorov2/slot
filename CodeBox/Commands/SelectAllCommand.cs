@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.selectall")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.selectall", "esa")]
     public sealed class SelectAllCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)
@@ -17,7 +17,7 @@ namespace CodeBox.Commands
             var ln = Document.Lines[idx];
             sel.Start = default(Pos);
             sel.End = new Pos(idx, ln.Length);
-            return Clean;
+            return Clean | Scroll;
         }
 
         public override bool SingleRun => true;

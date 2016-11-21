@@ -42,9 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComponentModel\CommandComponentDataAttribute.cs" />
     <Compile Include="ComponentModel\ComponentCatalog.cs" />
     <Compile Include="ComponentModel\ComponentDataAttribute.cs" />
     <Compile Include="ComponentModel\ICommandComponent.cs" />
+    <Compile Include="ComponentModel\ICommandComponentMetadata.cs" />
     <Compile Include="ComponentModel\IComponent.cs" />
     <Compile Include="ComponentModel\IComponentMetadata.cs" />
     <Compile Include="ComponentModel\IExecutionContext.cs" />

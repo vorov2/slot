@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.autocomplete")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.autocomplete", "eea")]
     public sealed class AutocompleteCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

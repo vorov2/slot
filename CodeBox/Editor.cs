@@ -360,8 +360,6 @@ namespace CodeBox
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            base.OnKeyDown(e);
-
             if (Autocomplete.WindowShown && Autocomplete.ListenKeys(e.KeyData))
                 return;
 
@@ -369,9 +367,9 @@ namespace CodeBox
 
             if (!inp.IsEmpty())
                 RunCommand(inp);
+
+            base.OnKeyDown(e);
         }
-
-
 
         public void RunCommand(KeyInput input)
         {
@@ -379,7 +377,7 @@ namespace CodeBox
 
             if (KeyboardAdapter.ProcessInput(input) == InputState.Complete)
             {
-                var cmd = ComponentCatalog.Instance.GetComponent<EditorCommand>(KeyboardAdapter.LastKey);
+                var cmd = ComponentCatalog.Instance.GetCommand(KeyboardAdapter.LastKey) as EditorCommand;
                 if (cmd != null)
                     cmd.Clone().Run(this);
             }

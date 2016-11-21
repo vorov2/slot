@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.extendwordleft")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.extendwordleft", "eswl")]
     public sealed class ExtendWordLeftCommandCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => WordLeftCommand.WordLeft(View, sel);

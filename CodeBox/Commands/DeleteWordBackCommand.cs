@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.deletewordback")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.deletewordback", "eedwb")]
     public sealed class DeleteWordBackCommand : DeleteBackCommand
     {
         protected override ActionResults Execute(Selection sel)

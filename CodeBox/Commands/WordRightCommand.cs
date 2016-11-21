@@ -8,7 +8,7 @@ using CodeBox.Core.ComponentModel;
 namespace CodeBox.Commands
 {
     [Export(typeof(IComponent))]
-    [ComponentData("command.editor.wordright")]
+    [ComponentData("editor.wordright")]
     public sealed class WordRightCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel)

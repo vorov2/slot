@@ -10,8 +10,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.newline")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.newline", "ela")]
     public sealed class InsertNewLineCommand : EditorCommand
     {
         private IEnumerable<Character> @string;
@@ -33,7 +33,7 @@ namespace CodeBox.Commands
 
 
             var indentKey = View.AffinityManager.GetAffinity(new Pos(pos.Line, 0)).GetIndentComponentKey(View);
-            var comp = ComponentCatalog.Instance.GetComponent<IDentComponent>(indentKey);
+            var comp = ComponentCatalog.Instance.GetComponent(indentKey) as IDentComponent;
             indent = comp != null ? comp.CalculateIndentation(View, pos.Line) : 0;
 
             if (indent > 0)

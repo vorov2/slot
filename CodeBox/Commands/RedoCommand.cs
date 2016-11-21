@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.redo")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.redo", "eur")]
     public sealed class RedoCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

@@ -10,8 +10,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.commandbartoggle")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.commandbartoggle", "acb")]
     public sealed class ToggleCommandBar : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

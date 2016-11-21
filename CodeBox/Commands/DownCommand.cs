@@ -10,8 +10,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.down")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.down", "ecd")]
     public class DownCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveDown(View, sel);

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeBox.Test
+namespace CodeBox.CommandLine
 {
-    public sealed class CommandParser
+    public static class CommandParser
     {
-        public IEnumerable<Statement> Parse(string command)
+        public static IEnumerable<Statement> Parse(string command)
         {
             var buffer = command.ToCharArray();
             var pos = 0;
@@ -25,7 +22,7 @@ namespace CodeBox.Test
             while (pos < buffer.Length);
         }
 
-        private int ParseCommand(Statement stmt, char[] buffer, int pos)
+        private static int ParseCommand(Statement stmt, char[] buffer, int pos)
         {
             pos = ParseCommandHead(stmt, buffer, pos);
 
@@ -35,7 +32,7 @@ namespace CodeBox.Test
             return pos;
         }
 
-        private int ParseCommandHead(Statement stmt, char[] buffer, int pos)
+        private static int ParseCommandHead(Statement stmt, char[] buffer, int pos)
         {
             var start = -1;
 
@@ -57,7 +54,7 @@ namespace CodeBox.Test
             return buffer.Length;
         }
 
-        private int ParseArgument(Statement stmt, char[] buffer, int pos)
+        private static int ParseArgument(Statement stmt, char[] buffer, int pos)
         {
             var start = -1;
 
@@ -99,7 +96,7 @@ namespace CodeBox.Test
             return buffer.Length;
         }
 
-        private object TryConvert(string str)
+        private static object TryConvert(string str)
         {
             double d;
 
@@ -109,7 +106,7 @@ namespace CodeBox.Test
                 return str;
         }
 
-        private int ParseString(Statement stmt, char[] buffer, int pos, char end, out string val)
+        private static int ParseString(Statement stmt, char[] buffer, int pos, char end, out string val)
         {
             var start = pos;
             val = null;
@@ -120,7 +117,8 @@ namespace CodeBox.Test
 
                 if (c == end || c == '\0')
                 {
-                    val = new string(buffer, start, pos - start - (c == '\0' ? 1 : 0));
+                    var len = pos - start - (c == '\0' ? 1 : 0);
+                    val = new string(buffer, start, len < 0 ? 0 : len);
                     return pos + 1;
                 }
             }
@@ -128,55 +126,17 @@ namespace CodeBox.Test
             return buffer.Length;
         }
 
-        private bool IsSeparator(char c)
+        private static bool IsSeparator(char c)
         {
             return c == ' ' || c == '\t' || c == '\0';
         }
 
-        private char Lookup(char[] buffer, int pos)
+        private static char Lookup(char[] buffer, int pos)
         {
             if (pos > buffer.Length - 1)
                 return '\0';
             else
                 return buffer[pos];
         }
-    }
-
-    public sealed class Statement
-    {
-        internal Statement()
-        {
-
-        }
-
-        public Loc Location { get; internal set; }
-
-        public string Command { get; internal set; }
-
-        public List<StatementArgument> Arguments { get; } = new List<StatementArgument>();
-    }
-
-    public sealed class StatementArgument
-    {
-        internal StatementArgument()
-        {
-
-        }
-
-        public Loc Location { get; internal set; }
-
-        public object Value { get; internal set; }
-    }
-
-    public struct Loc
-    {
-        public Loc(int start, int end)
-        {
-            Start = start;
-            End = end;
-        }
-
-        public readonly int Start;
-        public readonly int End;
     }
 }

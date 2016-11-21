@@ -61,15 +61,13 @@ namespace CodeBox.Styling
             if (range.End.Line < 0)
                 return;
 
-            if(Styler != null)
+            if (StyleNeeded != null)
+                StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
+            else if (Styler != null)
                 Styler.Style(editor, range);
-            else
-                OnStyleNeeded(range);
         }
 
         public event EventHandler<StyleNeededEventArgs> StyleNeeded;
-        private void OnStyleNeeded(Range range) =>
-            StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
 
         public IStylerComponent Styler { get; private set; }
 
@@ -82,7 +80,7 @@ namespace CodeBox.Styling
                 if (value != _stylerKey)
                 {
                     _stylerKey = value;
-                    Styler = ComponentCatalog.Instance.GetComponent<IStylerComponent>(value);
+                    Styler = ComponentCatalog.Instance.GetComponent(value) as IStylerComponent;
                 }
             }
         }

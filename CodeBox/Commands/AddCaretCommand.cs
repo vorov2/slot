@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.caretadd")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.caretadd", "eca")]
     public sealed class AddCaretCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

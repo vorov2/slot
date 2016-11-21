@@ -9,8 +9,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.unindent")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.unindent", "elu")]
     public sealed class UnindentCommand : EditorCommand
     {
         private Selection redoSel;

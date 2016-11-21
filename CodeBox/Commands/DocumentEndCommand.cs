@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.documentend")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.documentend", "ecde")]
     public sealed class DocumentEndCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel)

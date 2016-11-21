@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.deleteword")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.deleteword", "eedw")]
     public sealed class DeleteWordCommand : DeleteCommand
     {
         private Selection redoSel;

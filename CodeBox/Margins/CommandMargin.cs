@@ -10,6 +10,7 @@ using CodeBox.Drawing;
 using System.Windows.Forms;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Commands;
+using CodeBox.CommandLine;
 
 namespace CodeBox.Margins
 {
@@ -68,11 +69,83 @@ namespace CodeBox.Margins
                 commandEditor.Height = Editor.Info.LineHeight;
                 commandEditor.LostFocus += EditorLostFocus;
                 commandEditor.KeyDown += EditorKeyDown;
+                commandEditor.Paint += EditorPaint;
+                commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
                 ResetBuffer();
                 Editor.Controls.Add(commandEditor);
             }
 
             return commandEditor;
+        }
+
+        private IEnumerable<Statement> statements;
+        private void EditorStyleNeeded(object sender, StyleNeededEventArgs e)
+        {
+            statements = CommandParser.Parse(commandEditor.Text);
+            commandEditor.Styles.ClearStyles(0);
+
+            foreach (var s in statements)
+            {
+                commandEditor.Styles.StyleRange(StandardStyle.Keyword, 0, s.Location.Start, s.Location.End);
+
+                if (s.HasArguments)
+                {
+                    foreach (var a in s.Arguments)
+                    {
+                        var st = a.Value is string ? StandardStyle.String : StandardStyle.Number;
+                        commandEditor.Styles.StyleRange(st, 0, a.Location.Start, a.Location.End);
+                    }
+                }
+            }
+        }
+
+        private void EditorPaint(object sender, PaintEventArgs e)
+        {
+            if (statements != null && statements.Any())
+            {
+                var stmt = statements.Last();
+
+                if (!stmt.HasArguments && !string.IsNullOrWhiteSpace(stmt.Command))
+                {
+                    var tetras = commandEditor.Lines[0].GetTetras(commandEditor.IndentSize);
+                    var w = (tetras + 1) * commandEditor.Info.CharWidth;
+                    var cmd = stmt.Command;
+                    var arr = 
+                        ComponentCatalog.Instance.EnumerateCommands()
+                        .Where(c => c.Alias.StartsWith(cmd))
+                        .ToList();
+
+                    var g = e.Graphics;
+                    var st = commandEditor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol);
+                    var cw = commandEditor.Info.CharWidth;
+
+                    if (arr.Count == 0)
+                        return;
+                    else if (arr.Count > 1)
+                    {
+                        foreach (var a in arr)
+                        {
+                            var len = cw * (a.Alias.Length + 1);
+
+                            if (w + len + cw * 3 > commandEditor.Info.TextWidth)
+                            {
+                                g.DrawString("...", commandEditor.Font, st.ForeColor.Brush(), w, 0);
+                                break;
+                            }
+                            else
+                            {
+                                g.DrawString(a.Alias, commandEditor.Font, st.ForeColor.Brush(), w, 0);
+                                w += len;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var a = arr[0];
+                        g.DrawString(a.Key, commandEditor.Font, st.ForeColor.Brush(), w, 0);
+                    }
+                }
+            }
         }
 
         private void EditorKeyDown(object sender, KeyEventArgs e)
@@ -133,7 +206,7 @@ namespace CodeBox.Margins
 
         private void ExecuteCommand(string command)
         {
-            var cmd = ComponentCatalog.Instance.GetComponent<EditorCommand>(command);
+            var cmd = ComponentCatalog.Instance.GetCommandByAlias(command) as EditorCommand;
 
             if (cmd != null)
                 cmd.Run(Editor);

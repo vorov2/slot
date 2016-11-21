@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CodeBox.CommandLine
+{
+    public struct Loc : IEquatable<Loc>
+    {
+        public Loc(int start, int end)
+        {
+            Start = start;
+            End = end;
+        }
+
+        public readonly int Start;
+        public readonly int End;
+
+        public bool Equals(Loc other) => Start == other.Start && End == other.End;
+
+        public override bool Equals(object other) => other is Loc ? Equals((Loc)other) : false;
+
+        public override int GetHashCode() => Start.GetHashCode();
+
+        public override string ToString() => $"({Start},{End})";
+    }
+}

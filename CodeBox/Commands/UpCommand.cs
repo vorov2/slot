@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.up")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.up", "ecu")]
     public class UpCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveUp(View, sel);

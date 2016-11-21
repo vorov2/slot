@@ -116,7 +116,7 @@ namespace CodeBox.Folding
 
                     if (key != null)
                     {
-                        var fp = ComponentCatalog.Instance.GetComponent<IFoldingComponent>(key);
+                        var fp = ComponentCatalog.Instance.GetComponent(key) as IFoldingComponent;
                         fp.Fold(editor, range);
                     }
                 }

@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.selectword")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.selectword", "esw")]
     public class SelectWordCommand : EditorCommand
     {
         internal enum Strategy

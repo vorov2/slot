@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.extenddocumentend")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.extenddocumentend", "esde")]
     public sealed class ExtendDocumentEndCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel)

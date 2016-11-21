@@ -9,8 +9,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.followlink")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.followlink", "etl")]
     public sealed class FollowLinkCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

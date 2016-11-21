@@ -9,8 +9,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.indent")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.indent", "eli")]
     public sealed class IndentCommand : InsertRangeCommand
     {
         private List<int> undoIndents;

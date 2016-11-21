@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.selectwordadd")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.selectwordadd", "eswa")]
     public class SelectWordAddCommand : SelectWordCommand
     {
         protected override void Select(Range range)

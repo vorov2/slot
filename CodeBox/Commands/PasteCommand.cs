@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.paste")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.paste", "ebv")]
     public sealed class PasteCommand : InsertRangeCommand
     {
         protected override ActionResults Execute(Selection sel)

@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.overtype")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.overtype", "edo")]
     public sealed class OvertypeCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

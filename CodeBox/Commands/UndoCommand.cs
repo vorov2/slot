@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.undo")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.undo", "euu")]
     public sealed class UndoCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

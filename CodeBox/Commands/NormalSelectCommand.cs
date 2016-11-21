@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.selectnormal")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.selectnormal", "esn")]
     public sealed class NormalSelectCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

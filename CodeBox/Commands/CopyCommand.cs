@@ -9,8 +9,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.copy")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.copy", "ebc")]
     public sealed class CopyCommand : EditorCommand
     {
         protected override ActionResults Execute(Selection sel)

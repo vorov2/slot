@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("command.editor.delete")]
+    [Export(typeof(ICommandComponent))]
+    [CommandComponentData("editor.delete", "eed")]
     public class DeleteCommand : EditorCommand
     {
         private IEnumerable<Character> deleteString;
