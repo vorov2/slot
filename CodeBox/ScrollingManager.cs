@@ -287,7 +287,8 @@ namespace CodeBox
             var diffY = Math.Abs(loc.Y - pointer.Y);
             var diffX = Math.Abs(loc.X - pointer.X);
 
-            if (diffY < editor.Info.LineHeight && diffX < editor.Info.CharWidth)
+            if (editor.LimitedMode
+                || diffY < editor.Info.LineHeight && diffX < editor.Info.CharWidth)
                 return;
 
             if (diffY > diffX)
