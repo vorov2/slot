@@ -98,7 +98,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="samples\commands.json" />
+    <None Include="samples\commands.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="samples\keymap.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
