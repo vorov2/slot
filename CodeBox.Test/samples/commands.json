@@ -1,0 +1,18 @@
+﻿[
+    {
+        "key": "editor.copy",
+        "alias": "ed/c",
+        "title": "Editor: Copy",
+        "mode": "editor"
+    },
+    {
+        "key": "file.open",
+        "alias": "fi/o",
+        "title": "Open a file",
+        "mode": "global",
+        "arguments": [
+            { "name": "fileName", "type": "string", "optional": true },
+            { "name": "encoding", "type": "any", "optional": true }
+        ]
+    }
+]

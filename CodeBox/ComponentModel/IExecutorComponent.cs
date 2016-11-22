@@ -2,6 +2,7 @@
 using CodeBox.Core.ComponentModel;
 using CodeBox.ObjectModel;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using static CodeBox.Commands.ActionResults;
@@ -15,7 +16,7 @@ namespace CodeBox.ComponentModel
 
     [Export(typeof(IComponent))]
     [ComponentData("executor.editor")]
-    public sealed class CommandExecutor : IExecutorComponent
+    public sealed class CommandDispatcher : IExecutorComponent
     {
         public bool Execute(IExecutionContext ctx, string commandKey, object arg = null)
         {
