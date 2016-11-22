@@ -163,8 +163,6 @@ namespace CodeBox.Margins
 
                 if (!string.IsNullOrWhiteSpace(stmt.Command))
                 {
-                    var tetras = commandEditor.Lines[0].GetTetras(commandEditor.IndentSize);
-                    var w = (tetras + 1) * commandEditor.Info.CharWidth;
                     var cmd = stmt.Command;
                     var arr =
                         ComponentCatalog.Instance.EnumerateCommands()
@@ -172,55 +170,30 @@ namespace CodeBox.Margins
                         .ToList();
 
                     var g = e.Graphics;
-                    var st = commandEditor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol);
-                    var cw = commandEditor.Info.CharWidth;
-
+                    
                     if (arr.Count == 0)
                         return;
                     else if (arr.Count > 1 || stmt.Command.Length < arr[0].Alias.Length)
                     {
-                        foreach (var a in arr)
-                        {
-                            var len = cw * (a.Alias.Length + 1);
-
-                            if (w + len + cw * 3 > commandEditor.Info.TextWidth)
-                            {
-                                g.DrawString("...", commandEditor.Font, st.ForeColor.Brush(), w, 0);
-                                break;
-                            }
-                            else
-                            {
-                                g.DrawString(a.Alias, commandEditor.Font, st.ForeColor.Brush(), w, 0);
-                                w += len;
-                            }
-                        }
-
+                        DrawStringWithPeriods(g, string.Join(" ", arr.Select(a => a.Alias)));
                         HideAutocompleteWindow();
                     }
                     else
                     {
                         var a = arr[0];
-                        var len = cw * (a.Key.Length + 1);
-
-                        if (w + len < commandEditor.Info.TextWidth)
-                            g.DrawString(a.Key, commandEditor.Font, st.ForeColor.Brush(), w, 0);
+                        var str = a.Key;
 
                         if (a.ArgumentType != ArgumentType.None)
-                        {
-                            w += len;
-                            var str = $"({a.ArgumentName}:{a.ArgumentType.ToString().ToLower()})";
+                            str += $"({a.ArgumentName}:{a.ArgumentType.ToString().ToLower()})";
 
-                            if (w + (str.Length + 1) * cw < commandEditor.Info.TextWidth)
-                                g.DrawString(str, commandEditor.Font, st.ForeColor.Brush(), w, 0);
-                        }
-
+                        DrawStringWithPeriods(g, str);
                         var obj = ComponentCatalog.Instance.GetCommandByAlias(a.Alias);
                         var prov = obj as IArgumentValueProvider;
 
                         if (prov != null)
                         {
-                            var str = stmt.Argument != null ? stmt.Argument.ToString() : "";
-                            lastLookupInput = str;
+                            var arg = stmt.Argument != null ? stmt.Argument.ToString() : "";
+                            lastLookupInput = arg;
                             ShowAutocompleteWindow(prov);
                         }
                         else
@@ -230,6 +203,32 @@ namespace CodeBox.Margins
             }
             else
                 HideAutocompleteWindow();
+        }
+
+        private void DrawStringWithPeriods(Graphics g, string str)
+        {
+            var tetras = commandEditor.Lines[0].GetTetras(commandEditor.IndentSize);
+            var cw = commandEditor.Info.SmallCharWidth;
+            var font = commandEditor.Settings.SmallFont;
+            var x = (tetras + 1) * commandEditor.Info.CharWidth;
+            var y = (commandEditor.Height - (int)(commandEditor.Info.SmallCharHeight * 1.1)) / 2;
+            var brush = commandEditor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush();
+
+            if (x + cw * 2 >= commandEditor.Info.TextWidth - cw)
+                return;
+
+            for (var i = 0; i < str.Length; i++)
+            {
+                var c = str[i];
+                g.DrawString(c.ToString(), font, brush, x, y);
+                x += cw;
+
+                if (x + cw * 2 >= commandEditor.Info.TextWidth - cw && i != str.Length - 1)
+                {
+                    g.DrawString("…", font, brush, x, y);
+                    return;
+                }
+            }
         }
 
         private void EditorKeyDown(object sender, KeyEventArgs e)

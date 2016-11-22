@@ -1,5 +1,5 @@
 ﻿{
-    "key": "theme.defaultdark"
+    "key": "theme.defaultdark",
     "name": "Dark",
     "styles": [
         {
@@ -9,11 +9,11 @@
         },
         {
             "key": "caret",
-            "color": "white",
+            "color": "white"
         },
         {
             "key": "currentline",
-            "backColor": "#262626",
+            "backColor": "#262626"
         },
         {
             "key": "popup",

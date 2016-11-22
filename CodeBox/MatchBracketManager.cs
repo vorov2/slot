@@ -13,7 +13,6 @@ namespace CodeBox
     public sealed class MatchBracketManager
     {
         private readonly Editor editor;
-        private bool markedParent;
         private int edits;
         private Pos lastPos;
         private Tuple<int, AppliedStyle> match1;
@@ -37,30 +36,22 @@ namespace CodeBox
 
         public void Match()
         {
-            if (!Enabled)
-                return;
-
-            if (!editor.Buffer.Selections.Main.IsEmpty 
+            if (!editor.Settings.MatchBrackets
+                || !editor.Buffer.Selections.Main.IsEmpty 
                 || (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret))
             {
-                if (match1 != null && match2 != null)
-                {
-                    editor.Lines[match1.Item1].AppliedStyles.Add(match1.Item2);
-                    editor.Lines[match2.Item1].AppliedStyles.Add(match2.Item2);
-                }
-
                 return;
             }
 
-            match1 = null;
-            match2 = null;
             edits = editor.Buffer.Edits;
             lastPos = editor.Buffer.Selections.Main.Caret;
 
-            if (markedParent)
+            if (match1 != null && match2 != null)
             {
-                editor.Styles.Restyle();
-                markedParent = false;
+                editor.Lines[match1.Item1].AppliedStyles.Remove(match1.Item2);
+                editor.Lines[match2.Item1].AppliedStyles.Remove(match2.Item2);
+                match1 = null;
+                match2 = null;
             }
 
             foreach (var sel in editor.Buffer.Selections)
@@ -76,18 +67,14 @@ namespace CodeBox
                     && Even(pi = bracketsForward.IndexOf(ln[sel.Caret.Col].Char))
                     && IsBracketStyle(ln, sel.Caret.Col))
                 {
-                    var m = TraverseForward(grm1, bracketsForward, pi, sel);
-                    if (!markedParent)
-                        markedParent = m;
+                    TraverseForward(grm1, bracketsForward, pi, sel);
                 }
                 else if (sel.Caret.Col > 0
                     && sel.Caret.Col <= ln.Length
                     && Odd(pi = bracketsBackward.IndexOf(ln[sel.Caret.Col - 1].Char))
                     && IsBracketStyle(ln, sel.Caret.Col - 1))
                 {
-                    var m = TraverseBackward(grm2, bracketsBackward, pi, sel);
-                    if (!markedParent)
-                        markedParent = m;
+                    TraverseBackward(grm2, bracketsBackward, pi, sel);
                 }
             }
         }
@@ -180,11 +167,6 @@ namespace CodeBox
         private bool Odd(int num)
         {
             return num != -1 && num % 2 != 0;
-        }
-
-        public bool Enabled
-        {
-            get { return editor.Settings.MatchBrackets; }
         }
     }
 }

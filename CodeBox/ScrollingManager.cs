@@ -240,7 +240,7 @@ namespace CodeBox
                     maxHeight += editor.Info.LineHeight;
                 }
 
-                var xmax = maxWidth - editor.Info.TextWidth + editor.Info.CharWidth * 5;
+                var xmax = maxWidth - editor.Info.TextWidth + editor.Info.CharWidth * 10;
                 ScrollBounds = new Size(xmax < 0 ? 0 : xmax, maxHeight);
             }
             else
