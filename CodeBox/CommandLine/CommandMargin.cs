@@ -89,7 +89,7 @@ namespace CodeBox.CommandLine
             {
                 window = new AutocompleteWindow(Editor) { MaxItems = 15, SmallFont = true };
                 window.Visible = false;
-                window.Trimming = StringTrimming.EllipsisPath;
+                window.MouseDown += AutocompleteClick;
                 Editor.Controls.Add(window);
             }
 
@@ -97,19 +97,23 @@ namespace CodeBox.CommandLine
         }
 
         private string lastLookupInput;
+        private ArgumentAffinity currentAffinity;
         private void ShowAutocompleteWindow(IArgumentValueProvider prov)
         {
             var wnd = GetAutocompleteWindow();
             wnd.PreferredWidth = commandEditor.Width;
             var items = prov.EnumerateArgumentValues(lastLookupInput);
 
-            if (items.Any())
+            if (items.Any()
+                && (!items.JustOne()
+                    || !items.First().Data.ToString().Equals(lastLookupInput, StringComparison.OrdinalIgnoreCase)))
             {
                 wnd.SetItems(items);
                 wnd.Left = commandEditor.Left;
                 wnd.Top = lastBounds.Top + lastBounds.Height;
+                window.Trimming = currentAffinity == ArgumentAffinity.FilePath ?
+                    StringTrimming.EllipsisPath : StringTrimming.EllipsisCharacter;
                 wnd.Visible = true;
-                wnd.MouseDown += AutocompleteClick;
                 wnd.Invalidate();
                 Editor.LockMouseScrolling = true;
             }
@@ -121,12 +125,20 @@ namespace CodeBox.CommandLine
         {
             if (window != null && window.Visible)
                 InsertCompleteString();
+
+            if (currentAffinity != ArgumentAffinity.FilePath
+                && statement.Arguments.Count == CommandCatalog.Instance.GetCommandByAlias(statement.Command)
+                    ?.Arguments.Count)
+                ExecuteCommand(commandEditor.Text);
+            else if (currentAffinity != ArgumentAffinity.FilePath)
+                commandEditor.RunCommand((Identifier)"editor.insertrange", " ".MakeCharacters());
         }
 
         private bool HideAutocompleteWindow()
         {
             if (window != null && window.Visible)
             {
+                window.Reset();
                 window.Visible = false;
                 Editor.LockMouseScrolling = false;
                 return true;
@@ -135,133 +147,88 @@ namespace CodeBox.CommandLine
             return false;
         }
 
-        private IEnumerable<Statement> statements;
+        private Statement statement;
         private void EditorStyleNeeded(object sender, StyleNeededEventArgs e)
         {
-            statements = CommandParser.Parse(commandEditor.Text);
+            statement = new CommandParser(ContinuationStatement?.Clone()).Parse(commandEditor.Text);
             commandEditor.Styles.ClearStyles(0);
 
-            if (statements == null)
+            if (statement == null)
                 return;
 
-            foreach (var stmt in statements)
-            {
+            if (statement.Location.End != statement.Location.Start)
                 commandEditor.Styles.StyleRange(StandardStyle.Keyword, 0,
-                    stmt.Location.Start, stmt.Location.End);
+                    statement.Location.Start, statement.Location.End);
 
-                if (stmt.HasArguments)
+            if (statement.HasArguments)
+            {
+                foreach (var a in statement.Arguments)
                 {
-                    foreach (var a in stmt.Arguments)
-                    {
-                        var st = a.Type == ArgumentType.String ? StandardStyle.String
-                            : a.Type == ArgumentType.Number ? StandardStyle.Number
-                            : StandardStyle.Default;
-                        commandEditor.Styles.StyleRange(st, 0,
-                            a.Location.Start, a.Location.End);
-                    }
+                    var st = a.Type == ArgumentType.String ? StandardStyle.String
+                        : a.Type == ArgumentType.Number ? StandardStyle.Number
+                        : StandardStyle.Default;
+                    commandEditor.Styles.StyleRange(st, 0,
+                        a.Location.Start, a.Location.End);
                 }
             }
         }
 
         private void EditorPaint(object sender, PaintEventArgs e)
         {
-            if (statements != null && statements.Any())
+            if (statement != null && !string.IsNullOrWhiteSpace(statement.Command))
             {
-                var stmt = GetCurrentStatement();
+                var cmd = statement.Command;
+                var arr =
+                    CommandCatalog.Instance.EnumerateCommands()
+                    .Where(c => c.Alias.StartsWith(cmd))
+                    .ToList();
+                var g = e.Graphics;
 
-                if (!string.IsNullOrWhiteSpace(stmt.Command))
+                if (arr.Count == 0)
+                    return;
+                else if (arr.Count > 1 || statement.Command.Length < arr[0].Alias.Length)
                 {
-                    var cmd = stmt.Command;
-                    var arr =
-                        CommandCatalog.Instance.EnumerateCommands()
-                        .Where(c => c.Alias.StartsWith(cmd))
-                        .ToList();
+                    DrawStringWithPeriods(g, string.Join(" ", arr.Select(a => a.Alias)), 0);
+                    HideAutocompleteWindow();
+                }
+                else
+                {
+                    var ci = arr[0];
+                    var ind = GetCurrentArgument(statement);
+                    DrawStringWithPeriods(g, ci.ToString(), ind);
 
-                    var g = e.Graphics;
-                    
-                    if (arr.Count == 0)
-                        return;
-                    else if (arr.Count > 1 || stmt.Command.Length < arr[0].Alias.Length)
+                    if (ci.HasArguments)
                     {
-                        DrawStringWithPeriods(g, string.Join(" ", arr.Select(a => a.Alias)));
-                        HideAutocompleteWindow();
-                    }
-                    else
-                    {
-                        var ci = arr[0];
-                        var sb = new StringBuilder();
-                        sb.Append(ci.Key.Name);
+                        var pos = commandEditor.Buffer.Selections.Main.Caret.Col;
 
-                        if (ci.HasArguments)
+                        if (ind != -1 && ind < ci.Arguments.Count && ci.Arguments[ind].ValueProvider != null)
                         {
-                            for (var i = 0; i < ci.Arguments.Count; i++)
+                            var prov = ComponentCatalog.Instance.GetComponent(ci.Arguments[ind].ValueProvider)
+                                as IArgumentValueProvider;
+                            currentAffinity = ci.Arguments[ind].Affinity;
+
+                            if (prov != null)
                             {
-                                var ar = ci.Arguments[i];
-
-                                if (i == 0)
-                                    sb.Append('(');
-                                else
-                                    sb.Append(',');
-
-                                sb.Append(ar.Name);
-                                sb.Append(':');
-                                sb.Append(ar.Type.ToString().ToLower());
-
-                                if (i == ci.Arguments.Count - 1)
-                                    sb.Append(')');
+                                lastLookupInput = statement.HasArguments && statement.Arguments.Count > ind 
+                                    ? statement.Arguments[ind].Value.ToString() : "";
+                                Console.WriteLine($"Last lookup: {lastLookupInput}");
+                                ShowAutocompleteWindow(prov);
+                                return;
                             }
                         }
-                        else
-                            sb.Append("()");
-
-                        if (ci.Title != null)
-                            sb.Append(" //" + ci.Title);
-
-                        DrawStringWithPeriods(g, sb.ToString());
-
-                        if (ci.HasArguments)
-                        {
-                            var ind = GetCurrentArgument(stmt);
-                            var pos = commandEditor.Buffer.Selections.Main.Caret.Col;
-
-                            if (ind != -1 && ind < ci.Arguments.Count && ci.Arguments[ind].ValueProvider != null)
-                            {
-                                var prov = ComponentCatalog.Instance.GetComponent(ci.Arguments[ind].ValueProvider)
-                                    as IArgumentValueProvider;
-
-                                if (prov != null)
-                                {
-                                    lastLookupInput = stmt.HasArguments && stmt.Arguments.Count > ind 
-                                        ? stmt.Arguments[ind].Value.ToString() : "";
-                                    ShowAutocompleteWindow(prov);
-                                    return;
-                                }
-                            }
-                        }
-
-                        HideAutocompleteWindow();
                     }
                 }
             }
-            else
-                HideAutocompleteWindow();
-        }
 
-        private Statement GetCurrentStatement()
-        {
-            var pos = commandEditor.Buffer.Selections.Main.Caret.Col;
-            foreach (var st in statements)
-                if (st.Location.Start <= pos && st.Location.End >= pos)
-                    return st;
-            return statements.Last();
+            HideAutocompleteWindow();
         }
 
         private int GetCurrentArgument(Statement stmt = null)
         {
-            stmt = stmt ?? GetCurrentStatement();
+            stmt = stmt ?? statement;
             var pos = commandEditor.Buffer.Selections.Main.Caret.Col;
 
-            if (!stmt.HasArguments && pos >= stmt.Location.End)
+            if (!stmt.HasArguments && (pos >= stmt.Location.End || stmt.Location.End == 0))
                 return 0;
 
             if (stmt != null)
@@ -276,14 +243,15 @@ namespace CodeBox.CommandLine
 
             if (stmt.HasArguments && pos < stmt.Arguments[0].Location.Start)
                 return 0;
-            else if (stmt.HasArguments && pos > stmt.Arguments[stmt.Arguments.Count - 1].Location.End
-                && commandEditor.Lines[0][pos - 1].Char == ' ')
+            else if (stmt.HasArguments
+                && (pos == 0 || commandEditor.Lines[0].CharAt(pos - 1) == ' ')
+                    || pos > stmt.Arguments[stmt.Arguments.Count - 1].Location.End)
                 return stmt.Arguments.Count;
 
             return -1;
         }
 
-        private void DrawStringWithPeriods(Graphics g, string str)
+        private void DrawStringWithPeriods(Graphics g, string str, int arg)
         {
             var tetras = commandEditor.Lines[0].GetTetras(commandEditor.IndentSize);
             var cw = commandEditor.Info.SmallCharWidth;
@@ -291,6 +259,9 @@ namespace CodeBox.CommandLine
             var x = (tetras + 1) * commandEditor.Info.CharWidth;
             var y = (commandEditor.Height - (int)(commandEditor.Info.SmallCharHeight * 1.1)) / 2;
             var brush = commandEditor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush();
+            var brush1 = commandEditor.Styles.Styles.DefaultStyle.ForeColor.Brush();
+            var curarg = -1;
+            var last = '\0';
 
             if (x + cw * 2 >= commandEditor.Info.TextWidth - cw)
                 return;
@@ -298,7 +269,14 @@ namespace CodeBox.CommandLine
             for (var i = 0; i < str.Length; i++)
             {
                 var c = str[i];
-                g.DrawString(c.ToString(), font, brush, x, y);
+
+                if (last == '(' || last == ',')
+                    curarg++;
+
+                if (c == ')')
+                    curarg = -1;
+
+                g.DrawString(c.ToString(), font, curarg == arg && arg != -1 && c != ',' ? brush1 : brush, x, y);
                 x += cw;
 
                 if (x + cw * 2 >= commandEditor.Info.TextWidth - cw && i != str.Length - 1)
@@ -306,6 +284,8 @@ namespace CodeBox.CommandLine
                     g.DrawString("…", font, brush, x, y);
                     return;
                 }
+
+                last = c;
             }
         }
 
@@ -329,22 +309,21 @@ namespace CodeBox.CommandLine
 
         private void InsertCompleteString()
         {
-            var stmt = GetCurrentStatement();
-            var idx = GetCurrentArgument(stmt);
+            var idx = GetCurrentArgument(statement);
             var sels = commandEditor.Buffer.Selections;
 
-            if (stmt.Arguments.Count < idx)
-                sels.Set(new Pos(0, stmt.Arguments[idx].Location.End));
+            if (statement.Arguments.Count < idx)
+                sels.Set(new Pos(0, statement.Arguments[idx].Location.End));
 
             var len = (lastLookupInput ?? "").Length;
-            var instr = window.SelectedItem.Value.ToString();
+            var instr = window.SelectedItem.Data.ToString();
             var hasnil = instr.IndexOf(' ') != -1 || instr.IndexOf('\t') != -1;
             var str = instr;
 
-            if (stmt.Arguments.Count > idx && hasnil)
+            if (statement.Arguments.Count > idx && hasnil)
             {
-                sels.Main.Start = new Pos(0, stmt.Arguments[idx].Location.Start);
-                var end = stmt.Arguments[idx].Location.End;
+                sels.Main.Start = new Pos(0, statement.Arguments[idx].Location.Start);
+                var end = statement.Arguments[idx].Location.End;
                 sels.Main.End = new Pos(0, end < commandEditor.Lines[0].Length ? end + 1 : end);
                 str = "\"" + str + "\"";
             }
@@ -419,22 +398,43 @@ namespace CodeBox.CommandLine
                 Editor.Redraw();
         }
 
+        private static readonly object[] defargs = new object[0];
         private void ExecuteCommand(string command)
         {
-            foreach (var stat in statements)
-            {
-                var md = CommandCatalog.Instance.GetCommandByAlias(stat.Command);
+            statement = new CommandParser(ContinuationStatement?.Clone()).Parse(command);
+            var md = CommandCatalog.Instance.GetCommandByAlias(statement.Command);
 
-                if (md != null)
+            if (md != null)
+            {
+                if (md.Arguments.Count(a => !a.Optional) > statement.Arguments.Count)
                 {
+                    statement.Location = default(Loc);
+                    if (statement.HasArguments)
+                        foreach (var a in statement.Arguments)
+                            a.Location = new Loc(-1, -1);
+                    ContinuationStatement = statement;
+                    ShowEditor();
+                    commandEditor.Focus();
+                    commandEditor.Redraw();
+                }
+                else
+                {
+                    var args = statement.HasArguments
+                        ? statement.Arguments.Select(a => a.Value).ToArray() : defargs;
+                    statement = null;
+                    ContinuationStatement = null;
+                    HideEditor();
                     var exec = ComponentCatalog.Instance.GetComponent(md.Key.Namespace) as ICommandDispatcher;
+
                     if (exec != null)
-                        exec.Execute(Editor, md.Key);
+                        exec.Execute(Editor, md.Key, args);
                 }
             }
         }
 
         internal int PreferredEditorWidth => Editor.ClientSize.Width - (Editor.ClientSize.Width / 10);
+
+        internal Statement ContinuationStatement { get; set; }
 
         public override int CalculateSize() => Editor.Info.LineHeight + Editor.Info.CharWidth;
     }

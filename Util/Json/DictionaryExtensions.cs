@@ -42,6 +42,14 @@ namespace Json
                 : false;
         }
 
+        public static T Enum<T>(this Dictionary<string, object> dict, string key) where T : struct
+        {
+            var str = dict.String(key);
+            T res;
+            System.Enum.TryParse<T>(str, true, out res);
+            return res;
+        }
+
         public static char Char(this Dictionary<string, object> dict, string key)
         {
             object res;

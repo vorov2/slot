@@ -1,20 +1,14 @@
-﻿using System;
+﻿using CodeBox.Core.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Core.ComponentModel
+namespace CodeBox.Core.CommandModel
 {
     public interface IArgumentValueProvider : IComponent
     {
-        IEnumerable<ArgumentValue> EnumerateArgumentValues(object curvalue);
-    }
-
-    public class ArgumentValue
-    {
-        public object Value { get; set; }
-
-        public override string ToString() => (Value ?? "").ToString();
+        IEnumerable<Value> EnumerateArgumentValues(object curvalue);
     }
 }

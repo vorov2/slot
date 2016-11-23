@@ -18,7 +18,7 @@ namespace CodeBox
     public sealed class TestCommandDispatcher : CommandDispatcher
     {
         [Command]
-        public void OpenFile(string fileName, string encoding = null)
+        public void OpenFile(string fileName, string encoding = "utf-8")
         {
             var enc = Encoding.GetEncodings()
                 .FirstOrDefault(e => e.Name.Equals(encoding, StringComparison.OrdinalIgnoreCase))
@@ -27,7 +27,7 @@ namespace CodeBox
 
             try
             {
-                var txt = File.ReadAllText(fileName, enc);
+                var txt = File.ReadAllText(Uri.UnescapeDataString(fileName), enc);
                 //((Editor)ctx).AttachBuffer(new DocumentBuffer(Document.FromString(txt), fileName, enc));
             }
             catch (Exception)
@@ -41,22 +41,23 @@ namespace CodeBox
     [ComponentData("values.encoding")]
     public sealed class EncodingValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<ArgumentValue> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<Value> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string;
 
             return Encoding.GetEncodings()
                 .Where(e => str == null || e.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
-                .Select(e => new EncodingArgumentValue(e));
+                .Select(e => new EncodingArgumentValue(e))
+                .OrderBy(e => e.Data);
         }
 
-        class EncodingArgumentValue : ArgumentValue
+        class EncodingArgumentValue : Value
         {
             private readonly EncodingInfo enc;
             internal EncodingArgumentValue(EncodingInfo enc)
             {
                 this.enc = enc;
-                Value = enc.Name.ToUpper();
+                Data = enc.Name.ToUpper();
             }
 
             public override string ToString()
@@ -67,7 +68,7 @@ namespace CodeBox
                 if (idx > -1)
                     nam = nam.Substring(0, idx - 1).TrimEnd();
 
-                return $"{Value} ({nam})";
+                return $"{Data} ({nam})";
             }
         }
     }
@@ -76,17 +77,17 @@ namespace CodeBox
     [ComponentData("values.systempath")]
     public sealed class SystemPathValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<ArgumentValue> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<Value> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string ?? "";
 
             //if (!string.IsNullOrWhiteSpace(str))
-                return GetPathElements(str) ?? Enumerable.Empty<ArgumentValue>();
+                return GetPathElements(str) ?? Enumerable.Empty<Value>();
 
-            return Enumerable.Empty<ArgumentValue>();
+            //return Enumerable.Empty<ArgumentValue>();
         }
 
-        private IEnumerable<ArgumentValue> GetPathElements(string pat)
+        private IEnumerable<Value> GetPathElements(string pat)
         {
             if (pat.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 return null;
@@ -96,7 +97,7 @@ namespace CodeBox
                 if (pat.EndsWith("\\") || pat.EndsWith("//"))
                     return Directory.EnumerateFileSystemEntries(pat)
                         .Where(v => v.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new ArgumentValue { Value = sy });
+                        .Select(sy => new Value { Data = sy });
                 else
                 {
                     FileInfo fi;
@@ -106,7 +107,7 @@ namespace CodeBox
                     var loc = Environment.CurrentDirectory == dir.Name;
                     return dir.EnumerateFileSystemInfos()
                         .Where(v => (loc ? v.Name : v.FullName).StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new ArgumentValue { Value = sy.FullName });
+                        .Select(sy => new Value { Data = sy.FullName });
                 }
             }
             catch (Exception)

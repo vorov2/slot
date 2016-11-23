@@ -3,21 +3,18 @@
         "key": "editor.copy",
         "alias": "e-c",
         "title": "Editor: Copy",
-        "mode": "editor"
     },
     {
         "key": "editor.selectall",
         "alias": "e-sa",
         "title": "Editor: Select All",
-        "mode": "editor"
     },
     {
-        "key": "file.open",
+        "key": "test.openfile",
         "alias": "f-o",
         "title": "Open a file",
-        "mode": "global",
         "arguments": [
-            { "name": "fileName", "type": "string", "valueProvider": "values.systempath", "optional": true },
+            { "name": "fileName", "type": "string", "valueProvider": "values.systempath", "affinity": "FilePath" },
             { "name": "encoding", "type": "any", "valueProvider": "values.encoding", "optional": true }
         ]
     }

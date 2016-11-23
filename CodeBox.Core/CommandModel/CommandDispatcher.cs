@@ -22,7 +22,21 @@ namespace CodeBox.Core.CommandModel
 
             try
             {
-                cmd.Invoke(this, args);
+                var vals = args;
+
+                if (args != null && args.Length > 0)
+                {
+                    var pars = cmd.GetParameters();
+                    vals = new object[pars.Length];
+
+                    for (var i = 0; i < pars.Length; i++)
+                    {
+                        var cval = args.Length > i ? args[i] : pars[i].DefaultValue;
+                        vals[i] = cval;
+                    }
+                }
+
+                cmd.Invoke(this, vals);
                 return true;
             }
             catch (Exception)
@@ -36,9 +50,10 @@ namespace CodeBox.Core.CommandModel
             if (commands != null)
                 return;
 
-            commands = new Dictionary<string, MethodInfo>();
+            commands = new Dictionary<string, MethodInfo>(StringComparer.OrdinalIgnoreCase);
             foreach (var mi in GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic))
-                commands.Add(mi.Name.ToLower(), mi);
+                if (Attribute.IsDefined(mi, typeof(CommandAttribute)))
+                    commands.Add(mi.Name.ToLower(), mi);
         }
     }
 }

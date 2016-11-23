@@ -1,6 +1,7 @@
 ﻿using CodeBox.Autocomplete;
 using CodeBox.Commands;
 using CodeBox.Core;
+using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ObjectModel;
 using System;
@@ -43,7 +44,7 @@ namespace CodeBox.Autocomplete
 
         private void InsertCompleteString()
         {
-            var str = window.SelectedItem.Value.ToString().Substring(completeString.Length);
+            var str = window.SelectedItem.Data.ToString().Substring(completeString.Length);
             editor.RunCommand((Identifier)"editor.insertrange", str.MakeCharacters());
             HideAutocomplete();
         }
@@ -71,7 +72,7 @@ namespace CodeBox.Autocomplete
                 return;
             }
 
-            window.SetItems(newItems.Select(i => new ArgumentValue { Value = i }));
+            window.SetItems(newItems.Select(i => new Value { Data = i }));
             SetLocationByPos(pos);
             WindowShown = true;
             lastCol = pos.Col;
@@ -172,7 +173,7 @@ namespace CodeBox.Autocomplete
                     HideAutocomplete();
                 else
                 {
-                    window.SetItems(newItems.Select(i => new ArgumentValue { Value = i }));
+                    window.SetItems(newItems.Select(i => new Value { Data = i }));
                     window.Invalidate();
                     SetLocationByPos(caret);
                 }

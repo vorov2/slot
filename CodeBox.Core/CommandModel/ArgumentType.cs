@@ -6,7 +6,7 @@ namespace CodeBox.Core.CommandModel
     {
         None,
 
-        Any,
+        Object,
 
         String,
 

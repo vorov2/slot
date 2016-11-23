@@ -1,4 +1,5 @@
-﻿using CodeBox.Core.ComponentModel;
+﻿using CodeBox.Core.CommandModel;
+using CodeBox.Core.ComponentModel;
 using CodeBox.Drawing;
 using CodeBox.Styling;
 using System;
@@ -27,7 +28,7 @@ namespace CodeBox.Autocomplete
 
         class ItemInfo
         {
-            public ArgumentValue Item;
+            public Value Item;
             public int Y;
         }
 
@@ -224,10 +225,16 @@ namespace CodeBox.Autocomplete
             Invalidate();
         }
 
-        public void SetItems(IEnumerable<ArgumentValue> items)
+        public void SetItems(IEnumerable<Value> items)
         {
             this.items = items.Select(i => new ItemInfo { Item = i }).ToList();
             InvalidateWindow();
+        }
+
+        public void Reset()
+        {
+            items.Clear();
+            ScrollPosition = 0;
         }
 
         internal int ScrollPosition { get; private set; }
@@ -248,7 +255,7 @@ namespace CodeBox.Autocomplete
 
         internal int LineHeight => CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
 
-        internal ArgumentValue SelectedItem
+        internal Value SelectedItem
         {
             get { return items[selectedLine].Item; }
         }

@@ -10,6 +10,15 @@ namespace CodeBox.CommandLine
 
         }
 
+        internal Statement Clone()
+        {
+            return new Statement
+            {
+                Command = Command,
+                _arguments = new List<StatementArgument>(Arguments)
+            };
+        }
+
         public string Command { get; internal set; }
 
         public bool HasArguments => _arguments != null && _arguments.Count > 0;

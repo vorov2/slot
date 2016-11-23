@@ -42,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandModel\ArgumentAffinity.cs" />
+    <Compile Include="CommandModel\Value.cs" />
     <Compile Include="CommandModel\CommandAttribute.cs" />
     <Compile Include="CommandModel\CommandDispatcher.cs" />
     <Compile Include="CommandModel\ICommandDispatcher.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Identifier.cs" />
     <Compile Include="CommandModel\CommandCatalog.cs" />
     <Compile Include="CommandModel\CommandMetadata.cs" />

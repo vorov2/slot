@@ -38,7 +38,7 @@ namespace CodeBox.Core.CommandModel
             {
                 Key = (Identifier)dict.String("key"),
                 Alias = dict.String("alias"),
-                Title = dict.String("title")
+                Title = dict.String("title"),
             };
 
             var obj = dict.Object("arguments") as List<object>;
@@ -62,7 +62,9 @@ namespace CodeBox.Core.CommandModel
             {
                 Name = dict.String("name"),
                 ValueProvider = (Identifier)dict.String("valueProvider"),
-                Type = GetArgumentType(dict)
+                Type = GetArgumentType(dict),
+                Optional = dict.Bool("optional"),
+                Affinity = dict.Enum<ArgumentAffinity>("affinity")
             };
         }
 
@@ -71,7 +73,7 @@ namespace CodeBox.Core.CommandModel
             var str = dict.String("type");
             return string.Equals(str, "string", StringComparison.OrdinalIgnoreCase) ? ArgumentType.String
                 : string.Equals(str, "number", StringComparison.OrdinalIgnoreCase) ? ArgumentType.Number
-                : ArgumentType.Any;
+                : ArgumentType.Object;
         }
     }
 }
