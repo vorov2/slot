@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.undo", "euu")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.undo")]
     public sealed class UndoCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             return Pure | NeedUndo | KeepRedo;
         }

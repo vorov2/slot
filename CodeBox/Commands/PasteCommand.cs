@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.paste", "ebv")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.paste")]
     public sealed class PasteCommand : InsertRangeCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var str = Clipboard.GetText();
             base.insertString = str.MakeCharacters();

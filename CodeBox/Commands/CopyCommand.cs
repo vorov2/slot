@@ -9,11 +9,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.copy", "ebc")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.copy")]
     public sealed class CopyCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var sb = new StringBuilder();
 

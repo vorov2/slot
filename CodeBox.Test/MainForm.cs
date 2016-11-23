@@ -17,6 +17,9 @@ using CodeBox.Lexing;
 using CodeBox.Indentation;
 using CodeBox.Affinity;
 using CodeBox.Core.Keyboard;
+using CodeBox.Core;
+using CodeBox.Core.CommandModel;
+using CodeBox.CommandLine;
 
 namespace CodeBox.Test
 {
@@ -35,7 +38,7 @@ namespace CodeBox.Test
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ed.Styles.StylerKey = "styler.lexer";
+            ed.Styles.StylerKey = (Identifier)"styler.lexer";
             var lexer = (ConfigurableLexer)ed.Styles.Styler;
             var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
             var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
@@ -47,6 +50,8 @@ namespace CodeBox.Test
             ed.GrammarManager.RegisterGrammar(html);
             ed.GrammarManager.RegisterGrammar(css);
             ed.GrammarManager.RegisterGrammar(json);
+
+            CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
 
 
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });

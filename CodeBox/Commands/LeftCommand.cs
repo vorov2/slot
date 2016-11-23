@@ -7,8 +7,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.left", "ecl")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.left")]
     public class LeftCommand : CaretCommand
     {
         protected override Pos GetPosition(Selection sel) => MoveLeft(Document, sel);

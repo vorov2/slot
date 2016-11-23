@@ -14,7 +14,8 @@ namespace CodeBox
     {
         private readonly Editor editor;
         private int edits;
-        private Pos lastPos;
+        private Pos lastPos = Pos.Empty;
+        private Guid docId;
         private Tuple<int, AppliedStyle> match1;
         private Tuple<int, AppliedStyle> match2;
 
@@ -38,11 +39,12 @@ namespace CodeBox
         {
             if (!editor.Settings.MatchBrackets
                 || !editor.Buffer.Selections.Main.IsEmpty 
-                || (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret))
+                || (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret && editor.Document.Id == docId))
             {
                 return;
             }
 
+            docId = editor.Document.Id;
             edits = editor.Buffer.Edits;
             lastPos = editor.Buffer.Selections.Main.Caret;
 

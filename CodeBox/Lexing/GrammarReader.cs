@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Json;
 
 namespace CodeBox.Lexing
 {
@@ -26,8 +27,8 @@ namespace CodeBox.Lexing
                     NonWordSymbols = dict.String("delimeters"),
                     CommentMask = dict.String("commentMask"),
                     NumberLiteral = (tmp = dict.String("numbers")) != null ? new NumberLiteral(tmp) :null,
-                    IndentComponentKey = dict.String("indentProvider"),
-                    FoldingComponentKey = dict.String("foldingProvider"),
+                    IndentComponentKey = (Identifier)dict.String("indentProvider"),
+                    FoldingComponentKey = (Identifier)dict.String("foldingProvider"),
                     AutocompleteSymbols = dict.String("autocompleteSymbols")
                 };
 

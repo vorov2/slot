@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core.ComponentModel
+namespace CodeBox.Core.CommandModel
 {
     public enum ArgumentType
     {

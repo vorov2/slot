@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.insertrange", "eeir")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.insertrange")]
     public class InsertRangeCommand : EditorCommand
     {
         private Selection undo;
@@ -17,9 +17,10 @@ namespace CodeBox.Commands
         private IEnumerable<Character> deleteString;
         protected IEnumerable<Character> insertString;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            insertString = insertString ?? arg as IEnumerable<Character>;
+            insertString = insertString ?? 
+                (args != null && args.Length > 0 ? args[0] as IEnumerable<Character> : null);
 
             if (insertString == null)
                 return Pure;

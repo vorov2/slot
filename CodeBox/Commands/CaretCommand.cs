@@ -6,7 +6,7 @@ namespace CodeBox.Commands
 {
     public abstract class CaretCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var pos = GetPosition(sel);
             sel.Clear(pos);

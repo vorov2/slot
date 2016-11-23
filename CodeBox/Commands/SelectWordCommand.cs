@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.selectword", "esw")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.selectword")]
     public class SelectWordCommand : EditorCommand
     {
         internal enum Strategy
@@ -19,7 +19,7 @@ namespace CodeBox.Commands
             Word
         }
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             if (sel.Caret != View.Caret)
                 return Clean;

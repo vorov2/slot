@@ -7,13 +7,13 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.selectline", "esl")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.selectline")]
     public sealed class SelectLineCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            var p = arg == null || !(arg is Pos) ? View.Caret : (Pos)arg;
+            var p = args == null || args.Length == 0 || !(args[0] is int) ? View.Caret : new Pos((int)args[0], 0);
 
             if (p.Line > -1)
             {

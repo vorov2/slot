@@ -1,4 +1,5 @@
 ﻿using CodeBox.Affinity;
+using CodeBox.Core;
 using CodeBox.Indentation;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,9 @@ namespace CodeBox.Lexing
 
         public NumberLiteral NumberLiteral { get; set; }
 
-        public string IndentComponentKey { get; set; }
+        public Identifier IndentComponentKey { get; set; }
 
-        public string FoldingComponentKey { get; set; }
+        public Identifier FoldingComponentKey { get; set; }
 
         public string AutocompleteSymbols { get; set; }
         #endregion

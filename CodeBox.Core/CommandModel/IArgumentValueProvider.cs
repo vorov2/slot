@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeBox.Core.ComponentModel
 {
-    public interface IArgumentValueProvider
+    public interface IArgumentValueProvider : IComponent
     {
         IEnumerable<ArgumentValue> EnumerateArgumentValues(object curvalue);
     }

@@ -9,6 +9,7 @@ using CodeBox.Styling;
 using CodeBox.Folding;
 using CodeBox.Commands;
 using CodeBox.Drawing;
+using CodeBox.Core;
 
 namespace CodeBox.Margins
 {
@@ -24,9 +25,9 @@ namespace CodeBox.Margins
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
 
             if (lineIndex > -1 && Editor.Folding.IsFoldingHeader(lineIndex))
-                Editor.RunCommand("editor.foldingtoggle", new Pos(lineIndex, 0));
+                Editor.RunCommand((Identifier)"editor.foldingtoggle", new Pos(lineIndex, 0));
             else
-                Editor.RunCommand("editor.selectline", new Pos(lineIndex, 0));
+                Editor.RunCommand((Identifier)"editor.selectline", new Pos(lineIndex, 0));
 
             return MarginEffects.Redraw | MarginEffects.Invalidate | MarginEffects.CaptureMouse;
         }

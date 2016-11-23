@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.delete", "eed")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.delete")]
     public class DeleteCommand : EditorCommand
     {
         private IEnumerable<Character> deleteString;
@@ -17,7 +17,7 @@ namespace CodeBox.Commands
         private Selection redoSel;
         protected Pos undoPos;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             redoSel = sel.Clone();
             var res = Clean;

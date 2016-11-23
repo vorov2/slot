@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.insertchar", "eeic", ArgumentName = "char", ArgumentType = ArgumentType.String)]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.insertchar")]
     public class InsertCharCommand : EditorCommand
     {
         private Character deleteChar;
@@ -18,21 +18,9 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (arg is Character)
-                insertChar = (Character)arg;
-            else if (arg is string)
-            {
-                var s = (string)arg;
-
-                if (s.Length == 0)
-                    return Pure;
-                else
-                    insertChar = new Character(s[0]);
-            }
-            else
-                return Pure;
+            insertChar = new Character(((Editor)View).InputChar);
 
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;

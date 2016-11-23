@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.extendpageup", "espu")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.extendpageup")]
     public sealed class ExtendPageUpCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => PageUpCommand.PageUp(View);

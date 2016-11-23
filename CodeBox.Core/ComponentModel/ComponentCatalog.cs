@@ -13,12 +13,7 @@ namespace CodeBox.Core.ComponentModel
 
         [ImportMany]
         private IEnumerable<Lazy<IComponent, IComponentMetadata>> providers = null;
-        private Dictionary<string, IComponent> providerMap = new Dictionary<string, IComponent>();
-
-        [ImportMany]
-        private IEnumerable<Lazy<ICommand, ICommandMetadata>> commands = null;
-        private Dictionary<string, ICommand> commandMap = new Dictionary<string, ICommand>();
-        private Dictionary<string, ICommand> commandAliasMap = new Dictionary<string, ICommand>();
+        private Dictionary<Identifier, IComponent> providerMap = new Dictionary<Identifier, IComponent>();
 
         private ComponentCatalog()
         {
@@ -48,63 +43,19 @@ namespace CodeBox.Core.ComponentModel
             return providers.Select(p => p.Metadata);
         }
 
-        public IEnumerable<ICommandMetadata> EnumerateCommands()
-        {
-            return commands.Select(p => p.Metadata);
-        }
-
-        public IComponent GetComponent(string key)
+        public IComponent GetComponent(Identifier key)
         {
             IComponent ret;
 
             if (!providerMap.TryGetValue(key, out ret))
             {
-                var comp = providers.FirstOrDefault(c => c.Metadata.Key == key);
+                var strKey = key.ToString();
+                var comp = providers.FirstOrDefault(c => c.Metadata.Key == strKey);
 
                 if (comp != null)
                 {
                     providerMap.Add(key, comp.Value);
                     ret = comp.Value;
-                }
-                else
-                    return null;
-            }
-
-            return ret;
-        }
-
-        public ICommand GetCommand(string key)
-        {
-            ICommand ret;
-
-            if (!commandMap.TryGetValue(key, out ret))
-            {
-                var cmd = commands.FirstOrDefault(c => c.Metadata.Key == key);
-
-                if (cmd != null)
-                {
-                    commandMap.Add(key, cmd.Value);
-                    ret = cmd.Value;
-                }
-                else
-                    return null;
-            }
-
-            return ret;
-        }
-
-        public ICommand GetCommandByAlias(string alias)
-        {
-            ICommand ret;
-
-            if (!commandAliasMap.TryGetValue(alias, out ret))
-            {
-                var cmd = commands.FirstOrDefault(c => c.Metadata.Alias == alias);
-
-                if (cmd != null)
-                {
-                    commandAliasMap.Add(alias, cmd.Value);
-                    ret = cmd.Value;
                 }
                 else
                     return null;

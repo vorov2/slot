@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.redo", "eur")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.redo")]
     public sealed class RedoCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             return Pure | NeedRedo | KeepRedo;
         }

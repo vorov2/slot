@@ -9,15 +9,15 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.unindent", "elu")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.unindent")]
     public sealed class UnindentCommand : EditorCommand
     {
         private Selection redoSel;
         private List<int> undoIndents;
         private bool useTab;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             redoSel = sel.Clone();
             useTab = View.UseTabs;

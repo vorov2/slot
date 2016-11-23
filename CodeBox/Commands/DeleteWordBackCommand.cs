@@ -8,11 +8,11 @@ using CodeBox.Affinity;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.deletewordback", "eedwb")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.deletewordback")]
     public sealed class DeleteWordBackCommand : DeleteBackCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var ln = Document.Lines[sel.Caret.Line];
 

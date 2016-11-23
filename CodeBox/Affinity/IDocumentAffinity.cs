@@ -1,4 +1,5 @@
-﻿using CodeBox.Indentation;
+﻿using CodeBox.Core;
+using CodeBox.Indentation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +20,8 @@ namespace CodeBox.Affinity
 
         NumberLiteral NumberLiteral { get; }
 
-        string IndentComponentKey { get; }
+        Identifier IndentComponentKey { get; }
 
-        string FoldingComponentKey { get; }
+        Identifier FoldingComponentKey { get; }
     }
 }

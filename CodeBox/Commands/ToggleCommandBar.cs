@@ -7,14 +7,15 @@ using CodeBox.ObjectModel;
 using CodeBox.Margins;
 using System.ComponentModel.Composition;
 using CodeBox.Core.ComponentModel;
+using CodeBox.CommandLine;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.commandbartoggle", "acb")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.commandbartoggle")]
     public sealed class ToggleCommandBar : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var ed = View as Editor;
 

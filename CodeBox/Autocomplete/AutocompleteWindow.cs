@@ -1,4 +1,5 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Core.ComponentModel;
+using CodeBox.Drawing;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace CodeBox.Autocomplete
 
         class ItemInfo
         {
-            public string Text;
+            public ArgumentValue Item;
             public int Y;
         }
 
@@ -48,7 +49,7 @@ namespace CodeBox.Autocomplete
 
             foreach (var ii in items)
             {
-                var w = ii.Text.Length * CharWidth + CharWidth * 2;
+                var w = ii.Item.ToString().Length * CharWidth + CharWidth * 2;
                 ii.Y = y;
 
                 if (w > width)
@@ -95,7 +96,7 @@ namespace CodeBox.Autocomplete
                                 new Rectangle(0, y, Width - CharWidth, LineHeight));
                         }
 
-                        g.DrawString(s.Text, SmallFont ? editor.Settings.SmallFont : editor.Settings.Font, ps.ForeColor.Brush(),
+                        g.DrawString(s.Item.ToString(), SmallFont ? editor.Settings.SmallFont : editor.Settings.Font, ps.ForeColor.Brush(),
                             new Rectangle(CharWidth, y, Width - CharWidth*2, LineHeight),
                             format);
                     }
@@ -223,9 +224,9 @@ namespace CodeBox.Autocomplete
             Invalidate();
         }
 
-        public void SetItems(IEnumerable<string> items)
+        public void SetItems(IEnumerable<ArgumentValue> items)
         {
-            this.items = items.Select(i => new ItemInfo { Text = i }).ToList();
+            this.items = items.Select(i => new ItemInfo { Item = i }).ToList();
             InvalidateWindow();
         }
 
@@ -247,9 +248,9 @@ namespace CodeBox.Autocomplete
 
         internal int LineHeight => CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
 
-        internal string SelectedItem
+        internal ArgumentValue SelectedItem
         {
-            get { return items[selectedLine].Text; }
+            get { return items[selectedLine].Item; }
         }
     }
 }

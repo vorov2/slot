@@ -9,14 +9,14 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.indent", "eli")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.indent")]
     public sealed class IndentCommand : InsertRangeCommand
     {
         private List<int> undoIndents;
         private bool useTab;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var startLine = Document.Lines[sel.Start.Line];
 

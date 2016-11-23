@@ -6,7 +6,7 @@ namespace CodeBox.Commands
 {
     public abstract class SelectionCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var pos = Select(sel);
             sel.End = pos;

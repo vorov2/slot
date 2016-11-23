@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.selectnormal", "esn")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.selectnormal")]
     public sealed class NormalSelectCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             DoSelection(View.Caret);
             return Clean | Scroll;

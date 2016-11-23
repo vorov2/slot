@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.Indentation;
 using System.Windows.Forms;
+using CodeBox.Core;
 
 namespace CodeBox
 {
@@ -34,9 +35,9 @@ namespace CodeBox
 
         string IDocumentAffinity.CommentMask { get; }
 
-        public string IndentComponentKey { get; set; }
+        public Identifier IndentComponentKey { get; set; }
 
-        public string FoldingComponentKey { get; set; }
+        public Identifier FoldingComponentKey { get; set; }
 
         public string AutocompleteSymbols { get; set; }
         #endregion

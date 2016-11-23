@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.caretadd", "eca")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.caretadd")]
     public sealed class AddCaretCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var newSel = new Selection(View.Caret);
             Buffer.Selections.AddFast(newSel);

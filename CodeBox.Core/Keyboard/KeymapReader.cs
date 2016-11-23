@@ -22,14 +22,14 @@ namespace CodeBox.Core.Keyboard
                             var str = o as string;
 
                             if (str != null)
-                                adapter.RegisterInput(kv.Key, str);
+                                adapter.RegisterInput((Identifier)kv.Key, str);
                         }
                     }
                     else
                     {
                         var str = kv.Value as string;
                         if (str != null)
-                            adapter.RegisterInput(kv.Key, str);
+                            adapter.RegisterInput((Identifier)kv.Key, str);
                     }
                 }
             }

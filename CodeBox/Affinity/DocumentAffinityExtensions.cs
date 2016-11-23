@@ -1,4 +1,5 @@
-﻿using CodeBox.Indentation;
+﻿using CodeBox.Core;
+using CodeBox.Indentation;
 using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace CodeBox.Affinity
             return aff.AutocompleteSymbols ?? ctx.Settings.AutocompleteSymbols;
         }
 
-        public static string GetIndentComponentKey(this IDocumentAffinity aff, IEditorView ctx)
+        public static Identifier GetIndentComponentKey(this IDocumentAffinity aff, IEditorView ctx)
         {
             return aff.IndentComponentKey ?? ctx.Settings.IndentComponentKey;
         }

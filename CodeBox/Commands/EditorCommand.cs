@@ -5,20 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
-using System.Windows.Forms;
-using CodeBox.ComponentModel;
-using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    public abstract class EditorCommand : ICommand
+    public abstract class EditorCommand
     {
-        public bool Run(IExecutionContext ctx, object arg = null)
-        {
-            return true;
-        }
-
-        internal abstract ActionResults Execute(Selection sel, object arg = null);
+        internal abstract ActionResults Execute(Selection sel, params object[] args);
 
         public virtual ActionResults Undo(out Pos pos)
         {

@@ -1,4 +1,6 @@
 ﻿using CodeBox.Commands;
+using CodeBox.Core;
+using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ObjectModel;
 using System;
@@ -7,18 +9,38 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using static CodeBox.Commands.ActionResults;
 
-namespace CodeBox.ComponentModel
+namespace CodeBox
 {
-    public interface IExecutorComponent : IComponent
-    {
-        bool Execute(IExecutionContext ctx, string commandKey, object arg = null);
-    }
-
     [Export(typeof(IComponent))]
-    [ComponentData("executor.editor")]
-    public sealed class CommandDispatcher : IExecutorComponent
+    [ComponentData("editor")]
+    public sealed class EditorCommandDispatcher : ICommandDispatcher
     {
-        public bool Execute(IExecutionContext ctx, string commandKey, object arg = null)
+        [ImportMany]
+        private IEnumerable<Lazy<EditorCommand, IComponentMetadata>> commands = null;
+        private Dictionary<Identifier, EditorCommand> commandMap = new Dictionary<Identifier, EditorCommand>();
+
+        private EditorCommand GetCommand(Identifier key)
+        {
+            EditorCommand ret;
+
+            if (!commandMap.TryGetValue(key, out ret))
+            {
+                var strKey = key.ToString();
+                var cmd = commands.FirstOrDefault(c => c.Metadata.Key == strKey);
+
+                if (cmd != null)
+                {
+                    commandMap.Add(key, cmd.Value);
+                    ret = cmd.Value;
+                }
+                else
+                    return null;
+            }
+
+            return ret;
+        }
+
+        public bool Execute(IExecutionContext ctx, Identifier commandKey, params object[] args)
         {
             var editor = ctx as Editor;
 
@@ -27,7 +49,7 @@ namespace CodeBox.ComponentModel
 
             editor.FirstEditLine = -1;
             editor.LastEditLine = -1;
-            var cmd = ComponentCatalog.Instance.GetCommand(commandKey) as EditorCommand;
+            var cmd = GetCommand(commandKey);
 
             if (cmd == null || editor.LimitedMode && !cmd.SupportLimitedMode)
                 return false;
@@ -51,7 +73,7 @@ namespace CodeBox.ComponentModel
                 var lel = lastSel.GetLastLine();
                 cmd = cmd.Clone();
                 cmd.View = editor;
-                exp = cmd.Execute(lastSel, arg);
+                exp = cmd.Execute(lastSel, args);
 
                 if (exp.Has(Modify) && (!editor.Buffer.LastAtomicChange || !exp.Has(AtomicChange)) && !editor.LimitedMode)
                     thisUndo = editor.Buffer.BeginUndoAction();
@@ -76,7 +98,7 @@ namespace CodeBox.ComponentModel
                     var lel = sel.GetLastLine();
                     cmd = cmd.Clone();
                     cmd.View = editor;
-                    var e = cmd.Execute(sel, arg);
+                    var e = cmd.Execute(sel, args);
                     exp |= e;
 
                     if (e.Has(Modify))

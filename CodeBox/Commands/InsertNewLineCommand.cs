@@ -10,8 +10,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.newline", "ela")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.newline")]
     public sealed class InsertNewLineCommand : EditorCommand
     {
         private IEnumerable<Character> @string;
@@ -20,7 +20,7 @@ namespace CodeBox.Commands
         private int indent;
         private IEnumerable<Character> unindent;
 
-        internal override ActionResults Execute(Selection selection, object arg = null)
+        internal override ActionResults Execute(Selection selection, params object[] args)
         {
             undoPos = selection.Start;
             redoSel = selection.Clone();

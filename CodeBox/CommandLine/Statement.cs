@@ -1,24 +1,29 @@
-﻿using CodeBox.Core.ComponentModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace CodeBox.CommandLine
 {
-    public sealed class Statement
+    public sealed class Statement : CommandLineItem
     {
         internal Statement()
         {
 
         }
 
-        public Loc Location { get; internal set; }
-
         public string Command { get; internal set; }
 
-        public ArgumentType ArgumentType { get; internal set; }
-        
-        public Loc ArgumentLocation { get; internal set; }
+        public bool HasArguments => _arguments != null && _arguments.Count > 0;
 
-        public object Argument { get; internal set; }
+        private List<StatementArgument> _arguments;
+        public List<StatementArgument> Arguments
+        {
+            get
+            {
+                if (_arguments == null)
+                    _arguments = new List<StatementArgument>();
+
+                return _arguments;
+            }
+        }
     }
 }

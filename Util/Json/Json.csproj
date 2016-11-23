@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BufferExtensions.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="JsonElementAttribute.cs" />
     <Compile Include="JsonError.cs" />
     <Compile Include="JsonFormatInfo.cs" />

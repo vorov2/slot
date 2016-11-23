@@ -8,8 +8,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.deleteback", "eedb")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.deleteback")]
     public class DeleteBackCommand : EditorCommand
     {
         private IEnumerable<Character> deleteString;
@@ -18,7 +18,7 @@ namespace CodeBox.Commands
         protected Selection redoSel;
         private int unindent;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             redoSel = sel.Clone();
             var res = Clean;

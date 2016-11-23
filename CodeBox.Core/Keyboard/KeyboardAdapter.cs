@@ -11,7 +11,7 @@ namespace CodeBox.Core.Keyboard
         private readonly MAP inputs = new MAP();
         private MAP lastDict;
 
-        public void RegisterInput(string key, string shortcut)
+        public void RegisterInput(Identifier key, string shortcut)
         {
             Parse(key, shortcut);
         }
@@ -34,12 +34,12 @@ namespace CodeBox.Core.Keyboard
             else
             {
                 lastDict = null;
-                LastKey = (string)obj;
+                LastKey = (Identifier)obj;
                 return InputState.Complete;
             }
         }
 
-        private void Parse(string key, string shortcut)
+        private void Parse(Identifier key, string shortcut)
         {
             var arr = shortcut.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             var dict = inputs;
@@ -132,6 +132,6 @@ namespace CodeBox.Core.Keyboard
             return SpecialKey.None;
         }
 
-        public string LastKey { get; private set; }
+        public Identifier LastKey { get; private set; }
     }
 }

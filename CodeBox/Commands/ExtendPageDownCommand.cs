@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.extendpagedown", "espd")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.extendpagedown")]
     public sealed class ExtendPageDownCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => PageDownCommand.PageDown(View);

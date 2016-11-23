@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.caretset", "ecs")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.caretset")]
     public sealed class SetCaretCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var newsel = default(Selection);
             var range = default(Range);

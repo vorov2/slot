@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.selectall", "esa")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.selectall")]
     public sealed class SelectAllCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var idx = Document.Lines.Count - 1;
             var ln = Document.Lines[idx];

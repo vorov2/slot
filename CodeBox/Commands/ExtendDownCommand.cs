@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.extenddown", "esd")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.extenddown")]
     public sealed class ExtendDownCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => DownCommand.MoveDown(View, sel);

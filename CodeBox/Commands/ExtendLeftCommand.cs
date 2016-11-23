@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.extendleft", "esl")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.extendleft")]
     public sealed class ExtendLeftCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => LeftCommand.MoveLeft(Document, sel);

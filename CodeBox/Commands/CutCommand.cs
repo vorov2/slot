@@ -8,11 +8,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.cut", "ebx")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.cut")]
     public sealed class CutCommand : DeleteRangeCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var res = base.Execute(sel);
 

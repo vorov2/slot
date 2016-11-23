@@ -7,52 +7,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Json;
 
 namespace CodeBox
 {
     internal static class DictionaryExtensions
     {
-        public static object Object(this Dictionary<string, object> dict, string key)
-        {
-            object res;
-            dict.TryGetValue(key, out res);
-            return res;
-        }
-
-        public static string String(this Dictionary<string, object> dict, string key)
-        {
-            var res = Object(dict, key);
-            return res != null ? res.ToString() : null;
-        }
-
-        public static int Int(this Dictionary<string, object> dict, string key)
-        {
-            var res = Object(dict, key);
-            return res != null && res is double ? (int)(double)res : 0;
-        }
-
-        public static double Double(this Dictionary<string, object> dict, string key)
-        {
-            var res = Object(dict, key);
-            return res != null && res is double ? (double)res : 0d;
-        }
-
-        public static bool Bool(this Dictionary<string, object> dict, string key)
-        {
-            object res;
-            dict.TryGetValue(key, out res);
-            return res != null && res is bool ? (bool)res
-                : res != null ? res.ToString().Equals(bool.TrueString, StringComparison.OrdinalIgnoreCase)
-                : false;
-        }
-
-        public static char Char(this Dictionary<string, object> dict, string key)
-        {
-            object res;
-            dict.TryGetValue(key, out res);
-            return res != null ? res.ToString()[0] : '\0';
-        }
-
         public static Color Color(this Dictionary<string, object> dict, string key)
         {
             var str = dict.String(key);
@@ -78,7 +38,7 @@ namespace CodeBox
 
         public static StandardStyle Style(this Dictionary<string, object> dict, string key)
         {
-            var str = String(dict, key);
+            var str = dict.String(key);
             return StandardStyleConverter.FromString(str);
         }
     }

@@ -7,11 +7,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.overtype", "edo")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.overtype")]
     public sealed class OvertypeCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             View.Overtype = !View.Overtype;
             return Clean;

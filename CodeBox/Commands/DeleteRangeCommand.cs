@@ -11,7 +11,7 @@ namespace CodeBox.Commands
         private Pos undoPos;
         private Selection redoSel;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             redoSel = sel.Clone();
             data = DeleteRange(View, sel);

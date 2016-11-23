@@ -42,13 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComponentModel\ArgumentType.cs" />
-    <Compile Include="ComponentModel\CommandDataAttribute.cs" />
+    <Compile Include="CommandModel\CommandAttribute.cs" />
+    <Compile Include="CommandModel\CommandDispatcher.cs" />
+    <Compile Include="CommandModel\ICommandDispatcher.cs" />
+    <Compile Include="Identifier.cs" />
+    <Compile Include="CommandModel\CommandCatalog.cs" />
+    <Compile Include="CommandModel\CommandMetadata.cs" />
+    <Compile Include="CommandModel\CommandReader.cs" />
+    <Compile Include="CommandModel\ArgumentType.cs" />
     <Compile Include="ComponentModel\ComponentCatalog.cs" />
     <Compile Include="ComponentModel\ComponentDataAttribute.cs" />
-    <Compile Include="ComponentModel\IArgumentValueProvider.cs" />
-    <Compile Include="ComponentModel\ICommand.cs" />
-    <Compile Include="ComponentModel\ICommandMetadata.cs" />
+    <Compile Include="CommandModel\IArgumentValueProvider.cs" />
     <Compile Include="ComponentModel\IComponent.cs" />
     <Compile Include="ComponentModel\IComponentMetadata.cs" />
     <Compile Include="ComponentModel\IExecutionContext.cs" />
@@ -61,6 +65,7 @@
     <Compile Include="Keyboard\Modifiers.cs" />
     <Compile Include="Keyboard\SpecialKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Json\Json.csproj">

@@ -9,6 +9,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Lexing;
 using CodeBox.ComponentModel;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core;
 
 namespace CodeBox.Styling
 {
@@ -72,8 +73,8 @@ namespace CodeBox.Styling
 
         public IStylerComponent Styler { get; private set; }
 
-        private string _stylerKey;
-        public string StylerKey
+        private Identifier _stylerKey;
+        public Identifier StylerKey
         {
             get { return _stylerKey; }
             set

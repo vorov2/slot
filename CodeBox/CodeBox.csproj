@@ -59,9 +59,11 @@
     <Compile Include="Autocomplete\ICompleteSource.cs" />
     <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
+    <Compile Include="CommandLine\CommandLineItem.cs" />
     <Compile Include="CommandLine\CommandParser.cs" />
     <Compile Include="CommandLine\Loc.cs" />
     <Compile Include="CommandLine\Statement.cs" />
+    <Compile Include="CommandLine\StatementArgument.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
@@ -120,9 +122,8 @@
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
-    <Compile Include="Commands\_TestCommand.cs" />
     <Compile Include="ComponentModel\ITextEditor.cs" />
-    <Compile Include="ComponentModel\IExecutorComponent.cs" />
+    <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="IEditorLock.cs" />
@@ -160,7 +161,7 @@
     <Compile Include="Margins\MarginList.cs" />
     <Compile Include="Margins\MarginMethod.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
-    <Compile Include="Margins\CommandMargin.cs" />
+    <Compile Include="CommandLine\CommandMargin.cs" />
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="Margins\TopMargin.cs" />
     <Compile Include="MatchBracketManager.cs" />
@@ -199,25 +200,7 @@
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
     <Compile Include="Styling\StylesReader.cs" />
     <Compile Include="Styling\Style.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <Compile Include="_TestCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">

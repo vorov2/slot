@@ -22,6 +22,7 @@ using CodeBox.Core.ComponentModel;
 using System.Text;
 using CodeBox.Lexing;
 using System.IO;
+using CodeBox.Core.CommandModel;
 
 namespace CodeBox
 {
@@ -321,7 +322,8 @@ namespace CodeBox
                     case '\u001b': //Esc
                         return true;
                     default:
-                        RunCommand("editor.insertchar", new Character(ch));
+                        InputChar = ch;
+                        RunCommand((Identifier)"editor.insertchar");
                         break;
                 }
 
@@ -386,11 +388,11 @@ namespace CodeBox
                 RunCommand(KeyboardAdapter.LastKey);
         }
 
-        internal void RunCommand(string commandKey, object arg = null)
+        internal void RunCommand(Identifier commandKey, params object[] args)
         {
-            var exec = ComponentCatalog.Instance.GetComponent("executor.editor") as ComponentModel.IExecutorComponent;
+            var exec = ComponentCatalog.Instance.GetComponent(commandKey.Namespace) as ICommandDispatcher;
             if (exec != null)
-                exec.Execute(this, commandKey, arg);
+                exec.Execute(this, commandKey, args);
         }
 
         public override Color BackColor => Styles.Styles.DefaultStyle.BackColor;
@@ -412,6 +414,7 @@ namespace CodeBox
                 Styles.RestyleDocument();
                 Folding.RebuildFolding(full: true);
                 Redraw();
+                MatchBrackets.Match();
             }
             finally
             {
@@ -510,6 +513,8 @@ namespace CodeBox
         internal bool LockMouseScrolling { get; set; }
 
         public Pos Caret { get; private set; }
+
+        internal char InputChar { get; private set; }
 
         [Browsable(false)]
         public KeyboardAdapter KeyboardAdapter { get; }

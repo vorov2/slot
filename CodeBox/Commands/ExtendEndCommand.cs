@@ -6,8 +6,8 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.extendend", "ese")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.extendend")]
     public sealed class ExtendEndCommand : SelectionCommand
     {
         protected override Pos Select(Selection sel) => EndCommand.MoveEnd(Document, sel.Caret);

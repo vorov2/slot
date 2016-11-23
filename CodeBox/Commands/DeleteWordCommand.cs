@@ -7,13 +7,13 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.deleteword", "eedw")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.deleteword")]
     public sealed class DeleteWordCommand : DeleteCommand
     {
         private Selection redoSel;
 
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var ln = Document.Lines[sel.Caret.Line];
 

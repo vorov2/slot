@@ -9,11 +9,11 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Commands
 {
-    [Export(typeof(ICommand))]
-    [CommandData("editor.selectblock", "esb")]
+    [Export(typeof(EditorCommand))]
+    [ComponentData("editor.selectblock")]
     public sealed class BlockSelectCommand : EditorCommand
     {
-        internal override ActionResults Execute(Selection sel, object arg = null)
+        internal override ActionResults Execute(Selection sel, params object[] args)
         {
             if (View.WordWrap)
                 return Pure;

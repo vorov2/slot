@@ -8,6 +8,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Commands;
 using CodeBox.Drawing;
+using CodeBox.Core;
 
 namespace CodeBox.Margins
 {
@@ -22,7 +23,7 @@ namespace CodeBox.Margins
         {
             var sel = Editor.Buffer.Selections.Main;
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
-            Editor.RunCommand("editor.selectline", new Pos(lineIndex, 0));
+            Editor.RunCommand((Identifier)"editor.selectline", new Pos(lineIndex, 0));
             return MarginEffects.Redraw;
         }
 
