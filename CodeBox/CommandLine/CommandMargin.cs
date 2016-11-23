@@ -184,14 +184,12 @@ namespace CodeBox.CommandLine
                     .ToList();
                 var g = e.Graphics;
 
-                if (arr.Count == 0)
-                    return;
-                else if (arr.Count > 1 || statement.Command.Length < arr[0].Alias.Length)
+                if (arr.Count > 1 || (arr.Count == 1 && statement.Command.Length < arr[0].Alias.Length))
                 {
                     DrawStringWithPeriods(g, string.Join(" ", arr.Select(a => a.Alias)), 0);
                     HideAutocompleteWindow();
                 }
-                else
+                else if (arr.Count == 1)
                 {
                     var ci = arr[0];
                     var ind = GetCurrentArgument(statement);
@@ -228,7 +226,7 @@ namespace CodeBox.CommandLine
             stmt = stmt ?? statement;
             var pos = commandEditor.Buffer.Selections.Main.Caret.Col;
 
-            if (!stmt.HasArguments && (pos >= stmt.Location.End || stmt.Location.End == 0))
+            if (!stmt.HasArguments && (pos > stmt.Location.End || stmt.Location.End == 0))
                 return 0;
 
             if (stmt != null)
@@ -244,8 +242,8 @@ namespace CodeBox.CommandLine
             if (stmt.HasArguments && pos < stmt.Arguments[0].Location.Start)
                 return 0;
             else if (stmt.HasArguments
-                && (pos == 0 || commandEditor.Lines[0].CharAt(pos - 1) == ' ')
-                    || pos > stmt.Arguments[stmt.Arguments.Count - 1].Location.End)
+                && (pos == 0 || commandEditor.Lines[0].CharAt(pos - 1) == ' '
+                    || pos > stmt.Arguments[stmt.Arguments.Count - 1].Location.End))
                 return stmt.Arguments.Count;
 
             return -1;
