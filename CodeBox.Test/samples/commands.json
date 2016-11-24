@@ -56,7 +56,7 @@
                 "name": "encoding",
                 "type": "any",
                 "valueProvider": "values.encoding",
-                "optional": true
+                "optional": false
             }
         ]
     }

@@ -387,7 +387,16 @@ namespace CodeBox.CommandLine
             //HideEditor();
         }
 
-        public void Toggle(string cmd = null)
+        public void Toggle(Statement stmt)
+        {
+            ContinuationStatement = statement = stmt;
+            Toggle(default(string));
+            commandEditor.Redraw();
+        }
+
+        public void Toggle() => Toggle(default(string));
+
+        public void Toggle(string cmd)
         {
             if (commandEditor == null || !commandEditor.Visible)
             {
@@ -438,29 +447,15 @@ namespace CodeBox.CommandLine
 
             if (md != null)
             {
-                if (md.Arguments.Count(a => !a.Optional) > statement.Arguments.Count)
-                {
-                    statement.Location = default(Loc);
-                    if (statement.HasArguments)
-                        foreach (var a in statement.Arguments)
-                            a.Location = new Loc(-1, -1);
-                    ContinuationStatement = statement;
-                    ShowEditor();
-                    commandEditor.Focus();
-                    commandEditor.Redraw();
-                }
-                else
-                {
-                    var args = statement.HasArguments
-                        ? statement.Arguments.Select(a => a.Value).ToArray() : defargs;
-                    statement = null;
-                    ContinuationStatement = null;
-                    HideEditor();
-                    var exec = ComponentCatalog.Instance.GetComponent(md.Key.Namespace) as ICommandDispatcher;
+                var args = statement.HasArguments
+                    ? statement.Arguments.Select(a => a.Value).ToArray() : defargs;
+                statement = null;
+                ContinuationStatement = null;
+                HideEditor();
+                var exec = ComponentCatalog.Instance.GetComponent(md.Key.Namespace) as ICommandDispatcher;
 
-                    if (exec != null)
-                        exec.Execute(Editor, md.Key, args);
-                }
+                if (exec != null)
+                    exec.Execute(Editor, md.Key, args);
             }
         }
 

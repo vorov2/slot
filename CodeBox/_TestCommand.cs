@@ -18,7 +18,7 @@ namespace CodeBox
     [ComponentData("test")]
     public sealed class TestCommandDispatcher : CommandDispatcher
     {
-        protected override void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey)
+        protected override void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey, object[] args)
         {
             var ed = ctx as Editor;
 
@@ -32,7 +32,19 @@ namespace CodeBox
                 if (cm != null)
                 {
                     var cmd = CommandCatalog.Instance.GetCommandByKey(commandKey);
-                    cm.Toggle(cmd.Alias);
+
+                    if (args == null || args.Length == 0)
+                        cm.Toggle(cmd.Alias);
+                    else
+                    {
+                        var stmt = new Statement { Command = cmd.Alias };
+                        stmt.Arguments.AddRange(args.Select(a => new StatementArgument
+                        {
+                            Value = a,
+                            Type = a is double ? ArgumentType.Number : ArgumentType.String
+                        }));
+                        cm.Toggle(stmt);
+                    }
                 }
             }
         }
@@ -44,7 +56,7 @@ namespace CodeBox
         }
 
         [Command]
-        public void OpenFile(string fileName, string encoding = "utf-8")
+        public void OpenFile(string fileName, string encoding)// = "utf-8")
         {
             var enc = Encoding.GetEncodings()
                 .FirstOrDefault(e => e.Name.Equals(encoding, StringComparison.OrdinalIgnoreCase))
@@ -108,7 +120,7 @@ namespace CodeBox
             var chars = (curvalue as string ?? "").ToCharArray();
             return CommandCatalog.Instance.EnumerateCommands()
                 .Where(c => c.Alias != "?")
-                .Where(c => c.Title.IndexOfAll(chars))
+                .Where(c => c.Title.ContainsAll(chars))
                 .Select(c => new Value { Data = c.Title });
         }
     }

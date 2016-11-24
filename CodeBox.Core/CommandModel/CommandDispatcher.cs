@@ -31,9 +31,9 @@ namespace CodeBox.Core.CommandModel
 
                     for (var i = 0; i < pars.Length; i++)
                     {
-                        if (!pars[i].HasDefaultValue)
+                        if (args.Length <= i && !pars[i].HasDefaultValue)
                         {
-                            ProcessNotEnoughArguments(ctx, commandKey);
+                            ProcessNotEnoughArguments(ctx, commandKey, args);
                             return false;
                         }
 
@@ -44,7 +44,7 @@ namespace CodeBox.Core.CommandModel
 
                 if (vals.Length < pars.Length)
                 {
-                    ProcessNotEnoughArguments(ctx, commandKey);
+                    ProcessNotEnoughArguments(ctx, commandKey, args);
                     return false;
                 }
 
@@ -57,7 +57,7 @@ namespace CodeBox.Core.CommandModel
             }
         }
 
-        protected abstract void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey);
+        protected abstract void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey, object[] args);
 
         private void ResolveCommands()
         {

@@ -11,7 +11,7 @@ namespace CodeBox.CommandLine
     {
         internal StatementArgument()
         {
-
+            Location = new Loc(-1, -1);
         }
 
         public ArgumentType Type { get; internal set; }

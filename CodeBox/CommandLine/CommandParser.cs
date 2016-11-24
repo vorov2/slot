@@ -70,7 +70,8 @@ namespace CodeBox.CommandLine
             for (; pos < buffer.Length + 1; pos++)
             {
                 var c = Lookup(buffer, pos);
-                var sep = IsSeparator(c);
+                var ws = c == ' ' || c == '\t';
+                var sep = c == '|' || c == '\0';
 
                 if (start == -1 && (c == '"' || c == '\''))
                 {
@@ -88,7 +89,7 @@ namespace CodeBox.CommandLine
 
                     start = -1;
                 }
-                else if (!sep && start == -1)
+                else if (!sep && !ws && start == -1)
                     start = pos;
                 else if (sep && start > -1)
                 {
