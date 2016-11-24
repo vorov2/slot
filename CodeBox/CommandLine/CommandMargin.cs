@@ -166,7 +166,7 @@ namespace CodeBox.CommandLine
                 {
                     var st = a.Type == ArgumentType.String ? StandardStyle.String
                         : a.Type == ArgumentType.Number ? StandardStyle.Number
-                        : StandardStyle.Default;
+                        : StandardStyle.KeywordSpecial;
                     commandEditor.Styles.StyleRange(st, 0,
                         a.Location.Start, a.Location.End);
                 }
@@ -310,7 +310,7 @@ namespace CodeBox.CommandLine
             var idx = GetCurrentArgument(statement);
             var sels = commandEditor.Buffer.Selections;
 
-            if (statement.Arguments.Count < idx)
+            if (statement.Arguments.Count > idx)
                 sels.Set(new Pos(0, statement.Arguments[idx].Location.End));
 
             var len = (lastLookupInput ?? "").Length;
