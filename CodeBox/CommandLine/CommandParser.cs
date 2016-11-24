@@ -83,7 +83,6 @@ namespace CodeBox.CommandLine
                         stmt.Arguments.Add(new StatementArgument
                         {
                             Location = new Loc(sp, pos),
-                            Type = ArgumentType.String,
                             Value = str
                         });
 
@@ -94,12 +93,10 @@ namespace CodeBox.CommandLine
                 else if (sep && start > -1)
                 {
                     var str = new string(buffer, start, pos - start);
-                    var obj = TryConvert(str);
                     stmt.Arguments.Add(new StatementArgument
                     {
                         Location = new Loc(start, c == '|' ? pos - 1 : pos),
-                        Type = obj is double ? ArgumentType.Number : ArgumentType.Object,
-                        Value = obj
+                        Value = str
                     });
                     start = -1;
                 }
@@ -107,16 +104,6 @@ namespace CodeBox.CommandLine
             }
 
             return buffer.Length;
-        }
-
-        private object TryConvert(string str)
-        {
-            double d;
-
-            if (double.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out d))
-                return d;
-            else
-                return str;
         }
 
         private int ParseString(Statement stmt, char[] buffer, int pos, char end, out string val)

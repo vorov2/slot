@@ -14,8 +14,6 @@ namespace CodeBox.CommandLine
             Location = new Loc(-1, -1);
         }
 
-        public ArgumentType Type { get; internal set; }
-
         public object Value { get; internal set; }
     }
 }

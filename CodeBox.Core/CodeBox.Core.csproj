@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandModel\ArgumentAffinity.cs" />
+    <Compile Include="CommandModel\ArgumentType.cs" />
     <Compile Include="CommandModel\Value.cs" />
     <Compile Include="CommandModel\CommandAttribute.cs" />
     <Compile Include="CommandModel\CommandDispatcher.cs" />
@@ -52,7 +53,6 @@
     <Compile Include="CommandModel\CommandCatalog.cs" />
     <Compile Include="CommandModel\CommandMetadata.cs" />
     <Compile Include="CommandModel\CommandReader.cs" />
-    <Compile Include="CommandModel\ArgumentType.cs" />
     <Compile Include="ComponentModel\ComponentCatalog.cs" />
     <Compile Include="ComponentModel\ComponentDataAttribute.cs" />
     <Compile Include="CommandModel\IArgumentValueProvider.cs" />

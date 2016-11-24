@@ -164,10 +164,7 @@ namespace CodeBox.CommandLine
             {
                 foreach (var a in statement.Arguments)
                 {
-                    var st = a.Type == ArgumentType.String ? StandardStyle.String
-                        : a.Type == ArgumentType.Number ? StandardStyle.Number
-                        : StandardStyle.KeywordSpecial;
-                    commandEditor.Styles.StyleRange(st, 0,
+                    commandEditor.Styles.StyleRange(StandardStyle.KeywordSpecial, 0,
                         a.Location.Start, a.Location.End);
                 }
             }

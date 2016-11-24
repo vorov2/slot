@@ -26,7 +26,7 @@
                 "name": "encoding",
                 "type": "any",
                 "valueProvider": "values.encoding",
-                "optional": false
+                "optional": true
             }
         ]
     },
@@ -249,7 +249,7 @@
     },
     {
         "key": "editor.scrollup",
-        "alias": "e-lsa",
+        "alias": "e-lsu",
         "title": "Editor: Scroll line up"
     },
     {

@@ -41,8 +41,7 @@ namespace CodeBox
                         var stmt = new Statement { Command = cmd.Alias };
                         stmt.Arguments.AddRange(args.Select(a => new StatementArgument
                         {
-                            Value = a,
-                            Type = a is double ? ArgumentType.Number : ArgumentType.String
+                            Value = a
                         }));
                         cm.Toggle(stmt);
                     }
