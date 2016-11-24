@@ -66,7 +66,8 @@ namespace CodeBox
                 return;
             }
 
-            var grm = editor.AffinityManager.GetAffinity(caret);
+            var grmId = editor.AffinityManager.GetAffinityId(caret);
+            var grm = editor.GrammarManager.GetGrammar(grmId);
             var seps = (" \t" + (grm.NonWordSymbols ?? editor.Settings.NonWordSymbols)).ToCharArray();
             var regex = new Regex("\\b" + Regex.Escape(txt) + "\\b");
 
@@ -76,7 +77,7 @@ namespace CodeBox
                 var ln = line.Text;
 
                 foreach (Match m in regex.Matches(ln))
-                    if (m.Success)
+                    if (m.Success && editor.AffinityManager.GetAffinityId(i, m.Index) == grmId)
                     {
                         var aps = new AppliedStyle((int)StandardStyle.MatchedWord, m.Index, m.Index + m.Length - 1);
                         line.AppliedStyles.Add(aps);
