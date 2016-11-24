@@ -27,7 +27,8 @@ namespace CodeBox.Affinity
         internal void Associate(int line, int col, int grammar)
         {
             var ln = editor.Lines[line];
-            ln.Grammars.Add(new GrammarInfo { GrammarId = grammar, Col = col });
+            if (ln.Grammars.Count == 0 || ln.Grammars[ln.Grammars.Count - 1].GrammarId != grammar)
+                ln.Grammars.Add(new GrammarInfo { GrammarId = grammar, Col = col });
         }
 
         internal void ClearAssociations(int line)
