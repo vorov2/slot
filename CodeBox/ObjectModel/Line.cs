@@ -158,6 +158,12 @@ namespace CodeBox.ObjectModel
                 Invalidated = false;
             }
         }
+
+        internal void Reset()
+        {
+            _tetras = -1;
+            Invalidated = false;
+        }
         #endregion
 
         #region Styles

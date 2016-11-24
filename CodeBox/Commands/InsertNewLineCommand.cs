@@ -12,10 +12,10 @@ namespace CodeBox.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.newline")]
-    public sealed class InsertNewLineCommand : EditorCommand
+    public class InsertNewLineCommand : EditorCommand
     {
         private IEnumerable<Character> @string;
-        private Pos undoPos;
+        internal Pos undoPos;
         private Selection redoSel;
         private int indent;
         private IEnumerable<Character> unindent;
@@ -93,10 +93,10 @@ namespace CodeBox.Commands
 
         internal static Pos InsertNewLine(Document doc, Pos pos)
         {
-            var ln = doc.Lines[pos.Line];
+            var ln = pos.Line >= 0 ? doc.Lines[pos.Line] : null;
             var str = default(IEnumerable<Character>);
 
-            if (pos.Col != ln.Length && pos.Col < ln.Length)
+            if (ln != null && pos.Col != ln.Length && pos.Col < ln.Length)
             {
                 str = ln.GetRange(pos.Col, ln.Length - pos.Col);
                 ln.RemoveRange(pos.Col, ln.Length - pos.Col);

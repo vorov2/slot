@@ -68,6 +68,7 @@
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
+    <Compile Include="Commands\DeleteLineCommand.cs" />
     <Compile Include="Commands\EditorCommand.cs" />
     <Compile Include="Commands\ActionResults.cs" />
     <Compile Include="Commands\CopyCommand.cs" />
@@ -96,6 +97,8 @@
     <Compile Include="Commands\DownCommand.cs" />
     <Compile Include="Commands\EndCommand.cs" />
     <Compile Include="Commands\HomeCommand.cs" />
+    <Compile Include="Commands\InsertLineAbove.cs" />
+    <Compile Include="Commands\InsertLineBelow.cs" />
     <Compile Include="Commands\InsertNewLineCommand.cs" />
     <Compile Include="Commands\InsertRangeCommand.cs" />
     <Compile Include="Commands\NormalSelectCommand.cs" />

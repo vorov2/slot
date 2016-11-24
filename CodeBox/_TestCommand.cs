@@ -38,6 +38,12 @@ namespace CodeBox
         }
 
         [Command]
+        public void CommandPalette(string commandName)
+        {
+
+        }
+
+        [Command]
         public void OpenFile(string fileName, string encoding = "utf-8")
         {
             var enc = Encoding.GetEncodings()
@@ -94,6 +100,20 @@ namespace CodeBox
     }
 
     [Export(typeof(IComponent))]
+    [ComponentData("values.commands")]
+    public sealed class CommandsProvider : IArgumentValueProvider
+    {
+        public IEnumerable<Value> EnumerateArgumentValues(object curvalue)
+        {
+            var chars = (curvalue as string ?? "").ToCharArray();
+            return CommandCatalog.Instance.EnumerateCommands()
+                .Where(c => c.Alias != "?")
+                .Where(c => c.Title.IndexOfAll(chars))
+                .Select(c => new Value { Data = c.Title });
+        }
+    }
+
+    [Export(typeof(IComponent))]
     [ComponentData("values.systempath")]
     public sealed class SystemPathValueProvider : IArgumentValueProvider
     {
@@ -135,6 +155,5 @@ namespace CodeBox
                 return null;
             }
         }
-
     }
 }

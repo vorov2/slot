@@ -372,9 +372,9 @@ namespace CodeBox.CommandLine
             HideAutocompleteWindow();
         }
 
-        private void ResetBuffer()
+        private void ResetBuffer(string text = "")
         {
-            commandEditor.Text = "";
+            commandEditor.Text = text;
             commandEditor.Buffer.CurrentLineIndicator = false;
             commandEditor.Buffer.ShowEol = false;
             commandEditor.Buffer.ShowLineLength = false;
@@ -395,9 +395,8 @@ namespace CodeBox.CommandLine
 
                 if (cmd != null)
                 {
-                    commandEditor.Text = cmd + " ";
+                    ResetBuffer(cmd + " ");
                     commandEditor.Buffer.Selections.Set(new Pos(0, cmd.Length + 1));
-                    ResetBuffer();
                 }
 
                 commandEditor.Focus();

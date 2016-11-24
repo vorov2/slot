@@ -1,6 +1,10 @@
 ﻿{
-    "test.openfile":  "ctrl+o",
+    "test.openfile": "ctrl+o",
+    "test.commandpalette": "f1",
 
+    "editor.insertlinebelow": "ctrl+enter",
+    "editor.insertlineabove": "ctrl+shift+enter",
+    "editor.deleteline": "shift+del",
     "editor.foldingtoggle": "ctrl+k",
     "editor.autocomplete": "ctrl+space",
     "editor.followlink": "ctrl+click",

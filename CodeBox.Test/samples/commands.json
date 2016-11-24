@@ -1,21 +1,63 @@
 ﻿[
     {
+        "key": "test.commandpalette",
+        "alias": "?",
+        "title": "Command Palette",
+        "arguments": [
+            {
+                "name": "commandName",
+                "type": "string",
+                "valueProvider": "values.commands"
+            }
+        ]
+    },
+    {
         "key": "editor.copy",
         "alias": "e-c",
-        "title": "Editor: Copy",
+        "title": "Editor: Copy"
     },
     {
         "key": "editor.selectall",
         "alias": "e-sa",
-        "title": "Editor: Select All",
+        "title": "Editor: Select all"
+    },
+    {
+        "key": "editor.deleteline",
+        "alias": "e-ld",
+        "title": "Editor: Delete current line (or selected lines)"
+    },
+    {
+        "key": "editor.deleteline",
+        "alias": "e-ld",
+        "title": "Editor: Delete current line (or selected lines)"
+    },
+    {
+        "key": "editor.insertlinebelow",
+        "alias": "e-lib",
+        "title": "Editor: Insert line below caret position"
+    },
+    {
+        "key": "editor.insertlineabove",
+        "alias": "e-lia",
+        "title": "Editor: Insert line above caret position"
     },
     {
         "key": "test.openfile",
         "alias": "f-o",
         "title": "Open a file",
         "arguments": [
-            { "name": "fileName", "type": "string", "valueProvider": "values.systempath", "affinity": "FilePath" },
-            { "name": "encoding", "type": "any", "valueProvider": "values.encoding", "optional": true }
+            {
+                "name": "fileName",
+                "type": "string",
+                "valueProvider": "values.systempath",
+                "affinity": "FilePath"
+            },
+            {
+                "name": "encoding",
+                "type": "any",
+                "valueProvider": "values.encoding",
+                "optional": true
+            }
         ]
     }
 ]
