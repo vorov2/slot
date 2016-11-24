@@ -27,12 +27,11 @@ namespace CodeBox.Commands
 
             if (!selection.IsEmpty)
                 @string = DeleteRangeCommand.DeleteRange(View, selection);
-            
+
+            var indentKey = View.AffinityManager.GetAffinity(new Pos(undoPos.Line, 0)).GetIndentComponentKey(View);
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
 
-
-            var indentKey = View.AffinityManager.GetAffinity(new Pos(pos.Line, 0)).GetIndentComponentKey(View);
             var comp = indentKey != null ? ComponentCatalog.Instance.GetComponent(indentKey) as IDentComponent : null;
             indent = comp != null ? comp.CalculateIndentation(View, pos.Line) : 0;
 

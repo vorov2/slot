@@ -1,4 +1,5 @@
-﻿using CodeBox.Folding;
+﻿using CodeBox.Affinity;
+using CodeBox.Folding;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace CodeBox.ObjectModel
     {
         private List<Character> chars;
         private List<int> cuts;
+        internal readonly List<GrammarInfo> Grammars = new List<GrammarInfo>();
 
         public Line(IEnumerable<Character> chars, int id)
         {

@@ -67,8 +67,8 @@ namespace CodeBox
             }
 
             var grmId = editor.AffinityManager.GetAffinityId(caret);
-            var grm = editor.GrammarManager.GetGrammar(grmId);
-            var seps = (" \t" + (grm.NonWordSymbols ?? editor.Settings.NonWordSymbols)).ToCharArray();
+            var grm = grmId != 0 ? editor.GrammarManager.GetGrammar(grmId) : null;
+            var seps = (" \t" + (grm?.NonWordSymbols ?? editor.Settings.NonWordSymbols)).ToCharArray();
             var regex = new Regex("\\b" + Regex.Escape(txt) + "\\b");
 
             for (var i = 0; i < editor.Lines.Count; i++)
