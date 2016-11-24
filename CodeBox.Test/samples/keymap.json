@@ -1,4 +1,6 @@
 ﻿{
+    "test.openfile":  "ctrl+o",
+
     "editor.foldingtoggle": "ctrl+k",
     "editor.autocomplete": "ctrl+space",
     "editor.followlink": "ctrl+click",

@@ -75,12 +75,39 @@ namespace CodeBox.CommandLine
                 commandEditor.LostFocus += EditorLostFocus;
                 commandEditor.KeyDown += EditorKeyDown;
                 commandEditor.Paint += EditorPaint;
+                commandEditor.BeforePaste += EditorBeforePaste;
                 commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
                 ResetBuffer();
                 Editor.Controls.Add(commandEditor);
             }
 
             return commandEditor;
+        }
+
+        private void EditorBeforePaste(object sender, TextEventArgs e)
+        {
+            if (e.Text != null && (e.Text.IndexOf(' ') != -1 || e.Text.IndexOf('\t') != -1)
+                && statement != null)
+            {
+                var idx = GetCurrentArgument();
+
+                if (statement.Arguments.Count > idx)
+                {
+                    var arg = statement.Arguments[idx];
+
+                    if (arg.Type != ArgumentType.String)
+                    {
+                        var oldpos = commandEditor.Buffer.Selections.Main.Caret.Col;
+                        commandEditor.Buffer.Selections.Set(new Selection(
+                            new Pos(0, arg.Location.Start),
+                            new Pos(0, arg.Location.End)));
+                        commandEditor.RunCommand((Identifier)"editor.insertrange", arg.Value.ToString().MakeCharacters());
+                        commandEditor.Buffer.Selections.Set(new Pos(0, oldpos - 1));
+                    }
+                }
+                else if (statement.Arguments.Count == idx)
+                    e.Text = "\"" + e.Text + "\"";
+            }
         }
 
         private AutocompleteWindow GetAutocompleteWindow()
@@ -360,11 +387,19 @@ namespace CodeBox.CommandLine
             //HideEditor();
         }
 
-        public void Toggle()
+        public void Toggle(string cmd = null)
         {
             if (commandEditor == null || !commandEditor.Visible)
             {
                 ShowEditor();
+
+                if (cmd != null)
+                {
+                    commandEditor.Text = cmd + " ";
+                    commandEditor.Buffer.Selections.Set(new Pos(0, cmd.Length + 1));
+                    ResetBuffer();
+                }
+
                 commandEditor.Focus();
             }
             else

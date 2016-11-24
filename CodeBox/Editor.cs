@@ -554,5 +554,9 @@ namespace CodeBox
 
         [Browsable(false)]
         public bool LimitedMode { get; set; }
+
+        public event EventHandler<TextEventArgs> BeforePaste;
+        internal bool HasBeforePaste => BeforePaste != null;
+        internal void OnBeforePaste(TextEventArgs e) => BeforePaste?.Invoke(this, e);
     }
 }

@@ -40,6 +40,13 @@ namespace CodeBox.Core.CommandModel
             return ret;
         }
 
+        public CommandMetadata GetCommandByKey(Identifier key)
+        {
+            CommandMetadata ret;
+            commands.TryGetValue(key, out ret);
+            return ret;
+        }
+
         public static CommandCatalog Instance { get; } = new CommandCatalog();
     }
 }

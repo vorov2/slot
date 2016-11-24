@@ -23,17 +23,29 @@ namespace CodeBox.Core.CommandModel
             try
             {
                 var vals = args;
+                var pars = cmd.GetParameters();
 
                 if (args != null && args.Length > 0)
                 {
-                    var pars = cmd.GetParameters();
                     vals = new object[pars.Length];
 
                     for (var i = 0; i < pars.Length; i++)
                     {
+                        if (!pars[i].HasDefaultValue)
+                        {
+                            ProcessNotEnoughArguments(ctx, commandKey);
+                            return false;
+                        }
+
                         var cval = args.Length > i ? args[i] : pars[i].DefaultValue;
                         vals[i] = cval;
                     }
+                }
+
+                if (vals.Length < pars.Length)
+                {
+                    ProcessNotEnoughArguments(ctx, commandKey);
+                    return false;
                 }
 
                 cmd.Invoke(this, vals);
@@ -44,6 +56,8 @@ namespace CodeBox.Core.CommandModel
                 return false;
             }
         }
+
+        protected abstract void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey);
 
         private void ResolveCommands()
         {

@@ -200,6 +200,7 @@
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
     <Compile Include="Styling\StylesReader.cs" />
     <Compile Include="Styling\Style.cs" />
+    <Compile Include="TextEventArgs.cs" />
     <Compile Include="_TestCommand.cs" />
   </ItemGroup>
   <ItemGroup>

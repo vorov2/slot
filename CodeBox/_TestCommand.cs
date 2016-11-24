@@ -1,4 +1,5 @@
-﻿using CodeBox.Core;
+﻿using CodeBox.CommandLine;
+using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ObjectModel;
@@ -17,6 +18,25 @@ namespace CodeBox
     [ComponentData("test")]
     public sealed class TestCommandDispatcher : CommandDispatcher
     {
+        protected override void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey)
+        {
+            var ed = ctx as Editor;
+
+            if (ed != null)
+            {
+                if (ed.Parent is Editor)
+                    ed = ed.Parent as Editor;
+
+                var cm = ed.TopMargins.FirstOrDefault(b => b is CommandMargin) as CommandMargin;
+
+                if (cm != null)
+                {
+                    var cmd = CommandCatalog.Instance.GetCommandByKey(commandKey);
+                    cm.Toggle(cmd.Alias);
+                }
+            }
+        }
+
         [Command]
         public void OpenFile(string fileName, string encoding = "utf-8")
         {
