@@ -79,36 +79,14 @@ namespace CodeBox
     [ComponentData("values.encoding")]
     public sealed class EncodingValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<Value> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string;
 
             return Encoding.GetEncodings()
                 .Where(e => str == null || e.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
-                .Select(e => new EncodingArgumentValue(e))
-                .OrderBy(e => e.Data);
-        }
-
-        class EncodingArgumentValue : Value
-        {
-            private readonly EncodingInfo enc;
-            internal EncodingArgumentValue(EncodingInfo enc)
-            {
-                this.enc = enc;
-            }
-
-            public override object Data => enc.Name.ToUpper();
-
-            public override string ToString()
-            {
-                var idx = enc.DisplayName.IndexOf('(');
-                var nam = enc.DisplayName;
-
-                if (idx > -1)
-                    nam = nam.Substring(0, idx - 1).TrimEnd();
-
-                return $"{Data} ({nam})";
-            }
+                .Select(e => new ValueItem(e.Name, e.DisplayName))
+                .OrderBy(e => e.Value);
         }
     }
 
@@ -116,7 +94,7 @@ namespace CodeBox
     [ComponentData("values.commands")]
     public sealed class CommandsProvider : IArgumentValueProvider
     {
-        public IEnumerable<Value> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var chars = (curvalue as string ?? "").ToCharArray();
             return CommandCatalog.Instance.EnumerateCommands()
@@ -125,7 +103,7 @@ namespace CodeBox
                 .Select(c => new CommandArgumentValue(c, KeyboardAdapter.Instance.GetCommandShortcut(c.Key)));
         }
 
-        class CommandArgumentValue : Value
+        class CommandArgumentValue : ValueItem
         {
             private readonly CommandMetadata meta;
             private readonly KeyInput shortcut;
@@ -136,15 +114,12 @@ namespace CodeBox
                 this.shortcut = shortcut;
             }
 
-            public override object Data => meta.Title;
+            public override string Value => meta.Title;
 
             public override string Meta =>
                 shortcut != null ? $"{shortcut} ({meta.Alias})" : $"({meta.Alias})";
 
-            public override string ToString()
-            {
-                return Data.ToString();
-            }
+            public override string ToString() => Value;
         }
     }
 
@@ -152,17 +127,17 @@ namespace CodeBox
     [ComponentData("values.systempath")]
     public sealed class SystemPathValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<Value> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string ?? "";
 
             //if (!string.IsNullOrWhiteSpace(str))
-                return GetPathElements(str) ?? Enumerable.Empty<Value>();
+                return GetPathElements(str) ?? Enumerable.Empty<ValueItem>();
 
             //return Enumerable.Empty<ArgumentValue>();
         }
 
-        private IEnumerable<Value> GetPathElements(string pat)
+        private IEnumerable<ValueItem> GetPathElements(string pat)
         {
             if (pat.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 return null;
@@ -172,7 +147,7 @@ namespace CodeBox
                 if (pat.EndsWith("\\") || pat.EndsWith("//"))
                     return Directory.EnumerateFileSystemEntries(pat)
                         .Where(v => v.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new Value(sy));
+                        .Select(sy => new ValueItem(sy));
                 else
                 {
                     FileInfo fi;
@@ -182,7 +157,7 @@ namespace CodeBox
                     var loc = Environment.CurrentDirectory == dir.Name;
                     return dir.EnumerateFileSystemInfos()
                         .Where(v => (loc ? v.Name : v.FullName).StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new Value(sy.FullName));
+                        .Select(sy => new ValueItem(sy.FullName));
                 }
             }
             catch (Exception)

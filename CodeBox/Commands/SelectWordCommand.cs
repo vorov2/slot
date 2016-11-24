@@ -14,6 +14,7 @@ namespace CodeBox.Commands
     {
         internal enum Strategy
         {
+            None,
             Ws,
             NonWord,
             Word
@@ -47,7 +48,7 @@ namespace CodeBox.Commands
 
         protected virtual void Select(Range range) => Buffer.Selections.Set(Selection.FromRange(range));
 
-        internal static Range SelectWord(IEditorView ctx, Pos caret)
+        internal static Range SelectWord(IEditorView ctx, Pos caret, Strategy strategy = Strategy.None)
         {
             var doc = ctx.Buffer.Document;
             var line = doc.Lines[caret.Line];
@@ -60,6 +61,10 @@ namespace CodeBox.Commands
                 var caretColMin = caret.Col > 0 ? caret.Col - 1 : 0;
                 var c = line.CharAt(caretColMin);
                 var strat = GetStrategy(seps, c);
+
+                if (strategy != Strategy.None && strat != strategy)
+                    return null;
+
                 var start = FindBoundLeft(seps, line, caretColMin, strat);
                 var end = FindBoundRight(seps, line, caret.Col, strat);
 
@@ -127,9 +132,9 @@ namespace CodeBox.Commands
                 c = line.CharAt(pos);
                 var nonWord = seps.IndexOf(c) != -1;
                 var ws = char.IsWhiteSpace(c) || c == '\t';
-                var nextWs = char.IsWhiteSpace(line.CharAt(pos + 1));
+                //var nextWs = char.IsWhiteSpace(line.CharAt(pos + 1));
 
-                if (strat == Strategy.Word && (nonWord || (!nonWord && hadWs && !nextWs)))
+                if (strat == Strategy.Word && (nonWord || ws))
                     return pos == line.Length - 1 ? line.Length : pos;
                 else if (strat == Strategy.Ws && !ws)
                     return pos;

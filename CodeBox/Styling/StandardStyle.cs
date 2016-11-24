@@ -89,6 +89,9 @@ namespace CodeBox.Styling
         CurrentLine = 28,
 
         [FieldName("margin.commands")]
-        CommandBar = 29
+        CommandBar = 29,
+
+        [FieldName("word.matched")]
+        MatchedWord = 30,
     }
 }

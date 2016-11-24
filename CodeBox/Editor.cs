@@ -66,6 +66,7 @@ namespace CodeBox
             Folding = new FoldingManager(this);
             CallTips = new CallTipManager(this);
             MatchBrackets = new MatchBracketManager(this);
+            MatchWords = new MatchWordManager(this);
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
             Settings = settings;
@@ -238,7 +239,9 @@ namespace CodeBox
         {
             if (PointToClient(Cursor.Position) == mousePosition
                 && !movePosition.IsEmpty && movePosition.Line < Lines.Count)
+            {
                 CallTips.MouseDwell(movePosition);
+            }
             else
                 CallTips.HideCallTip();
 
@@ -532,6 +535,9 @@ namespace CodeBox
 
         [Browsable(false)]
         public MatchBracketManager MatchBrackets { get; }
+
+        [Browsable(false)]
+        public MatchWordManager MatchWords { get; }
 
         [Browsable(false)]
         public AutocompleteManager Autocomplete { get; }

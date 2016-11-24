@@ -124,7 +124,10 @@ namespace CodeBox
                 DoAftermath(editor, exp, editor.Buffer.Selections.Count, lastSel.Caret, thisUndo ? 1 : 0);
 
             if (!exp.Has(IdleCaret) && !editor.LimitedMode)
+            {
                 editor.MatchBrackets.Match();
+                editor.MatchWords.RequestMatch();
+            }
 
             if (!editor.LimitedMode)
             {

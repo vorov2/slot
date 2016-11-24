@@ -61,11 +61,11 @@ namespace CodeBox.Test
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
+            var coll = StylesReader.Read(File.ReadAllText("samples\\theme.json"));
             ed.Styles.Styles = coll;
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
-            var fl = LocalFile("test.htm");
+            var fl = LocalFile("test.htm");//@"c:\test\bigcode.cs";//
             ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), fl, Encoding.UTF8));
         }
 

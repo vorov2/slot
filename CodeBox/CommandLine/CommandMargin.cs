@@ -106,7 +106,7 @@ namespace CodeBox.CommandLine
 
             if (items.Any()
                 && (!items.JustOne()
-                    || !items.First().Data.ToString().Equals(lastLookupInput, StringComparison.OrdinalIgnoreCase)))
+                    || !items.First().Value.Equals(lastLookupInput, StringComparison.OrdinalIgnoreCase)))
             {
                 wnd.SetItems(items);
                 wnd.Left = commandEditor.Left;
@@ -310,7 +310,7 @@ namespace CodeBox.CommandLine
                 sels.Set(new Pos(0, statement.Arguments[idx].Location.End));
 
             var len = (lastLookupInput ?? "").Length;
-            var instr = window.SelectedItem.Data.ToString();
+            var instr = window.SelectedItem.Value;
             var str = instr.Substring(len);
             if (len > 0 && lastLookupInput[len - 1] != instr[len - 1])
                 str = char.IsLower(lastLookupInput[len - 1]) ? str.ToLower() : str.ToUpper();

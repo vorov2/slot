@@ -118,6 +118,10 @@
         {
             "key": "preprocessor",
             "color": "#7F7F7F"
+        },
+        {
+            "key": "word.matched",
+            "backColor": "#343A40"
         }
     ]
 }

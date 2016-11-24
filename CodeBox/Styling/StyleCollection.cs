@@ -22,14 +22,15 @@ namespace CodeBox.Styling
 
             if (!styles.TryGetValue((int)style, out ret))
             {
-                ret = style == StandardStyle.Selection ? new SelectionStyle()
+                ret = style == StandardStyle.Selection || style == StandardStyle.MatchedBracket || style == StandardStyle.MatchedWord
+                        ? new SelectionStyle()
                     : style == StandardStyle.LineNumbers ? new MarginStyle()
                     : style == StandardStyle.ScrollBars ? new MarginStyle()
                     : style == StandardStyle.Folding ? new MarginStyle()
                     : style == StandardStyle.Popup ? new PopupStyle()
                     : style == StandardStyle.Caret ? new Style()
                     : style == StandardStyle.CurrentLine ? new Style()
-                    : (Style)new TextStyle();
+                    : new TextStyle();
 
                 Register((int)style, ret);
             }

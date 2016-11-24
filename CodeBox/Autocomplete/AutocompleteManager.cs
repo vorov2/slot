@@ -44,7 +44,7 @@ namespace CodeBox.Autocomplete
 
         private void InsertCompleteString()
         {
-            var str = window.SelectedItem.Data.ToString().Substring(completeString.Length);
+            var str = window.SelectedItem.Value.Substring(completeString.Length);
             editor.RunCommand((Identifier)"editor.insertrange", str.MakeCharacters());
             HideAutocomplete();
         }
@@ -72,7 +72,7 @@ namespace CodeBox.Autocomplete
                 return;
             }
 
-            window.SetItems(newItems.Select(i => new Value(i)));
+            window.SetItems(newItems.Select(i => new ValueItem(i)));
             SetLocationByPos(pos);
             WindowShown = true;
             lastCol = pos.Col;
@@ -173,7 +173,7 @@ namespace CodeBox.Autocomplete
                     HideAutocomplete();
                 else
                 {
-                    window.SetItems(newItems.Select(i => new Value(i)));
+                    window.SetItems(newItems.Select(i => new ValueItem(i)));
                     window.Invalidate();
                     SetLocationByPos(caret);
                 }

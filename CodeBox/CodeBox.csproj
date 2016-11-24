@@ -168,6 +168,7 @@
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="Margins\TopMargin.cs" />
     <Compile Include="MatchBracketManager.cs" />
+    <Compile Include="MatchWordManager.cs" />
     <Compile Include="ObjectModel\DocumentBuffer.cs" />
     <Compile Include="ObjectModel\Character.cs" />
     <Compile Include="Commands\LeftCommand.cs" />

@@ -9,6 +9,6 @@ namespace CodeBox.Core.CommandModel
 {
     public interface IArgumentValueProvider : IComponent
     {
-        IEnumerable<Value> EnumerateArgumentValues(object curvalue);
+        IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue);
     }
 }

@@ -28,7 +28,7 @@ namespace CodeBox.Autocomplete
 
         class ItemInfo
         {
-            public Value Item;
+            public ValueItem Item;
             public int Y;
         }
 
@@ -106,11 +106,16 @@ namespace CodeBox.Autocomplete
                         if (s.Item.Meta != null)
                         {
                             var mstr = s.Item.Meta.ToString();
-                            g.DrawString(mstr,
-                                SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
-                                ps.ForeColor.Brush(),
-                                new Point(Width - mstr.Length * CharWidth - CharWidth * 2, y),
-                                format);
+                            var x = Width - mstr.Length * CharWidth - CharWidth * 2;
+                            foreach (var mc in mstr)
+                            {
+                                g.DrawString(mc.ToString(),
+                                    SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
+                                    ps.ForeColor.Brush(),
+                                    new Point(x, y),
+                                    format);
+                                x += CharWidth;
+                            }
                         }
                     }
                 }
@@ -237,7 +242,7 @@ namespace CodeBox.Autocomplete
             Invalidate();
         }
 
-        public void SetItems(IEnumerable<Value> items)
+        public void SetItems(IEnumerable<ValueItem> items)
         {
             this.items = items.Select(i => new ItemInfo { Item = i }).ToList();
             InvalidateWindow();
@@ -267,7 +272,7 @@ namespace CodeBox.Autocomplete
 
         internal int LineHeight => CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
 
-        internal Value SelectedItem
+        internal ValueItem SelectedItem
         {
             get { return items[selectedLine].Item; }
         }
