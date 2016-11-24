@@ -68,46 +68,19 @@ namespace CodeBox.CommandLine
         {
             if (commandEditor == null)
             {
-                commandEditor = new Editor(Editor.Settings, Editor.Styles.Styles, Editor.KeyboardAdapter, new Lexing.GrammarManager());
+                commandEditor = new Editor(Editor.Settings, Editor.Styles.Styles, new Lexing.GrammarManager());
                 commandEditor.LimitedMode = true;
                 commandEditor.Visible = false;
                 commandEditor.Height = Editor.Info.LineHeight;
                 commandEditor.LostFocus += EditorLostFocus;
                 commandEditor.KeyDown += EditorKeyDown;
                 commandEditor.Paint += EditorPaint;
-                commandEditor.BeforePaste += EditorBeforePaste;
                 commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
                 ResetBuffer();
                 Editor.Controls.Add(commandEditor);
             }
 
             return commandEditor;
-        }
-
-        private void EditorBeforePaste(object sender, TextEventArgs e)
-        {
-            if (e.Text != null && (e.Text.IndexOf(' ') != -1 || e.Text.IndexOf('\t') != -1)
-                && statement != null)
-            {
-                var idx = GetCurrentArgument();
-
-                if (statement.Arguments.Count > idx)
-                {
-                    var arg = statement.Arguments[idx];
-
-                    if (arg.Type != ArgumentType.String)
-                    {
-                        var oldpos = commandEditor.Buffer.Selections.Main.Caret.Col;
-                        commandEditor.Buffer.Selections.Set(new Selection(
-                            new Pos(0, arg.Location.Start),
-                            new Pos(0, arg.Location.End)));
-                        commandEditor.RunCommand((Identifier)"editor.insertrange", arg.Value.ToString().MakeCharacters());
-                        commandEditor.Buffer.Selections.Set(new Pos(0, oldpos - 1));
-                    }
-                }
-                else if (statement.Arguments.Count == idx)
-                    e.Text = "\"" + e.Text + "\"";
-            }
         }
 
         private AutocompleteWindow GetAutocompleteWindow()
@@ -269,8 +242,7 @@ namespace CodeBox.CommandLine
             if (stmt.HasArguments && pos < stmt.Arguments[0].Location.Start)
                 return 0;
             else if (stmt.HasArguments
-                && (pos == 0 || commandEditor.Lines[0].CharAt(pos - 1) == ' '
-                    || pos > stmt.Arguments[stmt.Arguments.Count - 1].Location.End))
+                && (pos == 0 || pos > stmt.Arguments[stmt.Arguments.Count - 1].Location.End))
                 return stmt.Arguments.Count;
 
             return -1;
@@ -342,33 +314,15 @@ namespace CodeBox.CommandLine
 
             var len = (lastLookupInput ?? "").Length;
             var instr = window.SelectedItem.Data.ToString();
-            var hasnil = instr.IndexOf(' ') != -1 || instr.IndexOf('\t') != -1;
-            var str = instr;
-
-            if (statement.Arguments.Count > idx && hasnil)
-            {
-                sels.Main.Start = new Pos(0, statement.Arguments[idx].Location.Start);
-                var end = statement.Arguments[idx].Location.End;
-                sels.Main.End = new Pos(0, end < commandEditor.Lines[0].Length ? end + 1 : end);
-                str = "\"" + str + "\"";
-            }
-            else
-            {
-                str = instr.Substring(len);
-                if (len > 0 && lastLookupInput[len - 1] != instr[len - 1])
-                    str = char.IsLower(lastLookupInput[len - 1]) ? str.ToLower() : str.ToUpper();
-                str = hasnil ? "\"" + str + "\"" : str;
-                if (instr.Length == str.Length
-                    && sels.Main.Caret.Col > 0
-                    && commandEditor.Lines[0][sels.Main.Caret.Col - 1].Char != ' ')
-                    str = " " + str;
-            }
+            var str = instr.Substring(len);
+            if (len > 0 && lastLookupInput[len - 1] != instr[len - 1])
+                str = char.IsLower(lastLookupInput[len - 1]) ? str.ToLower() : str.ToUpper();
+            if (instr.Length == str.Length
+                && sels.Main.Caret.Col > 0
+                && commandEditor.Lines[0][sels.Main.Caret.Col - 1].Char != ' ')
+                str = " " + str;
 
             commandEditor.RunCommand((Identifier)"editor.insertrange", str.MakeCharacters());
-
-            if (hasnil)
-                sels.Set(new Pos(0, sels.Main.Caret.Col - 1));
-
             HideAutocompleteWindow();
         }
 

@@ -12,6 +12,27 @@
         ]
     },
     {
+        "key": "test.openfile",
+        "alias": "f-o",
+        "title": "Open a file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "type": "string",
+                "valueProvider": "values.systempath",
+                "affinity": "FilePath"
+            },
+            {
+                "name": "encoding",
+                "type": "any",
+                "valueProvider": "values.encoding",
+                "optional": false
+            }
+        ]
+    },
+
+
+    {
         "key": "editor.copy",
         "alias": "e-c",
         "title": "Editor: Copy"
@@ -42,22 +63,248 @@
         "title": "Editor: Insert line above caret position"
     },
     {
-        "key": "test.openfile",
-        "alias": "f-o",
-        "title": "Open a file",
-        "arguments": [
-            {
-                "name": "fileName",
-                "type": "string",
-                "valueProvider": "values.systempath",
-                "affinity": "FilePath"
-            },
-            {
-                "name": "encoding",
-                "type": "any",
-                "valueProvider": "values.encoding",
-                "optional": false
-            }
-        ]
+        "key": "editor.addcaret",
+        "alias": "e-ca",
+        "title": "Editor: Add a caret at mouse cursor position"
+    },
+    {
+        "key": "editor.autocomplete",
+        "alias": "e-as",
+        "title": "Editor: Show autocomplete window"
+    },
+    {
+        "key": "editor.selectblock",
+        "alias": "e-sb",
+        "title": "Editor: Make a rectangular selection"
+    },
+    {
+        "key": "editor.clearselections",
+        "alias": "e-sc",
+        "title": "Editor: Clear selections"
+    },
+    {
+        "key": "editor.cut",
+        "alias": "e-x",
+        "title": "Editor: Cut"
+    },
+    {
+        "key": "editor.deleteback",
+        "alias": "e-db",
+        "title": "Editor: Delete backwards"
+    },
+    {
+        "key": "editor.delete",
+        "alias": "e-d",
+        "title": "Editor: Delete"
+    },
+    {
+        "key": "editor.deletewordback",
+        "alias": "e-dwb",
+        "title": "Editor: Delete word backwards"
+    },
+    {
+        "key": "editor.deleteword",
+        "alias": "e-dw",
+        "title": "Editor: Delete word"
+    },
+    {
+        "key": "editor.documentend",
+        "alias": "e-cde",
+        "title": "Editor: Move caret to the end of the document"
+    },
+    {
+        "key": "editor.documenthome",
+        "alias": "e-cdh",
+        "title": "Editor: Move caret to the beggining of the document"
+    },
+    {
+        "key": "editor.down",
+        "alias": "e-cd",
+        "title": "Editor: Move caret down"
+    },
+    {
+        "key": "editor.end",
+        "alias": "e-ce",
+        "title": "Editor: Move caret to the end of the line"
+    },
+    {
+        "key": "editor.extenddocumentend",
+        "alias": "e-sde",
+        "title": "Editor: Extend selection to the end of the document"
+    },
+    {
+        "key": "editor.extenddocumenthome",
+        "alias": "e-sdh",
+        "title": "Editor: Extend selection to the beggining of the document"
+    },
+    {
+        "key": "editor.extenddown",
+        "alias": "e-sd",
+        "title": "Editor: Extend selection down"
+    },
+    {
+        "key": "editor.extendend",
+        "alias": "e-se",
+        "title": "Editor: Extend selection to the end of the line"
+    },
+    {
+        "key": "editor.extendhome",
+        "alias": "e-sh",
+        "title": "Editor: Extend selection to the beggining of the line"
+    },
+    {
+        "key": "editor.extendleft",
+        "alias": "e-sl",
+        "title": "Editor: Extend selection to the left"
+    },
+    {
+        "key": "editor.extendpagedown",
+        "alias": "e-spd",
+        "title": "Editor: Extend selection one page down"
+    },
+    {
+        "key": "editor.extendpageup",
+        "alias": "e-spu",
+        "title": "Editor: Extend selection one page up"
+    },
+    {
+        "key": "editor.extendright",
+        "alias": "e-sr",
+        "title": "Editor: Extend selection to the right"
+    },
+    {
+        "key": "editor.extendwordleft",
+        "alias": "e-swl",
+        "title": "Editor: Extend selection word left"
+    },
+    {
+        "key": "editor.extendwordright",
+        "alias": "e-swr",
+        "title": "Editor: Extend selection word right"
+    },
+    {
+        "key": "editor.followlink",
+        "alias": "e-fl",
+        "title": "Editor: Follow link under the cursor"
+    },
+    {
+        "key": "editor.home",
+        "alias": "e-ch",
+        "title": "Editor: Move caret to the beggining of the line"
+    },
+    {
+        "key": "editor.indent",
+        "alias": "e-li",
+        "title": "Editor: Indent selection"
+    },
+    {
+        "key": "editor.newline",
+        "alias": "e-ln",
+        "title": "Editor: Insert a new line"
+    },
+    {
+        "key": "editor.left",
+        "alias": "e-cl",
+        "title": "Editor: Move caret to the left"
+    },
+    {
+        "key": "editor.selectnormal",
+        "alias": "e-sn",
+        "title": "Editor: Select a region of text"
+    },
+    {
+        "key": "editor.overtype",
+        "alias": "e-ovr",
+        "title": "Editor: Toggle overtype mode"
+    },
+    {
+        "key": "editor.pagedown",
+        "alias": "e-cpd",
+        "title": "Editor: Move caret page down"
+    },
+    {
+        "key": "editor.pageup",
+        "alias": "e-cpu",
+        "title": "Editor: Move caret page up"
+    },
+    {
+        "key": "editor.paste",
+        "alias": "e-p",
+        "title": "Editor: Paste"
+    },
+    {
+        "key": "editor.redo",
+        "alias": "e-r",
+        "title": "Editor: Redo"
+    },
+    {
+        "key": "editor.right",
+        "alias": "e-cr",
+        "title": "Editor: Move caret right"
+    },
+    {
+        "key": "editor.scrolldown",
+        "alias": "e-lsd",
+        "title": "Editor: Scroll line down"
+    },
+    {
+        "key": "editor.scrollup",
+        "alias": "e-lsa",
+        "title": "Editor: Scroll line up"
+    },
+    {
+        "key": "editor.selectline",
+        "alias": "e-sl",
+        "title": "Editor: Select line"
+    },
+    {
+        "key": "editor.selectwordadd",
+        "alias": "e-swa",
+        "title": "Editor: Add a selected word to the selections"
+    },
+    {
+        "key": "editor.selectword",
+        "alias": "e-sw",
+        "title": "Editor: Select a word"
+    },
+    {
+        "key": "editor.setcaret",
+        "alias": "e-cs",
+        "title": "Editor: Put a caret to the position under mouse cursor"
+    },
+    {
+        "key": "editor.togglecommandbar",
+        "alias": "e-cbt",
+        "title": "Editor: Toggle command bar"
+    },
+    {
+        "key": "editor.togglefolding",
+        "alias": "e-ft",
+        "title": "Editor: Expand or collapse folding region"
+    },
+    {
+        "key": "editor.undo",
+        "alias": "e-u",
+        "title": "Editor: Undo"
+    },
+    {
+        "key": "editor.unindent",
+        "alias": "e-lu",
+        "title": "Editor: Unindent lines"
+    },
+    {
+        "key": "editor.up",
+        "alias": "e-cu",
+        "title": "Editor: Move caret up"
+    },
+    {
+        "key": "editor.wordleft",
+        "alias": "e-cwl",
+        "title": "Editor: Move caret word left"
+    },
+    {
+        "key": "editor.wordright",
+        "alias": "e-cwr",
+        "title": "Editor: Move caret word right"
     }
 ]

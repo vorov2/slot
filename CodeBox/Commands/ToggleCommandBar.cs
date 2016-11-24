@@ -12,7 +12,7 @@ using CodeBox.CommandLine;
 namespace CodeBox.Commands
 {
     [Export(typeof(EditorCommand))]
-    [ComponentData("editor.commandbartoggle")]
+    [ComponentData("editor.togglecommandbar")]
     public sealed class ToggleCommandBar : EditorCommand
     {
         internal override ActionResults Execute(Selection sel, params object[] args)

@@ -39,12 +39,12 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor() : this(new EditorSettings(), new StyleCollection(), new KeyboardAdapter(), new GrammarManager())
+        public Editor() : this(new EditorSettings(), new StyleCollection(), new GrammarManager())
         {
 
         }
 
-        public Editor(EditorSettings settings, StyleCollection styles, KeyboardAdapter adapter, GrammarManager grammar)
+        public Editor(EditorSettings settings, StyleCollection styles, GrammarManager grammar)
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw
@@ -53,7 +53,6 @@ namespace CodeBox
             TabStop = true;
 
             GrammarManager = grammar;
-            KeyboardAdapter = adapter;
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
             RightMargins = new MarginList(this);
@@ -384,8 +383,8 @@ namespace CodeBox
         {
             Console.WriteLine($"KeyInput: {input}.");
 
-            if (KeyboardAdapter.ProcessInput(input) == InputState.Complete)
-                RunCommand(KeyboardAdapter.LastKey);
+            if (KeyboardAdapter.Instance.ProcessInput(input) == InputState.Complete)
+                RunCommand(KeyboardAdapter.Instance.LastKey);
         }
 
         internal void RunCommand(Identifier commandKey, params object[] args)
@@ -515,9 +514,6 @@ namespace CodeBox
         public Pos Caret { get; private set; }
 
         internal char InputChar { get; private set; }
-
-        [Browsable(false)]
-        public KeyboardAdapter KeyboardAdapter { get; }
 
         [Browsable(false)]
         public StyleManager Styles { get; }

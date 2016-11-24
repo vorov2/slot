@@ -72,7 +72,7 @@ namespace CodeBox.Autocomplete
                 return;
             }
 
-            window.SetItems(newItems.Select(i => new Value { Data = i }));
+            window.SetItems(newItems.Select(i => new Value(i)));
             SetLocationByPos(pos);
             WindowShown = true;
             lastCol = pos.Col;
@@ -173,7 +173,7 @@ namespace CodeBox.Autocomplete
                     HideAutocomplete();
                 else
                 {
-                    window.SetItems(newItems.Select(i => new Value { Data = i }));
+                    window.SetItems(newItems.Select(i => new Value(i)));
                     window.Invalidate();
                     SetLocationByPos(caret);
                 }

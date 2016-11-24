@@ -2,6 +2,7 @@
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Keyboard;
 using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
@@ -95,8 +96,9 @@ namespace CodeBox
             internal EncodingArgumentValue(EncodingInfo enc)
             {
                 this.enc = enc;
-                Data = enc.Name.ToUpper();
             }
+
+            public override object Data => enc.Name.ToUpper();
 
             public override string ToString()
             {
@@ -121,7 +123,29 @@ namespace CodeBox
             return CommandCatalog.Instance.EnumerateCommands()
                 .Where(c => c.Alias != "?")
                 .Where(c => c.Title.ContainsAll(chars))
-                .Select(c => new Value { Data = c.Title });
+                .Select(c => new CommandArgumentValue(c, KeyboardAdapter.Instance.GetCommandShortcut(c.Key)));
+        }
+
+        class CommandArgumentValue : Value
+        {
+            private readonly CommandMetadata meta;
+            private readonly KeyInput shortcut;
+
+            internal CommandArgumentValue(CommandMetadata meta, KeyInput shortcut)
+            {
+                this.meta = meta;
+                this.shortcut = shortcut;
+            }
+
+            public override object Data => meta.Title;
+
+            public override string Meta =>
+                shortcut != null ? $"{shortcut} ({meta.Alias})" : $"({meta.Alias})";
+
+            public override string ToString()
+            {
+                return Data.ToString();
+            }
         }
     }
 
@@ -149,7 +173,7 @@ namespace CodeBox
                 if (pat.EndsWith("\\") || pat.EndsWith("//"))
                     return Directory.EnumerateFileSystemEntries(pat)
                         .Where(v => v.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new Value { Data = sy });
+                        .Select(sy => new Value(sy));
                 else
                 {
                     FileInfo fi;
@@ -159,7 +183,7 @@ namespace CodeBox
                     var loc = Environment.CurrentDirectory == dir.Name;
                     return dir.EnumerateFileSystemInfos()
                         .Where(v => (loc ? v.Name : v.FullName).StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new Value { Data = sy.FullName });
+                        .Select(sy => new Value(sy.FullName));
                 }
             }
             catch (Exception)

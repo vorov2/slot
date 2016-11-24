@@ -2,7 +2,7 @@
 
 namespace CodeBox.Core.Keyboard
 {
-    public struct KeyInput : IEquatable<KeyInput>
+    public sealed class KeyInput : IEquatable<KeyInput>
     {
         public static readonly KeyInput Empty = new KeyInput(Modifiers.None, '\0');
 
@@ -36,13 +36,14 @@ namespace CodeBox.Core.Keyboard
 
         public override string ToString()
         {
-            return Modifier == Modifiers.None ? KeyToString()
+            var ret = Modifier == Modifiers.None ? KeyToString()
                 : $"{Modifier.ToString().Replace(", ", "+")}+{KeyToString()}";
+            return Chord == null ? ret : ret + "," + Chord.ToString();
         }
 
         private string KeyToString()
         {
-            return Key >= (int)SpecialKey.Del
+            return Key >= (int)SpecialKey.Space
                 ? KeyboardAdapter.SpecialKeysToString != null ?
                     KeyboardAdapter.SpecialKeysToString[(SpecialKey)Key]
                         : ((SpecialKey)Key).ToString() : ((char)Key).ToString();
@@ -61,5 +62,7 @@ namespace CodeBox.Core.Keyboard
         public Modifiers Modifier { get; }
 
         public int Key { get; }
+
+        public KeyInput Chord { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using CodeBox.Core.ComponentModel;
 namespace CodeBox.Commands
 {
     [Export(typeof(EditorCommand))]
-    [ComponentData("editor.selectionclear")]
+    [ComponentData("editor.clearselections")]
     public sealed class ClearSelectionCommand : EditorCommand
     {
         internal override ActionResults Execute(Selection sel, params object[] args)

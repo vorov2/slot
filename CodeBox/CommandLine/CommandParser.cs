@@ -97,7 +97,7 @@ namespace CodeBox.CommandLine
                     var obj = TryConvert(str);
                     stmt.Arguments.Add(new StatementArgument
                     {
-                        Location = new Loc(start, pos),
+                        Location = new Loc(start, c == '|' ? pos - 1 : pos),
                         Type = obj is double ? ArgumentType.Number : ArgumentType.Object,
                         Value = obj
                     });

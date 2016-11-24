@@ -8,8 +8,22 @@ namespace CodeBox.Core.CommandModel
 {
     public class Value
     {
-        public object Data { get; set; }
+        public Value(object data)
+        {
+            Data = data;
+        }
+
+        protected Value()
+        {
+
+        }
+
+        public virtual object Data { get; }
+
+        public virtual string Meta { get; }
 
         public override string ToString() => (Data ?? "").ToString();
+
+        //public virtual void Draw(Action<string,Rectangle> drawMain)
     }
 }

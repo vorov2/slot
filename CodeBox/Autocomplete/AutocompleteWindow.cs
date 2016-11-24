@@ -97,9 +97,21 @@ namespace CodeBox.Autocomplete
                                 new Rectangle(0, y, Width - CharWidth, LineHeight));
                         }
 
-                        g.DrawString(s.Item.ToString(), SmallFont ? editor.Settings.SmallFont : editor.Settings.Font, ps.ForeColor.Brush(),
+                        g.DrawString(s.Item.ToString(),
+                            SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
+                            ps.ForeColor.Brush(),
                             new Rectangle(CharWidth, y, Width - CharWidth*2, LineHeight),
                             format);
+
+                        if (s.Item.Meta != null)
+                        {
+                            var mstr = s.Item.Meta.ToString();
+                            g.DrawString(mstr,
+                                SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
+                                ps.ForeColor.Brush(),
+                                new Point(Width - mstr.Length * CharWidth - CharWidth * 2, y),
+                                format);
+                        }
                     }
                 }
             }
