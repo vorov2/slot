@@ -83,7 +83,8 @@ namespace CodeBox.Autocomplete
         {
             var caret = editor.Buffer.Selections.Main.Caret;
             var line = editor.Lines[caret.Line];
-            var seps = editor.Settings.NonWordSymbols;
+            var aff = editor.AffinityManager.GetAffinity(caret);
+            var seps = aff.NonWordSymbols ?? editor.Settings.NonWordSymbols;
             var sb = new StringBuilder();
 
             if (caret.Col > 0)
