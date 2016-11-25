@@ -134,7 +134,18 @@ namespace CodeBox.CommandLine
         private void AutocompleteClick(object sender, MouseEventArgs e)
         {
             if (window != null && window.Visible)
-                InsertCompleteString();
+            {
+                var arg = GetCurrentArgument();
+                if (arg != -1 && arg < statement.Arguments.Count)
+                {
+                    var a = statement.Arguments[arg];
+                    commandEditor.Buffer.Selections.Set(new Selection(
+                        new Pos(0, a.Location.Start), new Pos(0, a.Location.End)));
+                    commandEditor.RunCommand((Identifier)"editor.insertrange", window.SelectedItem.Value.MakeCharacters());
+                }
+                else
+                    InsertCompleteString();
+            }
 
             if (currentAffinity != ArgumentAffinity.FilePath
                 && statement.Arguments.Count == CommandCatalog.Instance.GetCommandByAlias(statement.Command)

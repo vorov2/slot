@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 
 namespace CodeBox.Core.CommandModel
 {
@@ -49,6 +51,13 @@ namespace CodeBox.Core.CommandModel
                     {
                         return false;
                     }
+                }
+                else if (targetType == typeof(Encoding))
+                {
+                    result = Encoding.GetEncodings()
+                        .FirstOrDefault(e => e.Name.Equals((string)obj, StringComparison.OrdinalIgnoreCase))
+                        ?.GetEncoding()
+                        ?? Encoding.UTF8;
                 }
                 else
                     return false;

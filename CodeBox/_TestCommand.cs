@@ -63,13 +63,8 @@ namespace CodeBox
         }
 
         [Command]
-        public void OpenFile(string fileName, string encoding)// = "utf-8")
+        public void OpenFile(string fileName, Encoding enc)// = "utf-8")
         {
-            var enc = Encoding.GetEncodings()
-                .FirstOrDefault(e => e.Name.Equals(encoding, StringComparison.OrdinalIgnoreCase))
-                ?.GetEncoding()
-                ?? Encoding.UTF8;
-
             try
             {
                 var txt = File.ReadAllText(Uri.UnescapeDataString(fileName), enc);
