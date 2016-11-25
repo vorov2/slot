@@ -31,6 +31,8 @@ namespace CodeBox.Lexing
 
         public string Key { get; set; }
 
+        public string Name { get; set; }
+
         public List<string> Extensions { get; } = new List<string>();
 
         public GrammarSection AddSection(GrammarSection section)

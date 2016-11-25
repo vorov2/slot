@@ -20,6 +20,8 @@ using CodeBox.Core.Keyboard;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.CommandLine;
+using CodeBox.Core.ComponentModel;
+using CodeBox.ComponentModel;
 
 namespace CodeBox.Test
 {
@@ -38,18 +40,18 @@ namespace CodeBox.Test
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ed.Styles.StylerKey = (Identifier)"styler.lexer";
-            var lexer = (ConfigurableLexer)ed.Styles.Styler;
+            ed.Styles.StylerKey = (Identifier)"styler.default";
             var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
             var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
             var html = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\html.grammar.json")));
             var css = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\css.grammar.json")));
             var json = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\json.grammar.json")));
-            ed.GrammarManager.RegisterGrammar(csharp);
-            ed.GrammarManager.RegisterGrammar(csharpExp);
-            ed.GrammarManager.RegisterGrammar(html);
-            ed.GrammarManager.RegisterGrammar(css);
-            ed.GrammarManager.RegisterGrammar(json);
+            var grm = ComponentCatalog.Instance.Grammars();
+            grm.RegisterGrammar(csharp);
+            grm.RegisterGrammar(csharpExp);
+            grm.RegisterGrammar(html);
+            grm.RegisterGrammar(css);
+            grm.RegisterGrammar(json);
 
             CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
 
@@ -61,10 +63,14 @@ namespace CodeBox.Test
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            var coll = StylesReader.Read(File.ReadAllText("samples\\theme.json"));
-            ed.Styles.Styles = coll;
+            //var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
+            //ed.Styles.Theme = coll;
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
+
+            var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
+            theme.ChangeTheme("dark");
+
             var fl = LocalFile("test.htm");//@"c:\test\bigcode.cs";//
             ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), fl, Encoding.UTF8));
         }

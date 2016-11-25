@@ -1,5 +1,6 @@
 ﻿{
     "key": "json",
+    "name": "JSON",
     "extensions": [ "json" ],
     "numbers": "(0123456789)[x]{0123456789.+-_abcdef}(lufdm)(ul)",
     "delimeters": "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?",

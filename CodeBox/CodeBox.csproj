@@ -67,6 +67,7 @@
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
+    <Compile Include="Commands\ChangeModeCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
     <Compile Include="Commands\DeleteLineCommand.cs" />
     <Compile Include="Commands\EditorCommand.cs" />
@@ -125,7 +126,9 @@
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
+    <Compile Include="ComponentCatalogExtensions.cs" />
     <Compile Include="ComponentModel\ITextEditor.cs" />
+    <Compile Include="ComponentModel\IThemeComponent.cs" />
     <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
@@ -145,10 +148,11 @@
     <Compile Include="Indentation\CurlyDentProvider.cs" />
     <Compile Include="Lexing\EnumerableExtensions.cs" />
     <Compile Include="Lexing\Grammar.cs" />
-    <Compile Include="Lexing\GrammarManager.cs" />
+    <Compile Include="Lexing\GrammarComponent.cs" />
     <Compile Include="Lexing\GrammarReader.cs" />
     <Compile Include="Lexing\GrammarSection.cs" />
     <Compile Include="Lexing\GrammarSectionSettings.cs" />
+    <Compile Include="ComponentModel\IGrammarComponent.cs" />
     <Compile Include="Lexing\MatchResult.cs" />
     <Compile Include="Affinity\NumberLiteral.cs" />
     <Compile Include="Lexing\SectionSequence.cs" />
@@ -188,7 +192,7 @@
     <Compile Include="SettingsReader.cs" />
     <Compile Include="Styling\MarginStyle.cs" />
     <Compile Include="Styling\PopupStyle.cs" />
-    <Compile Include="Styling\StyleCollection.cs" />
+    <Compile Include="Styling\ThemeComponent.cs" />
     <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="CallTips\CallTip.cs" />

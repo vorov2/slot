@@ -61,7 +61,7 @@ namespace CodeBox.Styling
 
         internal virtual TextStyle FullClone() => (TextStyle)MemberwiseClone();
 
-        internal TextStyle DefaultStyle { get; set; }
+        internal Style DefaultStyle { get; set; }
 
         internal TextStyle Cloned { get; set; }
 

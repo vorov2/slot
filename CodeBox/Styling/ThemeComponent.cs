@@ -1,17 +1,39 @@
-﻿using System;
+﻿using CodeBox.ComponentModel;
+using CodeBox.Core.ComponentModel;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.IO;
+using System.Linq;
 
 namespace CodeBox.Styling
 {
-    public sealed class StyleCollection
+    [Export(typeof(IComponent))]
+    [ComponentData("theme.default")]
+    public sealed class ThemeComponent : IThemeComponent
     {
         private readonly Dictionary<int, Style> styles = new Dictionary<int, Style>();
 
-        public StyleCollection()
+        [Import("directory.theme")]
+        private string themePath = null;
+
+        [Import("directory.root")]
+        private string rootPath = null;
+
+        public ThemeComponent()
         {
             var def = new TextStyle { Default = true };
             Register(0, def);
             DefaultStyle = def;
+        }
+
+        public void ChangeTheme(string themeKey)
+        {
+            var dir = new DirectoryInfo(Path.Combine(rootPath, themePath));
+            var fi = dir.EnumerateFiles($"{themeKey}.theme.json").FirstOrDefault();
+
+            if (fi != null)
+                StylesReader.Read(File.ReadAllText(fi.FullName), this);
         }
 
         public Style GetStyle(int styleId) => styles[styleId];
@@ -56,8 +78,6 @@ namespace CodeBox.Styling
             styles.Add(styleId, style);
         }
 
-        public TextStyle DefaultStyle { get; private set; }
-
-        public int StyleCount => styles.Count;
+        public Style DefaultStyle { get; private set; }
     }
 }

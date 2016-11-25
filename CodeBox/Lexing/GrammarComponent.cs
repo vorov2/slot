@@ -2,10 +2,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.ComponentModel.Composition;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Lexing
 {
-    public sealed class GrammarManager
+    [Export(typeof(IComponent))]
+    [ComponentData("grammar.default")]
+    public sealed class GrammarComponent : IGrammarComponent
     {
         private readonly Dictionary<string, Grammar> grammars = new Dictionary<string, Grammar>();
         private readonly List<Grammar> index = new List<Grammar>();
@@ -18,8 +22,11 @@ namespace CodeBox.Lexing
             grammar.GlobalId = index.Count;
         }
 
-        public Grammar GetRootGrammar() => GetGrammar(GrammarKey);
-
+        public IEnumerable<Grammar> EnumerateGrammars()
+        {
+            return index;
+        }
+ 
         public Grammar GetGrammar(string key)
         {
             if (key == null)
@@ -41,11 +48,9 @@ namespace CodeBox.Lexing
             return ret.Value;
         }
 
-        internal Grammar GetGrammar(int id)
+        public Grammar GetGrammar(int id)
         {
             return index[id - 1];
         }
-
-        public string GrammarKey { get; set; }
     }
 }

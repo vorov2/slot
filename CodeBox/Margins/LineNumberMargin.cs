@@ -22,7 +22,7 @@ namespace CodeBox.Margins
         {
             OnSizeChanged();
             var sc = Editor.Scroll.ScrollPosition;
-            var lns = (MarginStyle)Editor.Styles.Styles.GetStyle(StandardStyle.LineNumbers);
+            var lns = (MarginStyle)Editor.Styles.Theme.GetStyle(StandardStyle.LineNumbers);
 
             var lines = Editor.Document.Lines;
             var info = Editor.Info;

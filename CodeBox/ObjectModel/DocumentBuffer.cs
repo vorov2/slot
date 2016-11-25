@@ -130,6 +130,7 @@ namespace CodeBox.ObjectModel
             }
             set { _eol = value; }
         }
+        public string GrammarKey { get; set; }
 
         public string FileName { get; }
 

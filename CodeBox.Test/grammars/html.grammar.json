@@ -1,5 +1,6 @@
 ﻿{
     "key": "html",
+    "name": "HTML",
     "extensions": [ "htm", "html" ],
     "delimeters": "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
     "brackets": "<>",

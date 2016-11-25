@@ -9,6 +9,7 @@
     "editor.delimeters": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
     "editor.brackets": "(){}[]",
     "editor.matchBrackets": true,
+    "editor.matchWords": true,
     "editor.useTabs": false,
     "editor.indentSize": 4,
     "editor.wordWrap": false,

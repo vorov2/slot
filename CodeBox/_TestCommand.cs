@@ -96,10 +96,11 @@ namespace CodeBox
     {
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
-            var chars = (curvalue as string ?? "").ToCharArray();
+            var strings = (curvalue as string ?? "")
+                .Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             return CommandCatalog.Instance.EnumerateCommands()
                 .Where(c => c.Alias != "?")
-                .Where(c => c.Title.ContainsAll(chars))
+                .Where(c => c.Title.ContainsAll(strings))
                 .Select(c => new CommandArgumentValue(c, KeyboardAdapter.Instance.GetCommandShortcut(c.Key)));
         }
 

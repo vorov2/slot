@@ -191,16 +191,16 @@ namespace CodeBox.ObjectModel
                 if (index >= a.Start && index <= a.End)
                 {
                     if (ret == null)
-                        ret = (TextStyle)man.Styles.GetStyle(a.StyleId);
+                        ret = (TextStyle)man.Theme.GetStyle(a.StyleId);
                     else
                     {
-                        var next = (TextStyle)man.Styles.GetStyle(a.StyleId);
+                        var next = (TextStyle)man.Theme.GetStyle(a.StyleId);
                         ret = ret.Combine(next);
                     }
                 }
             }
 
-            ret = ret ?? man.Styles.DefaultStyle;
+            ret = ret ?? (TextStyle)man.Theme.DefaultStyle;
             return ret;
         }
         #endregion

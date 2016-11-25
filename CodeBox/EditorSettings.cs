@@ -3,10 +3,6 @@ using CodeBox.Affinity;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.Indentation;
 using System.Windows.Forms;
 using CodeBox.Core;
 
@@ -41,6 +37,8 @@ namespace CodeBox
 
         public string AutocompleteSymbols { get; set; }
         #endregion
+
+        public bool MatchWords { get; set; }
 
         public bool MatchBrackets { get; set; }
 
@@ -115,7 +113,7 @@ namespace CodeBox
                 }
             }
         }
-        
+
         public List<int> LongLineIndicators { get; }
     }
 

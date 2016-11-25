@@ -9,7 +9,7 @@ using CodeBox.Core.ComponentModel;
 namespace CodeBox.Commands
 {
     [Export(typeof(EditorCommand))]
-    [ComponentData("editor.foldingtoggle")]
+    [ComponentData("editor.togglefolding")]
     public sealed class ToggleFoldingCommand : EditorCommand
     {
         private int undoLine;
@@ -18,8 +18,7 @@ namespace CodeBox.Commands
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
             undoCaret = sel.Caret;
-            var pos = args == null || args.Length == 0 || !(args[0] is int) ? View.Caret : new Pos((int)args[0], 0);
-            var ln = pos.IsEmpty ? sel.Caret.Line : pos.Line;
+            var ln = GetArg<int>(0, args, sel.Caret.Line + 1) - 1;
             var level = -1;
 
             while (ln > -1)

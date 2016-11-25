@@ -1,4 +1,6 @@
-﻿using CodeBox.Indentation;
+﻿using CodeBox.Core;
+using CodeBox.Core.ComponentModel;
+using CodeBox.Indentation;
 using CodeBox.Lexing;
 using CodeBox.ObjectModel;
 using System;
@@ -38,7 +40,7 @@ namespace CodeBox.Affinity
 
         public IDocumentAffinity GetRootAffinity()
         {
-            return editor.GrammarManager.GetRootGrammar();
+            return ComponentCatalog.Instance.Grammars().GetGrammar(editor.Buffer.GrammarKey);
         }
 
         public IDocumentAffinity GetAffinity(Pos pos)
@@ -52,7 +54,7 @@ namespace CodeBox.Affinity
             var id = GetAffinityId(line, col);
 
             if (id != 0)
-                grm = editor.GrammarManager.GetGrammar(id);
+                grm = ComponentCatalog.Instance.Grammars().GetGrammar(id);
 
             return grm;
         }

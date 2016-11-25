@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
+using CodeBox.Core.CommandModel;
 
 namespace CodeBox.Commands
 {
@@ -22,6 +23,16 @@ namespace CodeBox.Commands
         {
             pos = Pos.Empty;
             return None;
+        }
+
+        protected T GetArg<T>(int num, object[] args, T def = default(T))
+        {
+            if (args == null || args.Length <= num)
+                return def;
+
+            var obj = args[num];
+            object res;
+            return Converter.Convert(obj, typeof(T), out res) ? (T)res : def;
         }
 
         internal IEditorView View { get; set; }

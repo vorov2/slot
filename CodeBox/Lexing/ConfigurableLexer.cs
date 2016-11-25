@@ -9,7 +9,7 @@ using CodeBox.Core.ComponentModel;
 namespace CodeBox.Lexing
 {
     [Export(typeof(IComponent))]
-    [ComponentData("styler.lexer")]
+    [ComponentData("styler.default")]
     public sealed class ConfigurableLexer : IStylerComponent
     {
         private char contextChar;
@@ -21,12 +21,12 @@ namespace CodeBox.Lexing
 
         public void Style(IEditorView context, Range range)
         {
-            if (context.GrammarManager.GrammarKey == null)
+            if (context.Buffer.GrammarKey == null)
                 return;
 
             Context = context;
-            Context.GrammarManager.GetRootGrammar().Sections.Reset();
-            Parse(new State(0, Context.GrammarManager.GrammarKey, false), range);
+            ComponentCatalog.Instance.Grammars().GetGrammar(Context.Buffer.GrammarKey).Sections.Reset();
+            Parse(new State(0, Context.Buffer.GrammarKey, false), range);
         }
 
         private void Parse(State state, Range rng)
@@ -40,18 +40,18 @@ namespace CodeBox.Lexing
             {
                 var line = Lines[i];
                 Context.AffinityManager.ClearAssociations(i);
-                var grm = Context.GrammarManager.GetGrammar(state.GrammarKey);
+                var grm = ComponentCatalog.Instance.Grammars().GetGrammar(state.GrammarKey);
                 Styles.ClearStyles(i);
                 var col = 0;
                 var sect = grm.Sections[lss];
                 sect.Sections.ResetSelective();
                 state = ParseLine(sect, ref col, i);
-                grm = Context.GrammarManager.GetGrammar(state.GrammarKey);
-                var st = (sect.Id != 0 || sect.GrammarKey != Context.GrammarManager.GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
+                grm = ComponentCatalog.Instance.Grammars().GetGrammar(state.GrammarKey);
+                var st = (sect.Id != 0 || sect.GrammarKey != Context.Buffer.GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
 
                 while (col <= line.Length)
                 {
-                    grm = Context.GrammarManager.GetGrammar(state.GrammarKey);
+                    grm = ComponentCatalog.Instance.Grammars().GetGrammar(state.GrammarKey);
                     sect = grm.Sections[state.SectionId];
                     sect.Sections.ResetSelective();
                     state = ParseLine(sect, ref col, i);
@@ -68,7 +68,7 @@ namespace CodeBox.Lexing
 
         private int StateToBit(State state)
         {
-            return state.GrammarKey != Context.GrammarManager.GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
+            return state.GrammarKey != Context.Buffer.GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
         }
 
         private State ParseLine(GrammarSection mys, ref int i, int line)
@@ -76,7 +76,7 @@ namespace CodeBox.Lexing
             var start = i;
             var identStart = i;
             var ln = Lines[line];
-            var grammar = Context.GrammarManager.GetGrammar(mys.GrammarKey);
+            var grammar = ComponentCatalog.Instance.Grammars().GetGrammar(mys.GrammarKey);
             Context.AffinityManager.Associate(line, i, grammar.GlobalId);
             var wordSep = grammar.NonWordSymbols ?? Context.Settings.NonWordSymbols;
             var backm = mys.Id == 0 && mys.BackDelegate != null ? mys.BackDelegate : mys;
@@ -220,7 +220,7 @@ namespace CodeBox.Lexing
                     if (sect.ExternalGrammarKey != null)
                     {
                         var bd = sect;
-                        sect = Context.GrammarManager.GetGrammar(sect.ExternalGrammarKey).Sections[0];
+                        sect = ComponentCatalog.Instance.Grammars().GetGrammar(sect.ExternalGrammarKey).Sections[0];
                         sect.BackDelegate = bd;
                     }
 
@@ -252,7 +252,7 @@ namespace CodeBox.Lexing
                         parId = backm.ParentId;
 
                         if (parId != 0)
-                            Context.GrammarManager.GetGrammar(backm.GrammarKey).Sections[parId].Fallback = true;
+                            ComponentCatalog.Instance.Grammars().GetGrammar(backm.GrammarKey).Sections[parId].Fallback = true;
                     }
 
                     if (backm.DontStyleCompletely)

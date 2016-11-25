@@ -17,10 +17,10 @@ namespace CodeBox.Styling
     {
         private readonly Editor editor;
 
-        public StyleManager(Editor editor, StyleCollection styles)
+        public StyleManager(Editor editor, IThemeComponent styles)
         {
             this.editor = editor;
-            Styles = styles;
+            Theme = styles;
         }
 
         public void ClearStyles(int line) => editor.Lines[line].AppliedStyles.Clear();
@@ -87,6 +87,6 @@ namespace CodeBox.Styling
             }
         }
 
-        public StyleCollection Styles { get; set; }
+        public IThemeComponent Theme { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace CodeBox
                 set.ShowLineLength = dict.Bool("editor.showLineLength");
                 set.CurrentLineIndicator = dict.Bool("editor.currentLineIndicator");
                 set.MatchBrackets = dict.Bool("editor.matchBrackets");
+                set.MatchWords = dict.Bool("editor.matchWords");
                 set.UseTabs = dict.Bool("editor.useTabs");
                 set.WordWrap = dict.Bool("editor.wordWrap");
                 set.NonWordSymbols = dict.String("editor.delimeters");

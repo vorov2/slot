@@ -25,16 +25,16 @@ namespace CodeBox.Margins
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
 
             if (lineIndex > -1 && Editor.Folding.IsFoldingHeader(lineIndex))
-                Editor.RunCommand((Identifier)"editor.foldingtoggle", new Pos(lineIndex, 0));
+                Editor.RunCommand((Identifier)"editor.togglefolding", lineIndex + 1);
             else
-                Editor.RunCommand((Identifier)"editor.selectline", new Pos(lineIndex, 0));
+                Editor.RunCommand((Identifier)"editor.selectline", lineIndex + 1);
 
             return MarginEffects.Redraw | MarginEffects.Invalidate | MarginEffects.CaptureMouse;
         }
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            var fs = (MarginStyle)Editor.Styles.Styles.GetStyle(StandardStyle.Folding);
+            var fs = (MarginStyle)Editor.Styles.Theme.GetStyle(StandardStyle.Folding);
             g.FillRectangle(fs.BackColor.Brush(), bounds);
             var lp = (int)(Editor.Info.CharWidth * .5);
             var h = (Editor.Info.LineHeight / 2) * 2;

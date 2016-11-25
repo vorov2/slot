@@ -8,11 +8,11 @@ namespace CodeBox.Core
 {
     public static class StringExtensions
     {
-        public static bool ContainsAll(this string str, char[] chars)
+        public static bool ContainsAll(this string str, string[] strings)
         {
-            foreach (var c in chars)
+            foreach (var s in strings)
             {
-                if (str.IndexOf(c.ToString(), StringComparison.OrdinalIgnoreCase) == -1)
+                if (str.IndexOf(s.ToString(), StringComparison.OrdinalIgnoreCase) == -1)
                     return false;
             }
 

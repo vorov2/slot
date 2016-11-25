@@ -80,7 +80,7 @@ namespace CodeBox.Margins
                 return false;
 
             var sc = new Rectangle(Editor.Scroll.ScrollPosition, Editor.Scroll.ScrollBounds);
-            var sbs = (MarginStyle)Editor.Styles.Styles.GetStyle(StandardStyle.ScrollBars);
+            var sbs = (MarginStyle)Editor.Styles.Theme.GetStyle(StandardStyle.ScrollBars);
             g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             if (Orientation == Orientation.Horizontal)
@@ -124,7 +124,7 @@ namespace CodeBox.Margins
                     var linePos = s.Caret.Line / (Editor.Lines.Count / 100d);
                     var caretY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
 
-                    g.FillRectangle(Editor.Styles.Styles.DefaultStyle.ForeColor.Brush(), new Rectangle(bounds.X, (int)caretY, bounds.Width,
+                    g.FillRectangle(Editor.Styles.Theme.DefaultStyle.ForeColor.Brush(), new Rectangle(bounds.X, (int)caretY, bounds.Width,
                         (int)Math.Round(g.DpiY / 96f) * s.Caret.Line == caretLine ? 2 : 1));
                 }
             }

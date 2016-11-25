@@ -24,6 +24,16 @@ namespace CodeBox.CommandLine
         private AutocompleteWindow window;
         private Rectangle lastBounds;
 
+        private sealed class LineEditor : Editor
+        {
+            private readonly Editor editor;
+
+            internal LineEditor(Editor editor) : base(editor.Settings)
+            {
+                this.editor = editor;
+            }
+        }
+
         public CommandMargin(Editor editor) : base(editor)
         {
 
@@ -36,7 +46,7 @@ namespace CodeBox.CommandLine
             if (ed.Width != PreferredEditorWidth)
                 HideEditor();
 
-            var cs = Editor.Styles.Styles.GetStyle(StandardStyle.CommandBar);
+            var cs = Editor.Styles.Theme.GetStyle(StandardStyle.CommandBar);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
             lastBounds = bounds;
 
@@ -68,7 +78,7 @@ namespace CodeBox.CommandLine
         {
             if (commandEditor == null)
             {
-                commandEditor = new Editor(Editor.Settings, Editor.Styles.Styles, new Lexing.GrammarManager());
+                commandEditor = new LineEditor(Editor);
                 commandEditor.LimitedMode = true;
                 commandEditor.Visible = false;
                 commandEditor.Height = Editor.Info.LineHeight;
@@ -174,10 +184,11 @@ namespace CodeBox.CommandLine
         {
             if (statement != null && !string.IsNullOrWhiteSpace(statement.Command))
             {
+                var spaced = commandEditor.Lines[0].Text.EndsWith(" ");
                 var cmd = statement.Command;
                 var arr =
                     CommandCatalog.Instance.EnumerateCommands()
-                    .Where(c => c.Alias.StartsWith(cmd))
+                    .Where(c => spaced ? c.Alias == cmd : c.Alias.StartsWith(cmd))
                     .ToList();
                 var g = e.Graphics;
 
@@ -252,8 +263,8 @@ namespace CodeBox.CommandLine
             var font = commandEditor.Settings.SmallFont;
             var x = (tetras + 1) * commandEditor.Info.CharWidth;
             var y = (commandEditor.Height - (int)(commandEditor.Info.SmallCharHeight * 1.1)) / 2;
-            var brush = commandEditor.Styles.Styles.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush();
-            var brush1 = commandEditor.Styles.Styles.DefaultStyle.ForeColor.Brush();
+            var brush = commandEditor.Styles.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush();
+            var brush1 = commandEditor.Styles.Theme.DefaultStyle.ForeColor.Brush();
             var curarg = -1;
             var last = '\0';
 

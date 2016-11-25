@@ -23,13 +23,13 @@ namespace CodeBox.Margins
         {
             var sel = Editor.Buffer.Selections.Main;
             var lineIndex = Editor.Locations.FindLineByLocation(loc.Y);
-            Editor.RunCommand((Identifier)"editor.selectline", new Pos(lineIndex, 0));
+            Editor.RunCommand((Identifier)"editor.selectline", lineIndex + 1);
             return MarginEffects.Redraw;
         }
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(Editor.Styles.Styles.DefaultStyle.BackColor.Brush(), bounds);
+            g.FillRectangle(Editor.Styles.Theme.DefaultStyle.BackColor.Brush(), bounds);
             return true;
         }
 

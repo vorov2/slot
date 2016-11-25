@@ -15,24 +15,20 @@ namespace CodeBox.Styling
 
     public static class StylesReader
     {
-        public static StyleCollection Read(string source)
+        public static void Read(string source, ThemeComponent comp)
         {
             ColorExtensions.Clean();
             var json = new Json.JsonParser(source) { SkipNulls = true };
             var dict = json.Parse() as MAP;
 
             if (dict != null)
-                return ReadStyles(dict.Object("styles") as List<object>);
-
-            return null;
+                ReadStyles(dict.Object("styles") as List<object>, comp);
         }
 
-        private static StyleCollection ReadStyles(List<object> styles)
+        private static void ReadStyles(List<object> styles, ThemeComponent coll)
         {
             if (styles == null)
-                return null;
-
-            var coll = new StyleCollection();
+                return;
 
             foreach (var o in styles)
             {
@@ -46,11 +42,9 @@ namespace CodeBox.Styling
                         ReadStyle(coll, styleKey, dict);
                 }
             }
-
-            return coll;
         }
 
-        private static void ReadStyle(StyleCollection coll, string styleKey, MAP dict)
+        private static void ReadStyle(ThemeComponent coll, string styleKey, MAP dict)
         {
             if (dict == null)
                 return;

@@ -1,5 +1,5 @@
 ﻿{
-    "key": "theme.defaultlight"
+    "key": "theme.light",
     "name": "Light",
     "styles": [
         {
@@ -122,7 +122,7 @@
         },
         {
             "key": "word.matched",
-            "backColor": "#E7F3FF"
+            "backColor": "#CCCFFF"
         }
     ]
 }

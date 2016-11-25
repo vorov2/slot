@@ -23,6 +23,7 @@ namespace CodeBox.Lexing
                 var grammar = new Grammar
                 {
                     Key = dict.String("key"),
+                    Name = dict.String("name"),
                     BracketSymbols = dict.String("brackets"),
                     NonWordSymbols = dict.String("delimeters"),
                     CommentMask = dict.String("commentMask"),

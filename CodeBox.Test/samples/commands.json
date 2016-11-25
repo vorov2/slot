@@ -24,12 +24,26 @@
             },
             {
                 "name": "encoding",
-                "type": "any",
+                "type": "object",
                 "valueProvider": "values.encoding",
                 "optional": true
             }
         ]
     },
+
+    {
+        "key": "editor.changemode",
+        "alias": "mode",
+        "title": "Change language mode",
+        "arguments": [
+            {
+                "name": "mode",
+                "type": "string",
+                "valueProvider": "values.modes"
+            }
+        ]
+    },
+
 
 
     {
@@ -254,8 +268,15 @@
     },
     {
         "key": "editor.selectline",
-        "alias": "e-sl",
-        "title": "Editor: Select line"
+        "alias": "e-ls",
+        "title": "Editor: Select line",
+        "arguments": [
+            {
+                "name": "lineNumber",
+                "type": "number",
+                "optional": true
+            }
+        ]
     },
     {
         "key": "editor.selectwordadd",
@@ -280,7 +301,14 @@
     {
         "key": "editor.togglefolding",
         "alias": "e-ft",
-        "title": "Editor: Expand or collapse folding region"
+        "title": "Editor: Toggle folding",
+        "arguments": [
+            {
+                "name": "lineNumber",
+                "type": "number",
+                "optional": true
+            }
+        ]
     },
     {
         "key": "editor.undo",

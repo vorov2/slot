@@ -13,15 +13,17 @@ namespace CodeBox.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            var p = args == null || args.Length == 0 || !(args[0] is int) ? View.Caret : new Pos((int)args[0], 0);
+            var line = GetArg<int>(0, args, sel.Caret.Line + 1) - 1;
 
-            if (p.Line > -1)
+            if (line > -1)
             {
-                sel.Start = new Pos(p.Line, 0);
-                sel.End = new Pos(p.Line, Document.Lines[p.Line].Length);
+                sel.Start = new Pos(line, 0);
+                sel.End = new Pos(line, Document.Lines[line].Length);
             }
 
             return Clean;
         }
+
+        internal override bool SingleRun => true;
     }
 }

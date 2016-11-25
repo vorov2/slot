@@ -23,6 +23,7 @@ using System.Text;
 using CodeBox.Lexing;
 using System.IO;
 using CodeBox.Core.CommandModel;
+using CodeBox.ComponentModel;
 
 namespace CodeBox
 {
@@ -39,12 +40,12 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor() : this(new EditorSettings(), new StyleCollection(), new GrammarManager())
+        public Editor() : this(new EditorSettings())
         {
 
         }
 
-        public Editor(EditorSettings settings, StyleCollection styles, GrammarManager grammar)
+        public Editor(EditorSettings settings)
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw
@@ -52,7 +53,6 @@ namespace CodeBox
             Cursor = Cursors.IBeam;
             TabStop = true;
 
-            GrammarManager = grammar;
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
             RightMargins = new MarginList(this);
@@ -70,7 +70,8 @@ namespace CodeBox
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
             Settings = settings;
-            Styles = new StyleManager(this, styles);
+            Styles = new StyleManager(this, 
+                (IThemeComponent)ComponentCatalog.Instance.GetComponent((Identifier)"theme.default"));
 
             Text = "";
             InitializeBuffer(Buffer);
@@ -136,7 +137,7 @@ namespace CodeBox
 
             var dt = DateTime.Now;
 
-            e.Graphics.FillRectangle(Styles.Styles.DefaultStyle.BackColor.Brush(),
+            e.Graphics.FillRectangle(Styles.Theme.DefaultStyle.BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -369,6 +370,8 @@ namespace CodeBox
             return base.IsInputKey(keyData);
         }
 
+        internal void InvokeKeyDown(KeyEventArgs e) => OnKeyDown(e);
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (Autocomplete.WindowShown && Autocomplete.ListenKeys(e.KeyData))
@@ -397,9 +400,9 @@ namespace CodeBox
                 exec.Execute(this, commandKey, args);
         }
 
-        public override Color BackColor => Styles.Styles.DefaultStyle.BackColor;
+        public override Color BackColor => Styles.Theme.DefaultStyle.BackColor;
 
-        public override Color ForeColor => Styles.Styles.DefaultStyle.ForeColor;
+        public override Color ForeColor => Styles.Theme.DefaultStyle.ForeColor;
 
         public override Font Font => Settings.Font;
 
@@ -410,7 +413,8 @@ namespace CodeBox
             try
             {
                 Buffer = buffer;
-                GrammarManager.GrammarKey = GrammarManager.GetGrammarByFile(new FileInfo(buffer.FileName))?.Key;
+                Buffer.GrammarKey = ComponentCatalog.Instance.Grammars()
+                    .GetGrammarByFile(new FileInfo(buffer.FileName))?.Key;
                 InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();
                 Styles.RestyleDocument();
@@ -544,9 +548,6 @@ namespace CodeBox
 
         [Browsable(false)]
         public AffinityManager AffinityManager { get; }
-
-        [Browsable(false)]
-        public GrammarManager GrammarManager { get; }
 
         [Browsable(false)]
         public int FirstEditLine { get; set; }
