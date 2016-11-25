@@ -1,4 +1,5 @@
 ﻿using CodeBox.CommandLine;
+using CodeBox.ComponentModel;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
@@ -52,7 +53,13 @@ namespace CodeBox
         [Command]
         public void CommandPalette(string commandName)
         {
+        }
 
+        [Command]
+        public void ChangeTheme(string themeName)
+        {
+            var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
+            theme.ChangeTheme(themeName);
         }
 
         [Command]
@@ -72,6 +79,20 @@ namespace CodeBox
             {
                 //logging
             }
+        }
+    }
+
+    [Export(typeof(IComponent))]
+    [ComponentData("values.themes")]
+    public sealed class ThemeValueProvider : IArgumentValueProvider
+    {
+        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        {
+            var str = curvalue as string;
+            var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
+            return theme.EnumerateThemes()
+                .Where(t => str == null || t.Key.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
+                .Select(t => new ValueItem(t.Key, t.Name));
         }
     }
 

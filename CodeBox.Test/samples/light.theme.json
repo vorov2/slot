@@ -1,128 +1,124 @@
-﻿{
-    "key": "theme.light",
-    "name": "Light",
-    "styles": [
-        {
-            "key": "default",
-            "color": "black",
-            "backColor": "white"
-        },
-        {
-            "key": "caret",
-            "color": "black",
-        },
-        {
-            "key": "currentline",
-            "backColor": "#E2E2E2",
-        },
-        {
-            "key": "popup",
-            "color": "black",
-            "backColor": "#F2F2F2",
-            "hoverColor": "#D6D6D6",
-            "selectedColor": "#ADD6FF",
-            "borderColor": "darkgray"
-        },
-        {
-            "key": "margin.commands",
-            "color": "black",
-            "backColor": "#D8D8D8",
-            "bold": true,
-        },
-        {
-            "key": "margin.linenumbers",
-            "color": "#6D6D6D",
-            "backColor": "#F2F2F2",
-            "activeColor": "black",
-            "activeBackColor": "#F2F2F2" //E2E2E2
-        },
-        {
-            "key": "margin.scrollbar",
-            "color": "#ADADAD",
-            "backColor": "#F2F2F2",
-            "activeColor": "#6D6D6D"
-        },
-        {
-            "key": "margin.folding",
-            "color": "#6D6D6D",
-            "backColor": "white",
-            "activeColor": "#4800FF"
-        },
-        {
-            "key": "symbol.special",
-            "color": "#6D6D6D"
-        },
-        {
-            "key": "selection",
-            "backColor": "#ADD6FF"
-        },
-        {
-            "key": "bracket.matched",
-            "underline": true
-        },
-        {
-            "key": "number",
-            "color": "red"
-        },
-        {
-            "key": "bracket",
-            "color": "#6D6D6D"
-        },
-        {
-            "key": "keyword",
-            "color": "blue"
-        },
-        {
-            "key": "keyword.special",
-            "color": "#0072C4"
-        },
-        {
-            "key": "keyword.typename",
-            "color": "#4800FF"
-        },
-        {
-            "key": "keyword.literal",
-            "color": "teal"
-        },
-        {
-            "key": "comment",
-            "color": "darkgreen"
-        },
-        {
-            "key": "comment.multiline",
-            "color": "darkgreen"
-        },
-        {
-            "key": "comment.document",
-            "color": "darkgreen"
-        },
-        {
-            "key": "char",
-            "color": "maroon"
-        },
-        {
-            "key": "string",
-            "color": "maroon"
-        },
-        {
-            "key": "string.multiline",
-            "color": "maroon"
-        },
-        {
-            "key": "string.macro",
-            "color": "maroon"
-        },
-        {
-            "key": "regex",
-            "color": "#FF00DC"
-        },
-        {
-            "key": "preprocessor",
-            "color": "gray"
-        },
-        {
-            "key": "word.matched",
-            "backColor": "#CCCFFF"
-        }
-    ]
-}
+﻿[
+    {
+        "key": "default",
+        "color": "black",
+        "backColor": "white"
+    },
+    {
+        "key": "caret",
+        "color": "black",
+    },
+    {
+        "key": "currentline",
+        "backColor": "#E2E2E2",
+    },
+    {
+        "key": "popup",
+        "color": "black",
+        "backColor": "#F2F2F2",
+        "hoverColor": "#D6D6D6",
+        "selectedColor": "#ADD6FF",
+        "borderColor": "darkgray"
+    },
+    {
+        "key": "margin.commands",
+        "color": "black",
+        "backColor": "#D8D8D8",
+        "bold": true,
+    },
+    {
+        "key": "margin.linenumbers",
+        "color": "#6D6D6D",
+        "backColor": "#F2F2F2",
+        "activeColor": "black",
+        "activeBackColor": "#F2F2F2" //E2E2E2
+    },
+    {
+        "key": "margin.scrollbar",
+        "color": "#ADADAD",
+        "backColor": "#F2F2F2",
+        "activeColor": "#6D6D6D"
+    },
+    {
+        "key": "margin.folding",
+        "color": "#6D6D6D",
+        "backColor": "white",
+        "activeColor": "#4800FF"
+    },
+    {
+        "key": "symbol.special",
+        "color": "#6D6D6D"
+    },
+    {
+        "key": "selection",
+        "backColor": "#ADD6FF"
+    },
+    {
+        "key": "bracket.matched",
+        "underline": true
+    },
+    {
+        "key": "number",
+        "color": "red"
+    },
+    {
+        "key": "bracket",
+        "color": "#6D6D6D"
+    },
+    {
+        "key": "keyword",
+        "color": "blue"
+    },
+    {
+        "key": "keyword.special",
+        "color": "#0072C4"
+    },
+    {
+        "key": "keyword.typename",
+        "color": "#4800FF"
+    },
+    {
+        "key": "keyword.literal",
+        "color": "teal"
+    },
+    {
+        "key": "comment",
+        "color": "darkgreen"
+    },
+    {
+        "key": "comment.multiline",
+        "color": "darkgreen"
+    },
+    {
+        "key": "comment.document",
+        "color": "darkgreen"
+    },
+    {
+        "key": "char",
+        "color": "maroon"
+    },
+    {
+        "key": "string",
+        "color": "maroon"
+    },
+    {
+        "key": "string.multiline",
+        "color": "maroon"
+    },
+    {
+        "key": "string.macro",
+        "color": "maroon"
+    },
+    {
+        "key": "regex",
+        "color": "#FF00DC"
+    },
+    {
+        "key": "preprocessor",
+        "color": "gray"
+    },
+    {
+        "key": "word.matched",
+        "backColor": "#CCCFFF"
+    }
+]

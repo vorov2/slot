@@ -1,5 +1,6 @@
 ﻿using CodeBox.ComponentModel;
 using CodeBox.Core.ComponentModel;
+using Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -12,6 +13,7 @@ namespace CodeBox.Styling
     [ComponentData("theme.default")]
     public sealed class ThemeComponent : IThemeComponent
     {
+        private readonly Dictionary<string, ThemeInfo> themes = new Dictionary<string, ThemeInfo>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<int, Style> styles = new Dictionary<int, Style>();
 
         [Import("directory.theme")]
@@ -27,13 +29,50 @@ namespace CodeBox.Styling
             DefaultStyle = def;
         }
 
+        public IEnumerable<ThemeInfo> EnumerateThemes()
+        {
+            return themes.Values;
+        }
+
         public void ChangeTheme(string themeKey)
         {
-            var dir = new DirectoryInfo(Path.Combine(rootPath, themePath));
-            var fi = dir.EnumerateFiles($"{themeKey}.theme.json").FirstOrDefault();
+            ReadThemes();
 
-            if (fi != null)
-                StylesReader.Read(File.ReadAllText(fi.FullName), this);
+            ThemeInfo th;
+
+            if (themes.TryGetValue(themeKey, out th))
+            {
+                var fi = new FileInfo(Path.Combine(rootPath, themePath, th.File));
+
+                if (fi.Exists)
+                    ThemeReader.Read(File.ReadAllText(fi.FullName), this);
+            }
+        }
+
+        private void ReadThemes()
+        {
+            if (themes.Count > 0)
+                return;
+
+            var fi = new FileInfo(Path.Combine(rootPath, themePath, "themes.json"));
+
+            if (fi.Exists)
+            {
+                var json = new JsonParser(File.ReadAllText(fi.FullName));
+                var list = json.Parse() as List<object>;
+
+                if (list != null)
+                    list.OfType<Dictionary<string, object>>()
+                        .ToList()
+                        .ForEach(
+                        e => themes.Add(e.String("key"),
+                        new ThemeInfo
+                        {
+                            Key = e.String("key"),
+                            Name = e.String("name"),
+                            File = e.String("file")
+                        }));
+            }
         }
 
         public Style GetStyle(int styleId) => styles[styleId];

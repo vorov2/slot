@@ -43,7 +43,18 @@
             }
         ]
     },
-
+    {
+        "key": "test.changetheme",
+        "alias": "theme",
+        "title": "Change visual theme",
+        "arguments": [
+            {
+                "name": "theme",
+                "type": "string",
+                "valueProvider": "values.themes"
+            }
+        ]
+    },
 
 
     {

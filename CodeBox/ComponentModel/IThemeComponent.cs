@@ -10,6 +10,8 @@ namespace CodeBox.ComponentModel
 {
     public interface IThemeComponent : IComponent
     {
+        IEnumerable<ThemeInfo> EnumerateThemes();
+
         void ChangeTheme(string themeKey);
 
         Style GetStyle(int styleId);
@@ -17,5 +19,14 @@ namespace CodeBox.ComponentModel
         Style GetStyle(StandardStyle style);
 
         Style DefaultStyle { get; }
+    }
+
+    public sealed class ThemeInfo
+    {
+        public string Key { get; internal set; }
+
+        public string Name { get; internal set; }
+
+        public string File { get; internal set; }
     }
 }

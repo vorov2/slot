@@ -206,7 +206,7 @@
     <Compile Include="Drawing\ColorExtensions.cs" />
     <Compile Include="ScrollingManager.cs" />
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
-    <Compile Include="Styling\StylesReader.cs" />
+    <Compile Include="Styling\ThemeReader.cs" />
     <Compile Include="Styling\Style.cs" />
     <Compile Include="TextEventArgs.cs" />
     <Compile Include="_TestCommand.cs" />

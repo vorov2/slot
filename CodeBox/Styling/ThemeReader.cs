@@ -13,23 +13,20 @@ namespace CodeBox.Styling
 {
     using MAP = Dictionary<string, object>;
 
-    public static class StylesReader
+    public static class ThemeReader
     {
         public static void Read(string source, ThemeComponent comp)
         {
             ColorExtensions.Clean();
             var json = new Json.JsonParser(source) { SkipNulls = true };
-            var dict = json.Parse() as MAP;
+            var list = json.Parse() as List<object>;
 
-            if (dict != null)
-                ReadStyles(dict.Object("styles") as List<object>, comp);
+            if (list != null)
+                ReadStyles(list, comp);
         }
 
         private static void ReadStyles(List<object> styles, ThemeComponent coll)
         {
-            if (styles == null)
-                return;
-
             foreach (var o in styles)
             {
                 var dict = o as MAP;

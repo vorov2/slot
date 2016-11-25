@@ -217,7 +217,7 @@ namespace CodeBox.CommandLine
                             {
                                 lastLookupInput = statement.HasArguments && statement.Arguments.Count > ind 
                                     ? statement.Arguments[ind].Value.ToString() : "";
-                                Console.WriteLine($"Last lookup: {lastLookupInput}");
+                                //Console.WriteLine($"Last lookup: {lastLookupInput}");
                                 ShowAutocompleteWindow(prov);
                                 return;
                             }
@@ -298,9 +298,14 @@ namespace CodeBox.CommandLine
         {
             if (e.KeyData == Keys.Return)
             {
-                var cl = commandEditor.Text;
-                HideEditor();
-                ExecuteCommand(cl);
+                if (window != null && window.Visible)
+                    AutocompleteClick(window, null);
+                else
+                {
+                    var cl = commandEditor.Text;
+                    HideEditor();
+                    ExecuteCommand(cl);
+                }
             }
             else if (e.KeyData == Keys.Escape)
                 HideEditor();
@@ -346,7 +351,7 @@ namespace CodeBox.CommandLine
 
         private void EditorLostFocus(object sender, EventArgs e)
         {
-            //HideEditor();
+            HideEditor();
         }
 
         public void Toggle(Statement stmt)
