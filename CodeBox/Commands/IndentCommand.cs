@@ -131,7 +131,7 @@ namespace CodeBox.Commands
                 return base.Undo(out pos);
         }
 
-        internal static List<int> Indent(IEditorView ctx, Selection sel)
+        internal static List<int> Indent(Editor ctx, Selection sel)
         {
             var norm = sel.Normalize();
             var undos = new List<int>();

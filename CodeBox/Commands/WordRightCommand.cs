@@ -18,7 +18,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        internal static Pos WordRight(IEditorView ctx, Selection sel)
+        internal static Pos WordRight(Editor ctx, Selection sel)
         {
             var caret = sel.Caret;
             var line = ctx.Buffer.Document.Lines[caret.Line];

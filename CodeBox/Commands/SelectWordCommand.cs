@@ -48,7 +48,7 @@ namespace CodeBox.Commands
 
         protected virtual void Select(Range range) => Buffer.Selections.Set(Selection.FromRange(range));
 
-        internal static Range SelectWord(IEditorView ctx, Pos caret, Strategy strategy = Strategy.None)
+        internal static Range SelectWord(Editor ctx, Pos caret, Strategy strategy = Strategy.None)
         {
             var doc = ctx.Buffer.Document;
             var line = doc.Lines[caret.Line];

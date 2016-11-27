@@ -52,7 +52,7 @@ namespace CodeBox.CommandLine
 
             if (!ed.Visible)
             {
-                g.DrawString(Editor.Buffer.FileName + (Editor.Buffer.IsDirty ? "*" : ""),
+                g.DrawString(Editor.Buffer.File + (Editor.Buffer.IsDirty ? "*" : ""),
                     Editor.Settings.SmallFont.Get(cs.FontStyle),
                     cs.ForeColor.Brush(),
                     Editor.Info.CharWidth * 2,//Editor.Info.TextLeft,
@@ -333,19 +333,13 @@ namespace CodeBox.CommandLine
             var idx = GetCurrentArgument(statement);
             var sels = commandEditor.Buffer.Selections;
 
-            if (statement.Arguments.Count > idx)
-                sels.Set(new Pos(0, statement.Arguments[idx].Location.End));
+            if (!string.IsNullOrEmpty(lastLookupInput) && idx < statement.Arguments.Count)
+            {
+                sels.Main.Start = new Pos(0, statement.Arguments[0].Location.Start);
+                sels.Main.End = new Pos(0, statement.Arguments[0].Location.End);
+            }
 
-            var len = (lastLookupInput ?? "").Length;
-            var instr = window.SelectedItem.Value;
-            var str = instr.Substring(len);
-            if (len > 0 && lastLookupInput[len - 1] != instr[len - 1])
-                str = char.IsLower(lastLookupInput[len - 1]) ? str.ToLower() : str.ToUpper();
-            if (instr.Length == str.Length
-                && sels.Main.Caret.Col > 0
-                && commandEditor.Lines[0][sels.Main.Caret.Col - 1].Char != ' ')
-                str = " " + str;
-
+            var str = window.SelectedItem.Value;
             commandEditor.RunCommand((Identifier)"editor.insertrange", str.MakeCharacters());
             HideAutocompleteWindow();
         }

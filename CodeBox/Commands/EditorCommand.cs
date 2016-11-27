@@ -35,7 +35,7 @@ namespace CodeBox.Commands
             return Converter.Convert(obj, typeof(T), out res) ? (T)res : def;
         }
 
-        internal IEditorView View { get; set; }
+        internal Editor View { get; set; }
 
         internal virtual bool SingleRun => false;
 

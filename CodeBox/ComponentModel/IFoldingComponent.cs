@@ -7,6 +7,6 @@ namespace CodeBox.ComponentModel
 {
     public interface IFoldingComponent : IComponent
     {
-        void Fold(IEditorView ctx, Range range);
+        void Fold(IExecutionContext context, Range range);
     }
 }

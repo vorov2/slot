@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => PageDown(View);
 
-        internal static Pos PageDown(IEditorView ctx)
+        internal static Pos PageDown(Editor ctx)
         {
             var lines = ctx.Buffer.Document.Lines;
             var caret = ctx.Buffer.Selections.Main.Caret;

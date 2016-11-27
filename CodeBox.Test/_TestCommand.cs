@@ -4,6 +4,7 @@ using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.Keyboard;
+using CodeBox.Core.ViewModel;
 using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox
+namespace CodeBox.Test
 {
     [Export(typeof(IComponent))]
     [ComponentData("test")]
     public sealed class TestCommandDispatcher : CommandDispatcher
     {
+        [Import("viewmanager.default", typeof(IComponent))]
+        private IViewManager viewManager = null;
+
+        [Import("buffermanager.default", typeof(IComponent))]
+        private IBufferManager bufferManager = null;
+
         protected override void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey, object[] args)
         {
             var ed = ctx as Editor;
@@ -39,11 +46,8 @@ namespace CodeBox
                         cm.Toggle(cmd.Alias);
                     else
                     {
-                        var stmt = new Statement { Command = cmd.Alias };
-                        stmt.Arguments.AddRange(args.Select(a => new StatementArgument
-                        {
-                            Value = a
-                        }));
+                        var stmt = new Statement(cmd.Alias);
+                        stmt.Arguments.AddRange(args.Select(a => new StatementArgument(a)));
                         cm.Toggle(stmt);
                     }
                 }
@@ -53,6 +57,18 @@ namespace CodeBox
         [Command]
         public void CommandPalette(string commandName)
         {
+            var cmd = CommandCatalog.Instance.EnumerateCommands()
+                .FirstOrDefault(c => c.Title.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+
+            if (cmd == null)
+            {
+                //Log
+                return;
+            }
+
+            var exec = ComponentCatalog.Instance.GetComponent(cmd.Key.Namespace) as ICommandDispatcher;
+            if (exec != null)
+                exec.Execute((IExecutionContext)viewManager.GetActiveView(), cmd.Key);
         }
 
         [Command]
@@ -63,12 +79,13 @@ namespace CodeBox
         }
 
         [Command]
-        public void OpenFile(string fileName, Encoding enc)// = "utf-8")
+        public void OpenFile(string fileName, Encoding enc = null)
         {
             try
             {
-                var txt = File.ReadAllText(Uri.UnescapeDataString(fileName), enc);
-                //((Editor)ctx).AttachBuffer(new DocumentBuffer(Document.FromString(txt), fileName, enc));
+                var fi = new FileInfo(Uri.UnescapeDataString(fileName));
+                var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
+                viewManager.CreateView(buffer);
             }
             catch (Exception)
             {

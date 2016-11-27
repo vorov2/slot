@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeBox.CallTips;
 using System.Text;
+using CodeBox.Core.ViewModel;
+using System.IO;
 
 namespace CodeBox.ObjectModel
 {
-    public sealed class DocumentBuffer
+    public sealed class DocumentBuffer : IMaterialBuffer
     {
         private int counter;
         private bool undoGroup;
@@ -31,7 +33,7 @@ namespace CodeBox.ObjectModel
             }
         }
 
-        public DocumentBuffer(Document doc, string fileName, Encoding encoding)
+        public DocumentBuffer(Document doc, FileInfo file, Encoding encoding)
         {
             Document = doc;
             Selections = new SelectionList(doc);
@@ -39,7 +41,7 @@ namespace CodeBox.ObjectModel
             RedoStack = new LimitedStack<CommandInfo>();
             Tips = new List<CallTip>();
             Encoding = encoding;
-            FileName = fileName;
+            File = file;
             editorLock = new EditorLock(this);
         }
 
@@ -73,6 +75,11 @@ namespace CodeBox.ObjectModel
             }
 
             return false;
+        }
+
+        public void Serialize(Stream stream)
+        {
+            throw new NotSupportedException();
         }
 
         public void EndUndoAction() => undoGroup = false;
@@ -132,8 +139,10 @@ namespace CodeBox.ObjectModel
         }
         public string GrammarKey { get; set; }
 
-        public string FileName { get; }
+        public FileInfo File { get; }
 
         public Encoding Encoding { get; }
+
+        public DateTime LastAccess { get; set; }
     }
 }

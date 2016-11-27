@@ -19,14 +19,16 @@ namespace CodeBox.Lexing
 
         }
 
-        public void Style(IEditorView context, Range range)
+        public void Style(IExecutionContext context, Range range)
         {
-            if (context.Buffer.GrammarKey == null)
+            var ctx = (Editor)context;
+
+            if (ctx.Buffer.GrammarKey == null)
                 return;
 
-            Context = context;
-            ComponentCatalog.Instance.Grammars().GetGrammar(Context.Buffer.GrammarKey).Sections.Reset();
-            Parse(new State(0, Context.Buffer.GrammarKey, false), range);
+            Editor = ctx;
+            ComponentCatalog.Instance.Grammars().GetGrammar(Editor.Buffer.GrammarKey).Sections.Reset();
+            Parse(new State(0, Editor.Buffer.GrammarKey, false), range);
         }
 
         private void Parse(State state, Range rng)
@@ -34,12 +36,12 @@ namespace CodeBox.Lexing
             Console.WriteLine($"Start parse from {rng.Start}");
             var lss = 0;
             contextChar = '\0';
-            var len = Context.Buffer.Document.Lines.Count;
+            var len = Editor.Buffer.Document.Lines.Count;
 
             for (var i = rng.Start.Line; i < len; i++)
             {
                 var line = Lines[i];
-                Context.AffinityManager.ClearAssociations(i);
+                Editor.AffinityManager.ClearAssociations(i);
                 var grm = ComponentCatalog.Instance.Grammars().GetGrammar(state.GrammarKey);
                 Styles.ClearStyles(i);
                 var col = 0;
@@ -47,7 +49,7 @@ namespace CodeBox.Lexing
                 sect.Sections.ResetSelective();
                 state = ParseLine(sect, ref col, i);
                 grm = ComponentCatalog.Instance.Grammars().GetGrammar(state.GrammarKey);
-                var st = (sect.Id != 0 || sect.GrammarKey != Context.Buffer.GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
+                var st = (sect.Id != 0 || sect.GrammarKey != Editor.Buffer.GrammarKey) && sect.Multiline ? 2 : StateToBit(state);
 
                 while (col <= line.Length)
                 {
@@ -68,7 +70,7 @@ namespace CodeBox.Lexing
 
         private int StateToBit(State state)
         {
-            return state.GrammarKey != Context.Buffer.GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
+            return state.GrammarKey != Editor.Buffer.GrammarKey || state.SectionId != 0 || state.MatchAnyState ? 1 : 0;
         }
 
         private State ParseLine(GrammarSection mys, ref int i, int line)
@@ -77,8 +79,8 @@ namespace CodeBox.Lexing
             var identStart = i;
             var ln = Lines[line];
             var grammar = ComponentCatalog.Instance.Grammars().GetGrammar(mys.GrammarKey);
-            Context.AffinityManager.Associate(line, i, grammar.GlobalId);
-            var wordSep = grammar.NonWordSymbols ?? Context.Settings.NonWordSymbols;
+            Editor.AffinityManager.Associate(line, i, grammar.GlobalId);
+            var wordSep = grammar.NonWordSymbols ?? Editor.Settings.NonWordSymbols;
             var backm = mys.Id == 0 && mys.BackDelegate != null ? mys.BackDelegate : mys;
             var last = '\0';
             var term = '\0';
@@ -104,7 +106,7 @@ namespace CodeBox.Lexing
                         style = kres;
                         contextChar = '\0';
                         if (mys.ContextChars != null)
-                            Context.CallTips.BindCallTip(
+                            Editor.CallTips.BindCallTip(
                                 "<b>ToolTip header</b><br><i>Subheader for this unique tip</i><br><br>&lt;<keyword>script</keyword><keywordspecial> type</keywordspecial>=<string>\"text/csharp\"</string>&gt;<br>This is a context keyword which is only recognized in a particular context such as (&gt;) or any other different context symbol.", 
                                 new Pos(line, i - mys.Keywords.Offset), new Pos(line, i));
                     }
@@ -187,7 +189,7 @@ namespace CodeBox.Lexing
                                 if (shift >= 0)
                                 {
                                     lineIndex--;
-                                    nln = Context.Buffer.Document.Lines[lineIndex];
+                                    nln = Editor.Buffer.Document.Lines[lineIndex];
                                 }
 
                             } while (shift >= 0);
@@ -254,6 +256,8 @@ namespace CodeBox.Lexing
                         if (parId != 0)
                             ComponentCatalog.Instance.Grammars().GetGrammar(backm.GrammarKey).Sections[parId].Fallback = true;
                     }
+                    else if (parId != 0)
+                        grammar.Sections[parId].Fallback = true;
 
                     if (backm.DontStyleCompletely)
                     {
@@ -316,10 +320,10 @@ namespace CodeBox.Lexing
                 || wordSep.IndexOf(c) != -1;
         }
 
-        internal List<Line> Lines => Context.Buffer.Document.Lines;
+        internal List<Line> Lines => Editor.Buffer.Document.Lines;
 
-        internal StyleManager Styles => Context.Styles;
+        internal StyleManager Styles => Editor.Styles;
 
-        public IEditorView Context { get; private set; }
+        public Editor Editor { get; private set; }
     }
 }

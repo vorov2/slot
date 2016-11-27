@@ -42,13 +42,11 @@ namespace CodeBox.Test
         {
             ed.Styles.StylerKey = (Identifier)"styler.default";
             var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
-            var csharpExp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp-expression.grammar.json")));
             var html = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\html.grammar.json")));
             var css = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\css.grammar.json")));
             var json = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\json.grammar.json")));
             var grm = ComponentCatalog.Instance.Grammars();
             grm.RegisterGrammar(csharp);
-            grm.RegisterGrammar(csharpExp);
             grm.RegisterGrammar(html);
             grm.RegisterGrammar(css);
             grm.RegisterGrammar(json);
@@ -72,7 +70,7 @@ namespace CodeBox.Test
             theme.ChangeTheme("light");
 
             var fl = LocalFile("test.htm");//@"c:\test\bigcode.cs";//
-            ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), fl, Encoding.UTF8));
+            ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), new FileInfo(fl), Encoding.UTF8));
         }
 
         private string LocalFile(string fileName)
@@ -90,5 +88,7 @@ namespace CodeBox.Test
         {
             //Focus();
         }
+
+        public Editor Editor => ed;
     }
 }

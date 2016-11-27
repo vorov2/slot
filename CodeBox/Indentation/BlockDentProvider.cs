@@ -9,8 +9,10 @@ namespace CodeBox.Indentation
     [ComponentData("indent.block")]
     public sealed class BlockDentProvider : IDentComponent
     {
-        public int CalculateIndentation(IEditorView ctx, int lineIndex)
+        public int CalculateIndentation(IExecutionContext context, int lineIndex)
         {
+            var ctx = (Editor)context;
+
             if (lineIndex > 0)
             {
                 var ln = ctx.Buffer.Document.Lines[lineIndex - 1];

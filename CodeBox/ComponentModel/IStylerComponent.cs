@@ -10,6 +10,6 @@ namespace CodeBox.ComponentModel
 {
     public interface IStylerComponent : IComponent
     {
-        void Style(IEditorView context, Range range);
+        void Style(IExecutionContext context, Range range);
     }
 }

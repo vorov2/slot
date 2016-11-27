@@ -15,8 +15,9 @@ namespace CodeBox.Folding
     [ComponentData("folding.indent")]
     public sealed class IndentFoldingProvider : IFoldingComponent
     {
-        public void Fold(IEditorView ctx, Range range)
+        public void Fold(IExecutionContext context, Range range)
         {
+            var ctx = (Editor)context;
             var prevIndent = 0;
             var li = range.Start.Line;
 

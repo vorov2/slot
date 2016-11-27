@@ -39,7 +39,7 @@ namespace CodeBox.Commands
             return new DeleteRangeCommand();
         }
 
-        internal static IEnumerable<Character> DeleteRange(IEditorView ctx, Selection selection)
+        internal static IEnumerable<Character> DeleteRange(Editor ctx, Selection selection)
         {
             var doc = ctx.Buffer.Document;
             var sel = selection.Normalize();

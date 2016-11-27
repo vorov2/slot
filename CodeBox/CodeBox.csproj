@@ -129,6 +129,7 @@
     <Compile Include="ComponentCatalogExtensions.cs" />
     <Compile Include="ComponentModel\ITextEditor.cs" />
     <Compile Include="ComponentModel\IThemeComponent.cs" />
+    <Compile Include="DocumentBufferManager.cs" />
     <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
@@ -181,7 +182,6 @@
     <Compile Include="Editor.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="IEditorView.cs" />
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />
     <Compile Include="ObjectModel\Pos.cs" />
@@ -209,7 +209,6 @@
     <Compile Include="Styling\ThemeReader.cs" />
     <Compile Include="Styling\Style.cs" />
     <Compile Include="TextEventArgs.cs" />
-    <Compile Include="_TestCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">

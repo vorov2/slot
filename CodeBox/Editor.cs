@@ -24,10 +24,11 @@ using CodeBox.Lexing;
 using System.IO;
 using CodeBox.Core.CommandModel;
 using CodeBox.ComponentModel;
+using CodeBox.Core.ViewModel;
 
 namespace CodeBox
 {
-    public class Editor : Control, IEditorView
+    public class Editor : Control, IExecutionContext, IView
     {
         public readonly static bool Mono = Type.GetType("Mono.Runtime") != null;
         private const int WM_POINTERDOWN = 0x0246;
@@ -414,7 +415,7 @@ namespace CodeBox
             {
                 Buffer = buffer;
                 Buffer.GrammarKey = ComponentCatalog.Instance.Grammars()
-                    .GetGrammarByFile(new FileInfo(buffer.FileName))?.Key;
+                    .GetGrammarByFile(buffer.File)?.Key;
                 InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();
                 Styles.RestyleDocument();
@@ -444,7 +445,7 @@ namespace CodeBox
             set
             {
                 var doc = Document.FromString(value);
-                var buffer = new DocumentBuffer(doc, "untitled", Encoding.UTF8);
+                var buffer = new DocumentBuffer(doc, new FileInfo("untitled"), Encoding.UTF8);
                 AttachBuffer(buffer);
             }
         }
@@ -557,6 +558,8 @@ namespace CodeBox
 
         [Browsable(false)]
         public bool LimitedMode { get; set; }
+
+        IBuffer IView.Buffer => Buffer;
 
         public event EventHandler<TextEventArgs> BeforePaste;
         internal bool HasBeforePaste => BeforePaste != null;

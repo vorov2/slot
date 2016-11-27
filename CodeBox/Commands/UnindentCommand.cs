@@ -88,7 +88,7 @@ namespace CodeBox.Commands
             return new UnindentCommand();
         }
 
-        internal static List<int> Unindent(IEditorView ctx, Selection sel)
+        internal static List<int> Unindent(Editor ctx, Selection sel)
         {
             var norm = sel.Normalize();
             var indents = new List<int>();

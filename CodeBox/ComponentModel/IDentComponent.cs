@@ -9,6 +9,6 @@ namespace CodeBox.ComponentModel
 {
     public interface IDentComponent : IComponent
     {
-        int CalculateIndentation(IEditorView ctx, int lineIndex);
+        int CalculateIndentation(IExecutionContext ctx, int lineIndex);
     }
 }

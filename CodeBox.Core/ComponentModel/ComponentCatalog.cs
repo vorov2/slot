@@ -23,7 +23,9 @@ namespace CodeBox.Core.ComponentModel
         private CompositionContainer CreateContainer()
         {
             var catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new DirectoryCatalog(new FileInfo(typeof(ComponentCatalog).Assembly.Location).DirectoryName));
+            var path = new FileInfo(typeof(ComponentCatalog).Assembly.Location).DirectoryName;
+            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
+            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.exe"));
             var container = new CompositionContainer(catalog);
 
             try

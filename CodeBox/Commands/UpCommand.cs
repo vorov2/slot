@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => MoveUp(View, sel);
 
-        internal static Pos MoveUp(IEditorView ctx, Selection sel)
+        internal static Pos MoveUp(Editor ctx, Selection sel)
         {
             var pos = sel.Caret;
 
@@ -25,7 +25,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        private static Pos InternalMoveUp(IEditorView ctx, Selection sel, Pos pos)
+        private static Pos InternalMoveUp(Editor ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
 

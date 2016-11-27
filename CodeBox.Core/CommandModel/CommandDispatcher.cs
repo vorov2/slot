@@ -38,14 +38,15 @@ namespace CodeBox.Core.CommandModel
                         }
 
                         var cval = args.Length > i ? args[i] : pars[i].DefaultValue;
+                        object fval = cval;
 
-                        if (!Converter.Convert(cval, pars[i].ParameterType, out cval))
+                        if (!Converter.Convert(cval, pars[i].ParameterType, out fval) && cval != null)
                         {
                             //log
                             return false;
                         }
 
-                        vals[i] = cval;
+                        vals[i] = fval;
                     }
                 }
 

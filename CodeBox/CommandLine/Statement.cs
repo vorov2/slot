@@ -5,6 +5,11 @@ namespace CodeBox.CommandLine
 {
     public sealed class Statement : CommandLineItem
     {
+        public Statement(string command)
+        {
+            Command = command;
+        }
+
         internal Statement()
         {
 

@@ -84,7 +84,45 @@
             "start": "{",
             "end": "}",
             "terminator": "{",
-            "grammar": "csharp-expression"
+            "styleNumbers": true,
+            "keywords": [
+                {
+                    "style": "keyword",
+                    "words": "new this base"
+                },
+                {
+                    "style": "keyword.typename",
+                    "words": "bool byte decimal char double float int long object sbyte short string uint ulong ushort void"
+                },
+                {
+                    "style": "keyword.literal",
+                    "words": "true false null"
+                }
+            ]
+        },
+        {
+            "key": "expression_comment.multiline",
+            "parent": "string.csharp",
+            "start": "/*",
+            "end": "*/",
+            "style": "comment.multiline",
+            "multiline": false
+        },
+        {
+            "key": "expression_string",
+            "parent": "string.csharp",
+            "start": "\"",
+            "end": "\"",
+            "escape": "\\",
+            "style": "string"
+        },
+        {
+            "key": "expression_char",
+            "parent": "string.csharp",
+            "start": "'",
+            "end": "'",
+            "escape": "\\",
+            "style": "char"
         }
     ]
 }

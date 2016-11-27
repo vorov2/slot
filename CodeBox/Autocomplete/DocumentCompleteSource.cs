@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Lexing;
 using CodeBox.Affinity;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Autocomplete
 {
@@ -15,12 +16,12 @@ namespace CodeBox.Autocomplete
         private volatile bool busy;
         private DateTime lastUpdate;
         private int lastEdits = -1;
-        private IEditorView context;
+        private Editor editor;
         private const string SEPS = " \r\n\t`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?";
 
-        public void Initialize(IEditorView context)
+        public void Initialize(IExecutionContext context)
         {
-            this.context = context;
+            this.editor = (Editor)context;
         }
 
         public IEnumerable<string> GetItems()
@@ -31,13 +32,13 @@ namespace CodeBox.Autocomplete
                 (lastUpdate == DateTime.MinValue || DateTime.Now - lastUpdate > TimeSpan.FromSeconds(10)))
             {
                 Console.WriteLine("Generate CompleteSource");
-                t = Task.Run(() => WalkDocument(context));
+                t = Task.Run(() => WalkDocument(editor));
             }
 
             if (completes.Count == 0 && t != null)
                 t.Wait();
 
-            var id = context.AffinityManager.GetAffinityId(context.Buffer.Selections.Main.Caret);
+            var id = editor.AffinityManager.GetAffinityId(editor.Buffer.Selections.Main.Caret);
 
             if (id != 0)
             {
@@ -54,7 +55,7 @@ namespace CodeBox.Autocomplete
             return Enumerable.Empty<string>();
         }
 
-        private void WalkDocument(IEditorView ctx)
+        private void WalkDocument(Editor ctx)
         {
             if (ctx.Buffer.Edits == lastEdits)
                 return;

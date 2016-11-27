@@ -32,7 +32,7 @@ namespace CodeBox.Commands
             return Pure;
         }
 
-        internal static string GetTextRange(IEditorView ctx, Range range)
+        internal static string GetTextRange(Editor ctx, Range range)
         {
             var doc = ctx.Buffer.Document;
             var sel = range.Normalize();

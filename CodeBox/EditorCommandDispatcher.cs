@@ -12,9 +12,11 @@ using static CodeBox.Commands.ActionResults;
 namespace CodeBox
 {
     [Export(typeof(IComponent))]
-    [ComponentData("editor")]
+    [ComponentData(Name)]
     public sealed class EditorCommandDispatcher : ICommandDispatcher
     {
+        public const string Name = "editor";
+
         [ImportMany]
         private IEnumerable<Lazy<EditorCommand, IComponentMetadata>> commands = null;
         private Dictionary<Identifier, EditorCommand> commandMap = new Dictionary<Identifier, EditorCommand>();
