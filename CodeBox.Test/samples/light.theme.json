@@ -71,11 +71,11 @@
     },
     {
         "key": "keyword.special",
-        "color": "#0072C4"
+        "color": "#004A7F"
     },
     {
         "key": "keyword.typename",
-        "color": "#4800FF"
+        "color": "#E25A00"
     },
     {
         "key": "keyword.literal",

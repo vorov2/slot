@@ -69,7 +69,7 @@ namespace CodeBox.Test
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
 
             var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
-            theme.ChangeTheme("dark");
+            theme.ChangeTheme("light");
 
             var fl = LocalFile("test.htm");//@"c:\test\bigcode.cs";//
             ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), fl, Encoding.UTF8));

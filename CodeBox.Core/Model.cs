@@ -21,6 +21,8 @@ namespace CodeBox.Core
 
     public interface IViewManager
     {
+        IView CreateView(IBuffer buffer);
+
         IView GetActiveView();
     }
 }
