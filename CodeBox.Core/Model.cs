@@ -9,7 +9,7 @@ namespace CodeBox.Core
 {
     public interface IBuffer
     {
-
+        bool IsDirty { get; }
 
         FileInfo File { get; }
     }
@@ -17,12 +17,10 @@ namespace CodeBox.Core
     public interface IView
     {
         IBuffer Buffer { get; }
-
-        bool IsDirty { get; }
     }
 
     public interface IViewManager
     {
-
+        IView GetActiveView();
     }
 }

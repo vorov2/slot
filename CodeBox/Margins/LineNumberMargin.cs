@@ -42,7 +42,7 @@ namespace CodeBox.Margins
 
                 if (line.Y >= sc.Y && y >= bounds.Y)
                 {
-                    var str = line.State.ToString();// (i + 1).ToString().PadLeft(len);
+                    var str = (i + 1).ToString().PadLeft(len);
                     var x = bounds.X + info.CharWidth*2;
                     var col = lns.ForeColor.Brush();
 
