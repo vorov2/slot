@@ -60,7 +60,7 @@ namespace CodeBox
             if (caret != requestCaret || (DateTime.Now - requestTime).TotalMilliseconds < 500)
             {
                 if (needRedraw)
-                    editor.Redraw();
+                    editor.Buffer.RequestRedraw();
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace CodeBox
             if (range == null)
             {
                 if (needRedraw)
-                    editor.Redraw();
+                    editor.Buffer.RequestRedraw();
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace CodeBox
             }
 
             if (finds.Count > 0 || needRedraw)
-                editor.Redraw();
+                editor.Buffer.RequestRedraw();
 
             requestCaret = Pos.Empty;
         }

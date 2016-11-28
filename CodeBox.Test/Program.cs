@@ -1,6 +1,7 @@
 ﻿using CodeBox.CommandLine;
 using CodeBox.ComponentModel;
 using CodeBox.Core;
+using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.Keyboard;
 using CodeBox.ObjectModel;
@@ -26,6 +27,8 @@ namespace CodeBox.Test
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var frm = new MainForm();
+            frm.Show();
+
             var ed = frm.Editor;
 
             //SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
@@ -35,12 +38,12 @@ namespace CodeBox.Test
             theme.ChangeTheme("dark");
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
-            var fi = new FileInfo(fl);
-            fi.Refresh();
-            ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), fi, Encoding.UTF8));
+            var cmd = (Identifier)"test.openfile";
+            var exec = ComponentCatalog.Instance.GetComponent(cmd.Namespace) as ICommandDispatcher;
+            exec.Execute(ed, cmd, fl);
 
 
-            Application.Run(frm);
+            Application.Run();
         }
         private static string LocalFile(string fileName)
         {

@@ -10,12 +10,44 @@
                 border: solid;
                 color: black;
             }
+            .highlight {
+                background-color: yellow;
+                color: black;
+            }
         </style>
         <ul>
             <li a="sboc" aria-busy="false"></li>
         </ul>
         <script type="text/javascript">
             internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
+
+            //Remove unneccessary elements.
+            public string NormalizeString(string str)
+            {
+                const string seps = " \t~\r\n\0";
+                var buffer = str.ToCharArray();
+                var sb = new StringBuilder();
+
+                for (var i = 0; i < buffer.Length; i++) {
+                    var c = buffer[i];
+                    if (seps.IndexOf(c) == -1)
+                        sb.Append(c);
+                }
+
+                return sb.ToString();
+            }
+
+            public string[] Words(string str)
+            {
+                const string seps = " \t\r\n,.;!?:;-";
+                return string.Split(seps.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            public string[] Lines(string str)
+            {
+                const string seps = "\r\n";
+                return string.Split(seps.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
 
             public AppliedStyle FindHyperlink(int col)
             {
