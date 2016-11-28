@@ -154,9 +154,9 @@ namespace CodeBox.ObjectModel
 
         public string GrammarKey { get; set; }
 
-        public FileInfo File { get; }
+        public FileInfo File { get; internal set; }
 
-        public Encoding Encoding { get; }
+        public Encoding Encoding { get; internal set; }
 
         public DateTime LastAccess { get; set; }
     }

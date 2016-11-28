@@ -45,7 +45,18 @@
     {
         "key": "test.savefile",
         "alias": "f-s",
-        "title": "Save file"
+        "title": "Save file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "type": "string",
+                "optional": true
+            }
+        ]
+    },
+    {
+        "key": "test.newfile",
+        "title": "New file"
     },
     {
         "key": "test.newwindow",

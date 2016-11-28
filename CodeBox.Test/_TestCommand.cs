@@ -100,7 +100,19 @@ namespace CodeBox.Test
         }
 
         [Command]
-        public void SaveFile()
+        public void NewFile()
+        {
+            var buffer = bufferManager.CreateBuffer();
+
+            if (buffer != null)
+            {
+                var view = viewManager.GetActiveView();
+                view.AttachBuffer(buffer);
+            }
+        }
+
+        [Command]
+        public void SaveFile(string fileName = null)
         {
             var view = viewManager.GetActiveView();
             var buffer = view.Buffer as IMaterialBuffer;
@@ -112,7 +124,11 @@ namespace CodeBox.Test
                 return;
             }
 
-            bufferManager.SaveBuffer(buffer, buffer.File, buffer.Encoding);
+            var fi = fileName != null
+                ? new FileInfo(Path.Combine(buffer.File?.Directory != null 
+                    ? buffer.File.Directory.FullName : Environment.CurrentDirectory, fileName))
+                : buffer.File;
+            bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
         }
 
         [Command]

@@ -52,7 +52,11 @@ namespace CodeBox
             var res1 = file.Exec(fl => File.WriteAllText(fl.FullName, txt, encoding));
 
             if (res1.Success)
+            {
+                docb.File = file;
+                docb.Encoding = encoding;
                 docb.ClearDirtyFlag();
+            }
             else
             {
                 Console.WriteLine(res1.Reason);
