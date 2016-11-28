@@ -18,8 +18,12 @@ namespace CodeBox.Core.CommandModel
         {
             commands.Remove(cmd.Key);
             commands.Add(cmd.Key, cmd);
-            commandsAlias.Remove(cmd.Alias);
-            commandsAlias.Add(cmd.Alias, cmd);
+
+            if (cmd.Alias != null)
+            {
+                commandsAlias.Remove(cmd.Alias);
+                commandsAlias.Add(cmd.Alias, cmd);
+            }
         }
 
         public void RegisterCommands(IEnumerable<CommandMetadata> cmds)

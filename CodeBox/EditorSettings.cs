@@ -38,6 +38,8 @@ namespace CodeBox
         public string AutocompleteSymbols { get; set; }
         #endregion
 
+        public bool ShowLineNumbers { get; set; }
+
         public bool MatchWords { get; set; }
 
         public bool MatchBrackets { get; set; }

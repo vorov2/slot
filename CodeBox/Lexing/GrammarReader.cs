@@ -24,6 +24,7 @@ namespace CodeBox.Lexing
                 {
                     Key = dict.String("key"),
                     Name = dict.String("name"),
+                    StylerKey = (Identifier)dict.String("stylerKey"),
                     BracketSymbols = dict.String("brackets"),
                     NonWordSymbols = dict.String("delimeters"),
                     CommentMask = dict.String("commentMask"),

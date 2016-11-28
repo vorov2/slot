@@ -79,13 +79,22 @@ namespace CodeBox.Test
         }
 
         [Command]
+        public void NewWindow()
+        {
+            var act = viewManager.GetActiveView();
+            var view = viewManager.CreateView();
+            view.AttachBuffer(act.Buffer);
+        }
+
+        [Command]
         public void OpenFile(string fileName, Encoding enc = null)
         {
             try
             {
                 var fi = new FileInfo(Uri.UnescapeDataString(fileName));
                 var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
-                viewManager.CreateView(buffer);
+                var view = viewManager.GetActiveView();
+                view.AttachBuffer(buffer);
             }
             catch (Exception)
             {

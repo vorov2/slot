@@ -19,11 +19,14 @@ namespace CodeBox
         private string lastWord;
         private Pos requestCaret = Pos.Empty;
         private DateTime requestTime;
+        private readonly Timer timer = new Timer();
 
         public MatchWordManager(Editor editor)
         {
             this.editor = editor;
-            Application.Idle += (o, e) => Match();
+            timer.Interval = 500;
+            timer.Tick += (o, e) => Match();
+            timer.Start();
         }
 
         public void RequestMatch()

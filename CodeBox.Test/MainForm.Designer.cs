@@ -52,7 +52,6 @@
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Activated += new System.EventHandler(this.Form1_Activated);
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.ResumeLayout(false);
 

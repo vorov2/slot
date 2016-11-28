@@ -77,15 +77,22 @@ namespace CodeBox.ObjectModel
             return false;
         }
 
+        public void EndUndoAction() => undoGroup = false;
+
+        internal void AddCommand(EditorCommand cmd) =>
+            UndoStack.Push(new CommandInfo { Id = counter, Command = cmd });
+
         public void Serialize(Stream stream)
         {
             throw new NotSupportedException();
         }
 
-        public void EndUndoAction() => undoGroup = false;
-
-        internal void AddCommand(EditorCommand cmd) =>
-            UndoStack.Push(new CommandInfo { Id = counter, Command = cmd });
+        internal readonly List<Editor> Views = new List<Editor>();
+        public void RequestRedraw()
+        {
+            foreach (var e in Views)
+                e.Redraw();
+        }
 
         internal bool LastAtomicChange { get; set; }
 
@@ -137,6 +144,7 @@ namespace CodeBox.ObjectModel
             }
             set { _eol = value; }
         }
+
         public string GrammarKey { get; set; }
 
         public FileInfo File { get; }

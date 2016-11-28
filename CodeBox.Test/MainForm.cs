@@ -30,7 +30,7 @@ namespace CodeBox.Test
         public MainForm()
         {
             InitializeComponent();
-            base.KeyPreview = true;
+            Initialize();
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -38,39 +38,23 @@ namespace CodeBox.Test
             base.OnKeyDown(e);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Initialize()
         {
-            ed.Styles.StylerKey = (Identifier)"styler.default";
-            var csharp = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\csharp.grammar.json")));
-            var html = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\html.grammar.json")));
-            var css = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\css.grammar.json")));
-            var json = GrammarReader.Read(File.ReadAllText(LocalFile("grammars\\json.grammar.json")));
-            var grm = ComponentCatalog.Instance.Grammars();
-            grm.RegisterGrammar(csharp);
-            grm.RegisterGrammar(html);
-            grm.RegisterGrammar(css);
-            grm.RegisterGrammar(json);
-
             CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
+            SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed.Settings);
 
+            if (ed.Settings.ShowLineNumbers)
+                ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
 
-            ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new FoldingMargin(ed));
             ed.RightMargins.Add(new ScrollBarMargin(ed, Orientation.Vertical));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
+            
             //var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
             //ed.Styles.Theme = coll;
-            SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
-            KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
-
-            var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
-            theme.ChangeTheme("light");
-
-            var fl = LocalFile("test.htm");//@"c:\test\bigcode.cs";//
-            ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), new FileInfo(fl), Encoding.UTF8));
         }
 
         private string LocalFile(string fileName)

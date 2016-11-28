@@ -30,6 +30,11 @@
             }
         ]
     },
+    {
+        "key": "test.newwindow",
+        "title": "New window"
+    },
+
 
     {
         "key": "editor.changemode",

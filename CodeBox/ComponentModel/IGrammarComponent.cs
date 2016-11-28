@@ -13,7 +13,5 @@ namespace CodeBox.Lexing
         Grammar GetGrammar(string key);
 
         Grammar GetGrammarByFile(FileInfo fi);
-
-        void RegisterGrammar(Grammar grammar);
     }
 }

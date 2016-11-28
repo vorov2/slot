@@ -14,15 +14,15 @@ namespace CodeBox
 
     public static class SettingsReader
     {
-        public static void Read(string source, Editor ctx)
+        public static void Read(string source, EditorSettings set)
         {
-            var set = ctx.Settings;
             var json = new Json.JsonParser(source) { SkipNulls = true };
             var dict = json.Parse() as MAP;
 
             if (dict != null)
             {
                 set.Font = CreateFont(dict);
+                set.ShowLineNumbers = dict.Bool("editor.showLineNumbers");
                 set.LinePadding = dict.Double("editor.linePadding");
                 set.ShowWhitespace = dict.Bool("editor.showWhitespace");
                 set.ShowEol = dict.Bool("editor.showEol");

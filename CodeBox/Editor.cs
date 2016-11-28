@@ -407,12 +407,24 @@ namespace CodeBox
 
         public override Font Font => Settings.Font;
 
-        public void AttachBuffer(DocumentBuffer buffer)
+        public void DetachBuffer()
         {
+            Buffer.Views.Remove(this);
+            AttachBuffer(new DocumentBuffer(Document.FromString(""), null, Encoding.UTF8));
+        }
+
+        public void AttachBuffer(IBuffer buf)
+        {
+            var buffer = buf as DocumentBuffer;
+
+            if (buffer == null)
+                throw new NotSupportedException();
+
             var @lock = Buffer?.ObtainLock();
 
             try
             {
+                buffer.Views.Add(this);
                 Buffer = buffer;
                 Buffer.GrammarKey = ComponentCatalog.Instance.Grammars()
                     .GetGrammarByFile(buffer.File)?.Key;

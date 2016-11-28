@@ -254,7 +254,7 @@ namespace CodeBox
                 editor.Styles.Restyle();
 
             if (!exp.Has(Silent))
-                editor.Redraw();
+                editor.Buffer.RequestRedraw();
 
             if (exp.Has(Modify))
                 editor.Folding.RebuildFolding();

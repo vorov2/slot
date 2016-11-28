@@ -2,6 +2,7 @@
     "editor.font": "Consolas",
     "editor.fontSize": 11,
     "editor.linePadding": 0.1,
+    "editor.showLineNumbers": true,
     "editor.showWhitespace": true,
     "editor.showEol": false,
     "editor.showLineLength": true,

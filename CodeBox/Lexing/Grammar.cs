@@ -29,6 +29,8 @@ namespace CodeBox.Lexing
         public string AutocompleteSymbols { get; set; }
         #endregion
 
+        public Identifier StylerKey { get; set; }
+
         public string Key { get; set; }
 
         public string Name { get; set; }

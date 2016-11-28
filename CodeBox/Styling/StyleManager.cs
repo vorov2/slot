@@ -15,6 +15,7 @@ namespace CodeBox.Styling
 {
     public sealed class StyleManager
     {
+        private static readonly Identifier defaultStyler = (Identifier)"styler.default";
         private readonly Editor editor;
 
         public StyleManager(Editor editor, IThemeComponent styles)
@@ -65,27 +66,17 @@ namespace CodeBox.Styling
 
             if (StyleNeeded != null)
                 StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
-            else if (Styler != null)
-                Styler.Style(editor, range);
+            else
+            {
+                var grm = ComponentCatalog.Instance.Grammars().GetGrammar(editor.Buffer.GrammarKey);
+                var styler = grm == null ? null
+                    : ComponentCatalog.Instance.GetComponent(grm.StylerKey ?? defaultStyler) as IStylerComponent;
+                if (styler != null)
+                    styler.Style(editor, range);
+            }
         }
 
         public event EventHandler<StyleNeededEventArgs> StyleNeeded;
-
-        public IStylerComponent Styler { get; private set; }
-
-        private Identifier _stylerKey;
-        public Identifier StylerKey
-        {
-            get { return _stylerKey; }
-            set
-            {
-                if (value != _stylerKey)
-                {
-                    _stylerKey = value;
-                    Styler = ComponentCatalog.Instance.GetComponent(value) as IStylerComponent;
-                }
-            }
-        }
 
         public IThemeComponent Theme { get; set; }
     }

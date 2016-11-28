@@ -88,6 +88,7 @@ namespace CodeBox.CommandLine
                 commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
                 ResetBuffer();
                 Editor.Controls.Add(commandEditor);
+                commandEditor.BringToFront();
             }
 
             return commandEditor;
@@ -149,7 +150,7 @@ namespace CodeBox.CommandLine
 
             if (currentAffinity != ArgumentAffinity.FilePath
                 && statement.Arguments.Count == CommandCatalog.Instance.GetCommandByAlias(statement.Command)
-                    ?.Arguments.Count)
+                    ?.Arguments.Count(a => !a.Optional))
                 ExecuteCommand(commandEditor.Text);
             else if (currentAffinity != ArgumentAffinity.FilePath)
                 commandEditor.RunCommand((Identifier)"editor.insertrange", " ".MakeCharacters());
@@ -199,7 +200,7 @@ namespace CodeBox.CommandLine
                 var cmd = statement.Command;
                 var arr =
                     CommandCatalog.Instance.EnumerateCommands()
-                    .Where(c => spaced ? c.Alias == cmd : c.Alias.StartsWith(cmd))
+                    .Where(c => c.Alias != null && (spaced ? c.Alias == cmd : c.Alias.StartsWith(cmd)))
                     .ToList();
                 var g = e.Graphics;
 

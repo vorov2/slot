@@ -17,22 +17,16 @@ namespace CodeBox.Test
     {
         public const string Name = "viewmanager.default";
 
-        public IView CreateView(IBuffer buffer)
+        public IView CreateView()
         {
-            var frm = (MainForm)Application.OpenForms[0];
-            var buf = buffer as DocumentBuffer;
-
-            if (buf != null)
-            {
-                frm.Editor.AttachBuffer(buf);
-            }
-
+            var frm = new MainForm();
+            frm.Show();
             return frm.Editor;
         }
 
         public IView GetActiveView()
         {
-            var frm = (MainForm)Application.OpenForms[0];
+            var frm = (MainForm)Form.ActiveForm;
             return frm.Editor;
         }
     }
