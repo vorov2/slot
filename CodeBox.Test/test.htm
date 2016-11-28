@@ -20,7 +20,9 @@
             public AppliedStyle FindHyperlink(int col)
             {
                 var x = 12.2d;
-                var str = $"my {x - this.foo} \"string";        
+                var str = $"my {x - this.foo} \"string";
+                var str2 = @"multiline
+                string";
                 var seq = from p in db.Products where p.summ > x select p.id;
 
                 foreach (var a in AppliedStyles)

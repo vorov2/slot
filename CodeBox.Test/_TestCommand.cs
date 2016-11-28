@@ -89,17 +89,60 @@ namespace CodeBox.Test
         [Command]
         public void OpenFile(string fileName, Encoding enc = null)
         {
-            try
+            var fi = new FileInfo(Uri.UnescapeDataString(fileName));
+            var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
+
+            if (buffer != null)
             {
-                var fi = new FileInfo(Uri.UnescapeDataString(fileName));
-                var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
                 var view = viewManager.GetActiveView();
                 view.AttachBuffer(buffer);
             }
-            catch (Exception)
+        }
+
+        [Command]
+        public void SaveFile()
+        {
+            var view = viewManager.GetActiveView();
+            var buffer = view.Buffer as IMaterialBuffer;
+
+            if (buffer == null)
             {
-                //logging
+                //log
+                //basically impossible situation
+                return;
             }
+
+            bufferManager.SaveBuffer(buffer, buffer.File, buffer.Encoding);
+        }
+
+        [Command]
+        public void OpenRecentFile(string fileName)
+        {
+            var buf = bufferManager.EnumerateBuffers()
+                .FirstOrDefault(b => b.File.Name.IndexOf(fileName, StringComparison.OrdinalIgnoreCase) != -1);
+            var view = viewManager.GetActiveView();
+            view.AttachBuffer(buf);
+        }
+    }
+
+    [Export(typeof(IComponent))]
+    [ComponentData("values.recentdocs")]
+    public sealed class RecentDocsValueProvider : IArgumentValueProvider
+    {
+        [Import("viewmanager.default", typeof(IComponent))]
+        private IViewManager viewManager = null;
+
+        [Import("buffermanager.default", typeof(IComponent))]
+        private IBufferManager bufferManager = null;
+
+        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        {
+            var str = curvalue as string;
+            var cur = viewManager.GetActiveView().Buffer;
+            return bufferManager.EnumerateBuffers()
+                .Where(b => b != cur && (str == null || b.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1))
+                .OrderByDescending(b => b.LastAccess)
+                .Select(b => new ValueItem(b.File.Name, b.File.DirectoryName));
         }
     }
 

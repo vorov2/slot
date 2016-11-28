@@ -53,6 +53,7 @@ namespace CodeBox
                 | ControlStyles.Selectable, true);
             Cursor = Cursors.IBeam;
             TabStop = true;
+            AllowDrop = true;
 
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
@@ -77,6 +78,26 @@ namespace CodeBox
             Text = "";
             InitializeBuffer(Buffer);
             timer.Tick += Tick;
+        }
+
+        protected override void OnDragEnter(DragEventArgs drgevent)
+        {
+            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
+                drgevent.Effect = DragDropEffects.Copy;
+
+            base.OnDragEnter(drgevent);
+        }
+
+        protected override void OnDragDrop(DragEventArgs drgevent)
+        {
+            var data = drgevent.Data.GetData(DataFormats.FileDrop) as string[];
+
+            if (data != null && data.Length > 0)
+            {
+                RunCommand((Identifier)"test.openfile", data[data.Length - 1]);
+            }
+
+            base.OnDragDrop(drgevent);
         }
 
         private volatile bool disposed;
@@ -184,7 +205,11 @@ namespace CodeBox
                 return;
 
             base.OnMouseWheel(e);
-            Scroll.ScrollY((e.Delta / 120) * 2);
+            var scrollBy = (e.Delta / 120) * 2;
+
+            if ((scrollBy > 0 && Scroll.ScrollPosition.Y < 0)
+                || (scrollBy < 0 && -Scroll.ScrollPosition.Y < Scroll.ScrollBounds.Height))
+                Scroll.ScrollY(scrollBy);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -424,6 +449,7 @@ namespace CodeBox
 
             try
             {
+                buffer.LastAccess = DateTime.Now;
                 buffer.Views.Add(this);
                 Buffer = buffer;
                 Buffer.GrammarKey = ComponentCatalog.Instance.Grammars()

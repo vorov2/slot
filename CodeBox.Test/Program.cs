@@ -34,8 +34,10 @@ namespace CodeBox.Test
             var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
             theme.ChangeTheme("dark");
 
-            var fl = LocalFile("test.htm");//@"c:\test\bigcode.cs";//
-            ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), new FileInfo(fl), Encoding.UTF8));
+            var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
+            var fi = new FileInfo(fl);
+            fi.Refresh();
+            ed.AttachBuffer(new DocumentBuffer(Document.FromString(File.ReadAllText(fl)), fi, Encoding.UTF8));
 
 
             Application.Run(frm);

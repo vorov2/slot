@@ -26,8 +26,14 @@ namespace CodeBox.Test
 
         public IView GetActiveView()
         {
-            var frm = (MainForm)Form.ActiveForm;
-            return frm.Editor;
+            MainForm frm = Form.ActiveForm as MainForm;
+
+            if (frm == null)
+                frm = Application.OpenForms.OfType<MainForm>()
+                    .OrderByDescending(f => f.Activations)
+                    .FirstOrDefault();
+
+            return frm?.Editor;
         }
     }
 }

@@ -54,6 +54,7 @@
     <Compile Include="CommandModel\CommandDispatcher.cs" />
     <Compile Include="CommandModel\ICommandDispatcher.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="ExecExtensions.cs" />
     <Compile Include="Identifier.cs" />
     <Compile Include="CommandModel\CommandCatalog.cs" />
     <Compile Include="CommandModel\CommandMetadata.cs" />

@@ -31,6 +31,23 @@
         ]
     },
     {
+        "key": "test.openrecentfile",
+        "alias": "f-or",
+        "title": "Open a recent file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "type": "string",
+                "valueProvider": "values.recentdocs"
+            }
+        ]
+    },
+    {
+        "key": "test.savefile",
+        "alias": "f-s",
+        "title": "Save file"
+    },
+    {
         "key": "test.newwindow",
         "title": "New window"
     },

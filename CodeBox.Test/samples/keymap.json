@@ -1,5 +1,6 @@
 ﻿{
     "test.openfile": "ctrl+o",
+    "test.savefile": "ctrl+s",
     "test.commandpalette": "f1",
 
     "editor.insertlinebelow": "ctrl+enter",

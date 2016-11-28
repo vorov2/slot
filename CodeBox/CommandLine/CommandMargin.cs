@@ -204,12 +204,13 @@ namespace CodeBox.CommandLine
                     .ToList();
                 var g = e.Graphics;
 
-                if (arr.Count > 1 || (arr.Count == 1 && statement.Command.Length < arr[0].Alias.Length))
+                if ((arr.Count > 1 || (arr.Count == 1 && statement.Command.Length < arr[0].Alias.Length)) &&
+                    !statement.HasArguments)
                 {
                     DrawStringWithPeriods(g, string.Join(" ", arr.Select(a => a.Alias)), 0);
                     HideAutocompleteWindow();
                 }
-                else if (arr.Count == 1)
+                else if (arr.Count > 0)
                 {
                     var ci = arr[0];
                     var ind = GetCurrentArgument(statement);

@@ -40,6 +40,7 @@ namespace CodeBox.Test
 
         private void Initialize()
         {
+            AllowDrop = true;
             CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed.Settings);
 
@@ -65,6 +66,7 @@ namespace CodeBox.Test
 
         private void Form1_Activated(object sender, EventArgs e)
         {
+            Activations++;
             //ed.Focus();
         }
 
@@ -74,5 +76,7 @@ namespace CodeBox.Test
         }
 
         public Editor Editor => ed;
+
+        public int Activations { get; private set; }
     }
 }

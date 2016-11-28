@@ -9,9 +9,11 @@ namespace CodeBox.Core.ViewModel
 {
     public interface IBufferManager : IComponent
     {
-        IBuffer CreateBuffer();
+        IMaterialBuffer CreateBuffer();
 
-        IBuffer CreateBuffer(FileInfo fileName, Encoding encoding);
+        IMaterialBuffer CreateBuffer(FileInfo fileName, Encoding encoding);
+
+        void SaveBuffer(IMaterialBuffer buffer, FileInfo file, Encoding encoding);
 
         IEnumerable<IBuffer> EnumerateBuffers();
     }

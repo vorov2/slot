@@ -50,8 +50,10 @@ namespace CodeBox
 
             if (match1 != null && match2 != null)
             {
-                editor.Lines[match1.Item1].AppliedStyles.Remove(match1.Item2);
-                editor.Lines[match2.Item1].AppliedStyles.Remove(match2.Item2);
+                if (editor.Lines.Count > match1.Item1)
+                    editor.Lines[match1.Item1].AppliedStyles.Remove(match1.Item2);
+                if (editor.Lines.Count > match2.Item1)
+                    editor.Lines[match2.Item1].AppliedStyles.Remove(match2.Item2);
                 match1 = null;
                 match2 = null;
             }

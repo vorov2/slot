@@ -87,6 +87,13 @@ namespace CodeBox.ObjectModel
             throw new NotSupportedException();
         }
 
+        public void ClearDirtyFlag()
+        {
+            Edits = 0;
+            LastAtomicChange = false;
+            RequestRedraw();
+        }
+
         internal readonly List<Editor> Views = new List<Editor>();
         public void RequestRedraw()
         {
