@@ -3,7 +3,7 @@
     "test.savefile": "ctrl+s",
     "test.commandpalette": "f1",
 
-    "editor.togglesearch": "ctrl+f",
+    "editor.showsearch": "ctrl+f",
 
     "editor.insertlinebelow": "ctrl+enter",
     "editor.insertlineabove": "ctrl+shift+enter",

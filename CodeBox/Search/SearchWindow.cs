@@ -28,7 +28,25 @@ namespace CodeBox.Search
             SearchBox = new LineEditor(editor);
             SearchBox.Paint += SearchBoxPaint;
             SearchBox.Styles.StyleNeeded += SearchBoxStyling;
+            SearchBox.KeyDown += SearchBoxKeyDown;
+            SearchBox.LostFocus += SearchBoxLostFocus;
             Controls.Add(SearchBox);
+        }
+
+        private void SearchBoxLostFocus(object sender, EventArgs e)
+        {
+            SearchBox.Redraw();
+        }
+
+        private void SearchBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Escape)
+            {
+                Visible = false;
+                editor.Focus();
+            }
+
+            OnKeyDown(e);
         }
 
         private void SearchBoxStyling(object sender, StyleNeededEventArgs e)

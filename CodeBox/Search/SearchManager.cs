@@ -1,4 +1,6 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Commands;
+using CodeBox.Drawing;
+using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -107,33 +109,57 @@ namespace CodeBox.Search
 
         public void TrySearch()
         {
-            var ovl = GetOverlay();
-            if (ovl.Visible)
+            if (overlay != null && overlay.Visible)
                 Search();
         }
 
-        public void ToggleSearch()
+        public void HideSearch()
         {
-            var ovl = GetOverlay();
-
-            if (ovl.Visible)
-                ovl.Visible = false;
-            else
-                DisplaySearchBox();
+            if (overlay != null)
+                overlay.Visible = false;
         }
 
-        private void DisplaySearchBox()
+        public void UpdateSearchPanel()
+        {
+            if (overlay != null && overlay.Visible)
+                InternalShowSearch(lastWidth, update: true);
+        }
+
+        private int lastWidth;
+        public void ShowSearch()
+        {
+            InternalShowSearch(lastWidth = editor.Info.TextWidth / 2);
+        }
+
+        private void InternalShowSearch(int width, bool update = false)
         {
             var ovl = GetOverlay();
-            var size = new Size(editor.Info.TextWidth / 2, editor.Info.LineHeight + Dpi.GetHeight(8));
-            var rect = new Rectangle(new Point(
-                    editor.Info.TextRight- size.Width - editor.Info.CharWidth, 
-                    editor.Info.TextTop + editor.Info.CharWidth),
-                size);
-            ovl.Size = size;
-            ovl.Location = rect.Location;
-            ovl.Visible = true;
-            ovl.Invalidate();
+
+            if (!ovl.Visible || update)
+            {
+                if (width > editor.Info.TextWidth)
+                    width = editor.Info.TextWidth;
+
+                var size = new Size(width, editor.Info.LineHeight + Dpi.GetHeight(8));
+                var rect = new Rectangle(new Point(
+                        editor.Info.TextRight - size.Width - editor.Info.CharWidth,
+                        editor.Info.TextTop + editor.Info.CharWidth),
+                    size);
+                ovl.Size = size;
+                ovl.Location = rect.Location;
+                ovl.Visible = true;
+                ovl.Invalidate();
+            }
+
+            if (!editor.Buffer.Selections.Main.IsEmpty)
+            {
+                var txt = CopyCommand.GetTextRange(editor, editor.Buffer.Selections.Main);
+                ovl.SearchBox.Text = txt;
+                ovl.SearchBox.Buffer.Selections.Set(
+                    new Selection(new Pos(0, 0), new Pos(0, txt.Length)));
+                Search();
+            }
+
             ovl.SearchBox.Redraw();
             ovl.SearchBox.Focus();
         }

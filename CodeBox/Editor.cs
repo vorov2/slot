@@ -196,6 +196,7 @@ namespace CodeBox
             Styles.Restyle();
             Invalidate();
             Autocomplete.HideAutocomplete();
+            Search.UpdateSearchPanel();
             base.OnResize(eventargs);
         }
 
@@ -411,6 +412,9 @@ namespace CodeBox
 
             if (!inp.IsEmpty())
                 RunCommand(inp);
+
+            if (e.KeyData == Keys.Escape)
+                Search.HideSearch();
 
             base.OnKeyDown(e);
         }

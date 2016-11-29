@@ -11,12 +11,12 @@ using System.ComponentModel.Composition;
 namespace CodeBox.Search
 {
     [Export(typeof(EditorCommand))]
-    [ComponentData("editor.togglesearch")]
-    public sealed class ToggleSearchCommand : EditorCommand
+    [ComponentData("editor.showsearch")]
+    public sealed class ShowSearchCommand : EditorCommand
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            View.Search.ToggleSearch();
+            View.Search.ShowSearch();
             return ActionResults.Clean;
         }
 

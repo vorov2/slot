@@ -90,9 +90,9 @@
     },
 
     {
-        "key": "editor.togglesearch",
-        "alias": "s-t",
-        "title": "Search: Toggle search panel"
+        "key": "editor.showsearch",
+        "alias": "s-p",
+        "title": "Search: Show search panel"
     },
 
     {
