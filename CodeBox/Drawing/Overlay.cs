@@ -14,7 +14,7 @@ namespace CodeBox.Drawing
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.Selectable, false);
+            //SetStyle(ControlStyles.Selectable, false);
         }
 
         protected override void OnPaint(PaintEventArgs e)

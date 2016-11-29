@@ -110,7 +110,11 @@
     },
     {
         "key": "regex",
-        "color": "#FF7CDC"
+        "color": "#C586C0"
+    },
+    {
+        "key": "error",
+        "color": "#F4443F"
     },
     {
         "key": "preprocessor",

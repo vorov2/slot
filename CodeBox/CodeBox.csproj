@@ -200,6 +200,7 @@
     <Compile Include="Search\SearchWindow.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Search\ToggleSearchCommand.cs" />
     <Compile Include="SettingsReader.cs" />
     <Compile Include="Styling\SearchItemStyle.cs" />
     <Compile Include="Styling\MarginStyle.cs" />

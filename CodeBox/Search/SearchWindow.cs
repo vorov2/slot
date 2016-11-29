@@ -1,4 +1,5 @@
 ﻿using CodeBox.Drawing;
+using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,51 @@ namespace CodeBox.Search
     public sealed class SearchWindow : Overlay
     {
         private readonly Editor editor;
+        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
+        {
+            LineAlignment = StringAlignment.Center,
+            Alignment = StringAlignment.Near,
+            Trimming = StringTrimming.None
+        };
 
         public SearchWindow(Editor editor)
         {
             this.editor = editor;
             Cursor = Cursors.Default;
             SearchBox = new LineEditor(editor);
+            SearchBox.Paint += SearchBoxPaint;
+            SearchBox.Styles.StyleNeeded += SearchBoxStyling;
             Controls.Add(SearchBox);
+        }
+
+        private void SearchBoxStyling(object sender, StyleNeededEventArgs e)
+        {
+            SearchBox.Styles.ClearStyles(0);
+
+            var style = InputInvalid ? StandardStyle.Error
+                : UseRegex ? StandardStyle.Regex : StandardStyle.Default;
+            SearchBox.Styles.StyleRange(style, 0, 0, SearchBox.Lines[0].Length);
+        }
+
+        private void SearchBoxPaint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+
+            if (tip != null)
+            {
+                var width = tip.Length * editor.Info.SmallCharWidth;
+                var x = SearchBox.Info.TextWidth - width - editor.Info.SmallCharWidth * 3;
+                var style = editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+                g.FillRectangle(style.BackColor.Brush(),
+                    new Rectangle(x - editor.Info.SmallCharWidth, 0, width + editor.Info.SmallCharWidth * 2, editor.Info.LineHeight));
+
+                foreach (var c in tip)
+                {
+                    g.DrawString(c.ToString(), editor.Settings.SmallFont, style.ForeColor.Brush(),
+                        new Rectangle(x, 0, editor.Info.SmallCharWidth, editor.Info.LineHeight), format);
+                    x += editor.Info.SmallCharWidth;
+                }
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -72,7 +111,47 @@ namespace CodeBox.Search
             {
                 UseRegex = !UseRegex;
                 Invalidate();
+                SearchBox.Styles.RestyleDocument();
                 OnSettingsChanged();
+            }
+        }
+
+        private string tip;
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            var loc = e.Location;
+
+            if (OnButton(loc, button1))
+            {
+                tip = "Ignore case";
+                SearchBox.Redraw();
+            }
+            else if (OnButton(loc, button2))
+            {
+                tip = "Whole word";
+                SearchBox.Redraw();
+            }
+            else if (OnButton(loc, button3))
+            {
+                tip = "Regular expressions";
+                SearchBox.Redraw();
+            }
+            else if (tip != null)
+            {
+                tip = null;
+                SearchBox.Redraw();
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            if (tip != null)
+            {
+                tip = null;
+                SearchBox.Redraw();
             }
         }
 
@@ -85,6 +164,7 @@ namespace CodeBox.Search
         public bool CaseSensitive { get; set; }
         public bool UseRegex { get; set; }
         public bool WholeWord { get; set; }
+        internal bool InputInvalid { get; set; }
 
         private void DrawButton(Graphics g, string chars, Rectangle rect, bool set)
         {
@@ -113,7 +193,7 @@ namespace CodeBox.Search
         public event EventHandler SettingsChanged;
         private void OnSettingsChanged() => SettingsChanged?.Invoke(this, EventArgs.Empty);
 
-        public override Color BackgroundColor => editor.Styles.Theme.GetStyle(StandardStyle.CommandBar).BackColor;
+        public override Color BackgroundColor => editor.Styles.Theme.GetStyle(StandardStyle.Default).BackColor;
 
         public override Color BorderColor =>
             ((PopupStyle)editor.Styles.Theme.GetStyle(StandardStyle.Popup)).BorderColor;

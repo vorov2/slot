@@ -89,6 +89,11 @@
         ]
     },
 
+    {
+        "key": "editor.togglesearch",
+        "alias": "s-t",
+        "title": "Search: Toggle search panel"
+    },
 
     {
         "key": "editor.copy",

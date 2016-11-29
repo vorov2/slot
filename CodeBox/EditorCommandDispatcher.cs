@@ -253,8 +253,11 @@ namespace CodeBox
                 editor.Scroll.SuppressOnScroll = false;
             }
 
-            if (scrolled || exp.Has(Modify))
+            if (/*scrolled ||*/ exp.Has(Modify))
                 editor.Styles.Restyle();
+
+            if (exp.Has(Modify))
+                editor.Search.TrySearch();
 
             if (!exp.Has(Silent))
                 editor.Buffer.RequestRedraw();

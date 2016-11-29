@@ -75,6 +75,7 @@ namespace CodeBox.Search
         {
             try
             {
+                overlay.InputInvalid = false;
                 var opt = RegexOptions.None;
 
                 if (!overlay.CaseSensitive)
@@ -86,10 +87,11 @@ namespace CodeBox.Search
                 if (overlay.WholeWord)
                     txt = "\\b" + txt + "\\b";
 
-                return new Regex(txt, opt);// Regex.Escape(txt));
+                return new Regex(txt, opt);
             }
             catch
             {
+                overlay.InputInvalid = true;
                 return null;
             }
         }
@@ -103,11 +105,25 @@ namespace CodeBox.Search
             }
         }
 
-        public void RenderSearchBox(Graphics g)
+        public void TrySearch()
         {
-            if (!Displayed)
-                return;
+            var ovl = GetOverlay();
+            if (ovl.Visible)
+                Search();
+        }
 
+        public void ToggleSearch()
+        {
+            var ovl = GetOverlay();
+
+            if (ovl.Visible)
+                ovl.Visible = false;
+            else
+                DisplaySearchBox();
+        }
+
+        private void DisplaySearchBox()
+        {
             var ovl = GetOverlay();
             var size = new Size(editor.Info.TextWidth / 2, editor.Info.LineHeight + Dpi.GetHeight(8));
             var rect = new Rectangle(new Point(
@@ -119,9 +135,7 @@ namespace CodeBox.Search
             ovl.Visible = true;
             ovl.Invalidate();
             ovl.SearchBox.Redraw();
-            Search();
+            ovl.SearchBox.Focus();
         }
-
-        public bool Displayed { get; private set; } = true;
     }
 }

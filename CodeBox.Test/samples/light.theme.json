@@ -114,6 +114,10 @@
         "color": "#FF00DC"
     },
     {
+        "key": "error",
+        "color": "#FF0000"
+    },
+    {
         "key": "preprocessor",
         "color": "gray"
     },

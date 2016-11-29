@@ -95,6 +95,9 @@ namespace CodeBox.Styling
         MatchedWord = 30,
 
         [FieldName("search.result")]
-        SearchItem = 31
+        SearchItem = 31,
+
+        [FieldName("error")]
+        Error = 32
     }
 }

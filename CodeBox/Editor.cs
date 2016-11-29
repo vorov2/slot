@@ -161,9 +161,6 @@ namespace CodeBox
 
             var dt = DateTime.Now;
 
-            if (!LimitedMode)
-                Search.RenderSearchBox(e.Graphics);
-
             e.Graphics.FillRectangle(Styles.Theme.DefaultStyle.BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
@@ -184,8 +181,10 @@ namespace CodeBox
             Renderer.DrawWordWrapColumn(e.Graphics);
 
             e.Graphics.TranslateTransform(Scroll.ScrollPosition.X, Scroll.ScrollPosition.Y);
-            foreach (var c in carets)
-                CaretRenderer.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
+
+            if (!LimitedMode || Focused)
+                foreach (var c in carets)
+                    CaretRenderer.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
 
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
