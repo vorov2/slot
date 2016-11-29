@@ -10,6 +10,7 @@ namespace CodeBox.Drawing
         private static readonly Dictionary<Color, Brush> brushCache = new Dictionary<Color, Brush>();
         private static readonly Dictionary<Color, Pen> penCache = new Dictionary<Color, Pen>();
         private static readonly Dictionary<Color, Pen> dashedPenCache = new Dictionary<Color, Pen>();
+        private static readonly Dictionary<Color, Pen> thickPenCache = new Dictionary<Color, Pen>();
 
         public static void Clean()
         {
@@ -51,7 +52,23 @@ namespace CodeBox.Drawing
             return p;
         }
 
-        public static Pen CreateDashed(this Color color)
+        public static Pen ThickPen(this Color color)
+        {
+            Pen p;
+
+            if (!thickPenCache.TryGetValue(color, out p))
+            {
+                p = new Pen(color);
+                using (var c = new Control())
+                using (var g = c.CreateGraphics())
+                    p.Width = (g.DpiY / 96f) * 2;
+                thickPenCache.Add(color, p);
+            }
+
+            return p;
+        }
+
+        public static Pen DashedPen(this Color color)
         {
             Pen p;
 

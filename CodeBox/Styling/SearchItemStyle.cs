@@ -13,7 +13,7 @@ namespace CodeBox.Styling
     {
         public override void DrawAdornment(Graphics g, Rectangle rect, Pos pos)
         {
-            var p = LineColor.Pen();
+            var p = LineColor.ThickPen();
             var pw = (int)Math.Round(p.Width, MidpointRounding.AwayFromZero);
             g.DrawLine(p,
                 new Point(rect.X, rect.Y + rect.Height - pw),

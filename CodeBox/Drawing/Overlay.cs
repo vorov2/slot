@@ -20,11 +20,11 @@ namespace CodeBox.Drawing
         protected override void OnPaint(PaintEventArgs e)
         {
             var g = e.Graphics;
-            var ratioX = (int)Math.Round((g.DpiX / 96f) * 2);
-            var ratioY = (int)Math.Round((g.DpiY / 96f) * 2);
+            var ratioX = Dpi.GetWidth(1);
+            var ratioY = Dpi.GetHeight(1);
             g.FillRectangle(BorderColor.Brush(), new Rectangle(0, 0, Width, Height));
-            g.FillRectangle(BackgroundColor.Brush(), new Rectangle(ratioX, 0,
-                Width - ratioX * 2, Height - ratioY));
+            g.FillRectangle(BackgroundColor.Brush(), new Rectangle(ratioX, ratioY,
+                Width - ratioX * 2, Height - ratioY * 2));
         }
 
         public virtual Color BorderColor { get; }

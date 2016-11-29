@@ -28,10 +28,10 @@ namespace CodeBox.Search
 
             var sb = SearchBox;
             var rect = ClientRectangle;
-            sb.Location = new Point(editor.Info.CharWidth, (rect.Height - sb.Height) / 2);
+            sb.Location = new Point(editor.Info.CharWidth / 2, (rect.Height - sb.Height) / 2);
             var optWidth = editor.Info.CharWidth * 11;
-            var butWidth = editor.Info.CharWidth * 7;
-            var pad = editor.Info.CharWidth * 2;
+            var butWidth = 0;// editor.Info.CharWidth * 7;
+            var pad = editor.Info.CharWidth;
 
             sb.Size = new Size(rect.Width - optWidth - butWidth - pad, sb.Height);
 
@@ -89,10 +89,6 @@ namespace CodeBox.Search
         private void DrawButton(Graphics g, string chars, Rectangle rect, bool set)
         {
             var fnt = editor.Settings.Font;
-
-            if (set)
-                fnt = fnt.Get(FontStyle.Bold);
-
             var def = editor.Styles.Theme.DefaultStyle;
             var style = editor.Styles.Theme.GetStyle(StandardStyle.SpecialSymbol);
 
@@ -120,6 +116,6 @@ namespace CodeBox.Search
         public override Color BackgroundColor => editor.Styles.Theme.GetStyle(StandardStyle.CommandBar).BackColor;
 
         public override Color BorderColor =>
-            ControlPaint.Dark(editor.Styles.Theme.DefaultStyle.BackColor, .05f);
+            ((PopupStyle)editor.Styles.Theme.GetStyle(StandardStyle.Popup)).BorderColor;
     }
 }

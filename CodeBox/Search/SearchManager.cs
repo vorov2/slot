@@ -109,9 +109,11 @@ namespace CodeBox.Search
                 return;
 
             var ovl = GetOverlay();
-            var ratio = (int)Math.Round((g.DpiX / 96f) * 2);
-            var size = new Size(editor.Info.TextWidth / 2, editor.Info.LineHeight + editor.Info.CharWidth + ratio);
-            var rect = new Rectangle(new Point(editor.Info.TextRight- size.Width, editor.Info.TextTop), size);
+            var size = new Size(editor.Info.TextWidth / 2, editor.Info.LineHeight + Dpi.GetHeight(8));
+            var rect = new Rectangle(new Point(
+                    editor.Info.TextRight- size.Width - editor.Info.CharWidth, 
+                    editor.Info.TextTop + editor.Info.CharWidth),
+                size);
             ovl.Size = size;
             ovl.Location = rect.Location;
             ovl.Visible = true;
