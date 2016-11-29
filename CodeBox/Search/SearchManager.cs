@@ -27,8 +27,6 @@ namespace CodeBox.Search
             {
                 overlay = new SearchWindow(editor);
                 overlay.Visible = false;
-                overlay.BorderColor = ControlPaint.Dark(editor.Styles.Theme.DefaultStyle.BackColor, .05f);
-                overlay.BackColor = editor.Styles.Theme.GetStyle(StandardStyle.Popup).BackColor;
                 overlay.SearchBox.ContentModified += SearchBoxContentModified;
                 overlay.SettingsChanged += SearchBoxContentModified;
                 editor.Controls.Add(overlay);
@@ -118,6 +116,7 @@ namespace CodeBox.Search
             ovl.Location = rect.Location;
             ovl.Visible = true;
             ovl.Invalidate();
+            ovl.SearchBox.Redraw();
             Search();
         }
 

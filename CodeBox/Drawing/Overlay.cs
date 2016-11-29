@@ -23,10 +23,12 @@ namespace CodeBox.Drawing
             var ratioX = (int)Math.Round((g.DpiX / 96f) * 2);
             var ratioY = (int)Math.Round((g.DpiY / 96f) * 2);
             g.FillRectangle(BorderColor.Brush(), new Rectangle(0, 0, Width, Height));
-            g.FillRectangle(BackColor.Brush(), new Rectangle(ratioX, 0,
+            g.FillRectangle(BackgroundColor.Brush(), new Rectangle(ratioX, 0,
                 Width - ratioX * 2, Height - ratioY));
         }
 
-        public Color BorderColor { get; set; }
+        public virtual Color BorderColor { get; }
+
+        public virtual Color BackgroundColor { get; }
     }
 }

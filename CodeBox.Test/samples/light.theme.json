@@ -6,11 +6,11 @@
     },
     {
         "key": "caret",
-        "color": "black",
+        "color": "black"
     },
     {
         "key": "currentline",
-        "backColor": "#E2E2E2",
+        "backColor": "#E2E2E2"
     },
     {
         "key": "popup",
@@ -24,7 +24,7 @@
         "key": "margin.commands",
         "color": "black",
         "backColor": "#D8D8D8",
-        "bold": true,
+        "bold": true
     },
     {
         "key": "margin.linenumbers",
@@ -120,5 +120,9 @@
     {
         "key": "word.matched",
         "backColor": "#CCCFFF"
+    },
+    {
+        "key": "search.result",
+        "lineColor": "red"
     }
 ]

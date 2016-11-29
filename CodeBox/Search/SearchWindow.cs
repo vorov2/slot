@@ -89,6 +89,10 @@ namespace CodeBox.Search
         private void DrawButton(Graphics g, string chars, Rectangle rect, bool set)
         {
             var fnt = editor.Settings.Font;
+
+            if (set)
+                fnt = fnt.Get(FontStyle.Bold);
+
             var def = editor.Styles.Theme.DefaultStyle;
             var style = editor.Styles.Theme.GetStyle(StandardStyle.SpecialSymbol);
 
@@ -112,5 +116,10 @@ namespace CodeBox.Search
 
         public event EventHandler SettingsChanged;
         private void OnSettingsChanged() => SettingsChanged?.Invoke(this, EventArgs.Empty);
+
+        public override Color BackgroundColor => editor.Styles.Theme.GetStyle(StandardStyle.CommandBar).BackColor;
+
+        public override Color BorderColor =>
+            ControlPaint.Dark(editor.Styles.Theme.DefaultStyle.BackColor, .05f);
     }
 }
