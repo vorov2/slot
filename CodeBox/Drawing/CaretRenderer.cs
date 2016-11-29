@@ -49,16 +49,8 @@ namespace CodeBox.Drawing
 
         private void Tick(object sender, EventArgs e)
         {
-            if (!editor.Focused && timerDraw)
-                return;
-
-            var rect = editor.CallTips.TipRectangle;
-            var cx = caretX + editor.Scroll.ScrollPosition.X;
-            var cy = caretY + editor.Scroll.ScrollPosition.Y;
-
-            if (!rect.IsEmpty 
-                && cx >= rect.X && cx <= rect.X + rect.Width
-                && cy >= rect.Y && cy <= rect.Y + rect.Height)
+            if ((!editor.Focused && timerDraw)
+                || OverlapRectangle(editor.CallTips.TipRectangle))
                 return;
 
             using (var g = editor.CreateGraphics())
@@ -72,6 +64,15 @@ namespace CodeBox.Drawing
             }
 
             timerDraw = !timerDraw;
+        }
+
+        private bool OverlapRectangle(Rectangle rect)
+        {
+            var cx = caretX;
+            var cy = caretY;
+            return !rect.IsEmpty
+                && cx + editor.Info.CharWidth >= rect.X && cx <= rect.X + rect.Width
+                && cy >= rect.Y && cy <= rect.Y + rect.Height;
         }
 
         public void Suspend()

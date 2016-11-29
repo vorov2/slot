@@ -93,5 +93,8 @@ namespace CodeBox.Styling
 
         [FieldName("word.matched")]
         MatchedWord = 30,
+
+        [FieldName("search.result")]
+        SearchItem = 31
     }
 }

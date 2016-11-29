@@ -10,6 +10,8 @@ namespace CodeBox.Styling
 
         public Color BackColor { get; set; }
 
+        public Color LineColor { get; set; }
+
         public FontStyle FontStyle { get; set; }
     }
 }

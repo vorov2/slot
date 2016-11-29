@@ -119,5 +119,9 @@
     {
         "key": "word.matched",
         "backColor": "#343A40"
+    },
+    {
+        "key": "search.result",
+        "lineColor": "orange"
     }
 ]

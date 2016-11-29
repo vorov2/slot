@@ -130,6 +130,9 @@
     <Compile Include="ComponentModel\ITextEditor.cs" />
     <Compile Include="ComponentModel\IThemeComponent.cs" />
     <Compile Include="DocumentBufferManager.cs" />
+    <Compile Include="Drawing\Overlay.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
@@ -160,6 +163,9 @@
     <Compile Include="Lexing\State.cs" />
     <Compile Include="Lexing\StringTable.cs" />
     <Compile Include="LimitedStack.cs" />
+    <Compile Include="LineEditor.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="LocationManager.cs" />
     <Compile Include="Margins\FoldingMargin.cs" />
     <Compile Include="Margins\GutterMargin.cs" />
@@ -189,7 +195,12 @@
     <Compile Include="ObjectModel\Selection.cs" />
     <Compile Include="ObjectModel\SelectionList.cs" />
     <Compile Include="ComponentModel\IDentComponent.cs" />
+    <Compile Include="Search\SearchManager.cs" />
+    <Compile Include="Search\SearchWindow.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SettingsReader.cs" />
+    <Compile Include="Styling\SearchItemStyle.cs" />
     <Compile Include="Styling\MarginStyle.cs" />
     <Compile Include="Styling\PopupStyle.cs" />
     <Compile Include="Styling\ThemeComponent.cs" />

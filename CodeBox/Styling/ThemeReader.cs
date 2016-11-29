@@ -49,6 +49,7 @@ namespace CodeBox.Styling
             var style = coll.GetStyle(StandardStyleConverter.FromString(styleKey));
             style.ForeColor = dict.Color("color");
             style.BackColor = dict.Color("backColor");
+            style.LineColor = dict.Color("lineColor");
             style.FontStyle = dict.FontStyles();
             var ms = style as MarginStyle;
 

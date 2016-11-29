@@ -91,6 +91,7 @@ namespace CodeBox.Styling
                     : style == StandardStyle.Popup ? new PopupStyle()
                     : style == StandardStyle.Caret ? new Style()
                     : style == StandardStyle.CurrentLine ? new Style()
+                    : style == StandardStyle.SearchItem ? new SearchItemStyle()
                     : new TextStyle();
 
                 Register((int)style, ret);
@@ -109,7 +110,7 @@ namespace CodeBox.Styling
             {
                 ts.Cloned = ts.FullClone();
                 ts.DefaultStyle = DefaultStyle;
-                ts.Cloned.Default = false;
+                ts.Cloned.Default = ts.Default;
                 ts.Cloned.DefaultStyle = DefaultStyle;
             }
 

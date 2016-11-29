@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CodeBox.Drawing
 {
@@ -154,7 +155,8 @@ namespace CodeBox.Drawing
                         if (c == '\0' && showEol || (c == '\t' || c == ' ') && showWs)
                         {
                             c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
-                            style = (TextStyle)editor.Styles.Theme.GetStyle(StandardStyle.SpecialSymbol);//);
+                            style = (TextStyle)editor.Styles.Theme.GetStyle(StandardStyle.SpecialSymbol);
+                            style = style.Combine(line.GetStyle(i, editor.Styles));
                         }
                         else
                             style = line.GetStyle(i, editor.Styles);

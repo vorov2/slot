@@ -24,16 +24,6 @@ namespace CodeBox.CommandLine
         private AutocompleteWindow window;
         private Rectangle lastBounds;
 
-        private sealed class LineEditor : Editor
-        {
-            private readonly Editor editor;
-
-            internal LineEditor(Editor editor) : base(editor.Settings)
-            {
-                this.editor = editor;
-            }
-        }
-
         public CommandMargin(Editor editor) : base(editor)
         {
 
@@ -80,9 +70,7 @@ namespace CodeBox.CommandLine
             if (commandEditor == null)
             {
                 commandEditor = new LineEditor(Editor);
-                commandEditor.LimitedMode = true;
                 commandEditor.Visible = false;
-                commandEditor.Height = Editor.Info.LineHeight;
                 commandEditor.LostFocus += EditorLostFocus;
                 commandEditor.KeyDown += EditorKeyDown;
                 commandEditor.Paint += EditorPaint;
@@ -103,6 +91,7 @@ namespace CodeBox.CommandLine
                 window.Visible = false;
                 window.MouseDown += AutocompleteClick;
                 Editor.Controls.Add(window);
+                window.BringToFront();
             }
 
             return window;

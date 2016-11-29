@@ -238,6 +238,9 @@ namespace CodeBox
 
                 if (!exp.Has(KeepRedo))
                     editor.Buffer.RedoStack.Clear();
+
+                if (editor.HasContentModified)
+                    editor.OnContentModified();
             }
 
             if (exp.Has(RestoreCaret))

@@ -9,17 +9,18 @@ using CodeBox.Drawing;
 
 namespace CodeBox.Styling
 {
-    public sealed class SelectionStyle : TextStyle
+    public sealed class SelectionStyle : SearchItemStyle
     {
         public override void DrawBackground(Graphics g, Rectangle rect, Pos pos) =>
             g.FillRectangle(BackColor.Brush(), rect);
 
         internal override TextStyle Combine(TextStyle other)
         {
-            var hidden = other.Clone();
+            var hidden = Clone();
             hidden.ForeColor = other.ForeColor;
             hidden.BackColor = BackColor;
             hidden.FontStyle = other.FontStyle;
+            hidden.LineColor = LineColor.IsEmpty ? other.LineColor : LineColor;
             return hidden;
         }
     }

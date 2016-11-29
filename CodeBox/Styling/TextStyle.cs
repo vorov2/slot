@@ -41,7 +41,7 @@ namespace CodeBox.Styling
 
         public virtual void DrawBackground(Graphics g, Rectangle rect, Pos pos)
         {
-            if (!BackColor.IsEmpty && !Default)
+            if (!BackColor.IsEmpty && DefaultStyle != null && BackColor != DefaultStyle.BackColor)
                 g.FillRectangle(BackColor.Brush(), rect);
         }
 
@@ -51,6 +51,7 @@ namespace CodeBox.Styling
             hidden.ForeColor = ForeColor.IsEmpty ? other.ForeColor : ForeColor;
             hidden.BackColor = BackColor.IsEmpty ? other.BackColor : BackColor;
             hidden.FontStyle = FontStyle == FontStyle.Regular ? other.FontStyle : FontStyle;
+            hidden.LineColor = LineColor.IsEmpty ? other.LineColor : LineColor;
             //hidden.ForeColor = other.ForeColor.IsEmpty ? ForeColor : other.ForeColor;
             //hidden.BackColor = other.BackColor.IsEmpty ? BackColor : other.BackColor;
             //hidden.FontStyle = other.FontStyle == FontStyle.Regular ? FontStyle : other.FontStyle;

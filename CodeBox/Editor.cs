@@ -25,6 +25,7 @@ using System.IO;
 using CodeBox.Core.CommandModel;
 using CodeBox.ComponentModel;
 using CodeBox.Core.ViewModel;
+using CodeBox.Search;
 
 namespace CodeBox
 {
@@ -71,6 +72,7 @@ namespace CodeBox
             MatchWords = new MatchWordManager(this);
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
+            Search = new SearchManager(this);
             Settings = settings;
             Styles = new StyleManager(this, 
                 (IThemeComponent)ComponentCatalog.Instance.GetComponent((Identifier)"theme.default"));
@@ -158,6 +160,9 @@ namespace CodeBox
             CaretRenderer.Suspend();
 
             var dt = DateTime.Now;
+
+            if (!LimitedMode)
+                Search.RenderSearchBox(e.Graphics);
 
             e.Graphics.FillRectangle(Styles.Theme.DefaultStyle.BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
@@ -518,13 +523,13 @@ namespace CodeBox
         public bool ShowEol => Buffer.ShowEol ?? Settings.ShowEol;
 
         [Browsable(false)]
-        public bool ShowWhitespace => Buffer.ShowWhitespace ?? Settings.ShowWhitespace;
+        public bool ShowWhitespace => !LimitedMode && (Buffer.ShowWhitespace ?? Settings.ShowWhitespace);
 
         [Browsable(false)]
-        public bool ShowLineLength => Buffer.ShowLineLength ?? Settings.ShowLineLength;
+        public bool ShowLineLength => !LimitedMode && (Buffer.ShowLineLength ?? Settings.ShowLineLength);
 
         [Browsable(false)]
-        public bool CurrentLineIndicator => Buffer.CurrentLineIndicator ?? Settings.CurrentLineIndicator;
+        public bool CurrentLineIndicator => !LimitedMode && (Buffer.CurrentLineIndicator ?? Settings.CurrentLineIndicator);
 
         [Browsable(false)]
         public bool ReadOnly
@@ -597,10 +602,17 @@ namespace CodeBox
         [Browsable(false)]
         public bool LimitedMode { get; set; }
 
+        [Browsable(false)]
+        public SearchManager Search { get; }
+
         IBuffer IView.Buffer => Buffer;
 
         public event EventHandler<TextEventArgs> BeforePaste;
         internal bool HasBeforePaste => BeforePaste != null;
         internal void OnBeforePaste(TextEventArgs e) => BeforePaste?.Invoke(this, e);
+
+        public event EventHandler ContentModified;
+        internal bool HasContentModified => ContentModified != null;
+        internal void OnContentModified() => ContentModified?.Invoke(this, EventArgs.Empty); 
     }
 }

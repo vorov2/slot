@@ -51,7 +51,9 @@ namespace CodeBox
 
             foreach (var f in finds)
             {
-                editor.Lines[f.Item1].AppliedStyles.Remove(f.Item2);
+                if (editor.Lines.Count > f.Item1)
+                    editor.Lines[f.Item1].AppliedStyles.Remove(f.Item2);
+
                 needRedraw = true;
             }
 
