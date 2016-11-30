@@ -16,8 +16,17 @@ namespace CodeBox.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            Buffer.Selections.Truncate();
+            if (View.Search.IsSearchVisible)
+                View.Search.HideSearch();
+            else
+                Buffer.Selections.Truncate();
+
+            if (!View.Focused)
+                View.Focus();
+
             return Clean;
         }
+
+        internal override bool SingleRun => true;
     }
 }

@@ -16,6 +16,11 @@ namespace CodeBox.Margins
             Editor = editor;
         }
 
+        public virtual void Reset()
+        {
+
+        }
+
         public virtual MarginEffects MouseDown(Point loc) => MarginEffects.None;
 
         public virtual MarginEffects MouseUp(Point loc) => MarginEffects.None;

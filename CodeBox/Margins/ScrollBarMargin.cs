@@ -22,6 +22,14 @@ namespace CodeBox.Margins
             Orientation = orientation;
         }
 
+        public override void Reset()
+        {
+            lastCaretPos = 0;
+            lastCaretSize = 0;
+            mouseDown = false;
+            diff = 0;
+        }
+
         public override MarginEffects MouseDown(Point loc)
         {
             if (IsCaretInLocation(loc))
@@ -126,6 +134,31 @@ namespace CodeBox.Margins
 
                     g.FillRectangle(Editor.Styles.Theme.DefaultStyle.ForeColor.Brush(), new Rectangle(bounds.X, (int)caretY, bounds.Width,
                         (int)Math.Round(g.DpiY / 96f) * s.Caret.Line == caretLine ? 2 : 1));
+                }
+
+                if (Editor.Search.HasSearchResults)
+                {
+                    var hl = Editor.Styles.Theme.GetStyle(StandardStyle.SearchItem);
+                    var markHeight = (int)(bounds.Height / Editor.Lines.Count);
+                    markHeight = markHeight < 2 ? 2 : markHeight;
+                    var lastLine = -1;
+
+                    foreach (var f in Editor.Search.EnumerateSearchResults())
+                    {
+                        if (f.Line == lastLine)
+                            continue;
+
+                        var linePos = f.Line / (Editor.Lines.Count / 100d);
+                        var markY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
+                        var w = Dpi.GetWidth(4);
+
+                        g.FillRectangle(hl.LineColor.Brush(), new Rectangle(
+                            bounds.X + (bounds.Width - w) / 2,
+                            (int)markY,
+                            w,
+                            Dpi.GetHeight(markHeight)));
+                        lastLine = f.Line;
+                    }
                 }
             }
 

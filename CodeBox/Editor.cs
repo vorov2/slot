@@ -413,25 +413,25 @@ namespace CodeBox
             if (!inp.IsEmpty())
                 RunCommand(inp);
 
-            if (e.KeyData == Keys.Escape)
-                Search.HideSearch();
-
             base.OnKeyDown(e);
         }
 
         public void RunCommand(KeyInput input)
         {
-            Console.WriteLine($"KeyInput: {input}.");
-
             if (KeyboardAdapter.Instance.ProcessInput(input) == InputState.Complete)
-                RunCommand(KeyboardAdapter.Instance.LastKey);
+            {
+                if (!RunCommand(KeyboardAdapter.Instance.LastKey))
+                    OnCommandRejected();
+            }
         }
 
-        internal void RunCommand(Identifier commandKey, params object[] args)
+        public event EventHandler CommandRejected;
+        private void OnCommandRejected() => CommandRejected?.Invoke(this, EventArgs.Empty);
+
+        internal bool RunCommand(Identifier commandKey, params object[] args)
         {
             var exec = ComponentCatalog.Instance.GetComponent(commandKey.Namespace) as ICommandDispatcher;
-            if (exec != null)
-                exec.Execute(this, commandKey, args);
+            return exec != null ? exec.Execute(this, commandKey, args) : false;
         }
 
         public override Color BackColor => Styles.Theme.DefaultStyle.BackColor;
@@ -468,6 +468,11 @@ namespace CodeBox
                 Folding.RebuildFolding(full: true);
                 Redraw();
                 MatchBrackets.Match();
+                Search.HideSearch();
+                TopMargins.ResetMargins();
+                BottomMargins.ResetMargins();
+                LeftMargins.ResetMargins();
+                RightMargins.ResetMargins();
             }
             finally
             {

@@ -1,4 +1,5 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Core.Keyboard;
+using CodeBox.Drawing;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
@@ -28,25 +29,19 @@ namespace CodeBox.Search
             SearchBox = new LineEditor(editor);
             SearchBox.Paint += SearchBoxPaint;
             SearchBox.Styles.StyleNeeded += SearchBoxStyling;
-            SearchBox.KeyDown += SearchBoxKeyDown;
+            SearchBox.CommandRejected += SearchBoxCommandRejected;
             SearchBox.LostFocus += SearchBoxLostFocus;
             Controls.Add(SearchBox);
+        }
+
+        private void SearchBoxCommandRejected(object sender, EventArgs e)
+        {
+            editor.RunCommand(KeyboardAdapter.Instance.LastKey);
         }
 
         private void SearchBoxLostFocus(object sender, EventArgs e)
         {
             SearchBox.Redraw();
-        }
-
-        private void SearchBoxKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Escape)
-            {
-                Visible = false;
-                editor.Focus();
-            }
-
-            OnKeyDown(e);
         }
 
         private void SearchBoxStyling(object sender, StyleNeededEventArgs e)

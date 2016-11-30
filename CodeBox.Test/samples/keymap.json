@@ -4,6 +4,12 @@
     "test.commandpalette": "f1",
 
     "editor.showsearch": "ctrl+f",
+    "editor.searchnext": "f3",
+    "editor.searchprevious": "f4",
+    "editor.searchselect": "ctrl+f3",
+    "editor.searchregex": "alt+r",
+    "editor.searchcasesensitive": "alt+c",
+    "editor.searchwholeword": "alt+w",
 
     "editor.insertlinebelow": "ctrl+enter",
     "editor.insertlineabove": "ctrl+shift+enter",

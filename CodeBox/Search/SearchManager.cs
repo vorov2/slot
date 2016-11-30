@@ -38,7 +38,7 @@ namespace CodeBox.Search
         }
 
 
-        private readonly List<Tuple<int, AppliedStyle>> finds = new List<Tuple<int, AppliedStyle>>();
+        private readonly List<SearchResult> finds = new List<SearchResult>();
         private void SearchBoxContentModified(object sender, EventArgs e)
         {
             Search();
@@ -50,7 +50,7 @@ namespace CodeBox.Search
             var txt = overlay.SearchBox.Buffer.GetText();
             ClearFinds();
 
-            if (txt != null)
+            if (!string.IsNullOrEmpty(txt))
             {
                 var regex = TryGetRegex(txt);
 
@@ -66,7 +66,7 @@ namespace CodeBox.Search
                             var grp = match.Groups[match.Groups.Count - 1];
                             var aps = new AppliedStyle((int)StandardStyle.SearchItem, grp.Index, grp.Index + grp.Length - 1);
                             line.AppliedStyles.Add(aps);
-                            finds.Add(Tuple.Create(i, aps));
+                            finds.Add(new SearchResult(i, aps));
                         }
                     }
                 }
@@ -102,9 +102,11 @@ namespace CodeBox.Search
         {
             foreach (var f in finds)
             {
-                if (editor.Lines.Count > f.Item1)
-                    editor.Lines[f.Item1].AppliedStyles.Remove(f.Item2);
+                if (editor.Lines.Count > f.Line)
+                    editor.Lines[f.Line].AppliedStyles.Remove(f.Style);
             }
+
+            finds.Clear();
         }
 
         public void TrySearch()
@@ -117,6 +119,7 @@ namespace CodeBox.Search
         {
             if (overlay != null)
                 overlay.Visible = false;
+            ClearFinds();
         }
 
         public void UpdateSearchPanel()
@@ -157,11 +160,51 @@ namespace CodeBox.Search
                 ovl.SearchBox.Text = txt;
                 ovl.SearchBox.Buffer.Selections.Set(
                     new Selection(new Pos(0, 0), new Pos(0, txt.Length)));
-                Search();
             }
+
+            if (!string.IsNullOrEmpty(ovl.SearchBox.Text))
+                Search();
 
             ovl.SearchBox.Redraw();
             ovl.SearchBox.Focus();
+        }
+
+        public bool IsFocused => overlay != null && overlay.SearchBox.Focused;
+
+        public bool IsSearchVisible => overlay != null && overlay.Visible;
+
+        public bool HasSearchResults => finds.Count > 0;
+
+        public IEnumerable<SearchResult> EnumerateSearchResults() => finds;
+
+        public bool UseRegex
+        {
+            get { return GetOverlay().UseRegex; }
+            set
+            {
+                GetOverlay().UseRegex = value;
+                GetOverlay().Invalidate();
+            }
+        }
+
+        public bool CaseSensitive
+        {
+            get { return GetOverlay().CaseSensitive; }
+            set
+            {
+                GetOverlay().CaseSensitive = value;
+                GetOverlay().Invalidate();
+            }
+        }
+
+        public bool WholeWord
+        {
+            get { return GetOverlay().WholeWord; }
+            set
+            {
+                GetOverlay().WholeWord = value;
+                GetOverlay().Invalidate();
+            }
         }
     }
 }

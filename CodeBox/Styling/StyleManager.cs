@@ -40,7 +40,8 @@ namespace CodeBox.Styling
             var fvl = editor.FirstEditLine < 0 ? editor.Scroll.FirstVisibleLine : editor.FirstEditLine;
             /*editor.FirstEditLine < editor.Scroll.FirstVisibleLine
                 ? editor.FirstEditLine : editor.Scroll.FirstVisibleLine;*/
-            var lvl = editor.Scroll.LastVisibleLine;
+            var lvl = editor.LastEditLine > editor.Scroll.LastVisibleLine ? editor.LastEditLine
+                : editor.Scroll.LastVisibleLine;
             var state = 0;
 
             while (fvl > -1 && (state = editor.Lines[fvl].State) != 0)

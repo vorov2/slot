@@ -66,6 +66,7 @@ namespace CodeBox.Margins
                     {
                         editor.Redraw();
                         editor.Styles.Restyle();
+                        editor.Search.TrySearch();
                     }
                     if ((effect & MarginEffects.Scroll) == MarginEffects.Scroll)
                         editor.Scroll.UpdateVisibleRectangle();
@@ -77,6 +78,12 @@ namespace CodeBox.Margins
             }
 
             return false;
+        }
+
+        public void ResetMargins()
+        {
+            foreach (var m in margins)
+                m.Reset();
         }
 
         public IEnumerator<Margin> GetEnumerator() => margins.GetEnumerator();

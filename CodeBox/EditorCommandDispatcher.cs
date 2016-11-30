@@ -49,8 +49,8 @@ namespace CodeBox
             if (editor == null)
                 return false;
 
-            editor.FirstEditLine = -1;
-            editor.LastEditLine = -1;
+            editor.FirstEditLine = editor.LimitedMode ? 0 : int.MaxValue;
+            editor.LastEditLine = 0;
             var cmd = GetCommand(commandKey);
 
             if (cmd == null || editor.LimitedMode && !cmd.SupportLimitedMode)
@@ -121,6 +121,8 @@ namespace CodeBox
 
             if (thisUndo)
                 editor.Buffer.EndUndoAction();
+
+            Console.WriteLine($"FirstEditLine: {editor.FirstEditLine}; LastEditLine: {editor.LastEditLine}");
 
             if (exp != None)
                 DoAftermath(editor, exp, editor.Buffer.Selections.Count, lastSel.Caret, thisUndo ? 1 : 0);
@@ -246,6 +248,9 @@ namespace CodeBox
             if (exp.Has(RestoreCaret))
                 SetCarets(editor, selCount, caret);
 
+            if (exp.Has(SetEditRange))
+                SetEditLines(editor);
+
             if (exp.Has(Scroll))
             {
                 editor.Scroll.SuppressOnScroll = true;
@@ -253,11 +258,11 @@ namespace CodeBox
                 editor.Scroll.SuppressOnScroll = false;
             }
 
-            if (scrolled || exp.Has(Modify))
+            if (/*scrolled ||*/ exp.Has(Modify))
+            {
                 editor.Styles.Restyle();
-
-            if (exp.Has(Modify))
                 editor.Search.TrySearch();
+            }
 
             if (!exp.Has(Silent))
                 editor.Buffer.RequestRedraw();
@@ -276,8 +281,7 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Undo(editor, editor.Buffer.UndoStack.Peek().Id, out count, out pos);
-                SetEditLines(editor);
-                DoAftermath(editor, exp | KeepRedo, count, pos, -1);
+                DoAftermath(editor, exp | KeepRedo | SetEditRange, count, pos, -1);
             }
         }
 
@@ -322,8 +326,7 @@ namespace CodeBox
                 Pos pos;
                 int count;
                 var exp = Redo(editor, editor.Buffer.RedoStack.Peek().Id, out count, out pos);
-                SetEditLines(editor);
-                DoAftermath(editor, exp | KeepRedo, count, pos);
+                DoAftermath(editor, exp | KeepRedo | SetEditRange, count, pos);
             }
         }
 

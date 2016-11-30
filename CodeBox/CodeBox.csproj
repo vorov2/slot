@@ -196,7 +196,14 @@
     <Compile Include="ObjectModel\Selection.cs" />
     <Compile Include="ObjectModel\SelectionList.cs" />
     <Compile Include="ComponentModel\IDentComponent.cs" />
+    <Compile Include="Search\SearchCaseCommand.cs" />
     <Compile Include="Search\SearchManager.cs" />
+    <Compile Include="Search\SearchNextCommand.cs" />
+    <Compile Include="Search\SearchPreviousCommand.cs" />
+    <Compile Include="Search\SearchResult.cs" />
+    <Compile Include="Search\SearchSelectCommand.cs" />
+    <Compile Include="Search\SearchRegexCommand.cs" />
+    <Compile Include="Search\SearchWholeWord.cs" />
     <Compile Include="Search\SearchWindow.cs">
       <SubType>Component</SubType>
     </Compile>

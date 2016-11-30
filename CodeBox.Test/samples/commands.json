@@ -91,8 +91,38 @@
 
     {
         "key": "editor.showsearch",
-        "alias": "s-p",
+        "alias": "s-f",
         "title": "Search: Show search panel"
+    },
+    {
+        "key": "editor.searchnext",
+        "alias": "s-n",
+        "title": "Search: Search next"
+    },
+    {
+        "key": "editor.searchprevious",
+        "alias": "s-p",
+        "title": "Search: Search previous"
+    },
+    {
+        "key": "editor.searchselect",
+        "alias": "s-sa",
+        "title": "Search: Select all search results"
+    },
+    {
+        "key": "editor.searchregex",
+        "alias": "s-or",
+        "title": "Search: Use regular expressions"
+    },
+    {
+        "key": "editor.searchcasesensitive",
+        "alias": "s-oc",
+        "title": "Search: Case sensitive"
+    },
+    {
+        "key": "editor.searchwholeword",
+        "alias": "s-ow",
+        "title": "Search: Match whole word"
     },
 
     {

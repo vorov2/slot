@@ -43,6 +43,8 @@ namespace CodeBox.Commands
         AutocompleteShow = 0x1000,
 
         KeepRedo = 0x2000,
+
+        SetEditRange = 0x4000
     }
 
     public static class ActionResultsExtensions
