@@ -49,6 +49,7 @@
     <Compile Include="CommandModel\ArgumentAffinity.cs" />
     <Compile Include="CommandModel\ArgumentType.cs" />
     <Compile Include="CommandModel\Converter.cs" />
+    <Compile Include="CommandModel\ICommandBar.cs" />
     <Compile Include="CommandModel\ValueItem.cs" />
     <Compile Include="CommandModel\CommandAttribute.cs" />
     <Compile Include="CommandModel\CommandDispatcher.cs" />

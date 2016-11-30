@@ -15,6 +15,7 @@ using CodeBox.Autocomplete;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Margins;
+using CodeBox.Core.Keyboard;
 
 namespace CodeBox.CommandLine
 {
@@ -75,12 +76,21 @@ namespace CodeBox.CommandLine
                 commandEditor.KeyDown += EditorKeyDown;
                 commandEditor.Paint += EditorPaint;
                 commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
+                commandEditor.CommandRejected += EditorCommandRejected;
                 ResetBuffer();
                 Editor.Controls.Add(commandEditor);
                 commandEditor.BringToFront();
             }
 
             return commandEditor;
+        }
+
+        private void EditorCommandRejected(object sender, EventArgs e)
+        {
+            var key = KeyboardAdapter.Instance.LastKey;
+
+            if (key.Name != "newline" && key.Name != "up" && key.Name != "down" && key.Name != "indent")
+                Editor.RunCommand(KeyboardAdapter.Instance.LastKey);
         }
 
         private AutocompleteWindow GetAutocompleteWindow()
@@ -351,32 +361,29 @@ namespace CodeBox.CommandLine
             HideEditor();
         }
 
-        public void Toggle(Statement stmt)
+        public void Show(Statement stmt)
         {
             ContinuationStatement = statement = stmt;
-            Toggle(default(string));
+            Show(default(string));
             commandEditor.Redraw();
         }
 
-        public void Toggle() => Toggle(default(string));
+        public void Show() => Show(default(string));
 
-        public void Toggle(string cmd)
+        public void Show(string cmd)
         {
-            if (commandEditor == null || !commandEditor.Visible)
+            ShowEditor();
+
+            if (cmd != null)
             {
-                ShowEditor();
-
-                if (cmd != null)
-                {
-                    ResetBuffer(cmd + " ");
-                    commandEditor.Buffer.Selections.Set(new Pos(0, cmd.Length + 1));
-                }
-
-                commandEditor.Focus();
+                ResetBuffer(cmd + " ");
+                commandEditor.Buffer.Selections.Set(new Pos(0, cmd.Length + 1));
             }
-            else
-                HideEditor();
+
+            commandEditor.Focus();
         }
+
+        public void Close() => HideEditor();
 
         private void ShowEditor()
         {
@@ -407,7 +414,7 @@ namespace CodeBox.CommandLine
         private void ExecuteCommand(string command)
         {
             statement = new CommandParser(ContinuationStatement?.Clone()).Parse(command);
-            var md = CommandCatalog.Instance.GetCommandByAlias(statement.Command);
+            var md = statement != null && statement.Command != null ? CommandCatalog.Instance.GetCommandByAlias(statement.Command) : null;
 
             if (md != null)
             {
@@ -426,6 +433,8 @@ namespace CodeBox.CommandLine
         internal int PreferredEditorWidth => Editor.ClientSize.Width - (Editor.ClientSize.Width / 10);
 
         internal Statement ContinuationStatement { get; set; }
+
+        internal bool IsActive => commandEditor != null && commandEditor.Visible;
 
         public override int CalculateSize() => Editor.Info.LineHeight + Editor.Info.CharWidth;
     }

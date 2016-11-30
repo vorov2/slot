@@ -21,20 +21,17 @@ namespace CodeBox.Commands
 
             if (ed != null)
             {
-                if (ed.Parent is Editor)
-                    ed = ed.Parent as Editor;
-
                 var cm = ed.TopMargins.FirstOrDefault(b => b is CommandMargin) as CommandMargin;
 
-                if (cm != null)
-                    cm.Toggle();
+                if (cm != null && cm.IsActive)
+                    cm.Close();
+                else
+                    cm.Show();
             }
 
             return ActionResults.Clean;
         }
 
         internal override bool SingleRun => true;
-
-        internal override bool SupportLimitedMode => true;
     }
 }

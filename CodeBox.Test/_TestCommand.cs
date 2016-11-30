@@ -27,33 +27,6 @@ namespace CodeBox.Test
         [Import("buffermanager.default", typeof(IComponent))]
         private IBufferManager bufferManager = null;
 
-        protected override void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey, object[] args)
-        {
-            var ed = ctx as Editor;
-
-            if (ed != null)
-            {
-                if (ed.Parent is Editor)
-                    ed = ed.Parent as Editor;
-
-                var cm = ed.TopMargins.FirstOrDefault(b => b is CommandMargin) as CommandMargin;
-
-                if (cm != null)
-                {
-                    var cmd = CommandCatalog.Instance.GetCommandByKey(commandKey);
-
-                    if (args == null || args.Length == 0)
-                        cm.Toggle(cmd.Alias);
-                    else
-                    {
-                        var stmt = new Statement(cmd.Alias);
-                        stmt.Arguments.AddRange(args.Select(a => new StatementArgument(a)));
-                        cm.Toggle(stmt);
-                    }
-                }
-            }
-        }
-
         [Command]
         public void CommandPalette(string commandName)
         {
@@ -68,7 +41,7 @@ namespace CodeBox.Test
 
             var exec = ComponentCatalog.Instance.GetComponent(cmd.Key.Namespace) as ICommandDispatcher;
             if (exec != null)
-                exec.Execute((IExecutionContext)viewManager.GetActiveView(), cmd.Key);
+                exec.Execute(viewManager.GetActiveView(), cmd.Key);
         }
 
         [Command]
@@ -219,7 +192,7 @@ namespace CodeBox.Test
             public override string Value => meta.Title;
 
             public override string Meta =>
-                shortcut != null ? $"{shortcut} ({meta.Alias})" : $"({meta.Alias})";
+                shortcut != null ? $"{shortcut} ({meta.Alias})" : $"{meta.Alias}";
 
             public override string ToString() => Value;
         }
@@ -232,11 +205,7 @@ namespace CodeBox.Test
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string ?? "";
-
-            //if (!string.IsNullOrWhiteSpace(str))
-                return GetPathElements(str) ?? Enumerable.Empty<ValueItem>();
-
-            //return Enumerable.Empty<ArgumentValue>();
+            return GetPathElements(str) ?? Enumerable.Empty<ValueItem>();
         }
 
         private IEnumerable<ValueItem> GetPathElements(string pat)
@@ -255,11 +224,10 @@ namespace CodeBox.Test
                     FileInfo fi;
                     var dir = string.IsNullOrWhiteSpace(pat) || (fi = new FileInfo(pat)).Directory == null
                         ? new DirectoryInfo(Environment.CurrentDirectory) : fi.Directory;
-
-                    var loc = Environment.CurrentDirectory == dir.Name;
+                    var loc = Environment.CurrentDirectory == dir.FullName;
                     return dir.EnumerateFileSystemInfos()
                         .Where(v => (loc ? v.Name : v.FullName).StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new ValueItem(sy.FullName));
+                        .Select(sy => new ValueItem(loc ? sy.Name : sy.FullName));
                 }
             }
             catch (Exception)

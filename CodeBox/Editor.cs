@@ -29,7 +29,7 @@ using CodeBox.Search;
 
 namespace CodeBox
 {
-    public class Editor : Control, IExecutionContext, IView
+    public class Editor : Control, IView
     {
         public readonly static bool Mono = Type.GetType("Mono.Runtime") != null;
         private const int WM_POINTERDOWN = 0x0246;
