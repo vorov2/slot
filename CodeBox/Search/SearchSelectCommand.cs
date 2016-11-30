@@ -16,11 +16,15 @@ namespace CodeBox.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (View.Search.HasSearchResults)
+            var seq = View.Search.HasSearchResults ? View.Search.EnumerateSearchResults()
+                : View.MatchWords.HasSearchResults ? View.MatchWords.EnumerateSearchResults()
+                : null;
+
+            if (seq != null)
             {
                 View.Buffer.Selections.Clear();
 
-                foreach (var sr in View.Search.EnumerateSearchResults())
+                foreach (var sr in seq)
                 {
                     View.Buffer.Selections.Add(new Selection(
                         new Pos(sr.Line, sr.StartCol),

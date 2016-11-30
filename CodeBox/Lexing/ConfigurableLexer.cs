@@ -118,10 +118,12 @@ namespace CodeBox.Lexing
                 else if (kres < 0)
                     mys.Keywords.Reset();
 
-                if (mys.StyleNumbers && grammar.NumberLiteral != null)
+                var num = false;
+
+                if (kres < 0 && mys.StyleNumbers && grammar.NumberLiteral != null)
                 {
                     var mc = grammar.NumberLiteral.MatchCount;
-                    var num = grammar.NumberLiteral.Match(c, last);
+                    num = grammar.NumberLiteral.Match(c, last);
 
                     if (!num && mc > 0 && nonIdent)
                         Styles.StyleRange(StandardStyle.Number, line, i - mc, i - 1);
@@ -147,7 +149,7 @@ namespace CodeBox.Lexing
                 if (!ws && nonIdent && c!= '\0')
                     contextChar = c;
 
-                var sect = mys.Sections.Match(c);
+                var sect = kres >= 0 || num ? null : mys.Sections.Match(c);
 
                 if (sect != null 
                     && (sect.Start == null || 
@@ -228,7 +230,7 @@ namespace CodeBox.Lexing
 
                     return Fetch(sect.Id, sect);
                 }
-                else if (backm.End != null && backm.End.Match(c) == MatchResult.Hit
+                else if (!num && backm.End != null && backm.End.Match(c) == MatchResult.Hit
                     && (backm.EscapeChar == '\0' || backm.EscapeChar != last || (i >= 1 && backm.EscapeChar == ln.CharAt(i - 2))))
                 {
                     if (i < ln.Length - 1 && backm.TerminatorEndChar == ln.CharAt(i + 1))

@@ -1,6 +1,7 @@
 ﻿using CodeBox.Commands;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ObjectModel;
+using CodeBox.Search;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace CodeBox
     public sealed class MatchWordManager
     {
         private readonly Editor editor;
-        private readonly List<Tuple<int,AppliedStyle>> finds = new List<Tuple<int,AppliedStyle>>();
+        private readonly List<SearchResult> finds = new List<SearchResult>();
         private string lastWord;
         private Pos requestCaret = Pos.Empty;
         private DateTime requestTime;
@@ -51,8 +52,8 @@ namespace CodeBox
 
             foreach (var f in finds)
             {
-                if (editor.Lines.Count > f.Item1)
-                    editor.Lines[f.Item1].AppliedStyles.Remove(f.Item2);
+                if (editor.Lines.Count > f.Line)
+                    editor.Lines[f.Line].AppliedStyles.Remove(f.Style);
 
                 needRedraw = true;
             }
@@ -90,13 +91,13 @@ namespace CodeBox
                     {
                         var aps = new AppliedStyle((int)StandardStyle.MatchedWord, m.Index, m.Index + m.Length - 1);
                         line.AppliedStyles.Add(aps);
-                        finds.Add(Tuple.Create(i, aps));
+                        finds.Add(new SearchResult(i, aps));
                     }
             }
 
             if (finds.Count == 1)
             {
-                editor.Lines[finds[0].Item1].AppliedStyles.Remove(finds[0].Item2);
+                editor.Lines[finds[0].Line].AppliedStyles.Remove(finds[0].Style);
                 finds.Clear();
             }
 
@@ -105,5 +106,9 @@ namespace CodeBox
 
             requestCaret = Pos.Empty;
         }
+
+        internal bool HasSearchResults => finds.Count > 0;
+
+        internal IEnumerable<SearchResult> EnumerateSearchResults() => finds;
     }
 }

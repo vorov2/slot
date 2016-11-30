@@ -184,6 +184,8 @@ namespace CodeBox.Search
             {
                 GetOverlay().UseRegex = value;
                 GetOverlay().Invalidate();
+                Search();
+                editor.Buffer.RequestRedraw();
             }
         }
 
@@ -194,6 +196,8 @@ namespace CodeBox.Search
             {
                 GetOverlay().CaseSensitive = value;
                 GetOverlay().Invalidate();
+                Search();
+                editor.Buffer.RequestRedraw();
             }
         }
 
@@ -204,6 +208,8 @@ namespace CodeBox.Search
             {
                 GetOverlay().WholeWord = value;
                 GetOverlay().Invalidate();
+                Search();
+                editor.Buffer.RequestRedraw();
             }
         }
     }

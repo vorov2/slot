@@ -193,7 +193,7 @@ namespace CodeBox
         protected override void OnResize(EventArgs eventargs)
         {
             Scroll.InvalidateLines(InvalidateFlags.Force);
-            Styles.Restyle();
+            //Styles.Restyle();
             Invalidate();
             Autocomplete.HideAutocomplete();
             Search.UpdateSearchPanel();

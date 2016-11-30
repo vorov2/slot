@@ -25,7 +25,7 @@ namespace CodeBox.Core.CommandModel
                 var vals = args;
                 var pars = cmd.GetParameters();
 
-                if (args != null && args.Length > 0)
+                if (args != null)
                 {
                     vals = new object[pars.Length];
 

@@ -107,7 +107,7 @@
     {
         "key": "editor.searchselect",
         "alias": "s-sa",
-        "title": "Search: Select all search results"
+        "title": "Search: Select all search results (or all occurences)"
     },
     {
         "key": "editor.searchregex",
