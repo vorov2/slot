@@ -65,8 +65,8 @@ namespace CodeBox.Margins
                     if ((effect & MarginEffects.Redraw) == MarginEffects.Redraw)
                     {
                         editor.Redraw();
-                        editor.Styles.Restyle();
-                        editor.Search.TrySearch();
+                        //editor.Styles.Restyle();
+                        //editor.Search.RequestSearch();
                     }
                     if ((effect & MarginEffects.Scroll) == MarginEffects.Scroll)
                         editor.Scroll.UpdateVisibleRectangle();

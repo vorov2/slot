@@ -17,7 +17,7 @@ namespace CodeBox.Styling
         internal override TextStyle Combine(TextStyle other)
         {
             var hidden = Clone();
-            hidden.ForeColor = other.ForeColor;
+            hidden.ForeColor = ForeColor.IsEmpty ? other.ForeColor : ForeColor;
             hidden.BackColor = BackColor;
             hidden.FontStyle = other.FontStyle;
             hidden.LineColor = LineColor.IsEmpty ? other.LineColor : LineColor;

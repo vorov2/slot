@@ -17,10 +17,14 @@ namespace CodeBox.Search
     {
         private readonly Editor editor;
         private SearchWindow overlay;
+        private DateTime requestTime;
+        private readonly Timer timer = new Timer();
 
         public SearchManager(Editor editor)
         {
             this.editor = editor;
+            timer.Interval = 500;
+            timer.Tick += (o, e) => TimerSearch();
         }
 
         private SearchWindow GetOverlay()
@@ -36,8 +40,7 @@ namespace CodeBox.Search
 
             return overlay;
         }
-
-
+        
         private readonly List<SearchResult> finds = new List<SearchResult>();
         private void SearchBoxContentModified(object sender, EventArgs e)
         {
@@ -109,10 +112,24 @@ namespace CodeBox.Search
             finds.Clear();
         }
 
-        public void TrySearch()
+        private void TimerSearch()
         {
-            if (overlay != null && overlay.Visible)
+            if (overlay != null && overlay.Visible && (DateTime.Now - requestTime).TotalMilliseconds > 500)
+            {
+                timer.Stop();
                 Search();
+                editor.Buffer.RequestRedraw();
+                requestTime = DateTime.MinValue;
+            }
+        }
+
+        public void RequestSearch()
+        {
+            if (overlay != null && overlay.Visible && requestTime == DateTime.MinValue)
+            {
+                requestTime = DateTime.Now;
+                timer.Start();
+            }
         }
 
         public void HideSearch()
@@ -131,7 +148,7 @@ namespace CodeBox.Search
         private int lastWidth;
         public void ShowSearch()
         {
-            InternalShowSearch(lastWidth = editor.Info.TextWidth / 2);
+            InternalShowSearch(lastWidth = editor.Info.TextWidth / 3);
         }
 
         private void InternalShowSearch(int width, bool update = false)

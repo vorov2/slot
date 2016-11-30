@@ -38,7 +38,8 @@ namespace CodeBox
         public void Match()
         {
             if (!editor.Settings.MatchBrackets
-                || !editor.Buffer.Selections.Main.IsEmpty 
+                || !editor.Buffer.Selections.Main.IsEmpty
+                || editor.Buffer.Selections.Count > 1
                 || (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret && editor.Document.Id == docId))
             {
                 return;

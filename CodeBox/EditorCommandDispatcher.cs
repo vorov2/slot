@@ -261,7 +261,7 @@ namespace CodeBox
             if (/*scrolled ||*/ exp.Has(Modify))
             {
                 editor.Styles.Restyle();
-                editor.Search.TrySearch();
+                editor.Search.RequestSearch();
             }
 
             if (!exp.Has(Silent))
