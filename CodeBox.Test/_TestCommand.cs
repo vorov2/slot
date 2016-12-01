@@ -64,24 +64,14 @@ namespace CodeBox.Test
         {
             var fi = new FileInfo(Uri.UnescapeDataString(fileName));
             var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
-
-            if (buffer != null)
-            {
-                var view = viewManager.GetActiveView();
-                view.AttachBuffer(buffer);
-            }
+            OpenBuffer(buffer);
         }
 
         [Command]
         public void NewFile()
         {
             var buffer = bufferManager.CreateBuffer();
-
-            if (buffer != null)
-            {
-                var view = viewManager.GetActiveView();
-                view.AttachBuffer(buffer);
-            }
+            OpenBuffer(buffer);
         }
 
         [Command]
@@ -109,8 +99,19 @@ namespace CodeBox.Test
         {
             var buf = bufferManager.EnumerateBuffers()
                 .FirstOrDefault(b => b.File.Name.IndexOf(fileName, StringComparison.OrdinalIgnoreCase) != -1);
-            var view = viewManager.GetActiveView();
-            view.AttachBuffer(buf);
+            OpenBuffer(buf);
+        }
+
+        private void OpenBuffer(IBuffer buf)
+        {
+            if (buf != null)
+            {
+                var view = viewManager.GetActiveView();
+                view.AttachBuffer(buf);
+
+                if (buf?.File.Directory != null)
+                    Directory.SetCurrentDirectory(buf.File.Directory.FullName);
+            }
         }
     }
 

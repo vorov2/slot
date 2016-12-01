@@ -48,7 +48,7 @@ namespace CodeBox.Styling
                 fvl--;
 
             fvl = fvl < 0 ? 0 : fvl;
-            lvl = lvl < fvl ? fvl : lvl;
+            lvl = lvl < fvl || lvl >= editor.Lines.Count ? fvl : lvl;
             var range = new Range(new Pos(fvl, 0),
                 new Pos(lvl, editor.Lines[lvl].Length - 1));
             RestyleRange(range);
