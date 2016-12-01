@@ -6,7 +6,6 @@
         "arguments": [
             {
                 "name": "commandName",
-                "type": "string",
                 "valueProvider": "values.commands"
             }
         ]
@@ -18,13 +17,11 @@
         "arguments": [
             {
                 "name": "fileName",
-                "type": "string",
                 "valueProvider": "values.systempath",
                 "affinity": "FilePath"
             },
             {
                 "name": "encoding",
-                "type": "object",
                 "valueProvider": "values.encoding",
                 "optional": true
             }
@@ -37,7 +34,6 @@
         "arguments": [
             {
                 "name": "fileName",
-                "type": "string",
                 "valueProvider": "values.recentdocs"
             }
         ]
@@ -49,7 +45,6 @@
         "arguments": [
             {
                 "name": "fileName",
-                "type": "string",
                 "optional": true
             }
         ]
@@ -71,7 +66,6 @@
         "arguments": [
             {
                 "name": "mode",
-                "type": "string",
                 "valueProvider": "values.modes"
             }
         ]
@@ -83,7 +77,6 @@
         "arguments": [
             {
                 "name": "theme",
-                "type": "string",
                 "valueProvider": "values.themes"
             }
         ]
@@ -352,7 +345,6 @@
         "arguments": [
             {
                 "name": "lineNumber",
-                "type": "number",
                 "optional": true
             }
         ]
@@ -384,7 +376,6 @@
         "arguments": [
             {
                 "name": "lineNumber",
-                "type": "number",
                 "optional": true
             }
         ]

@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="ApplicationPath.cs" />
     <Compile Include="CommandModel\ArgumentAffinity.cs" />
-    <Compile Include="CommandModel\ArgumentType.cs" />
+    <Compile Include="CommandModel\ArgumentMetadata.cs" />
     <Compile Include="CommandModel\Converter.cs" />
     <Compile Include="CommandModel\ICommandBar.cs" />
     <Compile Include="CommandModel\ValueItem.cs" />

@@ -132,6 +132,7 @@
     <Compile Include="ComponentModel\IThemeComponent.cs" />
     <Compile Include="DocumentBufferManager.cs" />
     <Compile Include="Drawing\Dpi.cs" />
+    <Compile Include="Drawing\GraphicsExtensions.cs" />
     <Compile Include="Drawing\Overlay.cs">
       <SubType>Component</SubType>
     </Compile>

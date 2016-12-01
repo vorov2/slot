@@ -41,41 +41,23 @@ namespace CodeBox.Core.CommandModel
                     var ar = Arguments[i];
 
                     if (i == 0)
-                        sb.Append('(');
+                        sb.Append(' ');
                     else
-                        sb.Append(", ");
+                        sb.Append(" | ");
 
                     sb.Append(ar);
 
                     if (i == Arguments.Count - 1)
-                        sb.Append(')');
+                        sb.Append(' ');
                 }
             }
             else
-                sb.Append("()");
+                sb.Append("");
 
             if (Title != null)
-                sb.Append(" //" + Title);
+                sb.Append(" #" + Title);
 
             return sb.ToString();
-        }
-    }
-
-    public sealed class ArgumentMetadata
-    {
-        public string Name { get; internal set; }
-
-        public Identifier ValueProvider { get; internal set; }
-
-        public ArgumentType Type { get; internal set; }
-
-        public bool Optional { get; internal set; }
-
-        public ArgumentAffinity Affinity { get; set; }
-
-        public override string ToString()
-        {
-            return Type.ToString().ToLower() + " " + Name + (Optional ? "?" : "");
         }
     }
 }

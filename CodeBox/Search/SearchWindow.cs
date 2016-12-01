@@ -62,7 +62,7 @@ namespace CodeBox.Search
                 var width = tip.Length * editor.Info.SmallCharWidth;
                 var x = SearchBox.Info.TextWidth - width - editor.Info.SmallCharWidth * 3;
                 var style = editor.Styles.Theme.GetStyle(StandardStyle.Popup);
-                g.FillRectangle(style.BackColor.Brush(),
+                g.DrawRoundedRectangle(style.BackColor,
                     new Rectangle(x - editor.Info.SmallCharWidth, 0, width + editor.Info.SmallCharWidth * 2, editor.Info.LineHeight));
 
                 foreach (var c in tip)

@@ -62,18 +62,9 @@ namespace CodeBox.Core.CommandModel
             {
                 Name = dict.String("name"),
                 ValueProvider = (Identifier)dict.String("valueProvider"),
-                Type = GetArgumentType(dict),
                 Optional = dict.Bool("optional"),
                 Affinity = dict.Enum<ArgumentAffinity>("affinity")
             };
-        }
-
-        private static ArgumentType GetArgumentType(Dictionary<string, object> dict)
-        {
-            var str = dict.String("type");
-            return string.Equals(str, "string", StringComparison.OrdinalIgnoreCase) ? ArgumentType.String
-                : string.Equals(str, "number", StringComparison.OrdinalIgnoreCase) ? ArgumentType.Number
-                : ArgumentType.Object;
         }
     }
 }

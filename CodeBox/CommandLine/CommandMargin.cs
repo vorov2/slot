@@ -47,8 +47,15 @@ namespace CodeBox.CommandLine
                         + (Editor.Buffer.File.Directory != null ? $" ({Editor.Buffer.File.Directory.FullName})" : ""),
                     Editor.Settings.SmallFont.Get(cs.FontStyle),
                     cs.ForeColor.Brush(),
-                    Editor.Info.CharWidth * 2,//Editor.Info.TextLeft,
+                    Editor.Info.CharWidth * 2,
                     (bounds.Height - Editor.Info.SmallCharHeight) / 2);
+            }
+            else
+            {
+                var shift = Dpi.GetHeight(2);
+                g.FillRectangle(ed.BackColor.Brush(),
+                    new Rectangle(ed.Left - Editor.Info.SmallCharWidth, shift,
+                    ed.Width + Editor.Info.SmallCharWidth, bounds.Height - shift * 2));
             }
 
             return true;
@@ -149,7 +156,7 @@ namespace CodeBox.CommandLine
             }
 
             if (currentAffinity != ArgumentAffinity.FilePath
-                && statement.Arguments.Count == CommandCatalog.Instance.GetCommandByAlias(statement.Command)
+                && statement.Arguments.Count >= CommandCatalog.Instance.GetCommandByAlias(statement.Command)
                     ?.Arguments.Count(a => !a.Optional))
                 ExecuteCommand(commandEditor.Text);
             else if (currentAffinity != ArgumentAffinity.FilePath)
@@ -207,14 +214,14 @@ namespace CodeBox.CommandLine
                 if ((arr.Count > 1 || (arr.Count == 1 && statement.Command.Length < arr[0].Alias.Length)) &&
                     !statement.HasArguments)
                 {
-                    DrawStringWithPeriods(g, string.Join(" ", arr.Select(a => a.Alias)), 0);
+                    DrawStringWithPeriods(g, string.Join(" ", arr.Select(a => a.Alias)), 0, hl: false);
                     HideAutocompleteWindow();
                 }
                 else if (arr.Count > 0)
                 {
                     var ci = arr[0];
                     var ind = GetCurrentArgument(statement);
-                    DrawStringWithPeriods(g, ci.ToString(), ind);
+                    DrawStringWithPeriods(g, ci.ToString(), ind, hl: true);
 
                     if (ci.HasArguments)
                     {
@@ -230,7 +237,6 @@ namespace CodeBox.CommandLine
                             {
                                 lastLookupInput = statement.HasArguments && statement.Arguments.Count > ind 
                                     ? statement.Arguments[ind].Value.ToString() : "";
-                                //Console.WriteLine($"Last lookup: {lastLookupInput}");
                                 ShowAutocompleteWindow(prov);
                                 return;
                             }
@@ -269,40 +275,54 @@ namespace CodeBox.CommandLine
             return -1;
         }
 
-        private void DrawStringWithPeriods(Graphics g, string str, int arg)
+        private string TrimToSize(string str, int x)
+        {
+            var max = ((commandEditor.Info.TextWidth - x) / Editor.Info.SmallCharWidth) - 3;
+
+            if (str.Length > max)
+                str = str.Substring(0, max) + "…";
+
+            return str;
+        }
+
+        private void DrawStringWithPeriods(Graphics g, string str, int arg, bool hl)
         {
             var tetras = commandEditor.Lines[0].GetTetras(commandEditor.IndentSize);
             var cw = commandEditor.Info.SmallCharWidth;
             var font = commandEditor.Settings.SmallFont;
-            var x = (tetras + 1) * commandEditor.Info.CharWidth;
+            var x = (tetras + 2) * commandEditor.Info.CharWidth;
             var y = (commandEditor.Height - (int)(commandEditor.Info.SmallCharHeight * 1.1)) / 2;
-            var brush = commandEditor.Styles.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush();
-            var brush1 = commandEditor.Styles.Theme.DefaultStyle.ForeColor.Brush();
+            var brush = commandEditor.Styles.Theme.GetStyle(StandardStyle.Default).ForeColor.Brush();
+            var brush1 = commandEditor.Styles.Theme.GetStyle(StandardStyle.KeywordSpecial).ForeColor.Brush();
+            var brush2 = commandEditor.Styles.Theme.GetStyle(StandardStyle.Comment).ForeColor.Brush();
+            var brush3 = commandEditor.Styles.Theme.GetStyle(StandardStyle.Keyword).ForeColor.Brush();
             var curarg = -1;
             var last = '\0';
 
             if (x + cw * 2 >= commandEditor.Info.TextWidth - cw)
                 return;
 
+            str = TrimToSize(str, x);
+            var style = Editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+            g.DrawRoundedRectangle(style.BackColor, new Rectangle(x - Editor.Info.CharWidth, y,
+                Editor.Info.SmallCharWidth * (str.Length + 2), (int)(commandEditor.Info.SmallCharHeight * 1.1)));
+            var cmt = false;
+
             for (var i = 0; i < str.Length; i++)
             {
                 var c = str[i];
 
-                if (last == '(' || last == ',')
+                if ((last == ' ' && curarg == -1) || last == '|')
                     curarg++;
 
-                if (c == ')')
-                    curarg = -1;
+                if (c == '#')
+                    cmt = true;
 
-                g.DrawString(c.ToString(), font, curarg == arg && arg != -1 && c != ',' ? brush1 : brush, x, y);
+                g.DrawString(c.ToString(), font, 
+                    hl && cmt ? brush2
+                    : hl && curarg == arg && arg != -1 && c != '|' ? brush1
+                    : hl && curarg == -1 ? brush3 : brush, x, y, TextStyle.Format);
                 x += cw;
-
-                if (x + cw * 2 >= commandEditor.Info.TextWidth - cw && i != str.Length - 1)
-                {
-                    g.DrawString("…", font, brush, x, y);
-                    return;
-                }
-
                 last = c;
             }
         }
@@ -337,8 +357,8 @@ namespace CodeBox.CommandLine
 
             if (!string.IsNullOrEmpty(lastLookupInput) && idx < statement.Arguments.Count)
             {
-                sels.Main.Start = new Pos(0, statement.Arguments[0].Location.Start);
-                sels.Main.End = new Pos(0, statement.Arguments[0].Location.End);
+                sels.Main.Start = new Pos(0, statement.Arguments[idx].Location.Start);
+                sels.Main.End = new Pos(0, statement.Arguments[idx].Location.End);
             }
 
             var str = window.SelectedItem.Value;
@@ -349,6 +369,7 @@ namespace CodeBox.CommandLine
         private void ResetBuffer(string text = "")
         {
             commandEditor.Text = text;
+            commandEditor.Buffer.Selections.Set(new Pos(0, 0));
             commandEditor.Buffer.CurrentLineIndicator = false;
             commandEditor.Buffer.ShowEol = false;
             commandEditor.Buffer.ShowLineLength = false;
