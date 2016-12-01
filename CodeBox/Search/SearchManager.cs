@@ -148,7 +148,7 @@ namespace CodeBox.Search
         private int lastWidth;
         public void ShowSearch()
         {
-            InternalShowSearch(lastWidth = editor.Info.TextWidth / 3);
+            InternalShowSearch(lastWidth = editor.Width / 3);
         }
 
         private void InternalShowSearch(int width, bool update = false)
@@ -200,9 +200,10 @@ namespace CodeBox.Search
             set
             {
                 GetOverlay().UseRegex = value;
-                GetOverlay().Invalidate();
                 Search();
                 editor.Buffer.RequestRedraw();
+                GetOverlay().SearchBox.Styles.RestyleDocument();
+                GetOverlay().Invalidate(true);
             }
         }
 
@@ -212,9 +213,10 @@ namespace CodeBox.Search
             set
             {
                 GetOverlay().CaseSensitive = value;
-                GetOverlay().Invalidate();
                 Search();
                 editor.Buffer.RequestRedraw();
+                GetOverlay().SearchBox.Styles.RestyleDocument();
+                GetOverlay().Invalidate(true);
             }
         }
 
@@ -224,9 +226,10 @@ namespace CodeBox.Search
             set
             {
                 GetOverlay().WholeWord = value;
-                GetOverlay().Invalidate();
                 Search();
                 editor.Buffer.RequestRedraw();
+                GetOverlay().SearchBox.Styles.RestyleDocument();
+                GetOverlay().Invalidate(true);
             }
         }
     }

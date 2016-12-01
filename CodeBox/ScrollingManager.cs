@@ -69,7 +69,7 @@ namespace CodeBox
             var tetras = editor.Lines[pos.Line].GetTetras(pos.Col, editor.IndentSize);
             var curpos = tetras * editor.Info.CharWidth + editor.Info.TextLeft + ScrollPosition.X;
 
-            if (curpos > editor.Info.TextRight)
+            if (curpos >= editor.Info.TextRight)
             {
                 curpos += editor.Info.CharWidth;
                 var diff = curpos - editor.Info.TextRight;

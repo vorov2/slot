@@ -61,15 +61,20 @@ namespace CodeBox.Search
             {
                 var width = tip.Length * editor.Info.SmallCharWidth;
                 var x = SearchBox.Info.TextWidth - width - editor.Info.SmallCharWidth * 3;
-                var style = editor.Styles.Theme.GetStyle(StandardStyle.Popup);
-                g.DrawRoundedRectangle(style.BackColor,
-                    new Rectangle(x - editor.Info.SmallCharWidth, 0, width + editor.Info.SmallCharWidth * 2, editor.Info.LineHeight));
 
-                foreach (var c in tip)
+                if (x > 0)
                 {
-                    g.DrawString(c.ToString(), editor.Settings.SmallFont, style.ForeColor.Brush(),
-                        new Rectangle(x, 0, editor.Info.SmallCharWidth, editor.Info.LineHeight), format);
-                    x += editor.Info.SmallCharWidth;
+                    SearchBox.CaretRenderer.Suspend();
+                    var style = editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+                    g.DrawRoundedRectangle(style.BackColor,
+                        new Rectangle(x - editor.Info.SmallCharWidth, 0, width + editor.Info.SmallCharWidth * 2, editor.Info.LineHeight));
+
+                    foreach (var c in tip)
+                    {
+                        g.DrawString(c.ToString(), editor.Settings.SmallFont, style.ForeColor.Brush(),
+                            new Rectangle(x, 0, editor.Info.SmallCharWidth, editor.Info.LineHeight), format);
+                        x += editor.Info.SmallCharWidth;
+                    }
                 }
             }
         }
@@ -83,19 +88,20 @@ namespace CodeBox.Search
             sb.Location = new Point(editor.Info.CharWidth / 2, (rect.Height - sb.Height) / 2);
             var optWidth = editor.Info.CharWidth * 11;
             var butWidth = 0;// editor.Info.CharWidth * 7;
-            var pad = editor.Info.CharWidth;
+            var pad = editor.Info.CharWidth * 2;
 
             sb.Size = new Size(rect.Width - optWidth - butWidth - pad, sb.Height);
 
             var g = e.Graphics;
+            var start = sb.Left + sb.Width + editor.Info.CharWidth;
 
-            button1 = new Rectangle(sb.Left + sb.Width, sb.Top, editor.Info.CharWidth * 3, editor.Info.LineHeight);
+            button1 = new Rectangle(start, sb.Top, editor.Info.CharWidth * 3, editor.Info.LineHeight);
             DrawButton(g, "Aa", button1, CaseSensitive);
 
-            button2 = new Rectangle(sb.Left + sb.Width + button1.Width, sb.Top, editor.Info.CharWidth * 4, editor.Info.LineHeight);
+            button2 = new Rectangle(start + button1.Width, sb.Top, editor.Info.CharWidth * 4, editor.Info.LineHeight);
             DrawButton(g, "[a]", button2, WholeWord);
 
-            button3 = new Rectangle(sb.Left + sb.Width + button1.Width + button2.Width, sb.Top, editor.Info.CharWidth * 4, editor.Info.LineHeight);
+            button3 = new Rectangle(start + button1.Width + button2.Width, sb.Top, editor.Info.CharWidth * 4, editor.Info.LineHeight);
             DrawButton(g, ".*", button3, UseRegex);
         }
 
