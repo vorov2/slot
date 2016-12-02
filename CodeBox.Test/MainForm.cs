@@ -35,11 +35,6 @@ namespace CodeBox.Test
             Initialize();
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-        }
-
         private void Initialize()
         {
             ed = new Editor { Dock = DockStyle.Fill };

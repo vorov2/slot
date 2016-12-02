@@ -400,8 +400,6 @@ namespace CodeBox
             return base.IsInputKey(keyData);
         }
 
-        internal void InvokeKeyDown(KeyEventArgs e) => OnKeyDown(e);
-
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (Autocomplete.WindowShown && Autocomplete.ListenKeys(e.KeyData))

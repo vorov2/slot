@@ -1,4 +1,5 @@
-﻿using CodeBox.Core.CommandModel;
+﻿using CodeBox.Core;
+using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.ViewModel;
 using System;

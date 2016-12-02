@@ -48,7 +48,10 @@ namespace CodeBox.Test
             var editor = view as Editor;
 
             if (editor != null)
+            {
+                editor.Buffer.LastAccess = DateTime.Now;
                 editor.FindForm().Activate();
+            }
         }
     }
 }
