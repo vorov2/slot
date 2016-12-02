@@ -74,7 +74,7 @@ namespace CodeBox.Autocomplete
             base.OnPaint(e);
             var g = e.Graphics;
 
-            var ps = (PopupStyle)editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+            var ps = (PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup);
             var borderPen = ps.BorderColor.Pen();
             g.FillRectangle(ps.BackColor.Brush(), e.ClipRectangle);
             g.DrawRectangle(borderPen,
@@ -245,6 +245,7 @@ namespace CodeBox.Autocomplete
         public void SetItems(IEnumerable<ValueItem> items)
         {
             this.items = items.Select(i => new ItemInfo { Item = i }).ToList();
+            selectedLine = 0;
             InvalidateWindow();
         }
 

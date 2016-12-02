@@ -10,6 +10,7 @@ using CodeBox.Lexing;
 using CodeBox.ComponentModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core;
+using System.ComponentModel.Composition;
 
 namespace CodeBox.Styling
 {
@@ -18,10 +19,9 @@ namespace CodeBox.Styling
         private static readonly Identifier defaultStyler = (Identifier)"styler.default";
         private readonly Editor editor;
 
-        public StyleManager(Editor editor, IThemeComponent styles)
+        public StyleManager(Editor editor)
         {
             this.editor = editor;
-            Theme = styles;
         }
 
         public void ClearStyles(int line) => editor.Lines[line].AppliedStyles.Clear();
@@ -78,7 +78,5 @@ namespace CodeBox.Styling
         }
 
         public event EventHandler<StyleNeededEventArgs> StyleNeeded;
-
-        public IThemeComponent Theme { get; set; }
     }
 }

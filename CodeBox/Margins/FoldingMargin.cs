@@ -34,7 +34,7 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            var fs = (MarginStyle)Editor.Styles.Theme.GetStyle(StandardStyle.Folding);
+            var fs = (MarginStyle)Editor.Theme.GetStyle(StandardStyle.Folding);
             g.FillRectangle(fs.BackColor.Brush(), bounds);
             var lp = (int)(Editor.Info.CharWidth * .5);
             var h = (Editor.Info.LineHeight / 2) * 2;

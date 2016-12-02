@@ -10,9 +10,10 @@ using System.Linq;
 namespace CodeBox.Styling
 {
     [Export(typeof(IComponent))]
-    [ComponentData("theme.default")]
+    [ComponentData(Name)]
     public sealed class ThemeComponent : IThemeComponent
     {
+        public const string Name = "theme.default";
         private readonly Dictionary<string, ThemeInfo> themes = new Dictionary<string, ThemeInfo>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<int, Style> styles = new Dictionary<int, Style>();
 

@@ -13,16 +13,18 @@ using CodeBox.Core;
 
 namespace CodeBox
 {
-    [Export(Name, typeof(IComponent))]
-    [ComponentData(Name)]
+    [Export(typeof(IBufferManager))]
     public sealed class DocumentBufferManager : IBufferManager
     {
-        public const string Name = "buffermanager.default";
         private readonly Stack<IBuffer> buffers = new Stack<IBuffer>();
 
         public IMaterialBuffer CreateBuffer()
         {
-            return InternalCreateBuffer(Document.FromString(""), new FileInfo("untitled"), Encoding.UTF8);
+            var num = buffers.Count(b => !b.File.Exists);
+            var ret = InternalCreateBuffer(Document.FromString(""),
+                new FileInfo($"untitled-{num + 1}"), Encoding.UTF8);
+            ret.Edits++;
+            return ret;
         }
 
         public void SaveBuffer(IMaterialBuffer buffer, FileInfo file, Encoding encoding)
@@ -83,7 +85,7 @@ namespace CodeBox
             }
         }
 
-        private IMaterialBuffer InternalCreateBuffer(Document doc, FileInfo file, Encoding enc)
+        private DocumentBuffer InternalCreateBuffer(Document doc, FileInfo file, Encoding enc)
         {
             var buf = new DocumentBuffer(doc, file, enc);
             buffers.Push(buf);

@@ -37,7 +37,7 @@ namespace CodeBox.CommandLine
             if (ed.Width != PreferredEditorWidth)
                 HideEditor();
 
-            var cs = Editor.Styles.Theme.GetStyle(StandardStyle.CommandBar);
+            var cs = Editor.Theme.GetStyle(StandardStyle.CommandBar);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
             lastBounds = bounds;
 
@@ -70,6 +70,7 @@ namespace CodeBox.CommandLine
         public override MarginEffects MouseUp(Point loc)
         {
             GetEditor().Focus();
+            commandEditor.Redraw();
             return MarginEffects.None;
         }
 
@@ -292,10 +293,10 @@ namespace CodeBox.CommandLine
             var font = commandEditor.Settings.SmallFont;
             var x = (tetras + 2) * commandEditor.Info.CharWidth;
             var y = (commandEditor.Height - (int)(commandEditor.Info.SmallCharHeight * 1.1)) / 2;
-            var brush = commandEditor.Styles.Theme.GetStyle(StandardStyle.Default).ForeColor.Brush();
-            var brush1 = commandEditor.Styles.Theme.GetStyle(StandardStyle.KeywordSpecial).ForeColor.Brush();
-            var brush2 = commandEditor.Styles.Theme.GetStyle(StandardStyle.Comment).ForeColor.Brush();
-            var brush3 = commandEditor.Styles.Theme.GetStyle(StandardStyle.Keyword).ForeColor.Brush();
+            var brush = commandEditor.Theme.GetStyle(StandardStyle.Default).ForeColor.Brush();
+            var brush1 = commandEditor.Theme.GetStyle(StandardStyle.KeywordSpecial).ForeColor.Brush();
+            var brush2 = commandEditor.Theme.GetStyle(StandardStyle.Comment).ForeColor.Brush();
+            var brush3 = commandEditor.Theme.GetStyle(StandardStyle.Keyword).ForeColor.Brush();
             var curarg = -1;
             var last = '\0';
 
@@ -303,7 +304,7 @@ namespace CodeBox.CommandLine
                 return;
 
             str = TrimToSize(str, x);
-            var style = Editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+            var style = Editor.Theme.GetStyle(StandardStyle.Popup);
             g.DrawRoundedRectangle(style.BackColor, new Rectangle(x - Editor.Info.CharWidth, y,
                 Editor.Info.SmallCharWidth * (str.Length + 2), (int)(commandEditor.Info.SmallCharHeight * 1.1)));
             var cmt = false;
@@ -369,7 +370,6 @@ namespace CodeBox.CommandLine
         private void ResetBuffer(string text = "")
         {
             commandEditor.Text = text;
-            commandEditor.Buffer.Selections.Set(new Pos(0, 0));
             commandEditor.Buffer.CurrentLineIndicator = false;
             commandEditor.Buffer.ShowEol = false;
             commandEditor.Buffer.ShowLineLength = false;

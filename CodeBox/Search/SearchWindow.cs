@@ -65,7 +65,7 @@ namespace CodeBox.Search
                 if (x > 0)
                 {
                     SearchBox.CaretRenderer.Suspend();
-                    var style = editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+                    var style = editor.Theme.GetStyle(StandardStyle.Popup);
                     g.DrawRoundedRectangle(style.BackColor,
                         new Rectangle(x - editor.Info.SmallCharWidth, 0, width + editor.Info.SmallCharWidth * 2, editor.Info.LineHeight));
 
@@ -188,8 +188,8 @@ namespace CodeBox.Search
         private void DrawButton(Graphics g, string chars, Rectangle rect, bool set)
         {
             var fnt = editor.Settings.Font;
-            var def = editor.Styles.Theme.DefaultStyle;
-            var style = editor.Styles.Theme.GetStyle(StandardStyle.SpecialSymbol);
+            var def = editor.Theme.DefaultStyle;
+            var style = editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
 
             g.FillRectangle(def.BackColor.Brush(),
                 new Rectangle(rect.X, rect.Y, rect.Width, editor.Info.LineHeight));
@@ -212,9 +212,9 @@ namespace CodeBox.Search
         public event EventHandler SettingsChanged;
         private void OnSettingsChanged() => SettingsChanged?.Invoke(this, EventArgs.Empty);
 
-        public override Color BackgroundColor => editor.Styles.Theme.GetStyle(StandardStyle.Default).BackColor;
+        public override Color BackgroundColor => editor.Theme.GetStyle(StandardStyle.Default).BackColor;
 
         public override Color BorderColor =>
-            ((PopupStyle)editor.Styles.Theme.GetStyle(StandardStyle.Popup)).BorderColor;
+            ((PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup)).BorderColor;
     }
 }

@@ -91,7 +91,7 @@ namespace CodeBox.CallTips
             var style = default(FontStyle);
             var color = default(Color);
 
-            var ps = (PopupStyle)editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+            var ps = (PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup);
             var doc = new XmlDocument();
             doc.LoadXml("<tip>" + text.Replace("<br>", "<br/>") + "</tip>");
             var node = doc.FirstChild;
@@ -129,7 +129,7 @@ namespace CodeBox.CallTips
 
                         if (Enum.TryParse(cn.Name, true, out ss))
                         {
-                            var so = editor.Styles.Theme.GetStyle(ss);
+                            var so = editor.Theme.GetStyle(ss);
                             style = so.FontStyle;
                             color = so.ForeColor;
                         }
@@ -211,7 +211,7 @@ namespace CodeBox.CallTips
 
                 var pt = new Point(x, y);
                 lastTipRectangle = new Rectangle(pt, size);
-                var ps = (PopupStyle)editor.Styles.Theme.GetStyle(StandardStyle.Popup);
+                var ps = (PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup);
                 g.FillRectangle(ps.BackColor.Brush(), lastTipRectangle);
                 g.DrawRectangle(ps.BorderColor.Pen(), lastTipRectangle);
                 draw(g, pt);

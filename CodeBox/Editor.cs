@@ -61,7 +61,6 @@ namespace CodeBox
             RightMargins = new MarginList(this);
             BottomMargins = new MarginList(this);
             Info = new EditorInfo(this);
-
             CaretRenderer = new CaretRenderer(this);
             Renderer = new Renderer(this);
             Scroll = new ScrollingManager(this);
@@ -74,11 +73,11 @@ namespace CodeBox
             AffinityManager = new AffinityManager(this);
             Search = new SearchManager(this);
             Settings = settings;
-            Styles = new StyleManager(this, 
-                (IThemeComponent)ComponentCatalog.Instance.GetComponent((Identifier)"theme.default"));
-
+            Styles = new StyleManager(this);
+            Theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
             Text = "";
             InitializeBuffer(Buffer);
+
             timer.Tick += Tick;
         }
 
@@ -96,7 +95,7 @@ namespace CodeBox
 
             if (data != null && data.Length > 0)
             {
-                RunCommand((Identifier)"test.openfile", data[data.Length - 1]);
+                RunCommand((Identifier)"file.openfile", data[data.Length - 1]);
             }
 
             base.OnDragDrop(drgevent);
@@ -161,7 +160,7 @@ namespace CodeBox
 
             var dt = DateTime.Now;
 
-            e.Graphics.FillRectangle(Styles.Theme.DefaultStyle.BackColor.Brush(),
+            e.Graphics.FillRectangle(Theme.DefaultStyle.BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -434,20 +433,28 @@ namespace CodeBox
             return exec != null ? exec.Execute(this, commandKey, args) : false;
         }
 
-        public override Color BackColor => Styles.Theme.DefaultStyle.BackColor;
+        public override Color BackColor => Theme.DefaultStyle.BackColor;
 
-        public override Color ForeColor => Styles.Theme.DefaultStyle.ForeColor;
+        public override Color ForeColor => Theme.DefaultStyle.ForeColor;
 
         public override Font Font => Settings.Font;
 
         public void DetachBuffer()
         {
-            Buffer.Views.Remove(this);
-            AttachBuffer(new DocumentBuffer(Document.FromString(""), null, Encoding.UTF8));
+            var buf = Buffer;
+
+            if (buf != null)
+            {
+                buf.ScrollPosition = Scroll.ScrollPosition;
+                buf.Views.Remove(this);
+            }
         }
 
         public void AttachBuffer(IBuffer buf)
         {
+            if (Buffer != null)
+                DetachBuffer();
+
             var buffer = buf as DocumentBuffer;
 
             if (buffer == null)
@@ -464,6 +471,7 @@ namespace CodeBox
                     .GetGrammarByFile(buffer.File)?.Key;
                 InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();
+                Scroll.ScrollPosition = buffer.ScrollPosition;
                 Styles.RestyleDocument();
                 Folding.RebuildFolding(full: true);
                 Redraw();
@@ -479,6 +487,11 @@ namespace CodeBox
                 if (@lock != null)
                     @lock.Release();
             }
+        }
+
+        void IView.Close()
+        {
+            FindForm().Close();
         }
 
         [Browsable(false)]
@@ -612,6 +625,9 @@ namespace CodeBox
 
         [Browsable(false)]
         public SearchManager Search { get; }
+
+        [Browsable(false)]
+        public IThemeComponent Theme { get; }
 
         IBuffer IView.Buffer => Buffer;
 

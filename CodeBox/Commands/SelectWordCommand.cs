@@ -22,8 +22,8 @@ namespace CodeBox.Commands
 
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (sel.Caret != View.Caret)
-                return Clean;
+            //if (sel.Caret != View.Caret)
+            //    return Clean;
 
             var caret = sel.Caret;
             var range = SelectWord(View, caret);

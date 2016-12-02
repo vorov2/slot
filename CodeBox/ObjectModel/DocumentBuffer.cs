@@ -8,6 +8,7 @@ using CodeBox.CallTips;
 using System.Text;
 using CodeBox.Core.ViewModel;
 using System.IO;
+using System.Drawing;
 
 namespace CodeBox.ObjectModel
 {
@@ -100,6 +101,8 @@ namespace CodeBox.ObjectModel
             foreach (var e in Views)
                 e.Redraw();
         }
+
+        public Point ScrollPosition { get; internal set; }
 
         internal bool LastAtomicChange { get; set; }
 

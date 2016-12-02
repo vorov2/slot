@@ -31,6 +31,7 @@ namespace CodeBox.Core.ComponentModel
             try
             {
                 container.ComposeParts(this);
+                container.ComposeParts(App.Instance);
             }
             catch (CompositionException ex)
             {

@@ -21,11 +21,8 @@ namespace CodeBox.Test
     [ComponentData("test")]
     public sealed class TestCommandDispatcher : CommandDispatcher
     {
-        [Import("viewmanager.default", typeof(IComponent))]
+        [Import]
         private IViewManager viewManager = null;
-
-        [Import("buffermanager.default", typeof(IComponent))]
-        private IBufferManager bufferManager = null;
 
         [Command]
         public void CommandPalette(string commandName)
@@ -51,90 +48,9 @@ namespace CodeBox.Test
             theme.ChangeTheme(themeName);
         }
 
-        [Command]
-        public void NewWindow()
-        {
-            var act = viewManager.GetActiveView();
-            var view = viewManager.CreateView();
-            view.AttachBuffer(act.Buffer);
-        }
-
-        [Command]
-        public void OpenFile(string fileName, Encoding enc = null)
-        {
-            var fi = new FileInfo(Uri.UnescapeDataString(fileName));
-            var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
-            OpenBuffer(buffer);
-        }
-
-        [Command]
-        public void NewFile()
-        {
-            var buffer = bufferManager.CreateBuffer();
-            OpenBuffer(buffer);
-        }
-
-        [Command]
-        public void SaveFile(string fileName = null)
-        {
-            var view = viewManager.GetActiveView();
-            var buffer = view.Buffer as IMaterialBuffer;
-
-            if (buffer == null)
-            {
-                //log
-                //basically impossible situation
-                return;
-            }
-
-            var fi = fileName != null
-                ? new FileInfo(Path.Combine(buffer.File?.Directory != null 
-                    ? buffer.File.Directory.FullName : Environment.CurrentDirectory, fileName))
-                : buffer.File;
-            bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
-        }
-
-        [Command]
-        public void OpenRecentFile(string fileName)
-        {
-            var buf = bufferManager.EnumerateBuffers()
-                .FirstOrDefault(b => b.File.Name.IndexOf(fileName, StringComparison.OrdinalIgnoreCase) != -1);
-            OpenBuffer(buf);
-        }
-
-        private void OpenBuffer(IBuffer buf)
-        {
-            if (buf != null)
-            {
-                var view = viewManager.GetActiveView();
-                view.AttachBuffer(buf);
-
-                if (buf?.File.Directory != null)
-                    Directory.SetCurrentDirectory(buf.File.Directory.FullName);
-            }
-        }
     }
 
-    [Export(typeof(IComponent))]
-    [ComponentData("values.recentdocs")]
-    public sealed class RecentDocsValueProvider : IArgumentValueProvider
-    {
-        [Import("viewmanager.default", typeof(IComponent))]
-        private IViewManager viewManager = null;
-
-        [Import("buffermanager.default", typeof(IComponent))]
-        private IBufferManager bufferManager = null;
-
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
-        {
-            var str = curvalue as string;
-            var cur = viewManager.GetActiveView().Buffer;
-            return bufferManager.EnumerateBuffers()
-                .Where(b => b != cur && (str == null || b.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1))
-                .OrderByDescending(b => b.LastAccess)
-                .Select(b => new ValueItem(b.File.Name, b.File.DirectoryName));
-        }
-    }
+    
 
     [Export(typeof(IComponent))]
     [ComponentData("values.themes")]
@@ -150,20 +66,7 @@ namespace CodeBox.Test
         }
     }
 
-    [Export(typeof(IComponent))]
-    [ComponentData("values.encoding")]
-    public sealed class EncodingValueProvider : IArgumentValueProvider
-    {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
-        {
-            var str = curvalue as string;
-
-            return Encoding.GetEncodings()
-                .Where(e => str == null || e.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
-                .Select(e => new ValueItem(e.Name, e.DisplayName))
-                .OrderBy(e => e.Value);
-        }
-    }
+    
 
     [Export(typeof(IComponent))]
     [ComponentData("values.commands")]
@@ -199,42 +102,5 @@ namespace CodeBox.Test
         }
     }
 
-    [Export(typeof(IComponent))]
-    [ComponentData("values.systempath")]
-    public sealed class SystemPathValueProvider : IArgumentValueProvider
-    {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
-        {
-            var str = curvalue as string ?? "";
-            return GetPathElements(str) ?? Enumerable.Empty<ValueItem>();
-        }
-
-        private IEnumerable<ValueItem> GetPathElements(string pat)
-        {
-            if (pat.IndexOfAny(Path.GetInvalidPathChars()) != -1)
-                return null;
-
-            try
-            {
-                if (pat.EndsWith("\\") || pat.EndsWith("//"))
-                    return Directory.EnumerateFileSystemEntries(pat)
-                        .Where(v => v.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new ValueItem(sy));
-                else
-                {
-                    FileInfo fi;
-                    var dir = string.IsNullOrWhiteSpace(pat) || (fi = new FileInfo(pat)).Directory == null
-                        ? new DirectoryInfo(Environment.CurrentDirectory) : fi.Directory;
-                    var loc = Environment.CurrentDirectory == dir.FullName;
-                    return dir.EnumerateFileSystemInfos()
-                        .Where(v => (loc ? v.Name : v.FullName).StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new ValueItem(loc ? sy.Name : sy.FullName));
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-    }
+    
 }

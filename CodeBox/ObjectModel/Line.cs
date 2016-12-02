@@ -1,4 +1,5 @@
 ﻿using CodeBox.Affinity;
+using CodeBox.ComponentModel;
 using CodeBox.Folding;
 using CodeBox.Styling;
 using System;
@@ -182,7 +183,7 @@ namespace CodeBox.ObjectModel
             return AppliedStyle.Empty;
         }
 
-        internal TextStyle GetStyle(int index, StyleManager man)
+        internal TextStyle GetStyle(int index, IThemeComponent theme)
         {
             var ret = default(TextStyle);
 
@@ -191,16 +192,16 @@ namespace CodeBox.ObjectModel
                 if (index >= a.Start && index <= a.End)
                 {
                     if (ret == null)
-                        ret = (TextStyle)man.Theme.GetStyle(a.StyleId);
+                        ret = (TextStyle)theme.GetStyle(a.StyleId);
                     else
                     {
-                        var next = (TextStyle)man.Theme.GetStyle(a.StyleId);
+                        var next = (TextStyle)theme.GetStyle(a.StyleId);
                         ret = ret.Combine(next);
                     }
                 }
             }
 
-            ret = ret ?? (TextStyle)man.Theme.DefaultStyle;
+            ret = ret ?? (TextStyle)theme.DefaultStyle;
             return ret;
         }
         #endregion

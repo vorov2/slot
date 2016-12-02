@@ -10,8 +10,12 @@
             }
         ]
     },
+
+
+
+    //File
     {
-        "key": "test.openfile",
+        "key": "file.openfile",
         "alias": "f-o",
         "title": "Open a file",
         "arguments": [
@@ -28,7 +32,7 @@
         ]
     },
     {
-        "key": "test.openrecentfile",
+        "key": "file.openrecentfile",
         "alias": "f-or",
         "title": "Open a recent file",
         "arguments": [
@@ -39,7 +43,18 @@
         ]
     },
     {
-        "key": "test.savefile",
+        "key": "file.openmodifiedfile",
+        "alias": "f-om",
+        "title": "Open a modified file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "valueProvider": "values.modifieddocs"
+            }
+        ]
+    },
+    {
+        "key": "file.savefile",
         "alias": "f-s",
         "title": "Save file",
         "arguments": [
@@ -50,12 +65,35 @@
         ]
     },
     {
-        "key": "test.newfile",
+        "key": "file.newfile",
+        "alias": "f-n",
         "title": "New file"
     },
     {
-        "key": "test.newwindow",
+        "key": "file.newwindow",
+        "alias": "f-wn",
         "title": "New window"
+    },
+    {
+        "key": "file.closewindow",
+        "alias": "f-wc",
+        "title": "Close window"
+    },
+    {
+        "key": "file.switchview",
+        "alias": "f-ws",
+        "title": "Switch view",
+        "arguments": [
+            {
+                "name": "viewName",
+                "valueProvider": "values.views"
+            }
+        ]
+    },
+    {
+        "key": "file.switchbuffer",
+        "alias": "f-bs",
+        "title": "Switch buffer"
     },
 
 

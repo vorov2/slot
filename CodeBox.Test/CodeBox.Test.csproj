@@ -123,6 +123,10 @@
       <Project>{2c727444-c7dd-4db3-8546-964f4b354242}</Project>
       <Name>Json</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Util\StringMacro\StringMacro.csproj">
+      <Project>{b807abf9-7e51-4508-8e5e-5679429a1a2b}</Project>
+      <Name>StringMacro</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="test.htm">

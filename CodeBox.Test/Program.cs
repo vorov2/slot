@@ -33,15 +33,15 @@ namespace CodeBox.Test
 
             //SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
+            CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
 
             var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
             theme.ChangeTheme("dark");
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
-            var cmd = (Identifier)"test.openfile";
+            var cmd = (Identifier)"file.openfile";
             var exec = ComponentCatalog.Instance.GetComponent(cmd.Namespace) as ICommandDispatcher;
             exec.Execute(ed, cmd, fl);
-
 
             Application.Run();
         }

@@ -9,6 +9,8 @@ namespace CodeBox.Core.ViewModel
 
         void DetachBuffer();
 
+        void Close();
+
         IBuffer Buffer { get; }
     }
 }

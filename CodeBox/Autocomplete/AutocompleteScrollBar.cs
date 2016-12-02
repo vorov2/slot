@@ -72,7 +72,7 @@ namespace CodeBox.Autocomplete
 
             var scY = window.ScrollPosition;
             var scHeight = window.ScrollMax;
-            var sbs = (MarginStyle)editor.Styles.Theme.GetStyle(StandardStyle.ScrollBars);
+            var sbs = (MarginStyle)editor.Theme.GetStyle(StandardStyle.ScrollBars);
             g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             var caretSize = ((double)bounds.Height / (bounds.Height + scHeight)) * bounds.Height;

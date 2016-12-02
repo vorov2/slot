@@ -11,12 +11,9 @@ using System.Windows.Forms;
 
 namespace CodeBox.Test
 {
-    [Export(Name, typeof(IComponent))]
-    [ComponentData(Name)]
+    [Export(typeof(IViewManager))]
     public sealed class ViewManager : IViewManager
     {
-        public const string Name = "viewmanager.default";
-
         public IView CreateView()
         {
             var frm = new MainForm();
@@ -26,14 +23,32 @@ namespace CodeBox.Test
 
         public IView GetActiveView()
         {
-            MainForm frm = Form.ActiveForm as MainForm;
+            var frm = Form.ActiveForm as MainForm;
 
             if (frm == null)
-                frm = Application.OpenForms.OfType<MainForm>()
+                frm = Application.OpenForms
+                    .OfType<MainForm>()
                     .OrderByDescending(f => f.Activations)
                     .FirstOrDefault();
 
             return frm?.Editor;
+        }
+
+        public IEnumerable<IView> EnumerateViews()
+        {
+            return Application.OpenForms
+                .OfType<MainForm>()
+                .OrderByDescending(f => f.Activations)
+                .Distinct()
+                .Select(f => f.Editor);
+        }
+
+        public void ActivateView(IView view)
+        {
+            var editor = view as Editor;
+
+            if (editor != null)
+                editor.FindForm().Activate();
         }
     }
 }

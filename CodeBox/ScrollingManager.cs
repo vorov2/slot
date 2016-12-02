@@ -333,9 +333,9 @@ namespace CodeBox
             }
         }
 
-        public Point ScrollPosition { get; private set; }
+        public Point ScrollPosition { get; internal set; }
 
-        public Size ScrollBounds { get; private set; }
+        public Size ScrollBounds { get; internal set; }
 
         internal bool SuppressOnScroll { get; set; }
     }

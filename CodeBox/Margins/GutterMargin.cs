@@ -29,7 +29,7 @@ namespace CodeBox.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            g.FillRectangle(Editor.Styles.Theme.DefaultStyle.BackColor.Brush(), bounds);
+            g.FillRectangle(Editor.Theme.DefaultStyle.BackColor.Brush(), bounds);
             return true;
         }
 

@@ -27,6 +27,8 @@ namespace CodeBox.Test
 {
     public partial class MainForm : Form
     {
+        private Editor ed;
+
         public MainForm()
         {
             InitializeComponent();
@@ -40,8 +42,7 @@ namespace CodeBox.Test
 
         private void Initialize()
         {
-            AllowDrop = true;
-            CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
+            ed = new Editor { Dock = DockStyle.Fill };
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed.Settings);
 
             if (ed.Settings.ShowLineNumbers)
@@ -53,7 +54,7 @@ namespace CodeBox.Test
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            
+            Controls.Add(ed);
             //var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
             //ed.Styles.Theme = coll;
         }
@@ -78,5 +79,11 @@ namespace CodeBox.Test
         public Editor Editor => ed;
 
         public int Activations { get; private set; }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (App.Instance.Terminating || Application.OpenForms.Count > 1 || !(e.Cancel = !App.Instance.Close()))
+                ed.DetachBuffer();
+        }
     }
 }

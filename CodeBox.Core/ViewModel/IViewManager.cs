@@ -1,5 +1,6 @@
 ﻿using CodeBox.Core.ComponentModel;
 using System;
+using System.Collections.Generic;
 
 namespace CodeBox.Core.ViewModel
 {
@@ -8,5 +9,9 @@ namespace CodeBox.Core.ViewModel
         IView CreateView();
 
         IView GetActiveView();
+
+        void ActivateView(IView view);
+
+        IEnumerable<IView> EnumerateViews();
     }
 }

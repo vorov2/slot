@@ -1,7 +1,11 @@
 ﻿{
-    "test.openfile": "ctrl+o",
-    "test.savefile": "ctrl+s",
     "test.commandpalette": "f1",
+
+    "file.newfile": "ctrl+n",
+    "file.newwindow": "ctrl+shift+n",
+    "file.openfile": "ctrl+o",
+    "file.savefile": "ctrl+s",
+    "file.switchbuffer": "ctrl+tab",
 
     "editor.showsearch": "ctrl+f",
     "editor.searchnext": "f3",
@@ -31,7 +35,7 @@
     "editor.addcaret": "ctrl+click",
     "editor.selectnormal": [ "move+click", "ctrl+move+click" ],
     "editor.selectblock": "alt+move+click",
-    "editor.selectword": "doubleclick",
+    "editor.selectword": [ "doubleclick", "ctrl+d" ],
     "editor.selectwordadd": "ctrl+doubleclick",
     "editor.unindent": "shift+tab",
     "editor.indent": "tab",
