@@ -20,7 +20,7 @@ namespace CodeBox.Commands
 
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            insertChar = new Character(((Editor)View).InputChar);
+            insertChar = new Character(View.InputChar);
 
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;

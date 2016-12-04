@@ -77,7 +77,8 @@ namespace CodeBox
                 cmd.View = editor;
                 exp = cmd.Execute(lastSel, args);
 
-                if (exp.Has(Modify) && (!editor.Buffer.LastAtomicChange || !exp.Has(AtomicChange)) && !editor.LimitedMode)
+                if (exp.Has(Modify) && (!editor.Buffer.LastAtomicChange || !exp.Has(AtomicChange)
+                    || editor.Overtype) && !editor.LimitedMode)
                     thisUndo = editor.Buffer.BeginUndoAction();
 
                 if (exp.Has(Modify) && !editor.LimitedMode)
