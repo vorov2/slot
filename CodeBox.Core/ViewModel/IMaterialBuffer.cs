@@ -5,6 +5,8 @@ namespace CodeBox.Core.ViewModel
 {
     public interface IMaterialBuffer : IBuffer
     {
+        string Mode { get; set; }
+
         bool IsDirty { get; }
 
         void Serialize(Stream stream);

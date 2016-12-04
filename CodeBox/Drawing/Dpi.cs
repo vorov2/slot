@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace CodeBox.Drawing
 {
-    internal static class Dpi
+    public static class Dpi
     {
         private static float? dpiX;
         private static float? dpiY;

@@ -162,5 +162,17 @@ namespace CodeBox.ObjectModel
         public Encoding Encoding { get; internal set; }
 
         public DateTime LastAccess { get; set; }
+
+        public string Mode
+        {
+            get { return GrammarKey; }
+            set
+            {
+                GrammarKey = value;
+
+                foreach (var ed in Views)
+                    ed.Styles.RestyleDocument();
+            }
+        }
     }
 }

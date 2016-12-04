@@ -1,6 +1,7 @@
 ﻿using CodeBox.Folding;
 using CodeBox.Margins;
 using CodeBox.ObjectModel;
+using CodeBox.StatusBar;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -221,7 +222,7 @@ namespace CodeBox.Drawing
 
                 if (vertical)
                     bounds = new Rectangle(start, editor.Info.TextTop, m.CalculateSize(),
-                        editor.ClientSize.Height - editor.Info.TextTop);
+                        editor.ClientSize.Height - editor.Info.TextTop); //HACK
                 else if (top)
                     bounds = new Rectangle(0, start, editor.ClientSize.Width, m.CalculateSize());
                 else

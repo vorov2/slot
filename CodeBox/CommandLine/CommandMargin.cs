@@ -55,7 +55,7 @@ namespace CodeBox.CommandLine
                 var shift = Dpi.GetHeight(2);
                 g.FillRectangle(ed.BackColor.Brush(),
                     new Rectangle(ed.Left - Editor.Info.SmallCharWidth, shift,
-                    ed.Width + Editor.Info.SmallCharWidth, bounds.Height - shift * 2));
+                    ed.Width + Editor.Info.SmallCharWidth * 2, bounds.Height - shift * 2));
             }
 
             return true;
@@ -120,7 +120,7 @@ namespace CodeBox.CommandLine
         private void ShowAutocompleteWindow(IArgumentValueProvider prov)
         {
             var wnd = GetAutocompleteWindow();
-            wnd.PreferredWidth = commandEditor.Width;
+            wnd.PreferredWidth = commandEditor.Width + Editor.Info.SmallCharWidth*2;
             var items = prov.EnumerateArgumentValues(lastLookupInput);
 
             if (items.Any()
@@ -128,7 +128,7 @@ namespace CodeBox.CommandLine
                     || !items.First().Value.Equals(lastLookupInput, StringComparison.OrdinalIgnoreCase)))
             {
                 wnd.SetItems(items);
-                wnd.Left = commandEditor.Left;
+                wnd.Left = commandEditor.Left - Editor.Info.SmallCharWidth;
                 wnd.Top = lastBounds.Top + lastBounds.Height;
                 window.Trimming = currentAffinity == ArgumentAffinity.FilePath ?
                     StringTrimming.EllipsisPath : StringTrimming.EllipsisCharacter;

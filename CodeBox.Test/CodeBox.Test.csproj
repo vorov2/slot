@@ -63,6 +63,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="samples\calc.cs" />
+    <Compile Include="SplitContainerEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ViewManager.cs" />
     <Compile Include="_TestCommand.cs" />
     <EmbeddedResource Include="MainForm.resx">

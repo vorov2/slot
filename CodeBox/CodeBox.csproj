@@ -68,7 +68,6 @@
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
-    <Compile Include="Commands\ChangeModeCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
     <Compile Include="Commands\DeleteLineCommand.cs" />
     <Compile Include="Commands\EditorCommand.cs" />
@@ -211,6 +210,9 @@
     </Compile>
     <Compile Include="Search\ShowSearchCommand.cs" />
     <Compile Include="SettingsReader.cs" />
+    <Compile Include="StatusBar\StatusBarControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Styling\SearchItemStyle.cs" />
     <Compile Include="Styling\MarginStyle.cs" />
     <Compile Include="Styling\PopupStyle.cs" />

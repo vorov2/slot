@@ -22,6 +22,7 @@ using CodeBox.Core.CommandModel;
 using CodeBox.CommandLine;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ComponentModel;
+using CodeBox.StatusBar;
 
 namespace CodeBox.Test
 {
@@ -49,7 +50,17 @@ namespace CodeBox.Test
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
-            Controls.Add(ed);
+            var statusBar = new StatusBarControl(ed) { Dock = DockStyle.Bottom };
+            var grm = ComponentCatalog.Instance.GetComponent((Identifier)"grammar.default") as IGrammarComponent;
+            statusBar.Tiles.Add(new ModeTile(ed));
+            statusBar.Tiles.Add(new LineEndingTile(ed));
+            statusBar.Tiles.Add(new EncodingTile(ed));
+
+
+            splitContainer.Panel1.Controls.Add(ed);
+            splitContainer.Panel1.Controls.Add(statusBar);
+            //statusBar.BringToFront();
+            ed.Paint += (o, e) => statusBar.Invalidate();
             //var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
             //ed.Styles.Theme = coll;
         }
@@ -58,7 +69,12 @@ namespace CodeBox.Test
         {
             return Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, fileName);
         }
-        
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+        }
+
 
         private void Form1_Activated(object sender, EventArgs e)
         {

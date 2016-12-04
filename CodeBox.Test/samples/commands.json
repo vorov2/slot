@@ -98,7 +98,7 @@
 
 
     {
-        "key": "editor.changemode",
+        "key": "test.changemode",
         "alias": "mode",
         "title": "Change language mode",
         "arguments": [
