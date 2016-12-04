@@ -50,7 +50,8 @@ namespace CodeBox.Drawing
         private void Tick(object sender, EventArgs e)
         {
             if ((!editor.Focused && timerDraw)
-                || OverlapRectangle(editor.CallTips.TipRectangle))
+                || OverlapRectangle(editor.CallTips.TipRectangle)
+                || editor.ReadOnly)
                 return;
 
             using (var g = editor.CreateGraphics())
@@ -137,15 +138,17 @@ namespace CodeBox.Drawing
         private int GetCaretWidth(Graphics g)
         {
             return BlockCaret ?
-                editor.Info.CharWidth : Dpi.GetWidth(2);
+                editor.Info.CharWidth : Dpi.GetWidth(ThinCaret ? 1 : 2);
         }
 
         private int GetCaretHeight(Graphics g)
         {
-            return BlockCaret ? Dpi.GetHeight(2) : editor.Info.LineHeight;
+            return BlockCaret ? Dpi.GetHeight(ThinCaret ? 1 : 2) : editor.Info.LineHeight;
         }
 
         public int BlinkInterval => timer.Interval;
+
+        public bool ThinCaret { get; set; }
 
         private bool _blockCaret;
         public bool BlockCaret

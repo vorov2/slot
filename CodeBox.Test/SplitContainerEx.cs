@@ -12,7 +12,7 @@ namespace CodeBox.Test
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
-            SplitterWidth = Dpi.GetHeight(1);
+            SplitterWidth = Dpi.GetHeight(4);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

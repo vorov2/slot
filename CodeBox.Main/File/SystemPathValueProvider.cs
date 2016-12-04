@@ -14,31 +14,31 @@ namespace CodeBox.Main.File
     {
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
-            var str = curvalue as string ?? "";
+            var str = curvalue as string;
             return GetPathElements(str) ?? Enumerable.Empty<ValueItem>();
         }
 
         private IEnumerable<ValueItem> GetPathElements(string pat)
         {
-            if (pat.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            pat = string.IsNullOrWhiteSpace(pat) ? null : pat;
+
+            if (pat != null && pat.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 return null;
 
             try
             {
-                if (pat.EndsWith("\\") || pat.EndsWith("//"))
-                    return Directory.EnumerateFileSystemEntries(pat)
-                        .Where(v => v.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new ValueItem(sy));
-                else
-                {
-                    FileInfo fi;
-                    var dir = string.IsNullOrWhiteSpace(pat) || (fi = new FileInfo(pat)).Directory == null
-                        ? new DirectoryInfo(Environment.CurrentDirectory) : fi.Directory;
-                    var loc = Environment.CurrentDirectory == dir.FullName;
-                    return dir.EnumerateFileSystemInfos()
-                        .Where(v => (loc ? v.Name : v.FullName).StartsWith(pat, StringComparison.OrdinalIgnoreCase))
-                        .Select(sy => new ValueItem(loc ? sy.Name : sy.FullName));
-                }
+                var cur = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+                var file = pat != null ? new FileInfo(pat) : null;
+                var path = file != null && (file.Directory != null && file.Directory.Exists) ? file.DirectoryName
+                    : pat != null && pat.EndsWith(Path.DirectorySeparatorChar.ToString()) ? pat
+                    : cur;
+
+                return Directory.EnumerateDirectories(path)
+                    .Select(d => d + Path.DirectorySeparatorChar)
+                    .Concat(Directory.EnumerateFiles(path))
+                    .Select(fi => fi.Replace(cur, ""))
+                    .Where(fi => pat == null || fi.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
+                    .Select(fi => new ValueItem(fi));
             }
             catch (Exception)
             {

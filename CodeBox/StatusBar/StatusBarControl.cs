@@ -190,6 +190,32 @@ namespace CodeBox.StatusBar
         protected virtual void OnClick() => Click?.Invoke(this, EventArgs.Empty);
     }
 
+
+
+    public sealed class HelpTile : StatusBarTile
+    {
+        private readonly Editor editor;
+
+        public HelpTile(Editor editor) : base(TileAlignment.Right)
+        {
+            this.editor = editor;
+        }
+
+        public override string Text
+        {
+            get { return "?"; }
+            set { base.Text = value; }
+        }
+
+        protected internal override void PerformClick()
+        {
+            var key = (Identifier)"test.commandpalette";
+            var disp = ComponentCatalog.Instance.GetComponent(key.Namespace) as ICommandDispatcher;
+            disp.Execute(editor, key);
+            base.PerformClick();
+        }
+    }
+
     public sealed class ModeTile : StatusBarTile
     {
         private readonly Editor editor;

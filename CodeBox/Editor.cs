@@ -157,7 +157,6 @@ namespace CodeBox
         protected override void OnPaint(PaintEventArgs e)
         {
             CaretRenderer.Suspend();
-
             var dt = DateTime.Now;
 
             e.Graphics.FillRectangle(Theme.DefaultStyle.BackColor.Brush(),
@@ -585,6 +584,13 @@ namespace CodeBox
         public Pos Caret { get; private set; }
 
         internal char InputChar { get; private set; }
+
+        [Browsable(false)]
+        public bool ThinCaret
+        {
+            get { return CaretRenderer.ThinCaret; }
+            set { CaretRenderer.ThinCaret = value; }
+        }
 
         [Browsable(false)]
         public StyleManager Styles { get; }

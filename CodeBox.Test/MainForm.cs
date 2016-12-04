@@ -29,11 +29,13 @@ namespace CodeBox.Test
     public partial class MainForm : Form
     {
         private Editor ed;
+        private Editor output;
 
         public MainForm()
         {
             InitializeComponent();
             Initialize();
+            InitializeOutput();
         }
 
         private void Initialize()
@@ -52,9 +54,11 @@ namespace CodeBox.Test
 
             var statusBar = new StatusBarControl(ed) { Dock = DockStyle.Bottom };
             var grm = ComponentCatalog.Instance.GetComponent((Identifier)"grammar.default") as IGrammarComponent;
+            statusBar.Tiles.Add(new HelpTile(ed));
             statusBar.Tiles.Add(new ModeTile(ed));
             statusBar.Tiles.Add(new LineEndingTile(ed));
             statusBar.Tiles.Add(new EncodingTile(ed));
+            statusBar.Tiles.Add(new OutputToggleTile(this));
             statusBar.Tiles.Add(new PosTile(ed));
             statusBar.Tiles.Add(new OvrTile(ed));
 
@@ -66,6 +70,30 @@ namespace CodeBox.Test
             //var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
             //ed.Styles.Theme = coll;
         }
+
+        private void InitializeOutput()
+        {
+            output = new Editor { Dock = DockStyle.Fill };
+            output.ReadOnly = true;
+            output.LeftMargins.Add(new GutterMargin(output));
+            output.RightMargins.Add(new ScrollBarMargin(output, Orientation.Vertical));
+            output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));
+            output.ThinCaret = true;
+            splitContainer.Panel2.Controls.Add(output);
+        }
+
+        //protected override CreateParams CreateParams
+        //{
+        //    get
+        //    {
+        //        CreateParams cp = base.CreateParams;
+        //        cp.ExStyle |= 0x02000000;   // WS_EX_COMPOSITED
+        //        return cp;
+        //    }
+        //}
+
+
+        public SplitContainer SplitContainer => splitContainer;
 
         private string LocalFile(string fileName)
         {
