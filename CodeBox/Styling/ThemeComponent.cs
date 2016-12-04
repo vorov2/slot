@@ -89,6 +89,7 @@ namespace CodeBox.Styling
                     : style == StandardStyle.LineNumbers ? new MarginStyle()
                     : style == StandardStyle.ScrollBars ? new MarginStyle()
                     : style == StandardStyle.Folding ? new MarginStyle()
+                    : style == StandardStyle.StatusBar ? new MarginStyle()
                     : style == StandardStyle.Popup ? new PopupStyle()
                     : style == StandardStyle.Caret ? new Style()
                     : style == StandardStyle.CurrentLine ? new Style()

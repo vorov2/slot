@@ -55,6 +55,8 @@ namespace CodeBox.Test
             statusBar.Tiles.Add(new ModeTile(ed));
             statusBar.Tiles.Add(new LineEndingTile(ed));
             statusBar.Tiles.Add(new EncodingTile(ed));
+            statusBar.Tiles.Add(new PosTile(ed));
+            statusBar.Tiles.Add(new OvrTile(ed));
 
 
             splitContainer.Panel1.Controls.Add(ed);

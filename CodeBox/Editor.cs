@@ -522,6 +522,7 @@ namespace CodeBox
                 {
                     Buffer.Overtype = value;
                     CaretRenderer.BlockCaret = value;
+                    Buffer.RequestRedraw();
                 }
             }
         }

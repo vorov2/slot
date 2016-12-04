@@ -25,39 +25,43 @@ namespace CodeBox.StatusBar
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
             Editor = editor;
-            Height = editor.Info.LineHeight + Dpi.GetHeight(2);
+            Height = editor.Info.LineHeight + Dpi.GetHeight(4);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             var g = e.Graphics;
             var bounds = e.ClipRectangle;
-
-            var backColor = Editor.Theme.GetStyle(StandardStyle.CommandBar).BackColor;//"#007ACC");
-            var foreColor = Editor.Theme.DefaultStyle.ForeColor;
-            g.FillRectangle(backColor.Brush(), bounds);
+            var style = (MarginStyle)Editor.Theme.GetStyle(StandardStyle.StatusBar);
+            g.FillRectangle(style.BackColor.Brush(), bounds);
 
             var ys = Dpi.GetHeight(2);
-            g.FillRectangle(ControlPaint.Dark(Editor.Theme.DefaultStyle.BackColor, .05f).Brush(),
+            g.FillRectangle(style.BackColor.Brush(),
                 new Rectangle(bounds.X, bounds.Y, bounds.Width, ys));
 
             var rights = Tiles.Where(t => t.Alignment == TileAlignment.Right);
             var pad = Dpi.GetWidth(6);
             var x = bounds.X + bounds.Width - pad;
+            var space = Editor.Info.SmallCharWidth;
 
             foreach (var tile in rights)
             {
+                var foreColor = style.ForeColor;
                 tile.Font = Editor.Settings.SmallFont;
                 var width = tile.MeasureWidth(g);
                 x -= width;
-                var rect = new Rectangle(x, bounds.Y + ys, width, bounds.Height - ys);
+                var rect = new Rectangle(x, bounds.Y + ys, width, bounds.Height - ys*2);
 
                 if (tile.Hover)
-                    g.FillRectangle(ControlPaint.Dark(backColor, .01f).Brush(), rect);
+                {
+                    g.FillRectangle(style.ActiveBackColor.Brush(), rect);
+                    foreColor = style.ActiveForeColor;
+                }
 
                 tile.Left = x;
                 tile.Right = x + width;
                 tile.Draw(g, foreColor, rect);
+                x -= space;
             }
 
             var lefts = Tiles.Where(t => t.Alignment == TileAlignment.Left);
@@ -65,17 +69,21 @@ namespace CodeBox.StatusBar
 
             foreach (var tile in lefts)
             {
+                var foreColor = style.ForeColor;
                 tile.Font = Editor.Settings.SmallFont;
                 var width = tile.MeasureWidth(g);
-                var rect = new Rectangle(x, 0, width, bounds.Height);
+                var rect = new Rectangle(x, bounds.Y + ys, width, bounds.Height - ys*2);
 
                 if (tile.Hover)
-                    g.FillRectangle(ControlPaint.Light(backColor, 0.3f).Brush(), rect);
+                {
+                    g.FillRectangle(style.ActiveBackColor.Brush(), rect);
+                    foreColor = style.ActiveForeColor;
+                }
 
-                tile.Draw(g, foreColor, new Rectangle(x, bounds.Y + ys, width, bounds.Height - ys));
+                tile.Draw(g, foreColor, rect);
                 tile.Left = x;
                 tile.Right = x + width;
-                x += width;
+                x += width + space;
             }
         }
 
@@ -255,6 +263,55 @@ namespace CodeBox.StatusBar
         protected internal override void PerformClick()
         {
             base.PerformClick();
+        }
+    }
+
+    public sealed class PosTile : StatusBarTile
+    {
+        private readonly Editor editor;
+
+        public PosTile(Editor editor) : base(TileAlignment.Left)
+        {
+            this.editor = editor;
+        }
+
+        public override string Text
+        {
+            get
+            {
+                var caret = editor.Buffer.Selections.Main.Caret;
+                return $"Ln {caret.Line + 1}, Ch {caret.Col + 1}";
+            }
+            set { base.Text = value; }
+        }
+
+        protected internal override void PerformClick()
+        {
+            base.PerformClick();
+        }
+    }
+    public sealed class OvrTile : StatusBarTile
+    {
+        private readonly Editor editor;
+
+        public OvrTile(Editor editor) : base(TileAlignment.Right)
+        {
+            this.editor = editor;
+        }
+
+        public override string Text
+        {
+            get
+            {
+                return editor.Overtype ? "OVR" : "INS";
+            }
+            set { base.Text = value; }
+        }
+
+        protected internal override void PerformClick()
+        {
+            editor.Overtype = !editor.Overtype;
+            editor.Focus();
         }
     }
 }

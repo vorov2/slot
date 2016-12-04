@@ -130,22 +130,19 @@ namespace CodeBox.Drawing
 
                 var cs = editor.Theme.GetStyle(StandardStyle.Caret);
                 g.FillRectangle(cs.ForeColor.Brush(), x, 
-                    BlockCaret ? y + editor.Info.LineHeight - h : y, w, h);
+                    BlockCaret ? y + editor.Info.CharHeight : y, w, h);
             }
         }
 
         private int GetCaretWidth(Graphics g)
         {
             return BlockCaret ?
-                editor.Info.CharWidth :
-                (int)Math.Round(g.DpiX / 96f) * 2;
+                editor.Info.CharWidth : Dpi.GetWidth(2);
         }
 
         private int GetCaretHeight(Graphics g)
         {
-            return BlockCaret ?
-                (int)Math.Round(g.DpiY / 96f) * 2 :
-                editor.Info.LineHeight;
+            return BlockCaret ? Dpi.GetHeight(2) : editor.Info.LineHeight;
         }
 
         public int BlinkInterval => timer.Interval;

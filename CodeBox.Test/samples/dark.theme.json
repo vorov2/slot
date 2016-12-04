@@ -21,6 +21,13 @@
         "borderColor": "#5F5F66"
     },
     {
+        "key": "margin.status",
+        "color": "#BFBFBF",
+        "backColor": "#161616",
+        "activeBackColor": "#1E1E1E",
+        "activeColor": "#CCCCCC"
+    },
+    {
         "key": "margin.commands",
         "color": "white",
         "backColor": "#2D2D30"

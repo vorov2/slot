@@ -98,6 +98,9 @@ namespace CodeBox.Styling
         SearchItem = 31,
 
         [FieldName("error")]
-        Error = 32
+        Error = 32,
+
+        [FieldName("margin.status")]
+        StatusBar = 33,
     }
 }
