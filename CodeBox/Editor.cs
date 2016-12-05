@@ -449,21 +449,26 @@ namespace CodeBox
 
         public void AttachBuffer(IBuffer buf)
         {
-            if (Buffer != null)
-                DetachBuffer();
-
             var buffer = buf as DocumentBuffer;
 
             if (buffer == null)
                 throw new NotSupportedException();
+
+            if (Buffer != null && buffer != Buffer)
+                DetachBuffer();
 
             var @lock = Buffer?.ObtainLock();
 
             try
             {
                 buffer.LastAccess = DateTime.Now;
-                buffer.Views.Add(this);
-                Buffer = buffer;
+
+                if (buffer != Buffer)
+                {
+                    buffer.Views.Add(this);
+                    Buffer = buffer;
+                }
+
                 Buffer.GrammarKey = ComponentCatalog.Instance.Grammars()
                     .GetGrammarByFile(buffer.File)?.Key;
                 InitializeBuffer(Buffer);

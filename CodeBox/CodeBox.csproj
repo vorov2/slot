@@ -180,8 +180,15 @@
     <Compile Include="CommandLine\CommandMargin.cs" />
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="Margins\TopMargin.cs" />
+    <Compile Include="Margins\VerticalScrollBarMargin.cs" />
     <Compile Include="MatchBracketManager.cs" />
     <Compile Include="MatchWordManager.cs" />
+    <Compile Include="Messages\MessageWindow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Messages\MessageWindowButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ObjectModel\DocumentBuffer.cs" />
     <Compile Include="ObjectModel\Character.cs" />
     <Compile Include="Commands\LeftCommand.cs" />
@@ -210,9 +217,17 @@
     </Compile>
     <Compile Include="Search\ShowSearchCommand.cs" />
     <Compile Include="SettingsReader.cs" />
+    <Compile Include="StatusBar\EncodingTile.cs" />
+    <Compile Include="StatusBar\HelpTile.cs" />
+    <Compile Include="StatusBar\LineEndingTile.cs" />
+    <Compile Include="StatusBar\ModeTile.cs" />
+    <Compile Include="StatusBar\OvrTile.cs" />
+    <Compile Include="StatusBar\PosTile.cs" />
     <Compile Include="StatusBar\StatusBarControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="StatusBar\StatusBarTile.cs" />
+    <Compile Include="StatusBar\TileAlignment.cs" />
     <Compile Include="Styling\SearchItemStyle.cs" />
     <Compile Include="Styling\MarginStyle.cs" />
     <Compile Include="Styling\PopupStyle.cs" />
@@ -244,6 +259,7 @@
       <Name>Json</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

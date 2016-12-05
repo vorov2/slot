@@ -47,7 +47,7 @@ namespace CodeBox.Test
                 ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
 
             ed.LeftMargins.Add(new FoldingMargin(ed));
-            ed.RightMargins.Add(new ScrollBarMargin(ed, Orientation.Vertical));
+            ed.RightMargins.Add(new VerticalScrollBarMargin(ed));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));

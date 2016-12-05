@@ -108,7 +108,7 @@ namespace CodeBox.CommandLine
                 window = new AutocompleteWindow(Editor) { MaxItems = 15, SmallFont = true };
                 window.Visible = false;
                 window.MouseDown += AutocompleteClick;
-                Editor.Controls.Add(window);
+                Editor.FindForm().Controls.Add(window);
                 window.BringToFront();
             }
 
@@ -369,7 +369,7 @@ namespace CodeBox.CommandLine
 
         private void ResetBuffer(string text = "")
         {
-            commandEditor.Text = text;
+            commandEditor.Buffer.Truncate(text);
             commandEditor.Buffer.CurrentLineIndicator = false;
             commandEditor.Buffer.ShowEol = false;
             commandEditor.Buffer.ShowLineLength = false;

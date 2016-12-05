@@ -60,6 +60,26 @@ namespace CodeBox.ObjectModel
             }
         }
 
+        public void Truncate(string text = "")
+        {
+            var @lock = ObtainLock();
+
+            try
+            {
+                Document.Lines.Clear();
+                Document.Lines.Add(Document.NewLine(text));
+                Selections.Set(new Pos(0, 0));
+                Edits = 0;
+
+                foreach (var v in Views)
+                    v.AttachBuffer(this);
+            }
+            finally
+            {
+                @lock.Release();
+            }
+        }
+
         public IEditorLock ObtainLock()
         {
             lockCount++;

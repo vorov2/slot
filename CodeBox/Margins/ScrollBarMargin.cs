@@ -10,11 +10,8 @@ using System.Windows.Forms;
 
 namespace CodeBox.Margins
 {
-    public sealed class ScrollBarMargin : Margin
+    public class ScrollBarMargin : Margin
     {
-        private bool mouseDown;
-        private int lastCaretPos;
-        private int lastCaretSize;
         private int diff;
 
         public ScrollBarMargin(Editor editor, Orientation orientation) : base(editor)
@@ -24,9 +21,9 @@ namespace CodeBox.Margins
 
         public override void Reset()
         {
-            lastCaretPos = 0;
-            lastCaretSize = 0;
-            mouseDown = false;
+            LastCaretPos = 0;
+            LastCaretSize = 0;
+            IsMouseDown = false;
             diff = 0;
         }
 
@@ -34,8 +31,8 @@ namespace CodeBox.Margins
         {
             if (IsCaretInLocation(loc))
             {
-                mouseDown = true;
-                diff = (Orientation == Orientation.Horizontal ? loc.X : loc.Y) - lastCaretPos;
+                IsMouseDown = true;
+                diff = (Orientation == Orientation.Horizontal ? loc.X : loc.Y) - LastCaretPos;
                 return MarginEffects.Redraw | MarginEffects.CaptureMouse;
             }
             else
@@ -48,13 +45,13 @@ namespace CodeBox.Margins
 
         public override MarginEffects MouseUp(Point loc)
         {
-            mouseDown = false;
+            IsMouseDown = false;
             return MarginEffects.Redraw;
         }
 
         public override MarginEffects MouseMove(Point loc)
         {
-            if (mouseDown)
+            if (IsMouseDown)
             {
                 var value = GetScrollValue(loc, false);
                 SetScrollPosition(value);
@@ -69,7 +66,7 @@ namespace CodeBox.Margins
             long max = GetMaximum();
             var v = Orientation == Orientation.Horizontal ? loc.X - Bounds.X : loc.Y - Bounds.Y;
             v -= diff;
-            var scrollSize = v / ((double)GetScrollSize() - lastCaretSize);
+            var scrollSize = v / ((double)GetScrollSize() - LastCaretSize);
             var ret = -(max * scrollSize);
             
             if (ret > 0)
@@ -101,10 +98,10 @@ namespace CodeBox.Margins
                 var perc = (bounds.Width - caretSize) / 100d;
                 var curpos = sc.Width != 0 ? (int)Math.Floor(Math.Floor(sc.X / (sc.Width / 100d)) * perc) : 0;
 
-                lastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle((mouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
-                    new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, lastCaretSize, bounds.Height));
-                lastCaretPos = bounds.X + Math.Abs(curpos);
+                LastCaretSize = (int)Math.Floor(caretSize);
+                g.FillRectangle((IsMouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
+                    new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, LastCaretSize, bounds.Height));
+                LastCaretPos = bounds.X + Math.Abs(curpos);
             }
             else
             {
@@ -116,50 +113,15 @@ namespace CodeBox.Margins
                 var perc = (bounds.Height - caretSize) / 100d;
                 var curpos = sc.Height != 0 ? (int)Math.Floor(Math.Floor(sc.Y / (sc.Height / 100d)) * perc) : 0;
 
-                lastCaretSize = (int)Math.Floor(caretSize);
+                LastCaretSize = (int)Math.Floor(caretSize);
                 var pos = bounds.Y + Math.Abs(curpos);
 
-                if (pos + lastCaretSize > Editor.ClientSize.Height)
-                    pos = Editor.ClientSize.Height - lastCaretSize;
+                if (pos + LastCaretSize > Editor.ClientSize.Height)
+                    pos = Editor.ClientSize.Height - LastCaretSize;
 
-                g.FillRectangle((mouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
-                    new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
-                lastCaretPos = pos;
-                var caretLine = Editor.Buffer.Selections.Main.Caret.Line;
-
-                foreach (var s in Editor.Buffer.Selections)
-                {
-                    var linePos = s.Caret.Line / (Editor.Lines.Count / 100d);
-                    var caretY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
-
-                    g.FillRectangle(Editor.Theme.DefaultStyle.ForeColor.Brush(), new Rectangle(bounds.X, (int)caretY, bounds.Width,
-                        (int)Math.Round(g.DpiY / 96f) * s.Caret.Line == caretLine ? 2 : 1));
-                }
-
-                if (Editor.Search.HasSearchResults)
-                {
-                    var hl = Editor.Theme.GetStyle(StandardStyle.SearchItem);
-                    var markHeight = (int)(bounds.Height / Editor.Lines.Count);
-                    markHeight = markHeight < 2 ? 2 : markHeight;
-                    var lastLine = -1;
-
-                    foreach (var f in Editor.Search.EnumerateSearchResults())
-                    {
-                        if (f.Line == lastLine)
-                            continue;
-
-                        var linePos = f.Line / (Editor.Lines.Count / 100d);
-                        var markY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
-                        var w = Dpi.GetWidth(4);
-
-                        g.FillRectangle(hl.LineColor.Brush(), new Rectangle(
-                            bounds.X + (bounds.Width - w) / 2,
-                            (int)markY,
-                            w,
-                            Dpi.GetHeight(markHeight)));
-                        lastLine = f.Line;
-                    }
-                }
+                g.FillRectangle((IsMouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
+                    new Rectangle(bounds.X, pos, bounds.Width, LastCaretSize));
+                LastCaretPos = pos;
             }
 
             return true;
@@ -179,16 +141,16 @@ namespace CodeBox.Margins
                 if (Editor.Scroll.ScrollBounds.Height == 0)
                     return 0;
                 else
-                    return (int)(Editor.Info.CharWidth*1.5);
+                    return Editor.Info.CharWidth;
             }
         }
 
         private bool IsCaretInLocation(Point loc)
         {
             if (Orientation == Orientation.Horizontal)
-                return loc.X >= lastCaretPos && loc.X < lastCaretPos + lastCaretSize;
+                return loc.X >= LastCaretPos && loc.X < LastCaretPos + LastCaretSize;
             else
-                return loc.Y >= lastCaretPos && loc.Y < lastCaretPos + lastCaretSize;
+                return loc.Y >= LastCaretPos && loc.Y < LastCaretPos + LastCaretSize;
         }
 
         private void SetScrollPosition(int value)
@@ -230,5 +192,11 @@ namespace CodeBox.Margins
                 }
             }
         }
+
+        protected bool IsMouseDown { get; set; }
+
+        protected int LastCaretPos { get; set; }
+
+        protected int LastCaretSize { get; set; }
     }
 }
