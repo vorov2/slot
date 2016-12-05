@@ -42,10 +42,7 @@ namespace CodeBox.Test
         {
             ed = new Editor { Dock = DockStyle.Fill };
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed.Settings);
-
-            if (ed.Settings.ShowLineNumbers)
-                ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
-
+            ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new FoldingMargin(ed));
             ed.RightMargins.Add(new VerticalScrollBarMargin(ed));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));

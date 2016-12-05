@@ -42,7 +42,7 @@ namespace CodeBox.Test
             var cmd = (Identifier)"file.openfile";
             var exec = ComponentCatalog.Instance.GetComponent(cmd.Namespace) as ICommandDispatcher;
             exec.Execute(ed, cmd, fl);
-
+            ed.ReadOnly = true;
             Application.Run();
         }
         private static string LocalFile(string fileName)

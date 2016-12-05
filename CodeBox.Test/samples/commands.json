@@ -30,9 +30,14 @@
         "title": "Buffer: Toggle word wrapping"
     },
     {
+        "key": "buffer.toggleReadOnly",
+        "alias": "b-sr",
+        "title": "Buffer: Toggle write protect"
+    },
+    {
         "key": "buffer.changeBufferMode",
         "alias": "mode",
-        "title": "Change language mode",
+        "title": "Buffer: Change language mode",
         "arguments": [
             {
                 "name": "mode",

@@ -37,6 +37,15 @@ namespace CodeBox.BufferCommands
         }
 
         [Command]
+        public void ToggleReadOnly()
+        {
+            var buf = GetBuffer();
+
+            if (buf != null)
+                buf.ReadOnly = !buf.ReadOnly;
+        }
+
+        [Command]
         public void ChangeBufferMode(string mode)
         {
             if (mode != null && ComponentCatalog.Instance.Grammars().GetGrammar(mode) != null)

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringMacro", "Util\StringM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBox.Main", "CodeBox.Main\CodeBox.Main.csproj", "{706A55BB-8814-48F3-A188-A9AB9F55B1D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskEngine", "Util\TaskEngine\TaskEngine.csproj", "{7362AF58-9084-455A-97EC-EB0F5D85599F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{706A55BB-8814-48F3-A188-A9AB9F55B1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{706A55BB-8814-48F3-A188-A9AB9F55B1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{706A55BB-8814-48F3-A188-A9AB9F55B1D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7362AF58-9084-455A-97EC-EB0F5D85599F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7362AF58-9084-455A-97EC-EB0F5D85599F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7362AF58-9084-455A-97EC-EB0F5D85599F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7362AF58-9084-455A-97EC-EB0F5D85599F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,5 +60,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2C727444-C7DD-4DB3-8546-964F4B354242} = {DBF27ABF-80EB-4015-A88F-8B1A35611C50}
 		{B807ABF9-7E51-4508-8E5E-5679429A1A2B} = {DBF27ABF-80EB-4015-A88F-8B1A35611C50}
+		{7362AF58-9084-455A-97EC-EB0F5D85599F} = {DBF27ABF-80EB-4015-A88F-8B1A35611C50}
 	EndGlobalSection
 EndGlobal

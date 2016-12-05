@@ -43,7 +43,7 @@ namespace CodeBox.CommandLine
 
             if (!ed.Visible)
             {
-                g.DrawString(Editor.Buffer.File.Name + (Editor.Buffer.IsDirty ? "*" : "")
+                g.DrawString("⚫⚪⛔ " + Editor.Buffer.File.Name + (Editor.Buffer.IsDirty ? "*" : "")
                         + (Editor.Buffer.File.Directory != null ? $" ({Editor.Buffer.File.Directory.FullName})" : ""),
                     Editor.Settings.SmallFont.Get(cs.FontStyle),
                     cs.ForeColor.Brush(),
