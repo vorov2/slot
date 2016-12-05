@@ -198,7 +198,7 @@ namespace CodeBox.Drawing
 
                 var addedWidth = 0;
 
-                if (line.Length > 0 && editor.ShowLineLength)
+                if (line.Length > 0 && editor.ShowLineLength && j == line.Stripes - 1)
                     addedWidth = DrawLineLengthIndicator(g, line.Length, x, y);
 
                 if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < editor.Buffer.Document.Lines.Count &&

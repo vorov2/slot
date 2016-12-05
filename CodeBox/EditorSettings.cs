@@ -121,12 +121,16 @@ namespace CodeBox
 
     public enum Eol
     {
+        [FieldName("Auto")]
         Auto = 0,
 
+        [FieldName("CR")]
         Cr,
 
+        [FieldName("LF")]
         Lf,
 
+        [FieldName("CRLF")]
         CrLf
     }
 

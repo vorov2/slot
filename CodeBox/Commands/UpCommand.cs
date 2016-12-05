@@ -16,11 +16,12 @@ namespace CodeBox.Commands
         internal static Pos MoveUp(Editor ctx, Selection sel)
         {
             var pos = sel.Caret;
+            var lines = ctx.Buffer.Document.Lines;
 
             do
             {
                 pos = InternalMoveUp(ctx, sel, pos);
-            } while (ctx.Buffer.Document.Lines[pos.Line].Folding.Has(FoldingStates.Invisible));
+            } while (lines[pos.Line].Folding.Has(FoldingStates.Invisible));
 
             return pos;
         }
@@ -43,9 +44,13 @@ namespace CodeBox.Commands
                     else
                     {
                         var newLn = doc.Lines[pos.Line - 1];
-                        var newCut = newLn.GetCut(newLn.Stripes - 2);
+                        var strp = newLn.Stripes - 2;
+                        var newCut = newLn.GetCut(strp < 0 ? 0 : strp);
                         if (newCut != newLn.Length)
-                            return new Pos(pos.Line - 1, newCut + tetra > newLn.Length ? newLn.Length : newCut + tetra);
+                        {
+                            var nc = newCut + tetra;
+                            return new Pos(pos.Line - 1, nc > newLn.Length ? newLn.Length : nc);
+                        }
                         else
                             return new Pos(pos.Line - 1, newCut > tetra ? tetra : newCut);
                     }
@@ -54,7 +59,8 @@ namespace CodeBox.Commands
                 {
                     var newStart = stripe > 1 ? ln.GetCut(stripe - 2) + 1 : 0;
                     var newEnd = ln.GetCut(stripe - 1);
-                    return new Pos(pos.Line, newStart + tetra > newEnd ? newEnd : newStart + tetra);
+                    var nc = newStart + tetra;
+                    return new Pos(pos.Line, nc > newEnd ? newEnd : nc);
                 }
             }
             else if (pos.Line > 0)

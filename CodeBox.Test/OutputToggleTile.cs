@@ -26,7 +26,8 @@ namespace CodeBox.Test
 
             if (form.SplitContainer.Panel2Collapsed)
             {
-                var ly = rect.Y + ((rect.Height - h) / 2) + (int)Math.Round(h / 2f, MidpointRounding.AwayFromZero);
+                var ly = rect.Y + ((rect.Height - h) / 2)
+                    + (int)Math.Round(h / 2f, MidpointRounding.AwayFromZero);
                 g.DrawLine(color.Pen(), rect.X, ly, rect.X + rect.Width, ly);
             }
         }

@@ -12,6 +12,35 @@
     },
 
 
+    //Buffer
+    {
+        "key": "buffer.setBufferEol",
+        "alias": "b-se",
+        "title": "Buffer: Set end of line sequence",
+        "arguments": [
+            {
+                "name": "eol",
+                "valueProvider": "values.eol"
+            }
+        ]
+    },
+    {
+        "key": "buffer.toggleWordWrap",
+        "alias": "b-sw",
+        "title": "Buffer: Toggle word wrapping"
+    },
+    {
+        "key": "buffer.changeBufferMode",
+        "alias": "mode",
+        "title": "Change language mode",
+        "arguments": [
+            {
+                "name": "mode",
+                "valueProvider": "values.modes"
+            }
+        ]
+    },
+
 
     //File
     {
@@ -97,17 +126,7 @@
     },
 
 
-    {
-        "key": "test.changemode",
-        "alias": "mode",
-        "title": "Change language mode",
-        "arguments": [
-            {
-                "name": "mode",
-                "valueProvider": "values.modes"
-            }
-        ]
-    },
+
     {
         "key": "test.changetheme",
         "alias": "theme",

@@ -1,12 +1,14 @@
-﻿using System;
+﻿using CodeBox.Core;
+using CodeBox.Core.ComponentModel;
+using System;
 
 namespace CodeBox.StatusBar
 {
-    public sealed class LineEndingTile : StatusBarTile
+    public sealed class EolTile : StatusBarTile
     {
         private readonly Editor editor;
 
-        public LineEndingTile(Editor editor) : base(TileAlignment.Right)
+        public EolTile(Editor editor) : base(TileAlignment.Right)
         {
             this.editor = editor;
         }
@@ -22,6 +24,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
+            ComponentCatalog.Instance.RunCommand(editor, Cmd.SetBufferEol);
             base.PerformClick();
         }
     }

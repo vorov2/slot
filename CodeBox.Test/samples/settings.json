@@ -13,8 +13,8 @@
     "editor.matchWords": true,
     "editor.useTabs": false,
     "editor.indentSize": 4,
-    "editor.wordWrap": false,
-    "editor.wordWrapColumn": 80,
+    "editor.wordWrap": true,
+    "editor.wordWrapColumn": 0,
     "editor.lineEndings": "auto",
     "editor.longLineIndicators": [ 25, 80, 100 ]
 }

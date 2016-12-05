@@ -13,8 +13,10 @@ namespace CodeBox.ObjectModel
 {
     public sealed class Line : IEnumerable<Character>
     {
+        private static readonly char[] emptyArray = new char[0]; 
         private List<Character> chars;
         private List<int> cuts;
+        private int tetraCount = -1;
         internal readonly List<GrammarInfo> Grammars = new List<GrammarInfo>();
 
         public Line(IEnumerable<Character> chars, int id)
@@ -30,7 +32,7 @@ namespace CodeBox.ObjectModel
         }
 
         public static Line FromString(string line, int id) =>
-            string.IsNullOrEmpty(line) ? new Line(new char[0], id) : new Line(line.ToCharArray(), id);
+            string.IsNullOrEmpty(line) ? new Line(emptyArray, id) : new Line(line.ToCharArray(), id);
 
         internal bool TrailingCaret { get; set; }
 
@@ -80,7 +82,8 @@ namespace CodeBox.ObjectModel
         public bool WhiteSpaceBefore(int col)
         {
             if (col < 0)
-                throw new CodeBoxException($"Negative value for the {nameof(col)} argument is not allowed.");
+                throw new CodeBoxException(
+                    $"Negative value for the {nameof(col)} argument is not allowed.");
 
             for (var i = 0; i < col; i++)
                 if (chars[i].Char != ' ')
@@ -106,7 +109,7 @@ namespace CodeBox.ObjectModel
         {
             chars.AddRange(str);
             Invalidated = false;
-            _tetras = -1;
+            tetraCount = -1;
         }
 
         public void Insert(int index, Character ch)
@@ -115,7 +118,7 @@ namespace CodeBox.ObjectModel
                 chars.Add(ch);
             else if (index >= 0)
                 chars.Insert(index, ch);
-            _tetras = -1;
+            tetraCount = -1;
             Invalidated = false;
         }
 
@@ -125,7 +128,7 @@ namespace CodeBox.ObjectModel
                 Append(str);
             else if (index >= 0)
                 chars.InsertRange(index, str);
-            _tetras = -1;
+            tetraCount = -1;
             Invalidated = false;
         }
 
@@ -135,16 +138,17 @@ namespace CodeBox.ObjectModel
                 count = Length - index;
 
             chars.RemoveRange(index, count);
-            _tetras = -1;
+            tetraCount = -1;
             Invalidated = false;
         }
 
-        public List<Character> GetRange(int index, int count) => chars.GetRange(index, count);
+        public List<Character> GetRange(int index, int count) =>
+            chars.GetRange(index, count);
 
         public void RemoveAt(int index)
         {
             chars.RemoveAt(index);
-            _tetras = -1;
+            tetraCount = -1;
             Invalidated = false;
         }
 
@@ -157,14 +161,14 @@ namespace CodeBox.ObjectModel
                     chars[index] = value;
                 else
                     chars.Add(value);
-                _tetras = -1;
+                tetraCount = -1;
                 Invalidated = false;
             }
         }
 
         internal void Reset()
         {
-            _tetras = -1;
+            tetraCount = -1;
             Invalidated = false;
         }
         #endregion
@@ -176,7 +180,8 @@ namespace CodeBox.ObjectModel
         {
             foreach (var a in AppliedStyles)
             {
-                if (col >= a.Start && col <= a.End && a.StyleId == (int)StandardStyle.Hyperlink)
+                if (col >= a.Start && col <= a.End
+                    && a.StyleId == (int)StandardStyle.Hyperlink)
                     return a;
             }
 
@@ -224,7 +229,7 @@ namespace CodeBox.ObjectModel
         internal void ClearCuts()
         {
             Invalidated = false;
-            _tetras = -1;
+            tetraCount = -1;
             cuts = null;
         }
 
@@ -247,7 +252,7 @@ namespace CodeBox.ObjectModel
 
                 if (c.Char == ' ' || c.Char == '\t')
                 {
-                    var tet = GetNextWordTetras(i + 1, tetra, tabSize);
+                    var tet = GetNextWordTetras(i + 1, tabSize);
 
                     if (width + tet * charWidth > limit)
                     {
@@ -260,8 +265,10 @@ namespace CodeBox.ObjectModel
             Invalidated = true;
         }
 
-        private int GetNextWordTetras(int index, int tetras, int tabSize)
+        private int GetNextWordTetras(int index, int tabSize)
         {
+            var tetras = 0;
+
             for (var i = index; i < chars.Count; i++)
             {
                 var c = chars[i];
@@ -294,11 +301,10 @@ namespace CodeBox.ObjectModel
             return col - start;
         }
 
-        private int _tetras = -1;
         internal int GetTetras(int tabSize)
         {
-            if (_tetras != -1)
-                return _tetras;
+            if (tetraCount != -1)
+                return tetraCount;
 
             var c = 0;
 
@@ -308,7 +314,7 @@ namespace CodeBox.ObjectModel
                 else
                     c++;
 
-            return _tetras = c;
+            return tetraCount = c;
         }
 
         internal int GetColumnForTetra(int tetra, int tabSize)

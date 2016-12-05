@@ -227,6 +227,9 @@ namespace CodeBox
                 {
                     var ln = editor.Lines[i];
 
+                    if (forced)
+                        ln.ClearCuts();
+
                     if (ln.Folding.Has(FoldingStates.Invisible))
                         continue;
 

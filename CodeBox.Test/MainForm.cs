@@ -56,11 +56,12 @@ namespace CodeBox.Test
             var grm = ComponentCatalog.Instance.GetComponent((Identifier)"grammar.default") as IGrammarComponent;
             statusBar.Tiles.Add(new HelpTile(ed));
             statusBar.Tiles.Add(new ModeTile(ed));
-            statusBar.Tiles.Add(new LineEndingTile(ed));
+            statusBar.Tiles.Add(new EolTile(ed));
             statusBar.Tiles.Add(new EncodingTile(ed));
             statusBar.Tiles.Add(new OutputToggleTile(this));
             statusBar.Tiles.Add(new PosTile(ed));
             statusBar.Tiles.Add(new OvrTile(ed));
+            statusBar.Tiles.Add(new WrapTile(ed));
 
 
             splitContainer.Panel1.Controls.Add(ed);

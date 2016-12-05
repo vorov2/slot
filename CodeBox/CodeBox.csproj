@@ -57,6 +57,9 @@
     </Compile>
     <Compile Include="Autocomplete\DocumentCompleteSource.cs" />
     <Compile Include="Autocomplete\ICompleteSource.cs" />
+    <Compile Include="BufferCommands\BufferCommandDispatcher.cs" />
+    <Compile Include="BufferCommands\EolValueProvider.cs" />
+    <Compile Include="BufferCommands\ModeValueProvider.cs" />
     <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
     <Compile Include="CommandLine\CommandBar.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="CommandLine\Loc.cs" />
     <Compile Include="CommandLine\Statement.cs" />
     <Compile Include="CommandLine\StatementArgument.cs" />
+    <Compile Include="Cmd.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
@@ -219,7 +223,7 @@
     <Compile Include="SettingsReader.cs" />
     <Compile Include="StatusBar\EncodingTile.cs" />
     <Compile Include="StatusBar\HelpTile.cs" />
-    <Compile Include="StatusBar\LineEndingTile.cs" />
+    <Compile Include="StatusBar\EolTile.cs" />
     <Compile Include="StatusBar\ModeTile.cs" />
     <Compile Include="StatusBar\OvrTile.cs" />
     <Compile Include="StatusBar\PosTile.cs" />
@@ -228,6 +232,7 @@
     </Compile>
     <Compile Include="StatusBar\StatusBarTile.cs" />
     <Compile Include="StatusBar\TileAlignment.cs" />
+    <Compile Include="StatusBar\WrapTile.cs" />
     <Compile Include="Styling\SearchItemStyle.cs" />
     <Compile Include="Styling\MarginStyle.cs" />
     <Compile Include="Styling\PopupStyle.cs" />
@@ -259,7 +264,6 @@
       <Name>Json</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

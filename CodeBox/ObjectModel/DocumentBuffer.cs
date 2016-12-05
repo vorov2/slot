@@ -142,7 +142,21 @@ namespace CodeBox.ObjectModel
 
         public bool Overtype { get; set; }
 
-        public bool? WordWrap { get; set; }
+        private bool? _wordWrap;
+        public bool? WordWrap
+        {
+            get { return _wordWrap; }
+            set
+            {
+                _wordWrap = value;
+
+                foreach (var v in Views)
+                {
+                    v.Scroll.InvalidateLines(InvalidateFlags.Force);
+                    v.Redraw();
+                }
+            }
+        }
 
         public int? WordWrapColumn { get; set; }
 
