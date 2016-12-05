@@ -139,6 +139,7 @@
     <Compile Include="Drawing\Overlay.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Drawing\SysFont.cs" />
     <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="StatusBar\StatusBarTile.cs" />
     <Compile Include="StatusBar\TileAlignment.cs" />
     <Compile Include="StatusBar\WrapTile.cs" />
+    <Compile Include="Styling\CommandBarStyle.cs" />
     <Compile Include="Styling\SearchItemStyle.cs" />
     <Compile Include="Styling\MarginStyle.cs" />
     <Compile Include="Styling\PopupStyle.cs" />

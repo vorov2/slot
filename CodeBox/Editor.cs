@@ -184,6 +184,17 @@ namespace CodeBox
                 foreach (var c in carets)
                     CaretRenderer.DrawCaret(e.Graphics, c.X, c.Y, c.Blink);
 
+            if (ReadOnly)
+            {
+                using (var fnt = new Font(Settings.Font.Name, Settings.Font.Size * 2))
+                {
+                    var size = e.Graphics.MeasureString("⚿", fnt);
+                    e.Graphics.DrawString("⚿", fnt, Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush(),
+                        Info.TextRight - size.Width - Scroll.ScrollPosition.X,
+                        Info.TextBottom - size.Height - Scroll.ScrollPosition.Y);
+                }
+            }
+
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
         }

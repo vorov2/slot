@@ -30,6 +30,7 @@
     {
         "key": "margin.commands",
         "color": "white",
+        "specialColor": "#B7B7B7",
         "backColor": "#2D2D30"
     },
     {

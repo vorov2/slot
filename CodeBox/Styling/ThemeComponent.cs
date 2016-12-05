@@ -86,6 +86,7 @@ namespace CodeBox.Styling
             {
                 ret = style == StandardStyle.Selection || style == StandardStyle.MatchedBracket || style == StandardStyle.MatchedWord
                         ? new SelectionStyle()
+                    : style == StandardStyle.CommandBar ? new CommandBarStyle()
                     : style == StandardStyle.LineNumbers ? new MarginStyle()
                     : style == StandardStyle.ScrollBars ? new MarginStyle()
                     : style == StandardStyle.Folding ? new MarginStyle()

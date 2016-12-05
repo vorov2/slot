@@ -24,6 +24,12 @@ namespace CodeBox.CommandLine
         private Editor commandEditor;
         private AutocompleteWindow window;
         private Rectangle lastBounds;
+        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
+        {
+            LineAlignment = StringAlignment.Near,
+            Alignment = StringAlignment.Near,
+            Trimming = StringTrimming.EllipsisPath
+        };
 
         public CommandMargin(Editor editor) : base(editor)
         {
@@ -37,18 +43,30 @@ namespace CodeBox.CommandLine
             if (ed.Width != PreferredEditorWidth)
                 HideEditor();
 
-            var cs = Editor.Theme.GetStyle(StandardStyle.CommandBar);
+            var cs = (CommandBarStyle)Editor.Theme.GetStyle(StandardStyle.CommandBar);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
             lastBounds = bounds;
 
             if (!ed.Visible)
             {
-                g.DrawString("⚫⚪⛔ " + Editor.Buffer.File.Name + (Editor.Buffer.IsDirty ? "*" : "")
-                        + (Editor.Buffer.File.Directory != null ? $" ({Editor.Buffer.File.Directory.FullName})" : ""),
-                    Editor.Settings.SmallFont.Get(cs.FontStyle),
-                    cs.ForeColor.Brush(),
-                    Editor.Info.CharWidth * 2,
-                    (bounds.Height - Editor.Info.SmallCharHeight) / 2);
+                var font = Editor.Settings.SmallFont.Get(cs.FontStyle);//SysFont.Font;// 
+                var x = Editor.Info.CharWidth * 2f;
+                var h = Editor.Info.CharWidth;
+                var y = bounds.Y + ((bounds.Height - h) / 2);
+                var w = Editor.Info.CharWidth;
+
+                if (Editor.Buffer.IsDirty)
+                    g.FillRectangle(cs.ForeColor.Brush(), x, y, w, h);
+                else
+                    g.DrawRectangle(cs.ForeColor.Pen(), x, y, w, h);
+
+                y = (bounds.Height - font.Height) / 2;
+                x = Editor.Info.CharWidth * 4f;
+                g.DrawString(Editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextStyle.Format);
+                x += /*g.MeasureString(Editor.Buffer.File.Name, font).Width;*/(Editor.Buffer.File.Name.Length + 1.5f) * Editor.Info.SmallCharWidth;
+
+                g.DrawString(Editor.Buffer.File.DirectoryName, font, cs.SpecialColor.Brush(), 
+                    new RectangleF(x, y, bounds.Width - x - Editor.Info.CharWidth, bounds.Height), format);
             }
             else
             {

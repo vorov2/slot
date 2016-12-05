@@ -68,6 +68,11 @@ namespace CodeBox.Styling
                     ps.SelectedColor = dict.Color("selectedColor");
                     ps.BorderColor = dict.Color("borderColor");
                 }
+
+                var cbs = style as CommandBarStyle;
+
+                if (cbs != null)
+                    cbs.SpecialColor = dict.Color("specialColor");
             }
         }
     }

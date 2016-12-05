@@ -20,7 +20,7 @@ namespace CodeBox.StatusBar
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
             Editor = editor;
-            Height = editor.Info.LineHeight + Dpi.GetHeight(4);
+            Height = /*SysFont.Font.Height*/editor.Info.LineHeight + Dpi.GetHeight(4);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -42,7 +42,7 @@ namespace CodeBox.StatusBar
             foreach (var tile in lefts)
             {
                 var foreColor = style.ForeColor;
-                tile.Font = Editor.Settings.SmallFont;
+                tile.Font = Editor.Settings.SmallFont;//SysFont.Font;//
                 var width = tile.MeasureWidth(g);
 
                 if (x + width > bounds.Width)
@@ -69,7 +69,7 @@ namespace CodeBox.StatusBar
             foreach (var tile in rights)
             {
                 var foreColor = style.ForeColor;
-                tile.Font = Editor.Settings.SmallFont;
+                tile.Font = Editor.Settings.SmallFont;//SysFont.Font; //
                 var width = tile.MeasureWidth(g);
                 x -= width;
 
