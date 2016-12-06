@@ -55,8 +55,10 @@ namespace CodeBox.Test
             statusBar.Tiles.Add(new ModeTile(ed));
             statusBar.Tiles.Add(new EolTile(ed));
             statusBar.Tiles.Add(new EncodingTile(ed));
+
             statusBar.Tiles.Add(new OutputToggleTile(this));
             statusBar.Tiles.Add(new PosTile(ed));
+            //statusBar.Tiles.Add(new ErrorsTile(ed));
             statusBar.Tiles.Add(new OvrTile(ed));
             statusBar.Tiles.Add(new WrapTile(ed));
 

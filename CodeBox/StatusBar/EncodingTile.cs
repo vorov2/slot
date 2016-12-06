@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CodeBox.Core;
+using CodeBox.Core.ComponentModel;
+using System;
 
 namespace CodeBox.StatusBar
 {
@@ -22,6 +24,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
+            ComponentCatalog.Instance.RunCommand(editor, (Identifier)"file.reopenfile");
             base.PerformClick();
         }
     }

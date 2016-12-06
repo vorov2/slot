@@ -204,6 +204,7 @@
     </Compile>
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />
+    <Compile Include="ObjectModel\LogBuffer.cs" />
     <Compile Include="ObjectModel\Pos.cs" />
     <Compile Include="ObjectModel\Range.cs" />
     <Compile Include="ObjectModel\Selection.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="Search\ShowSearchCommand.cs" />
     <Compile Include="SettingsReader.cs" />
     <Compile Include="StatusBar\EncodingTile.cs" />
+    <Compile Include="StatusBar\ErrorsTile.cs" />
     <Compile Include="StatusBar\HelpTile.cs" />
     <Compile Include="StatusBar\EolTile.cs" />
     <Compile Include="StatusBar\ModeTile.cs" />

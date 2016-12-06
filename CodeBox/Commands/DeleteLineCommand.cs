@@ -34,7 +34,7 @@ namespace CodeBox.Commands
                 Document.Lines.Remove(ln);
 
             if (Document.Lines.Count == 0)
-                Document.Lines.Add(Document.NewLine(""));
+                Document.Lines.Add(Line.Empty());
 
             var pos = new Pos(norm.Start.Line >= Document.Lines.Count ? Document.Lines.Count - 1 : norm.Start.Line, 0);
             sel.Clear(pos);

@@ -62,7 +62,7 @@ namespace CodeBox
         {
             var stripe = (int)Math.Ceiling((loc.Y - editor.Info.TextTop - line.Y - editor.Scroll.ScrollPosition.Y)
                 / (double)editor.Info.LineHeight) - 1;
-            var cut = line.GetCut(stripe);
+            var cut = line.GetCut(stripe < 0 ? 0 : stripe);
             var sc = stripe > 0 ? line.GetCut(stripe - 1) + 1 : 0;
             var width = editor.Info.TextLeft;
             var locX = loc.X - editor.Scroll.ScrollPosition.X;

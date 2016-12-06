@@ -101,6 +101,6 @@ namespace CodeBox.Styling
         Error = 32,
 
         [FieldName("margin.status")]
-        StatusBar = 33,
+        StatusBar = 33
     }
 }

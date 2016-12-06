@@ -101,7 +101,7 @@ namespace CodeBox.Commands
                 ln.RemoveRange(pos.Col, ln.Length - pos.Col);
             }
 
-            var newLn = doc.NewLine(str);
+            var newLn = new Line(str);
             doc.Lines.Insert(pos.Line + 1, newLn);
             pos = new Pos(pos.Line + 1, 0);
             return pos;

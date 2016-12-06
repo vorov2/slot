@@ -186,6 +186,13 @@ namespace CodeBox.Drawing
                                 if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
                                     cg.DrawLine(editor.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
 
+                                if (editor.Scroll.ScrollPosition.X != 0 && x + editor.Scroll.ScrollPosition.X == editor.Info.TextLeft)
+                                {
+                                    var cs = editor.Theme.GetStyle(StandardStyle.Default);
+                                    cg.FillRectangle(ControlPaint.Dark(cs.BackColor, .05f).Brush(),
+                                        new Rectangle(0, 0, Dpi.GetWidth(2), rect.Height));
+                                }
+
                                 editor.CaretRenderer.Resume();
                             }
 

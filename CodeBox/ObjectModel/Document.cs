@@ -8,8 +8,6 @@ namespace CodeBox.ObjectModel
 {
     public sealed class Document
     {
-        private int lineSequence;
-
         private Document()
         {
             Lines = new List<Line>();
@@ -25,16 +23,12 @@ namespace CodeBox.ObjectModel
             var txt = source.Replace("\r\n", "\n").Replace('\r', '\n');
 
             foreach (var ln in txt.Split('\n'))
-                doc.Lines.Add(doc.NewLine(ln));
+                doc.Lines.Add(Line.FromString(ln));
 
             return doc;
         }
 
         public Guid Id { get; private set; }
-
-        internal Line NewLine(string str) => Line.FromString(str, ++lineSequence);
-
-        internal Line NewLine(IEnumerable<Character> chars) => new Line(chars, ++lineSequence);
 
         internal List<Line> Lines { get; private set; }
 

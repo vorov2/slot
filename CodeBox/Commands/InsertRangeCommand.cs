@@ -88,14 +88,14 @@ namespace CodeBox.Commands
                         }
                         else if (last)
                         {
-                            var line = doc.NewLine(ln);
+                            var line = new Line(ln);
                             line.Append(portion);
                             doc.Lines.Insert(pos.Line + i, line);
                             retPos = new Pos(pos.Line + i, ln.Count());
                         }
                         else
                         {
-                            var line = doc.NewLine(ln);
+                            var line = new Line(ln);
                             doc.Lines.Insert(pos.Line + i, line);
                             retPos = new Pos(pos.Line + i, line.Length);
                         }

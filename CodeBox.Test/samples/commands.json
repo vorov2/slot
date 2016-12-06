@@ -66,6 +66,17 @@
         ]
     },
     {
+        "key": "file.reopenfile",
+        "alias": "f-ro",
+        "title": "Reopen a file with encoding",
+        "arguments": [
+            {
+                "name": "encoding",
+                "valueProvider": "values.encoding"
+            }
+        ]
+    },
+    {
         "key": "file.openrecentfile",
         "alias": "f-or",
         "title": "Open a recent file",

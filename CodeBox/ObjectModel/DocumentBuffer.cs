@@ -9,10 +9,11 @@ using System.Text;
 using CodeBox.Core.ViewModel;
 using System.IO;
 using System.Drawing;
+using CodeBox.Core.Output;
 
 namespace CodeBox.ObjectModel
 {
-    public sealed class DocumentBuffer : IMaterialBuffer
+    public class DocumentBuffer : IMaterialBuffer
     {
         private int counter;
         private bool undoGroup;
@@ -67,7 +68,7 @@ namespace CodeBox.ObjectModel
             try
             {
                 Document.Lines.Clear();
-                Document.Lines.Add(Document.NewLine(text));
+                Document.Lines.Add(Line.FromString(text));
                 Selections.Set(new Pos(0, 0));
                 Edits = 0;
 
@@ -120,6 +121,12 @@ namespace CodeBox.ObjectModel
         {
             foreach (var e in Views)
                 e.Redraw();
+        }
+
+        internal void ScrollToCaret()
+        {
+            foreach (var e in Views)
+                e.Scroll.UpdateVisibleRectangle();
         }
 
         public Point ScrollPosition { get; internal set; }

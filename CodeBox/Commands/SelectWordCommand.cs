@@ -134,7 +134,7 @@ namespace CodeBox.Commands
                 var ws = char.IsWhiteSpace(c) || c == '\t';
                 //var nextWs = char.IsWhiteSpace(line.CharAt(pos + 1));
 
-                if (strat == Strategy.Word && (nonWord || ws))
+                if (strat == Strategy.Word && (nonWord || hadWs))
                     return pos == line.Length - 1 ? line.Length : pos;
                 else if (strat == Strategy.Ws && !ws)
                     return pos;

@@ -79,6 +79,28 @@ namespace CodeBox.Main.File
         }
 
         [Command]
+        public void ReopenFile(Encoding enc)
+        {
+            var buffer = viewManager.GetActiveView()?.Buffer as IMaterialBuffer;
+
+            if (buffer != null)
+            {
+                if (buffer.IsDirty)
+                {
+                    //Log
+                    return;
+                }
+                else if (!buffer.File.Exists)
+                {
+                    //Log
+                    return;
+                }
+
+                OpenFile(buffer.File.FullName, enc);
+            }
+        }
+
+        [Command]
         public void NewFile()
         {
             var buffer = bufferManager.CreateBuffer();

@@ -19,24 +19,22 @@ namespace CodeBox.ObjectModel
         private int tetraCount = -1;
         internal readonly List<GrammarInfo> Grammars = new List<GrammarInfo>();
 
-        public Line(IEnumerable<Character> chars, int id)
+        public Line(IEnumerable<Character> chars)
         {
-            Id = id;
             this.chars = chars != null ? new List<Character>(chars) : new List<Character>();
         }
 
-        private Line(char[] chars, int id)
+        private Line(char[] chars)
         {
-            Id = id;
             this.chars = new List<Character>(chars.Select(c => new Character(c)));
         }
 
-        public static Line FromString(string line, int id) =>
-            string.IsNullOrEmpty(line) ? new Line(emptyArray, id) : new Line(line.ToCharArray(), id);
+        public static Line Empty() => new Line(emptyArray);
+
+        public static Line FromString(string line) =>
+            string.IsNullOrEmpty(line) ? new Line(emptyArray) : new Line(line.ToCharArray());
 
         internal bool TrailingCaret { get; set; }
-
-        public int Id { get; private set; }
 
         internal int Y { get; set; }
 
@@ -51,10 +49,10 @@ namespace CodeBox.ObjectModel
         public override bool Equals(object obj)
         {
             var ln = obj as Line;
-            return ln != null && ln.Id == Id;
+            return ln != null && ln.chars == chars;
         }
 
-        public override int GetHashCode() => Id.GetHashCode();
+        public override int GetHashCode() => chars.GetHashCode();
 
         public IEnumerator<Character> GetEnumerator()
         {

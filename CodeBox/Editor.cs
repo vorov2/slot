@@ -195,6 +195,15 @@ namespace CodeBox
                 }
             }
 
+            if (Scroll.ScrollPosition.X != 0)
+            {
+                var cs = Theme.GetStyle(StandardStyle.Default);
+                e.Graphics.FillRectangle(ControlPaint.Dark(cs.BackColor, .05f).Brush(),
+                    new Rectangle(Info.TextLeft - Scroll.ScrollPosition.X,
+                        Info.TextTop - Scroll.ScrollPosition.Y, Dpi.GetWidth(2),
+                        Info.TextHeight + BottomMargins.TotalWidth));
+            }
+
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
             base.OnPaint(e);
         }
