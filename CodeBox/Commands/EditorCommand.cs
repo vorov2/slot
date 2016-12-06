@@ -37,6 +37,8 @@ namespace CodeBox.Commands
 
         internal Editor View { get; set; }
 
+        internal bool GroupUndo { get; set; }
+
         internal virtual bool SingleRun => false;
 
         internal virtual bool ModifyContent => false;

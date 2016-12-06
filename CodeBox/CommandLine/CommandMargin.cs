@@ -81,7 +81,8 @@ namespace CodeBox.CommandLine
 
         public override MarginEffects MouseDown(Point loc)
         {
-            ShowEditor();
+            //ShowEditor();
+            ComponentCatalog.Instance.RunCommand(Editor, (Identifier)"file.openfile");
             return MarginEffects.CaptureMouse;
         }
 
@@ -395,10 +396,7 @@ namespace CodeBox.CommandLine
             commandEditor.Buffer.WordWrap = false;
         }
 
-        private void EditorLostFocus(object sender, EventArgs e)
-        {
-            HideEditor();
-        }
+        private void EditorLostFocus(object sender, EventArgs e) => Close();
 
         public void Show(Statement stmt)
         {

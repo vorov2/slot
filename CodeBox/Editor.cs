@@ -310,7 +310,7 @@ namespace CodeBox
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            base.OnMouseDown(e);
+            //base.OnMouseDown(e);
             var mouse = e.GetSpecialKey();
 
             if (e.Button == MouseButtons.Left)
@@ -335,11 +335,11 @@ namespace CodeBox
                         Scroll.InvalidateLines();
                         Redraw();
                     }
+
+                    if (!Focused)
+                        Focus();
                 }
             }
-
-            if (!Focused)
-                Focus();
         }
 
         protected override bool ProcessMnemonic(char charCode) =>

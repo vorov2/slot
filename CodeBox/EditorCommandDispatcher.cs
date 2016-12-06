@@ -77,8 +77,8 @@ namespace CodeBox
                 cmd.View = editor;
                 exp = cmd.Execute(lastSel, args);
 
-                if (exp.Has(Modify) && (!editor.Buffer.LastAtomicChange || !exp.Has(AtomicChange)
-                    || editor.Overtype) && !editor.LimitedMode)
+                if (exp.Has(Modify) && (!editor.Buffer.LastAtomicChange || !exp.Has(AtomicChange))
+                    && !editor.LimitedMode)
                     thisUndo = editor.Buffer.BeginUndoAction();
 
                 if (exp.Has(Modify) && !editor.LimitedMode)
@@ -86,6 +86,9 @@ namespace CodeBox
                     editor.Buffer.AddCommand(cmd);
                     editor.FirstEditLine = fel;
                     editor.LastEditLine = lel;
+
+                    if (editor.Buffer.LastAtomicChange)
+                        cmd.GroupUndo = true;
                 }
 
                 if (exp.Has(RestoreCaret))
@@ -307,7 +310,7 @@ namespace CodeBox
 
                     exp |= e;
 
-                    if (e.Has(RestoreCaret))
+                    if (e.Has(RestoreCaret) && !cmd.Command.GroupUndo)
                         AttachCaret(editor, p);
 
                     editor.Buffer.RedoStack.Push(editor.Buffer.UndoStack.Pop());
