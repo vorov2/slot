@@ -180,7 +180,7 @@ namespace CodeBox.ObjectModel
 
         public bool? ShowEol { get; set; }
 
-        public bool? ShowWhitespace { get; set; }
+        public ShowWhitespace? ShowWhitespace { get; set; }
 
         public bool? ShowLineLength { get; set; }
 

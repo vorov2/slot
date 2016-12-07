@@ -228,17 +228,20 @@ namespace CodeBox.ObjectModel
         {
             Invalidated = false;
             tetraCount = -1;
+            Indent = -1;
             cuts = null;
         }
 
-        internal void RecalculateCuts(int limit, int charWidth, int tabSize)
+        internal int GetLineIndent() => Indent;
+
+        internal void RecalculateCuts(int limit, int charWidth, int tabSize, WrappingIndent win)
         {
             if (cuts != null)
                 cuts.Clear();
 
             var width = 0;
             var tetra = 0;
-            var indent = -1;
+            var indent = false;
 
             for (var i = 0; i < chars.Count; i++)
             {
@@ -249,8 +252,13 @@ namespace CodeBox.ObjectModel
 
                 width += w;
 
-                //if (indent == -1 && (cuts == null || cuts.Count == 0) && c.Char != ' ' && c.Char != '\t')
-                //    indent = i;
+                if (!indent && (cuts == null || cuts.Count == 0) && c.Char != ' ' && c.Char != '\t')
+                {
+                    indent = true;
+                    Indent = win == WrappingIndent.None ? 0
+                        : win == WrappingIndent.Same ? tetra - 1
+                        : tetra - 1 + tabSize;
+                }
 
                 if (IsSep(c.Char))
                 {
@@ -258,7 +266,7 @@ namespace CodeBox.ObjectModel
 
                     if (width + tet * charWidth > limit)
                     {
-                        width = indent > 0 ? indent * charWidth : 0;//0;
+                        width = Indent * charWidth;
                         AddCut(i + 1);
                     }
                 }
@@ -368,6 +376,8 @@ namespace CodeBox.ObjectModel
         }
 
         internal bool Invalidated { get; private set; }
+
+        internal int Indent { get; private set; }
         #endregion
 
         #region Folding

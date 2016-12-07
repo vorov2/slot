@@ -24,7 +24,7 @@ namespace CodeBox
                 set.Font = CreateFont(dict);
                 set.ShowLineNumbers = dict.Bool("editor.showLineNumbers");
                 set.LinePadding = dict.Double("editor.linePadding");
-                set.ShowWhitespace = dict.Bool("editor.showWhitespace");
+                set.ShowWhitespace = GetShowWhitespace(dict);
                 set.ShowEol = dict.Bool("editor.showEol");
                 set.ShowLineLength = dict.Bool("editor.showLineLength");
                 set.CurrentLineIndicator = dict.Bool("editor.currentLineIndicator");
@@ -37,14 +37,15 @@ namespace CodeBox
                 set.IndentSize = dict.Int("editor.indentSize");
                 set.WordWrapColumn = dict.Int("editor.wordWrapColumn");
                 set.Eol = GetLineEndings(dict);
+                set.WrappingIndent = GetWrappingIndent(dict);
 
                 var lst = dict.Object("editor.longLineIndicators") as List<object>;
 
                 if (lst != null)
                 {
                     foreach (var s in lst)
-                        if (s is int)
-                            set.LongLineIndicators.Add((int)s);
+                        if (s is double)
+                            set.LongLineIndicators.Add((int)(double)s);
                 }
             }
         }
@@ -56,6 +57,22 @@ namespace CodeBox
                 : string.Equals(str, "cr", StringComparison.OrdinalIgnoreCase) ? Eol.Cr
                 : string.Equals(str, "crlf", StringComparison.OrdinalIgnoreCase) ? Eol.CrLf
                 : Eol.Auto;
+        }
+
+        private static WrappingIndent GetWrappingIndent(MAP dic)
+        {
+            var str = dic.String("editor.wrappingIndent");
+            return string.Equals(str, "indent", StringComparison.OrdinalIgnoreCase) ? WrappingIndent.Indent
+                : string.Equals(str, "same", StringComparison.OrdinalIgnoreCase) ? WrappingIndent.Same
+                : WrappingIndent.None;
+        }
+
+        private static ShowWhitespace GetShowWhitespace(MAP dic)
+        {
+            var str = dic.String("editor.showWhitespace");
+            return string.Equals(str, "all", StringComparison.OrdinalIgnoreCase) ? ShowWhitespace.All
+                : string.Equals(str, "boundary", StringComparison.OrdinalIgnoreCase) ? ShowWhitespace.Boundary
+                : ShowWhitespace.None;
         }
 
         private static Font CreateFont(MAP dict)

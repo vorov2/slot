@@ -260,7 +260,7 @@ namespace CodeBox
                         continue;
 
                     if (!ln.Invalidated || forced)
-                        ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.IndentSize);
+                        ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.IndentSize, editor.Settings.WrappingIndent);
                     ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
                 }

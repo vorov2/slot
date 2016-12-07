@@ -89,7 +89,8 @@ namespace CodeBox.Test
             output.ThinCaret = true;
 
             output.Settings.Font = set.SmallFont;
-            output.Settings.ShowEol = output.Settings.ShowWhitespace = output.Settings.ShowLineLength = false;
+            output.Settings.ShowEol = output.Settings.ShowLineLength = false;
+            output.Settings.ShowWhitespace = ShowWhitespace.None;
             output.AttachBuffer(App.Catalog<ILogComponent>().GetComponent((Identifier)"log.application"));
             output.ReadOnly = true;
 

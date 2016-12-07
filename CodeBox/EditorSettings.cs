@@ -48,6 +48,8 @@ namespace CodeBox
 
         public int WordWrapColumn { get; set; }
 
+        public WrappingIndent WrappingIndent { get; set; }
+
         public Eol Eol { get; set; }
 
         public bool UseTabs { get; set; }
@@ -58,7 +60,7 @@ namespace CodeBox
 
         public bool ShowEol { get; set; }
 
-        public bool ShowWhitespace { get; set; }
+        public ShowWhitespace ShowWhitespace { get; set; }
 
         public bool ShowLineLength { get; set; }
 
@@ -132,6 +134,30 @@ namespace CodeBox
 
         [FieldName("CRLF")]
         CrLf
+    }
+
+    public enum WrappingIndent
+    {
+        [FieldName("None")]
+        None = 0,
+
+        [FieldName("Same")]
+        Same,
+
+        [FieldName("Indent")]
+        Indent
+    }
+
+    public enum ShowWhitespace
+    {
+        [FieldName("None")]
+        None = 0,
+
+        [FieldName("All")]
+        All,
+
+        [FieldName("Boundary")]
+        Boundary
     }
 
     internal static class EolExtensions

@@ -14,12 +14,11 @@ namespace CodeBox.Commands
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
             var str = Clipboard.GetText();
-            var ed = (Editor)View;
             
-            if (ed.HasBeforePaste)
+            if (View.HasBeforePaste)
             {
                 var ev = new TextEventArgs(str);
-                ed.OnBeforePaste(ev);
+                View.OnBeforePaste(ev);
                 str = ev.Text;
             }
 

@@ -395,7 +395,6 @@ namespace CodeBox.CommandBar
             commandEditor.Buffer.CurrentLineIndicator = false;
             commandEditor.Buffer.ShowEol = false;
             commandEditor.Buffer.ShowLineLength = false;
-            commandEditor.Buffer.ShowWhitespace = false;
             commandEditor.Buffer.WordWrap = false;
         }
 

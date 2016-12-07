@@ -566,7 +566,8 @@ namespace CodeBox
         public bool ShowEol => Buffer.ShowEol ?? Settings.ShowEol;
 
         [Browsable(false)]
-        public bool ShowWhitespace => !LimitedMode && (Buffer.ShowWhitespace ?? Settings.ShowWhitespace);
+        public ShowWhitespace ShowWhitespace => LimitedMode ? ShowWhitespace.None
+            : (Buffer.ShowWhitespace ?? Settings.ShowWhitespace);
 
         [Browsable(false)]
         public bool ShowLineLength => !LimitedMode && (Buffer.ShowLineLength ?? Settings.ShowLineLength);

@@ -44,7 +44,15 @@ namespace CodeBox
             if (line == -1)
                 return Pos.Empty;
 
+            var ln = editor.Lines[line];
             var col = FindColumnByLocation(editor.Lines[line], loc);
+            var stripe = ln.GetStripe(col);
+
+            if (stripe > 0)
+            {
+                
+            }
+
             return new Pos(line, col);
         }
 
@@ -58,10 +66,9 @@ namespace CodeBox
             var tetras = line.GetTetras(pos.Col, editor.IndentSize);
 
             if (stripe > 0)
-                tetras -= line.GetTetras(line.GetCut(stripe - 1), editor.IndentSize);
+                tetras -= line.GetTetras(line.GetCut(stripe - 1), editor.IndentSize) - line.Indent;
 
-            var x = tetras * editor.Info.CharWidth
-                + editor.Info.TextLeft;
+            var x = tetras * editor.Info.CharWidth + editor.Info.TextLeft;
             return new Point(x + editor.Scroll.ScrollPosition.X, y + editor.Scroll.ScrollPosition.Y);
         }
 
@@ -70,10 +77,17 @@ namespace CodeBox
             var stripe = (int)Math.Ceiling((loc.Y - editor.Info.TextTop - line.Y - editor.Scroll.ScrollPosition.Y)
                 / (double)editor.Info.LineHeight) - 1;
             var cut = line.GetCut(stripe < 0 ? 0 : stripe);
-            var sc = stripe > 0 ? line.GetCut(stripe - 1) + 1 : 0;
+            var sc = stripe > 0 ? line.GetCut(stripe - 1) : 0;
             var width = editor.Info.TextLeft;
             var locX = loc.X - editor.Scroll.ScrollPosition.X;
-            var app = editor.Info.CharWidth * .15;
+            var app = editor.Info.CharWidth * .50;
+
+            if (stripe > 0)
+            {
+                locX -= line.Indent * editor.Info.CharWidth;
+                if (locX < width)
+                    locX = width;
+            }
 
             for (var i = sc; i < cut + 1; i++)
             {
@@ -86,9 +100,9 @@ namespace CodeBox
                 width += cw;
             }
 
-            return locX > width - editor.Info.CharWidth ? line.Length : 0;
+            return locX > width - editor.Info.CharWidth ? cut : 0;
         }
-        
+
         public MarginList FindMargin(Point loc)
         {
             if (loc.X < editor.Info.TextLeft)

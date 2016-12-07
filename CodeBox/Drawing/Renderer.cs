@@ -43,7 +43,7 @@ namespace CodeBox.Drawing
 
         internal void DrawLongLineIndicators(Graphics g)
         {
-            if (editor.WordWrap)
+            if (editor.WordWrap || editor.LimitedMode)
                 return;
 
             foreach (var i in editor.Settings.LongLineIndicators)
@@ -124,6 +124,7 @@ namespace CodeBox.Drawing
             var showWs = editor.ShowWhitespace;
             var specialSymbol = (TextStyle)editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
             var indent = -1;
+            var nonWs = false;
 
             for (var j = 0; j < line.Stripes; j++)
             {
@@ -139,11 +140,11 @@ namespace CodeBox.Drawing
 
                 var tet = 0;
 
-                //if (indent != -1)
-                //{
-                //    tet = indent;
-                //    x += tet * editor.Info.CharWidth;
-                //}
+                if (indent != -1)
+                {
+                    tet = indent;
+                    x += tet * editor.Info.CharWidth;
+                }
 
                 for (var i = oldcut; i < cut; i++)
                 {
@@ -160,11 +161,12 @@ namespace CodeBox.Drawing
                         var rect = new Rectangle(x, y, xw, editor.Info.LineHeight);
                         var pos = new Pos(lineIndex, i);
                         var high = sel && editor.Buffer.Selections.IsSelected(pos);
+                        var ws = c == '\t' || c == ' ';
 
-                        //if (c != ' ' && c != '\t' && indent == -1)
-                        //    indent = i;
+                        if (!ws)
+                            nonWs = true;
 
-                        if (c == '\0' && showEol || (c == '\t' || c == ' ') && showWs)
+                        if (c == '\0' && showEol || ws && (showWs == ShowWhitespace.All || showWs == ShowWhitespace.Boundary && !nonWs))
                         {
                             c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
                             style = specialSymbol;
@@ -226,6 +228,7 @@ namespace CodeBox.Drawing
                 oldcut = cut;
                 y += editor.Info.LineHeight;
                 x = lmarg;
+                indent = line.Indent;
             }
         }
 

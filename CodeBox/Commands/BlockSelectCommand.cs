@@ -15,10 +15,7 @@ namespace CodeBox.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (View.WordWrap)
-                return Pure;
-
-            DoSelection(View.Caret, ((Editor)View).PointToClient(Cursor.Position));
+            DoSelection(View.Caret, View.PointToClient(Cursor.Position));
             return Scroll | Clean;
         }
 

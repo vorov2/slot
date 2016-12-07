@@ -3,7 +3,7 @@
     "editor.fontSize": 11,
     "editor.linePadding": 0.1,
     "editor.showLineNumbers": true,
-    "editor.showWhitespace": true,
+    "editor.showWhitespace": "boundary",
     "editor.showEol": false,
     "editor.showLineLength": true,
     "editor.currentLineIndicator": true,
@@ -15,6 +15,7 @@
     "editor.indentSize": 4,
     "editor.wordWrap": false,
     "editor.wordWrapColumn": 80,
+    "editor.wrappingIndent": "same",
     "editor.lineEndings": "auto",
     "editor.longLineIndicators": [ 25, 80, 100 ]
 }
