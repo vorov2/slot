@@ -24,7 +24,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.RunCommand(editor, Cmd.SetBufferEol);
+            App.Ext.Run(editor, Cmd.SetBufferEol);
             base.PerformClick();
         }
     }

@@ -24,7 +24,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.RunCommand(editor, (Identifier)"file.reopenfile");
+            App.Ext.Run(editor, (Identifier)"file.reopenfile");
             base.PerformClick();
         }
     }

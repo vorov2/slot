@@ -36,7 +36,7 @@ namespace CodeBox.Test
                 return;
             }
 
-            App.Ext.RunCommand(viewManager.GetActiveView(), cmd.Key);
+            App.Ext.Run(viewManager.GetActiveView(), cmd.Key);
         }
 
         [Command]

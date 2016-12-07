@@ -93,7 +93,7 @@ namespace CodeBox.CommandBar
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            App.Ext.RunCommand(editor, (Identifier)"file.openfile");
+            App.Ext.Run(editor, (Identifier)"file.openfile");
             Invalidate();
             base.OnMouseDown(e);
         }
@@ -463,7 +463,7 @@ namespace CodeBox.CommandBar
                 statement = null;
                 ContinuationStatement = null;
                 HideEditor();
-                App.Ext.RunCommand(editor, md.Key, args);
+                App.Ext.Run(editor, md.Key, args);
             }
         }
 

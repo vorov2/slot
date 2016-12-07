@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 
 namespace CodeBox.ObjectModel
 {
-    [Export(typeof(ILog))]
-    [ComponentData("log.application")]
-    public class LogBuffer : DocumentBuffer, ILog
+    public class LogBuffer : DocumentBuffer, ILogComponent
     {
         public LogBuffer() 
             : base(Document.FromString(""), new FileInfo("memory"), Encoding.UTF8)
@@ -20,12 +18,13 @@ namespace CodeBox.ObjectModel
 
         }
 
-        void ILog.Write(string text, EntryType type)
+        void ILogComponent.Write(string text, EntryType type)
         {
             var ln = Line.FromString(text);
             ln.State = (int)type;
             Document.Lines.Add(ln);
             Selections.Set(new Pos(Document.Lines.Count - 1, ln.Length));
+            InvalidateLines();
             ScrollToCaret();
             RequestRedraw();
             OnEntryWritten(text, type);

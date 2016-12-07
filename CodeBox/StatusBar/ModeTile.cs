@@ -32,7 +32,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.RunCommand(editor, Cmd.ChangeBufferMode);
+            App.Ext.Run(editor, Cmd.ChangeBufferMode);
             base.PerformClick();
         }
     }

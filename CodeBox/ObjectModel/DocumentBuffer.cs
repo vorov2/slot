@@ -123,6 +123,12 @@ namespace CodeBox.ObjectModel
                 e.Redraw();
         }
 
+        internal void InvalidateLines()
+        {
+            foreach (var e in Views)
+                e.Scroll.InvalidateLines();
+        }
+
         internal void ScrollToCaret()
         {
             foreach (var e in Views)

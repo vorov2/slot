@@ -4,6 +4,7 @@ using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.Keyboard;
+using CodeBox.Core.Output;
 using CodeBox.Core.ViewModel;
 using CodeBox.Lexing;
 using CodeBox.ObjectModel;
@@ -40,6 +41,7 @@ namespace CodeBox.Test
             App.RegisterCatalog<IGrammarComponent>();
             App.RegisterCatalog<IBufferManager>();
             App.RegisterCatalog<IViewManager>();
+            App.RegisterCatalog<ILogComponent>();
             App.Initialize();
 
             var frm = new MainForm();
@@ -56,7 +58,7 @@ namespace CodeBox.Test
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
             var cmd = (Identifier)"file.openfile";
-            App.Ext.RunCommand(ed, cmd, fl);
+            App.Ext.Run(ed, cmd, fl);
             Application.Run();
         }
         private static string LocalFile(string fileName)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CodeBox.Core.Output
 {
-    public interface ILog : IMaterialBuffer, IComponent
+    public interface ILogComponent : IMaterialBuffer, IComponent
     {
         void Write(string text, EntryType type);
 

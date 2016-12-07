@@ -23,6 +23,7 @@ using CodeBox.CommandBar;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ComponentModel;
 using CodeBox.StatusBar;
+using CodeBox.Core.Output;
 
 namespace CodeBox.Test
 {
@@ -82,11 +83,15 @@ namespace CodeBox.Test
         private void InitializeOutput()
         {
             output = new Editor { Dock = DockStyle.Fill };
-            output.ReadOnly = true;
             output.LeftMargins.Add(new GutterMargin(output));
             output.RightMargins.Add(new ScrollBarMargin(output, Orientation.Vertical));
             output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));
             output.ThinCaret = true;
+
+            SettingsReader.Read(File.ReadAllText("samples\\settings.json"), output.Settings);
+            output.AttachBuffer(App.Catalog<ILogComponent>().GetComponent((Identifier)"log.application"));
+            output.ReadOnly = true;
+
             splitContainer.Panel2.Controls.Add(output);
         }
 

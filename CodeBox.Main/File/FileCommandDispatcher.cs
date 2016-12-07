@@ -87,6 +87,7 @@ namespace CodeBox.Main.File
             {
                 if (buffer.IsDirty)
                 {
+                    App.Ext.Log("File is dirty. Save file before reloading.", Core.Output.EntryType.Error);
                     //Log
                     return;
                 }

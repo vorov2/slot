@@ -446,7 +446,7 @@ namespace CodeBox
 
         internal bool RunCommand(Identifier commandKey, params object[] args)
         {
-            return App.Ext.RunCommand(this, commandKey, args);
+            return App.Ext.Run(this, commandKey, args);
         }
 
         public override Color BackColor => Theme.DefaultStyle.BackColor;
