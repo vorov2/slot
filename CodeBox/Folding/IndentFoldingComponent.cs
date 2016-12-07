@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Commands;
 using CodeBox.ComponentModel;
@@ -11,10 +7,12 @@ using System.ComponentModel.Composition;
 
 namespace CodeBox.Folding
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("folding.indent")]
-    public sealed class IndentFoldingProvider : IFoldingComponent
+    [Export(typeof(IFoldingComponent))]
+    [ComponentData(Name)]
+    public sealed class IndentFoldingComponent : IFoldingComponent
     {
+        public const string Name = "folding.indent";
+
         public void Fold(IExecutionContext context, Range range)
         {
             var ctx = (Editor)context;

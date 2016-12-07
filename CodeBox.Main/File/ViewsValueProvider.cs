@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace CodeBox.Main.File
 {
-    [Export(typeof(IComponent))]
+    [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.views")]
     public sealed class ViewsValueProvider : IArgumentValueProvider
     {

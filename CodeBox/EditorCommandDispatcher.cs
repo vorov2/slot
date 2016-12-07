@@ -11,7 +11,7 @@ using static CodeBox.Commands.ActionResults;
 
 namespace CodeBox
 {
-    [Export(typeof(IComponent))]
+    [Export(typeof(ICommandDispatcher))]
     [ComponentData(Name)]
     public sealed class EditorCommandDispatcher : ICommandDispatcher
     {

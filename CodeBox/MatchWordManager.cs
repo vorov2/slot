@@ -1,4 +1,5 @@
 ﻿using CodeBox.Commands;
+using CodeBox.Core;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ObjectModel;
 using CodeBox.Search;
@@ -77,7 +78,7 @@ namespace CodeBox
             }
 
             var grmId = editor.AffinityManager.GetAffinityId(caret);
-            var grm = grmId != 0 ? ComponentCatalog.Instance.Grammars().GetGrammar(grmId) : null;
+            var grm = grmId != 0 ? App.Ext.Grammars().GetGrammar(grmId) : null;
             var seps = (" \t" + (grm?.NonWordSymbols ?? editor.Settings.NonWordSymbols)).ToCharArray();
             var regex = new Regex("\\b" + Regex.Escape(txt) + "\\b");
 

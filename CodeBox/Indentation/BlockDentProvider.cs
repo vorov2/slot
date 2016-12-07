@@ -5,10 +5,12 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Indentation
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("indent.block")]
+    [Export(typeof(IDentComponent))]
+    [ComponentData(Name)]
     public sealed class BlockDentProvider : IDentComponent
     {
+        public const string Name = "ident.block";
+
         public int CalculateIndentation(IExecutionContext context, int lineIndex)
         {
             var ctx = (Editor)context;

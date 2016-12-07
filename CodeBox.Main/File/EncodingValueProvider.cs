@@ -8,7 +8,7 @@ using System.Text;
 
 namespace CodeBox.Main.File
 {
-    [Export(typeof(IComponent))]
+    [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.encoding")]
     public sealed class EncodingValueProvider : IArgumentValueProvider
     {

@@ -13,11 +13,11 @@ using System.Windows.Forms;
 
 namespace CodeBox.Main.File
 {
-    [Export(typeof(IComponent))]
-    [ComponentData(Key)]
+    [Export(typeof(ICommandDispatcher))]
+    [ComponentData(Name)]
     public sealed class FileCommandDispatcher : CommandDispatcher
     {
-        public const string Key = "file";
+        public const string Name = "file";
 
         [Import]
         private IViewManager viewManager = null;

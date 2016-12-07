@@ -74,7 +74,7 @@ namespace CodeBox
             Search = new SearchManager(this);
             Settings = settings;
             Styles = new StyleManager(this);
-            Theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
+            Theme = App.Catalog<IThemeComponent>().First();
             Text = "";
             InitializeBuffer(Buffer);
 
@@ -446,8 +446,7 @@ namespace CodeBox
 
         internal bool RunCommand(Identifier commandKey, params object[] args)
         {
-            var exec = ComponentCatalog.Instance.GetComponent(commandKey.Namespace) as ICommandDispatcher;
-            return exec != null ? exec.Execute(this, commandKey, args) : false;
+            return App.Ext.RunCommand(this, commandKey, args);
         }
 
         public override Color BackColor => Theme.DefaultStyle.BackColor;
@@ -489,7 +488,7 @@ namespace CodeBox
                     Buffer = buffer;
                 }
 
-                Buffer.GrammarKey = ComponentCatalog.Instance.Grammars()
+                Buffer.GrammarKey = App.Ext.Grammars()
                     .GetGrammarByFile(buffer.File)?.Key;
                 InitializeBuffer(Buffer);
                 Scroll.InvalidateLines();

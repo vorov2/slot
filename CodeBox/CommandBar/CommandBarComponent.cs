@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace CodeBox.CommandBar
 {
-    [Export(Name, typeof(IComponent))]
+    [Export(typeof(ICommandBar))]
     [ComponentData(Name)]
     public sealed class CommandBarComponent : ICommandBar
     {

@@ -22,9 +22,9 @@ namespace CodeBox.StatusBar
         {
             get
             {
-                return lastGrammar == null
+                return (lastGrammar == null && editor.Buffer.GrammarKey != null)
                         || (editor.Buffer.GrammarKey != lastGrammar && editor.Buffer.GrammarKey != null)
-                    ? (lastGrammar = ComponentCatalog.Instance.Grammars().GetGrammar(editor.Buffer.GrammarKey).Name)
+                    ? (lastGrammar = App.Ext.Grammars().GetGrammar(editor.Buffer.GrammarKey).Name)
                     : lastGrammar;
             }
             set { base.Text = value; }
@@ -32,7 +32,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
-            ComponentCatalog.Instance.RunCommand(editor, Cmd.ChangeBufferMode);
+            App.Ext.RunCommand(editor, Cmd.ChangeBufferMode);
             base.PerformClick();
         }
     }

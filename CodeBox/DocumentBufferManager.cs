@@ -14,8 +14,11 @@ using CodeBox.Core;
 namespace CodeBox
 {
     [Export(typeof(IBufferManager))]
+    [ComponentData(Name)]
     public sealed class DocumentBufferManager : IBufferManager
     {
+        public const string Name = "buffermanager.default";
+
         private readonly Stack<IBuffer> buffers = new Stack<IBuffer>();
 
         public IMaterialBuffer CreateBuffer()

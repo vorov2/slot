@@ -93,7 +93,7 @@ namespace CodeBox.CommandBar
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            ComponentCatalog.Instance.RunCommand(editor, (Identifier)"file.openfile");
+            App.Ext.RunCommand(editor, (Identifier)"file.openfile");
             Invalidate();
             base.OnMouseDown(e);
         }
@@ -253,8 +253,7 @@ namespace CodeBox.CommandBar
 
                         if (ind != -1 && ind < ci.Arguments.Count && ci.Arguments[ind].ValueProvider != null)
                         {
-                            var prov = ComponentCatalog.Instance.GetComponent(ci.Arguments[ind].ValueProvider)
-                                as IArgumentValueProvider;
+                            var prov = App.Catalog<IArgumentValueProvider>().GetComponent(ci.Arguments[ind].ValueProvider);
                             currentAffinity = ci.Arguments[ind].Affinity;
 
                             if (prov != null)
@@ -464,10 +463,7 @@ namespace CodeBox.CommandBar
                 statement = null;
                 ContinuationStatement = null;
                 HideEditor();
-                var exec = ComponentCatalog.Instance.GetComponent(md.Key.Namespace) as ICommandDispatcher;
-
-                if (exec != null)
-                    exec.Execute(editor, md.Key, args);
+                App.Ext.RunCommand(editor, md.Key, args);
             }
         }
 

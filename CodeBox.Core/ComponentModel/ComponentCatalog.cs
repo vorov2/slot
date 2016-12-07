@@ -7,66 +7,63 @@ using System.IO;
 
 namespace CodeBox.Core.ComponentModel
 {
-    public sealed class ComponentCatalog
+    public sealed class ComponentCatalog<T> where T : IComponent
     {
-        private CompositionContainer container;
-
         [ImportMany]
-        private IEnumerable<Lazy<IComponent, IComponentMetadata>> providers = null;
-        private Dictionary<Identifier, IComponent> providerMap = new Dictionary<Identifier, IComponent>();
+        private IEnumerable<Lazy<T, IComponentMetadata>> components = null;
 
-        private ComponentCatalog()
+        private Dictionary<Identifier, T> componentMap = new Dictionary<Identifier, T>();
+
+        public ComponentCatalog()
         {
-            container = CreateContainer();
-        }
 
-        private CompositionContainer CreateContainer()
-        {
-            var catalog = new AggregateCatalog();
-            var path = new FileInfo(typeof(ComponentCatalog).Assembly.Location).DirectoryName;
-            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
-            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.exe"));
-            var container = new CompositionContainer(catalog);
-
-            try
-            {
-                container.ComposeParts(this);
-                container.ComposeParts(App.Instance);
-            }
-            catch (CompositionException ex)
-            {
-                throw new Exception("Composition error.", ex);
-            }
-
-            return container;
         }
 
         public IEnumerable<IComponentMetadata> EnumerateComponents()
         {
-            return providers.Select(p => p.Metadata);
+            return components.Select(p => p.Metadata);
         }
 
-        public IComponent GetComponent(Identifier key)
+        public T GetComponent(Identifier key)
         {
-            IComponent ret;
+            T ret;
 
-            if (!providerMap.TryGetValue(key, out ret))
+            if (!componentMap.TryGetValue(key, out ret))
             {
                 var strKey = key.ToString();
-                var comp = providers.FirstOrDefault(c => c.Metadata.Key == strKey);
+                var comp = components.FirstOrDefault(c => c.Metadata.Key == strKey);
 
                 if (comp != null)
                 {
-                    providerMap.Add(key, comp.Value);
+                    componentMap.Add(key, comp.Value);
                     ret = comp.Value;
                 }
                 else
-                    return null;
+                    return default(T);
             }
 
             return ret;
         }
 
-        public static ComponentCatalog Instance { get; } = new ComponentCatalog();
+        public T First()
+        {
+            var ret = componentMap.Values.FirstOrDefault();
+
+            if (ret == null)
+            {
+                var cmp = components.FirstOrDefault();
+
+                if (cmp != null)
+                {
+                    ret = cmp.Value;
+                    componentMap.Add((Identifier)cmp.Metadata.Key, cmp.Value);
+                }
+            }
+
+            if (ret == null)
+                throw new Exception($"No component of type {typeof(T).Name} is registered.");
+
+            return ret;
+        }
     }
 }

@@ -69,9 +69,9 @@ namespace CodeBox.Styling
                 StyleNeeded?.Invoke(this, new StyleNeededEventArgs(range));
             else
             {
-                var grm = ComponentCatalog.Instance.Grammars().GetGrammar(editor.Buffer.GrammarKey);
+                var grm = App.Ext.Grammars().GetGrammar(editor.Buffer.GrammarKey);
                 var styler = grm == null ? null
-                    : ComponentCatalog.Instance.GetComponent(grm.StylerKey ?? defaultStyler) as IStylerComponent;
+                    : App.Catalog<IStylerComponent>().GetComponent(grm.StylerKey ?? defaultStyler);
                 if (styler != null)
                     styler.Style(editor, range);
             }

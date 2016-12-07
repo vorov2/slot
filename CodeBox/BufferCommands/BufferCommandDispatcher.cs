@@ -1,4 +1,5 @@
-﻿using CodeBox.Core.CommandModel;
+﻿using CodeBox.Core;
+using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.ViewModel;
 using CodeBox.ObjectModel;
@@ -11,10 +12,12 @@ using System.Threading.Tasks;
 
 namespace CodeBox.BufferCommands
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("buffer")]
+    [Export(typeof(ICommandDispatcher))]
+    [ComponentData(Name)]
     public sealed class BufferCommandDispatcher : CommandDispatcher
     {
+        public const string Name = "buffer";
+
         [Import]
         private IViewManager viewManager = null;
 
@@ -48,7 +51,7 @@ namespace CodeBox.BufferCommands
         [Command]
         public void ChangeBufferMode(string mode)
         {
-            if (mode != null && ComponentCatalog.Instance.Grammars().GetGrammar(mode) != null)
+            if (mode != null && App.Ext.Grammars().GetGrammar(mode) != null)
             {
                 var buffer = GetBuffer();
 

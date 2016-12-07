@@ -7,6 +7,7 @@ using CodeBox.Affinity;
 using System.ComponentModel.Composition;
 using static CodeBox.Commands.ActionResults;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core;
 
 namespace CodeBox.Commands
 {
@@ -32,7 +33,7 @@ namespace CodeBox.Commands
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
 
-            var comp = indentKey != null ? ComponentCatalog.Instance.GetComponent(indentKey) as IDentComponent : null;
+            var comp = indentKey != null ? App.Catalog<IDentComponent>().GetComponent(indentKey) : null;
             indent = comp != null ? comp.CalculateIndentation(View, pos.Line) : 0;
 
             if (indent > 0)

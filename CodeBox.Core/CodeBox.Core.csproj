@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="AppExtensions.cs" />
     <Compile Include="ApplicationPath.cs" />
     <Compile Include="CommandModel\ArgumentAffinity.cs" />
     <Compile Include="CommandModel\ArgumentMetadata.cs" />

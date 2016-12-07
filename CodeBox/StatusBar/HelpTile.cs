@@ -25,7 +25,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
-            ComponentCatalog.Instance.RunCommand(editor, (Identifier)"test.commandpalette");
+            App.Ext.RunCommand(editor, (Identifier)"test.commandpalette");
             base.PerformClick();
         }
     }

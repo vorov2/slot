@@ -8,7 +8,7 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.BufferCommands
 {
-    [Export(typeof(IComponent))]
+    [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.eol")]
     public sealed class EolValueProvider : IArgumentValueProvider
     {

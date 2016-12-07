@@ -54,7 +54,6 @@ namespace CodeBox.Test
             ed.TopMargins.Add(new TopMargin(ed));
 
             var statusBar = new StatusBarControl(ed) { Dock = DockStyle.Bottom };
-            var grm = ComponentCatalog.Instance.GetComponent((Identifier)"grammar.default") as IGrammarComponent;
             statusBar.Tiles.Add(new HelpTile(ed));
             statusBar.Tiles.Add(new ModeTile(ed));
             statusBar.Tiles.Add(new EolTile(ed));
@@ -132,7 +131,7 @@ namespace CodeBox.Test
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (App.Instance.Terminating || Application.OpenForms.Count > 1 || !(e.Cancel = !App.Instance.Close()))
+            if (App.Terminating || Application.OpenForms.Count > 1 || !(e.Cancel = !App.Close()))
                 ed.DetachBuffer();
         }
     }

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace CodeBox.Main.File
 {
-    [Export(typeof(IComponent))]
+    [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.systempath")]
     public sealed class SystemPathValueProvider : IArgumentValueProvider
     {

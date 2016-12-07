@@ -40,7 +40,7 @@ namespace CodeBox.Affinity
 
         public IDocumentAffinity GetRootAffinity()
         {
-            return ComponentCatalog.Instance.Grammars().GetGrammar(editor.Buffer.GrammarKey);
+            return App.Ext.Grammars().GetGrammar(editor.Buffer.GrammarKey);
         }
 
         public IDocumentAffinity GetAffinity(Pos pos)
@@ -54,7 +54,7 @@ namespace CodeBox.Affinity
             var id = GetAffinityId(line, col);
 
             if (id != 0)
-                grm = ComponentCatalog.Instance.Grammars().GetGrammar(id);
+                grm = App.Ext.Grammars().GetGrammar(id);
 
             return grm;
         }

@@ -5,10 +5,12 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Indentation
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("indent.curly")]
+    [Export(typeof(IDentComponent))]
+    [ComponentData(Name)]
     public sealed class CurlyDentProvider : IDentComponent
     {
+        public const string Name = "indent.curly";
+
         public int CalculateIndentation(IExecutionContext context, int lineIndex)
         {
             var ctx = (Editor)context;

@@ -130,7 +130,7 @@
     <Compile Include="Commands\WordRightCommand.cs" />
     <Compile Include="Affinity\AffinityManager.cs" />
     <Compile Include="Affinity\IDocumentAffinity.cs" />
-    <Compile Include="ComponentCatalogExtensions.cs" />
+    <Compile Include="AppExtensions.cs" />
     <Compile Include="ComponentModel\ITextEditor.cs" />
     <Compile Include="ComponentModel\IThemeComponent.cs" />
     <Compile Include="DocumentBufferManager.cs" />
@@ -154,7 +154,7 @@
     <Compile Include="Folding\FoldingNeededEventArgs.cs" />
     <Compile Include="Folding\FoldingStates.cs" />
     <Compile Include="ComponentModel\IFoldingComponent.cs" />
-    <Compile Include="Folding\IndentFoldingProvider.cs" />
+    <Compile Include="Folding\IndentFoldingComponent.cs" />
     <Compile Include="Indentation\BlockDentProvider.cs" />
     <Compile Include="Indentation\CurlyDentProvider.cs" />
     <Compile Include="Lexing\EnumerableExtensions.cs" />

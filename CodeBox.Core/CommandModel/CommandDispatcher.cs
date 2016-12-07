@@ -11,9 +11,6 @@ namespace CodeBox.Core.CommandModel
 {
     public abstract class CommandDispatcher : ICommandDispatcher
     {
-        [Import("commandbar.default", typeof(IComponent))]
-        private ICommandBar commandBar = null;
-
         private Dictionary<string, MethodInfo> commands;
 
         public bool Execute(IExecutionContext ctx, Identifier commandKey, params object[] args)
@@ -72,7 +69,7 @@ namespace CodeBox.Core.CommandModel
         protected virtual void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey, object[] args)
         {
             var cmd = CommandCatalog.Instance.GetCommandByKey(commandKey);
-            commandBar.Show(ctx, cmd.Alias, args);
+            App.Catalog<ICommandBar>().First().Show(ctx, cmd.Alias, args);
         }
 
         private void ResolveCommands()

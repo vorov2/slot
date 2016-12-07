@@ -1,4 +1,5 @@
 ﻿using CodeBox.ComponentModel;
+using CodeBox.Core;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
@@ -116,7 +117,7 @@ namespace CodeBox.Folding
 
                     if (key != null)
                     {
-                        var fp = ComponentCatalog.Instance.GetComponent(key) as IFoldingComponent;
+                        var fp = App.Catalog<IFoldingComponent>().GetComponent(key);
                         fp.Fold(editor, range);
                     }
                 }

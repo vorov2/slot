@@ -25,7 +25,7 @@ namespace CodeBox.StatusBar
 
         protected internal override void PerformClick()
         {
-            ComponentCatalog.Instance.RunCommand(editor, Cmd.ToggleWordWrap);
+            App.Ext.RunCommand(editor, Cmd.ToggleWordWrap);
             base.PerformClick();
         }
     }

@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace CodeBox.Test
 {
-    [Export(typeof(IComponent))]
+    [Export(typeof(ICommandDispatcher))]
     [ComponentData("test")]
     public sealed class TestCommandDispatcher : CommandDispatcher
     {
@@ -36,35 +36,33 @@ namespace CodeBox.Test
                 return;
             }
 
-            var exec = ComponentCatalog.Instance.GetComponent(cmd.Key.Namespace) as ICommandDispatcher;
-            if (exec != null)
-                exec.Execute(viewManager.GetActiveView(), cmd.Key);
+            App.Ext.RunCommand(viewManager.GetActiveView(), cmd.Key);
         }
 
         [Command]
         public void ChangeTheme(string themeName)
         {
-            var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
+            var theme = App.Catalog<IThemeComponent>().First();
             theme.ChangeTheme(themeName);
         }
 
     }
 
-    [Export(typeof(IComponent))]
+    [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.themes")]
     public sealed class ThemeValueProvider : IArgumentValueProvider
     {
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string;
-            var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
+            var theme = App.Catalog<IThemeComponent>().First();
             return theme.EnumerateThemes()
                 .Where(t => str == null || t.Key.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(t => new ValueItem(t.Key, t.Name));
         }
     }
 
-    [Export(typeof(IComponent))]
+    [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.commands")]
     public sealed class CommandsProvider : IArgumentValueProvider
     {

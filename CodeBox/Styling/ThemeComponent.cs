@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace CodeBox.Styling
 {
-    [Export(typeof(IComponent))]
+    [Export(typeof(IThemeComponent))]
     [ComponentData(Name)]
     public sealed class ThemeComponent : IThemeComponent
     {

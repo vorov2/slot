@@ -7,10 +7,12 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Lexing
 {
-    [Export(typeof(IComponent))]
-    [ComponentData("grammar.default")]
+    [Export(typeof(IGrammarComponent))]
+    [ComponentData(Name)]
     public sealed class GrammarComponent : IGrammarComponent
     {
+        public const string Name = "grammar.default";
+
         private readonly Dictionary<string, Grammar> grammars = new Dictionary<string, Grammar>();
         private readonly List<Grammar> index = new List<Grammar>();
 

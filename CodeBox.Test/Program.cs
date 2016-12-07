@@ -4,6 +4,8 @@ using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.Keyboard;
+using CodeBox.Core.ViewModel;
+using CodeBox.Lexing;
 using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,20 @@ namespace CodeBox.Test
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+
+            App.RegisterCatalog<ICommandDispatcher>();
+            App.RegisterCatalog<ICommandBar>();
+            App.RegisterCatalog<IArgumentValueProvider>();
+            App.RegisterCatalog<IThemeComponent>();
+            App.RegisterCatalog<IDentComponent>();
+            App.RegisterCatalog<IFoldingComponent>();
+            App.RegisterCatalog<IStylerComponent>();
+            App.RegisterCatalog<IGrammarComponent>();
+            App.RegisterCatalog<IBufferManager>();
+            App.RegisterCatalog<IViewManager>();
+            App.Initialize();
+
             var frm = new MainForm();
             frm.Show();
 
@@ -35,13 +51,12 @@ namespace CodeBox.Test
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
             CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
 
-            var theme = ComponentCatalog.Instance.GetComponent((Identifier)"theme.default") as IThemeComponent;
+            var theme = App.Catalog<IThemeComponent>().First();
             theme.ChangeTheme("dark");
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
             var cmd = (Identifier)"file.openfile";
-            var exec = ComponentCatalog.Instance.GetComponent(cmd.Namespace) as ICommandDispatcher;
-            exec.Execute(ed, cmd, fl);
+            App.Ext.RunCommand(ed, cmd, fl);
             Application.Run();
         }
         private static string LocalFile(string fileName)

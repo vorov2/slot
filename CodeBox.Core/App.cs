@@ -4,6 +4,8 @@ using CodeBox.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,21 +13,47 @@ using System.Windows.Forms;
 
 namespace CodeBox.Core
 {
-    public sealed class App
+    public static class App
     {
-        [Import]
-        private IViewManager viewManager = null;
+        private static readonly Dictionary<Type, object> catalogs = new Dictionary<Type, object>();
+        private static CompositionContainer container;
 
-        [Import]
-        private IBufferManager bufferManager = null;
-
-        private App()
+        public static void Initialize()
         {
+            var catalog = new AggregateCatalog();
+            var path = new FileInfo(typeof(App).Assembly.Location).DirectoryName;
+            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
+            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.exe"));
+            container = new CompositionContainer(catalog);
 
+            foreach (var c in catalogs.Values)
+                container.ComposeParts(c);
         }
 
-        public bool Close()
+        public static void RegisterCatalog<T>() where T : IComponent
         {
+            var type = typeof(T);
+
+            if (catalogs.ContainsKey(type))
+                throw new Exception($"Component catalog for '{type.Name}' is already registered.");
+
+            var cat = new ComponentCatalog<T>();
+            catalogs.Add(type, cat);
+        }
+
+        public static ComponentCatalog<T> Catalog<T>() where T : IComponent
+        {
+            object ret;
+
+            if (!catalogs.TryGetValue(typeof(T), out ret))
+                throw new Exception($"Unable to find component catalog for '{typeof(T).Name}'.");
+
+            return (ComponentCatalog<T>)ret;
+        }
+
+        public static bool Close()
+        {
+            var bufferManager = Catalog<IBufferManager>().First();
             var seq = bufferManager.EnumerateBuffers()
                 .OfType<IMaterialBuffer>()
                 .Where(b => b.IsDirty);
@@ -42,7 +70,7 @@ namespace CodeBox.Core
                 if (res == DialogResult.Yes)
                 {
                     var cmd = (Identifier)"file.save";
-                    var exec = ComponentCatalog.Instance.GetComponent(cmd.Namespace) as ICommandDispatcher;
+                    var exec = Catalog<ICommandDispatcher>().GetComponent(cmd.Namespace);
 
                     foreach (var d in seq)
                         exec.Execute(null, cmd, d.File.FullName);
@@ -57,8 +85,13 @@ namespace CodeBox.Core
             return true;
         }
 
-        public bool Terminating { get; private set; }
+        public static bool Terminating { get; private set; }
 
-        public static App Instance { get; } = new App();
+        public static IAppExtensions Ext { get; } = null;
+    }
+
+    public interface IAppExtensions
+    {
+
     }
 }
