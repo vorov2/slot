@@ -1,5 +1,6 @@
 ﻿using CodeBox.ComponentModel;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.ViewModel;
 using Json;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,9 @@ namespace CodeBox.Styling
 
         [Import("directory.root")]
         private string rootPath = null;
+
+        [Import]
+        private IViewManager viewManager = null;
 
         public ThemeComponent()
         {
@@ -46,7 +50,12 @@ namespace CodeBox.Styling
                 var fi = new FileInfo(Path.Combine(rootPath, themePath, th.File));
 
                 if (fi.Exists)
+                {
                     ThemeReader.Read(File.ReadAllText(fi.FullName), this);
+
+                    foreach (var v in viewManager.EnumerateViews().OfType<Editor>())
+                        v.Redraw();
+                }
             }
         }
 
