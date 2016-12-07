@@ -10,17 +10,18 @@ using CodeBox.Drawing;
 using System.Windows.Forms;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Commands;
-using CodeBox.CommandLine;
+using CodeBox.CommandBar;
 using CodeBox.Autocomplete;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Margins;
 using CodeBox.Core.Keyboard;
 
-namespace CodeBox.CommandLine
+namespace CodeBox.CommandBar
 {
-    public class CommandMargin : Margin
+    public class CommandBarControl : Control
     {
+        private Editor editor;
         private Editor commandEditor;
         private AutocompleteWindow window;
         private Rectangle lastBounds;
@@ -28,76 +29,80 @@ namespace CodeBox.CommandLine
         {
             LineAlignment = StringAlignment.Near,
             Alignment = StringAlignment.Near,
-            Trimming = StringTrimming.EllipsisPath
+            Trimming = StringTrimming.EllipsisPath,
+            FormatFlags = StringFormatFlags.NoWrap
         };
 
-        public CommandMargin(Editor editor) : base(editor)
+        public CommandBarControl(Editor editor)
         {
-
+            this.editor = editor;
+            SetStyle(ControlStyles.Selectable, false);
+            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer
+                | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
+            Cursor = Cursors.Default;
         }
 
-        protected override bool OnDraw(Graphics g, Rectangle bounds)
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            Height = (int)Math.Round(editor.Info.LineHeight * 1.7, MidpointRounding.AwayFromZero);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
         {
             var ed = GetEditor();
 
             if (ed.Width != PreferredEditorWidth)
                 HideEditor();
 
-            var cs = (CommandBarStyle)Editor.Theme.GetStyle(StandardStyle.CommandBar);
+            var g = e.Graphics;
+            var bounds = e.ClipRectangle;
+            var cs = (CommandBarStyle)editor.Theme.GetStyle(StandardStyle.CommandBar);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
             lastBounds = bounds;
 
             if (!ed.Visible)
             {
-                var font = Editor.Settings.SmallFont.Get(cs.FontStyle);//SysFont.Font;// 
-                var x = Editor.Info.CharWidth * 2f;
-                var h = Editor.Info.CharWidth;
+                var font = editor.Settings.SmallFont.Get(cs.FontStyle);//SysFont.Font;// 
+                var x = editor.Info.CharWidth * 2f;
+                var h = editor.Info.CharWidth;
                 var y = bounds.Y + ((bounds.Height - h) / 2);
-                var w = Editor.Info.CharWidth;
+                var w = editor.Info.CharWidth;
 
-                if (Editor.Buffer.IsDirty)
+                if (editor.Buffer.IsDirty)
                     g.FillRectangle(cs.ForeColor.Brush(), x, y, w, h);
                 else
                     g.DrawRectangle(cs.ForeColor.Pen(), x, y, w, h);
 
                 y = (bounds.Height - font.Height) / 2;
-                x = Editor.Info.CharWidth * 4f;
-                g.DrawString(Editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextStyle.Format);
-                x += /*g.MeasureString(Editor.Buffer.File.Name, font).Width;*/(Editor.Buffer.File.Name.Length + 1.5f) * Editor.Info.SmallCharWidth;
+                x = editor.Info.CharWidth * 4f;
+                g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextStyle.Format);
+                x += /*g.MeasureString(Editor.Buffer.File.Name, font).Width;*/(editor.Buffer.File.Name.Length + 1.5f) * editor.Info.SmallCharWidth;
 
-                g.DrawString(Editor.Buffer.File.DirectoryName, font, cs.SpecialColor.Brush(), 
-                    new RectangleF(x, y, bounds.Width - x - Editor.Info.CharWidth, bounds.Height), format);
+                g.DrawString(editor.Buffer.File.DirectoryName, font, cs.SpecialColor.Brush(), 
+                    new RectangleF(x, y, bounds.Width - x - editor.Info.CharWidth, bounds.Height), format);
             }
             else
             {
                 var shift = Dpi.GetHeight(2);
                 g.FillRectangle(ed.BackColor.Brush(),
-                    new Rectangle(ed.Left - Editor.Info.SmallCharWidth, shift,
-                    ed.Width + Editor.Info.SmallCharWidth * 2, bounds.Height - shift * 2));
+                    new Rectangle(ed.Left - editor.Info.SmallCharWidth, shift,
+                    ed.Width + editor.Info.SmallCharWidth * 2, bounds.Height - shift * 2));
             }
-
-            return true;
         }
 
-        public override MarginEffects MouseDown(Point loc)
+        protected override void OnMouseDown(MouseEventArgs e)
         {
-            //ShowEditor();
-            ComponentCatalog.Instance.RunCommand(Editor, (Identifier)"file.openfile");
-            return MarginEffects.CaptureMouse;
-        }
-
-        public override MarginEffects MouseUp(Point loc)
-        {
-            GetEditor().Focus();
-            commandEditor.Redraw();
-            return MarginEffects.None;
+            ComponentCatalog.Instance.RunCommand(editor, (Identifier)"file.openfile");
+            Invalidate();
+            base.OnMouseDown(e);
         }
 
         private Editor GetEditor()
         {
             if (commandEditor == null)
             {
-                commandEditor = new LineEditor(Editor);
+                commandEditor = new LineEditor(editor);
                 commandEditor.Visible = false;
                 commandEditor.LostFocus += EditorLostFocus;
                 commandEditor.KeyDown += EditorKeyDown;
@@ -105,8 +110,7 @@ namespace CodeBox.CommandLine
                 commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
                 commandEditor.CommandRejected += EditorCommandRejected;
                 ResetBuffer();
-                Editor.Controls.Add(commandEditor);
-                commandEditor.BringToFront();
+                Controls.Add(commandEditor);
             }
 
             return commandEditor;
@@ -117,17 +121,17 @@ namespace CodeBox.CommandLine
             var key = KeyboardAdapter.Instance.LastKey;
 
             if (key.Name != "newline" && key.Name != "up" && key.Name != "down" && key.Name != "indent")
-                Editor.RunCommand(KeyboardAdapter.Instance.LastKey);
+                editor.RunCommand(KeyboardAdapter.Instance.LastKey);
         }
 
         private AutocompleteWindow GetAutocompleteWindow()
         {
             if (window == null)
             {
-                window = new AutocompleteWindow(Editor) { MaxItems = 15, SmallFont = true };
+                window = new AutocompleteWindow(editor) { MaxItems = 15, SmallFont = true };
                 window.Visible = false;
                 window.MouseDown += AutocompleteClick;
-                Editor.FindForm().Controls.Add(window);
+                editor.FindForm().Controls.Add(window);
                 window.BringToFront();
             }
 
@@ -139,7 +143,7 @@ namespace CodeBox.CommandLine
         private void ShowAutocompleteWindow(IArgumentValueProvider prov)
         {
             var wnd = GetAutocompleteWindow();
-            wnd.PreferredWidth = commandEditor.Width + Editor.Info.SmallCharWidth*2;
+            wnd.PreferredWidth = commandEditor.Width + editor.Info.SmallCharWidth*2;
             var items = prov.EnumerateArgumentValues(lastLookupInput);
 
             if (items.Any()
@@ -147,13 +151,13 @@ namespace CodeBox.CommandLine
                     || !items.First().Value.Equals(lastLookupInput, StringComparison.OrdinalIgnoreCase)))
             {
                 wnd.SetItems(items);
-                wnd.Left = commandEditor.Left - Editor.Info.SmallCharWidth;
+                wnd.Left = commandEditor.Left - editor.Info.SmallCharWidth;
                 wnd.Top = lastBounds.Top + lastBounds.Height;
                 window.Trimming = currentAffinity == ArgumentAffinity.FilePath ?
                     StringTrimming.EllipsisPath : StringTrimming.EllipsisCharacter;
                 wnd.Visible = true;
                 wnd.Invalidate();
-                Editor.LockMouseScrolling = true;
+                editor.LockMouseScrolling = true;
             }
             else
                 HideAutocompleteWindow();
@@ -189,7 +193,7 @@ namespace CodeBox.CommandLine
             {
                 window.Reset();
                 window.Visible = false;
-                Editor.LockMouseScrolling = false;
+                editor.LockMouseScrolling = false;
                 return true;
             }
 
@@ -297,7 +301,7 @@ namespace CodeBox.CommandLine
 
         private string TrimToSize(string str, int x)
         {
-            var max = ((commandEditor.Info.TextWidth - x) / Editor.Info.SmallCharWidth) - 3;
+            var max = ((commandEditor.Info.TextWidth - x) / editor.Info.SmallCharWidth) - 3;
 
             if (str.Length > max)
                 str = str.Substring(0, max) + "…";
@@ -323,9 +327,9 @@ namespace CodeBox.CommandLine
                 return;
 
             str = TrimToSize(str, x);
-            var style = Editor.Theme.GetStyle(StandardStyle.Popup);
-            g.DrawRoundedRectangle(style.BackColor, new Rectangle(x - Editor.Info.CharWidth, y,
-                Editor.Info.SmallCharWidth * (str.Length + 2), (int)(commandEditor.Info.SmallCharHeight * 1.1)));
+            var style = editor.Theme.GetStyle(StandardStyle.Popup);
+            g.DrawRoundedRectangle(style.BackColor, new Rectangle(x - editor.Info.CharWidth, y,
+                editor.Info.SmallCharWidth * (str.Length + 2), (int)(commandEditor.Info.SmallCharHeight * 1.1)));
             var cmt = false;
 
             for (var i = 0; i < str.Length; i++)
@@ -396,18 +400,18 @@ namespace CodeBox.CommandLine
             commandEditor.Buffer.WordWrap = false;
         }
 
-        private void EditorLostFocus(object sender, EventArgs e) => Close();
+        private void EditorLostFocus(object sender, EventArgs e) => CloseInput();
 
-        public void Show(Statement stmt)
+        public void ShowInput(Statement stmt)
         {
             ContinuationStatement = statement = stmt;
-            Show(default(string));
+            ShowInput(default(string));
             commandEditor.Redraw();
         }
 
-        public void Show() => Show(default(string));
+        public void ShowInput() => ShowInput(default(string));
 
-        public void Show(string cmd)
+        public void ShowInput(string cmd)
         {
             ShowEditor();
 
@@ -420,16 +424,16 @@ namespace CodeBox.CommandLine
             commandEditor.Focus();
         }
 
-        public void Close() => HideEditor();
+        public void CloseInput() => HideEditor();
 
         private void ShowEditor()
         {
-            Editor.Redraw();
             var ed = GetEditor();
             ed.Top = (lastBounds.Height - ed.Height) / 2;
-            ed.Left = Editor.ClientSize.Width / 20;
+            ed.Left = editor.ClientSize.Width / 20;
             ed.Width = PreferredEditorWidth;
             ed.Visible = true;
+            Invalidate();
         }
 
         private void HideEditor()
@@ -444,7 +448,7 @@ namespace CodeBox.CommandLine
             }
 
             if (HideAutocompleteWindow() || hidden)
-                Editor.Redraw();
+                Invalidate();
         }
 
         private static readonly object[] defargs = new object[0];
@@ -463,16 +467,14 @@ namespace CodeBox.CommandLine
                 var exec = ComponentCatalog.Instance.GetComponent(md.Key.Namespace) as ICommandDispatcher;
 
                 if (exec != null)
-                    exec.Execute(Editor, md.Key, args);
+                    exec.Execute(editor, md.Key, args);
             }
         }
 
-        internal int PreferredEditorWidth => Editor.ClientSize.Width - (Editor.ClientSize.Width / 10);
+        internal int PreferredEditorWidth => editor.ClientSize.Width - (editor.ClientSize.Width / 10);
 
         internal Statement ContinuationStatement { get; set; }
 
         internal bool IsActive => commandEditor != null && commandEditor.Visible;
-
-        public override int CalculateSize() => Editor.Info.LineHeight + Editor.Info.CharWidth;
     }
 }

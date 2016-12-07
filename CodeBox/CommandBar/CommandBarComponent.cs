@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using CodeBox.Core.ViewModel;
 using CodeBox.Core.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Windows.Forms;
 
-namespace CodeBox.CommandLine
+namespace CodeBox.CommandBar
 {
     [Export(Name, typeof(IComponent))]
     [ComponentData(Name)]
-    public sealed class CommandBar : ICommandBar
+    public sealed class CommandBarComponent : ICommandBar
     {
         public const string Name = "commandbar.default";
 
@@ -20,7 +21,7 @@ namespace CodeBox.CommandLine
 
         public void Show(IExecutionContext view, string commandAlias, params object[] args)
         {
-            var cm = GetMargin(view);
+            var cm = GetCommandBarControl();
 
             if (cm != null)
             {
@@ -28,31 +29,28 @@ namespace CodeBox.CommandLine
                 {
                     var stmt = new Statement(commandAlias);
                     stmt.Arguments.AddRange(args.Select(a => new StatementArgument(a)));
-                    cm.Show(stmt);
+                    cm.ShowInput(stmt);
                 }
                 else if (commandAlias != null)
-                    cm.Show(commandAlias);
+                    cm.ShowInput(commandAlias);
                 else
-                    cm.Show();
+                    cm.ShowInput();
             }
         }
 
         public void Hide(IExecutionContext view)
         {
-            var cm = GetMargin(view);
+            var cm = GetCommandBarControl();
 
             if (cm != null)
-                cm.Close();
+                cm.CloseInput();
         }
 
-        private CommandMargin GetMargin(IExecutionContext view)
+        internal static CommandBarControl GetCommandBarControl()
         {
-            var editor = view as Editor;
-
-            if (editor == null)
-                return null; //Log
-
-            return editor.TopMargins.FirstOrDefault(b => b is CommandMargin) as CommandMargin;
+            return Form.ActiveForm.Controls.OfType<SplitContainer>()
+                .FirstOrDefault()
+                .Panel1.Controls.OfType<CommandBarControl>().FirstOrDefault();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.CommandLine
+namespace CodeBox.CommandBar
 {
     public struct Loc : IEquatable<Loc>
     {

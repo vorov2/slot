@@ -62,12 +62,12 @@
     <Compile Include="BufferCommands\ModeValueProvider.cs" />
     <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
-    <Compile Include="CommandLine\CommandBar.cs" />
-    <Compile Include="CommandLine\CommandLineItem.cs" />
-    <Compile Include="CommandLine\CommandParser.cs" />
-    <Compile Include="CommandLine\Loc.cs" />
-    <Compile Include="CommandLine\Statement.cs" />
-    <Compile Include="CommandLine\StatementArgument.cs" />
+    <Compile Include="CommandBar\CommandBarComponent.cs" />
+    <Compile Include="CommandBar\CommandLineItem.cs" />
+    <Compile Include="CommandBar\CommandParser.cs" />
+    <Compile Include="CommandBar\Loc.cs" />
+    <Compile Include="CommandBar\Statement.cs" />
+    <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="Cmd.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
@@ -121,7 +121,7 @@
     <Compile Include="Commands\SelectWordAddCommand.cs" />
     <Compile Include="Commands\SelectWordCommand.cs" />
     <Compile Include="Commands\SetCaretCommand.cs" />
-    <Compile Include="Commands\ToggleCommandBar.cs" />
+    <Compile Include="CommandBar\ToggleCommandBar.cs" />
     <Compile Include="Commands\UnindentCommand.cs" />
     <Compile Include="Commands\IndentCommand.cs" />
     <Compile Include="Commands\ToggleFoldingCommand.cs" />
@@ -182,7 +182,9 @@
     <Compile Include="Margins\MarginList.cs" />
     <Compile Include="Margins\MarginMethod.cs" />
     <Compile Include="Margins\ScrollBarMargin.cs" />
-    <Compile Include="CommandLine\CommandMargin.cs" />
+    <Compile Include="CommandBar\CommandBarControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="Margins\TopMargin.cs" />
     <Compile Include="Margins\VerticalScrollBarMargin.cs" />

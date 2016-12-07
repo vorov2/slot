@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeBox.CommandLine
+namespace CodeBox.CommandBar
 {
     public sealed class Statement : CommandLineItem
     {

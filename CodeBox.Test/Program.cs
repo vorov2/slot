@@ -1,4 +1,4 @@
-﻿using CodeBox.CommandLine;
+﻿using CodeBox.CommandBar;
 using CodeBox.ComponentModel;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;

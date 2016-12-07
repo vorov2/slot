@@ -19,7 +19,7 @@ using CodeBox.Affinity;
 using CodeBox.Core.Keyboard;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
-using CodeBox.CommandLine;
+using CodeBox.CommandBar;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ComponentModel;
 using CodeBox.StatusBar;
@@ -30,6 +30,7 @@ namespace CodeBox.Test
     {
         private Editor ed;
         private Editor output;
+        private CommandBarControl commandBar;
 
         public MainForm()
         {
@@ -41,12 +42,15 @@ namespace CodeBox.Test
         private void Initialize()
         {
             ed = new Editor { Dock = DockStyle.Fill };
+
+            commandBar = new CommandBarControl(ed) { Dock = DockStyle.Top };
+
+
             SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed.Settings);
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new FoldingMargin(ed));
             ed.RightMargins.Add(new VerticalScrollBarMargin(ed));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
-            ed.TopMargins.Add(new CommandMargin(ed));
             ed.TopMargins.Add(new TopMargin(ed));
 
             var statusBar = new StatusBarControl(ed) { Dock = DockStyle.Bottom };
@@ -64,9 +68,14 @@ namespace CodeBox.Test
 
 
             splitContainer.Panel1.Controls.Add(ed);
+            splitContainer.Panel1.Controls.Add(commandBar);
             splitContainer.Panel1.Controls.Add(statusBar);
             //statusBar.BringToFront();
-            ed.Paint += (o, e) => statusBar.Invalidate();
+            ed.Paint += (o, e) =>
+            {
+                statusBar.Invalidate();
+                commandBar.Invalidate();
+            };
             //var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
             //ed.Styles.Theme = coll;
         }

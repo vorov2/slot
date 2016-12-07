@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Margins;
 using System.ComponentModel.Composition;
 using CodeBox.Core.ComponentModel;
-using CodeBox.CommandLine;
+using CodeBox.CommandBar;
+using CodeBox.Commands;
 
-namespace CodeBox.Commands
+namespace CodeBox.CommandBar
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.togglecommandbar")]
@@ -21,12 +18,12 @@ namespace CodeBox.Commands
 
             if (ed != null)
             {
-                var cm = ed.TopMargins.FirstOrDefault(b => b is CommandMargin) as CommandMargin;
+                var cm = CommandBarComponent.GetCommandBarControl();
 
                 if (cm != null && cm.IsActive)
-                    cm.Close();
+                    cm.CloseInput();
                 else
-                    cm.Show();
+                    cm.ShowInput();
             }
 
             return ActionResults.Clean;
