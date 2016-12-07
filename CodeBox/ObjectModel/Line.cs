@@ -238,6 +238,7 @@ namespace CodeBox.ObjectModel
 
             var width = 0;
             var tetra = 0;
+            var indent = -1;
 
             for (var i = 0; i < chars.Count; i++)
             {
@@ -248,19 +249,28 @@ namespace CodeBox.ObjectModel
 
                 width += w;
 
-                if (c.Char == ' ' || c.Char == '\t')
+                //if (indent == -1 && (cuts == null || cuts.Count == 0) && c.Char != ' ' && c.Char != '\t')
+                //    indent = i;
+
+                if (IsSep(c.Char))
                 {
                     var tet = GetNextWordTetras(i + 1, tabSize);
 
                     if (width + tet * charWidth > limit)
                     {
-                        width = 0;
+                        width = indent > 0 ? indent * charWidth : 0;//0;
                         AddCut(i + 1);
                     }
                 }
             }
 
             Invalidated = true;
+        }
+
+        private bool IsSep(char ch)
+        {
+            return ch == ' ' || ch == '\t' || ch == ' ' || ch == '.' || ch == '!'
+                || ch == '?' || ch == ',' || ch == ';' || ch == '(' || ch == ')';
         }
 
         private int GetNextWordTetras(int index, int tabSize)
@@ -273,7 +283,7 @@ namespace CodeBox.ObjectModel
                 var ct = c.Char == '\t' ? GetTetras(i, tabSize) : 1;
                 tetras += ct;
 
-                if (c.Char == '\t' || c.Char == ' ')
+                if (IsSep(c.Char))
                     break;
             }
 

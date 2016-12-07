@@ -37,6 +37,7 @@ namespace CodeBox.Test
             form.SplitContainer.BackColor = form.SplitContainer.Panel1.BackColor
                 = form.SplitContainer.Panel2.BackColor = form.Editor.BackColor;
             form.SplitContainer.Panel2Collapsed = !form.SplitContainer.Panel2Collapsed;
+            form.SplitContainer.SplitterDistance = (int)(form.ClientSize.Height * 0.5);
         }
 
         public override int MeasureWidth(Graphics g) => form.Editor.Info.CharWidth * 2;

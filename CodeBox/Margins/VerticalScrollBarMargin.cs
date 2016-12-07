@@ -1,4 +1,5 @@
 ﻿using CodeBox.Drawing;
+using CodeBox.Search;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -58,29 +59,40 @@ namespace CodeBox.Margins
             if (Editor.Search.HasSearchResults)
             {
                 var hl = Editor.Theme.GetStyle(StandardStyle.SearchItem);
-                var markHeight = (int)(bounds.Height / Editor.Lines.Count);
-                markHeight = markHeight < 2 ? 2 : markHeight;
-                var lastLine = -1;
-
-                foreach (var f in Editor.Search.EnumerateSearchResults())
-                {
-                    if (f.Line == lastLine)
-                        continue;
-
-                    var linePos = f.Line / (Editor.Lines.Count / 100d);
-                    var markY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
-                    var w = Dpi.GetWidth(4);
-
-                    g.FillRectangle(hl.LineColor.Brush(), new Rectangle(
-                        bounds.X + (bounds.Width - w) / 2,
-                        (int)markY,
-                        w,
-                        Dpi.GetHeight(markHeight)));
-                    lastLine = f.Line;
-                }
+                MarkOccurences(g, hl, bounds, Editor.Search.EnumerateSearchResults());
+            }
+            else if (Editor.MatchWords.HasSearchResults)
+            {
+                var hl = Editor.Theme.GetStyle(StandardStyle.MatchedWord);
+                MarkOccurences(g, hl, bounds, Editor.MatchWords.EnumerateSearchResults());
             }
 
             return true;
+        }
+
+        private void MarkOccurences(Graphics g, Style hl, Rectangle bounds, IEnumerable<SearchResult> seq)
+        {
+            var markHeight = bounds.Height / Editor.Lines.Count;
+            var min = Dpi.GetHeight(6);
+            markHeight = markHeight < min ? min : markHeight;
+            var lastLine = -1;
+
+            foreach (var f in seq)
+            {
+                if (f.Line == lastLine)
+                    continue;
+
+                var linePos = f.Line / (Editor.Lines.Count / 100f);
+                var markY = Editor.Info.TextTop + linePos * (bounds.Height / 100f);
+                var w = Dpi.GetWidth(5);
+
+                g.FillRectangle((hl.LineColor.IsEmpty ? hl.BackColor : hl.LineColor).Brush(), new RectangleF(
+                    bounds.X + (bounds.Width - w) / 2f,
+                    markY,
+                    w,
+                    Dpi.GetHeight(markHeight)));
+                lastLine = f.Line;
+            }
         }
 
         public override int CalculateSize()

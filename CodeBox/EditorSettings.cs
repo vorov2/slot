@@ -94,7 +94,7 @@ namespace CodeBox
         }
 
         private Font _smallFont;
-        internal Font SmallFont
+        public Font SmallFont
         {
             get { return _smallFont; }
             private set

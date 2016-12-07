@@ -37,7 +37,7 @@ namespace CodeBox.Test
         {
             InitializeComponent();
             Initialize();
-            InitializeOutput();
+            InitializeOutput(ed.Settings);
         }
 
         private void Initialize()
@@ -80,7 +80,7 @@ namespace CodeBox.Test
             //ed.Styles.Theme = coll;
         }
 
-        private void InitializeOutput()
+        private void InitializeOutput(EditorSettings set)
         {
             output = new Editor { Dock = DockStyle.Fill };
             output.LeftMargins.Add(new GutterMargin(output));
@@ -88,7 +88,8 @@ namespace CodeBox.Test
             output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));
             output.ThinCaret = true;
 
-            SettingsReader.Read(File.ReadAllText("samples\\settings.json"), output.Settings);
+            output.Settings.Font = set.SmallFont;
+            output.Settings.ShowEol = output.Settings.ShowWhitespace = output.Settings.ShowLineLength = false;
             output.AttachBuffer(App.Catalog<ILogComponent>().GetComponent((Identifier)"log.application"));
             output.ReadOnly = true;
 

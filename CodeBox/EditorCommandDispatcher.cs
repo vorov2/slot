@@ -159,9 +159,6 @@ namespace CodeBox
 
         private void SetEditLines(Editor editor)
         {
-            editor.FirstEditLine = int.MaxValue;
-            editor.LastEditLine = 0;
-
             foreach (var s in editor.Buffer.Selections)
             {
                 var ln = s.GetFirstLine();
@@ -247,6 +244,13 @@ namespace CodeBox
 
                 if (editor.HasContentModified)
                     editor.OnContentModified();
+            }
+
+            if (exp.Has(SetEditRange))
+            {
+                editor.FirstEditLine = int.MaxValue;
+                editor.LastEditLine = 0;
+                SetEditLines(editor);
             }
 
             if (exp.Has(RestoreCaret))

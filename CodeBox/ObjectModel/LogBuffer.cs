@@ -22,8 +22,10 @@ namespace CodeBox.ObjectModel
         {
             var ln = Line.FromString(text);
             ln.State = (int)type;
+            Document.Lines.RemoveAt(Document.Lines.Count - 1);
             Document.Lines.Add(ln);
-            Selections.Set(new Pos(Document.Lines.Count - 1, ln.Length));
+            Document.Lines.Add(Line.Empty());
+            Selections.Set(new Pos(Document.Lines.Count - 1, 0));
             InvalidateLines();
             ScrollToCaret();
             RequestRedraw();

@@ -165,6 +165,7 @@ namespace CodeBox.ObjectModel
 
                 foreach (var v in Views)
                 {
+                    v.Scroll.ScrollPosition = new Point(0, v.Scroll.ScrollPosition.Y);
                     v.Scroll.InvalidateLines(InvalidateFlags.Force);
                     v.Redraw();
                 }

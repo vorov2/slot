@@ -122,6 +122,8 @@ namespace CodeBox.Drawing
             var sel = editor.Buffer.Selections.IsLineSelected(lineIndex);
             var showEol = editor.ShowEol;
             var showWs = editor.ShowWhitespace;
+            var specialSymbol = (TextStyle)editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
+            var indent = -1;
 
             for (var j = 0; j < line.Stripes; j++)
             {
@@ -136,6 +138,12 @@ namespace CodeBox.Drawing
                     cut++;
 
                 var tet = 0;
+
+                //if (indent != -1)
+                //{
+                //    tet = indent;
+                //    x += tet * editor.Info.CharWidth;
+                //}
 
                 for (var i = oldcut; i < cut; i++)
                 {
@@ -153,10 +161,13 @@ namespace CodeBox.Drawing
                         var pos = new Pos(lineIndex, i);
                         var high = sel && editor.Buffer.Selections.IsSelected(pos);
 
+                        //if (c != ' ' && c != '\t' && indent == -1)
+                        //    indent = i;
+
                         if (c == '\0' && showEol || (c == '\t' || c == ' ') && showWs)
                         {
                             c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
-                            style = (TextStyle)editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
+                            style = specialSymbol;
                             style = style.Combine(line.GetStyle(i, editor.Theme));
                         }
                         else
@@ -184,7 +195,7 @@ namespace CodeBox.Drawing
                                 style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
 
                                 if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
-                                    cg.DrawLine(editor.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
+                                    cg.DrawLine(specialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
 
                                 if (editor.Scroll.ScrollPosition.X != 0 && x + editor.Scroll.ScrollPosition.X == editor.Info.TextLeft)
                                 {

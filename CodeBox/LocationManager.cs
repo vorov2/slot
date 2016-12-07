@@ -51,9 +51,16 @@ namespace CodeBox
         public Point PositionToLocation(Pos pos)
         {
             var line = editor.Lines[pos.Line];
-            var y = line.Y + line.GetStripe(pos.Col) * editor.Info.LineHeight + editor.Info.LineHeight
+            var stripe = line.GetStripe(pos.Col);
+            var y = line.Y + stripe * editor.Info.LineHeight + editor.Info.LineHeight
                 + editor.Info.TextTop;
-            var x = line.GetTetras(pos.Col, editor.IndentSize) * editor.Info.CharWidth
+            
+            var tetras = line.GetTetras(pos.Col, editor.IndentSize);
+
+            if (stripe > 0)
+                tetras -= line.GetTetras(line.GetCut(stripe - 1), editor.IndentSize);
+
+            var x = tetras * editor.Info.CharWidth
                 + editor.Info.TextLeft;
             return new Point(x + editor.Scroll.ScrollPosition.X, y + editor.Scroll.ScrollPosition.Y);
         }
