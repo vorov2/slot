@@ -179,7 +179,19 @@ namespace CodeBox.ObjectModel
 
         public bool? CurrentLineIndicator { get; set; }
 
-        public bool ReadOnly { get; set; }
+        private bool _readOnly;
+        public bool ReadOnly
+        {
+            get { return _readOnly; }
+            set
+            {
+                if (value != _readOnly)
+                {
+                    _readOnly = value;
+                    RequestRedraw();
+                }
+            }
+        }
 
         public bool IsDirty
         {
