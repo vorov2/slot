@@ -85,7 +85,9 @@ namespace CodeBox
         protected override void OnDragEnter(DragEventArgs drgevent)
         {
             if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
+            {
                 drgevent.Effect = DragDropEffects.Copy;
+            }
 
             base.OnDragEnter(drgevent);
         }
@@ -94,9 +96,10 @@ namespace CodeBox
         {
             var data = drgevent.Data.GetData(DataFormats.FileDrop) as string[];
 
-            if (data != null && data.Length > 0)
+            if (data != null)
             {
-                RunCommand((Identifier)"file.openfile", data[data.Length - 1]);
+                foreach (var f in data)
+                    RunCommand((Identifier)"file.openfile", f);
             }
 
             base.OnDragDrop(drgevent);

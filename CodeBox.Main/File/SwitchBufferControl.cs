@@ -1,4 +1,5 @@
-﻿using CodeBox.Core.ViewModel;
+﻿using CodeBox.Core;
+using CodeBox.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,6 +13,7 @@ namespace CodeBox.Main.File
     public sealed class SwitchBufferControl : Control
     {
         internal static Font font = new Font(SystemFonts.CaptionFont.Name, 10);
+        internal static Font fontBold = new Font(font, FontStyle.Bold);
 
         private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
         {
@@ -58,14 +60,21 @@ namespace CodeBox.Main.File
 
             for (var i = 0; i < Buffers.Count; i++)
             {
-                var b = Buffers[i];
-                var rect = new Rectangle(x, y, ClientSize.Width - 12, font.Height);
+                if (y > 0 && y < ClientSize.Height - 6)
+                {
+                    var b = Buffers[i];
 
-                if (i == SelectedIndex)
-                    g.FillRectangle(SystemBrushes.Highlight, new Rectangle(x - 6, y, ClientSize.Width, font.Height));
+                    if (i == SelectedIndex)
+                        g.FillRectangle(SystemBrushes.Highlight, new Rectangle(x - 6, y, ClientSize.Width, font.Height));
 
-                g.DrawString(b.File.Name + " (" + b.File.Directory + ")",
-                    font, SystemBrushes.ControlText, rect, format);
+                    var size = g.MeasureString(b.File.Name, fontBold);
+                    g.DrawString(b.File.Name,
+                        fontBold, SystemBrushes.ControlText, new Rectangle(x, y, ClientSize.Width - 12, font.Height), format);
+                    g.DrawString(b.File.DirectoryName,
+                       font, SystemBrushes.ControlText, new RectangleF(x + size.Width, y,
+                            ClientSize.Width - 12 - size.Width, font.Height), format);
+                }
+
                 y += font.Height;
             }
         }
