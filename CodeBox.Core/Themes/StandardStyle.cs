@@ -1,12 +1,6 @@
-﻿using CodeBox.Core;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace CodeBox.Styling
+namespace CodeBox.Core.Themes
 {
     public enum StandardStyle
     {
@@ -14,93 +8,117 @@ namespace CodeBox.Styling
         Default = 0,
 
         [FieldName("selection")]
-        Selection = 1,
+        Selection,
 
         [FieldName("symbol.special")]
-        SpecialSymbol = 2,
+        SpecialSymbol,
 
         [FieldName("hyperlink")]
-        Hyperlink = 3,
+        Hyperlink,
 
         [FieldName("bracket.matched")]
-        MatchedBracket = 4,
+        MatchedBracket,
 
         [FieldName("number")]
-        Number = 5,
+        Number,
 
         [FieldName("bracket")]
-        Bracket = 6,
+        Bracket,
 
         [FieldName("keyword")]
-        Keyword = 10,
+        Keyword,
 
         [FieldName("keyword.special")]
-        KeywordSpecial = 11,
+        KeywordSpecial,
 
         [FieldName("keyword.typename")]
-        TypeName = 12,
+        TypeName,
 
         [FieldName("comment")]
-        Comment = 13,
+        Comment,
 
         [FieldName("comment.multiline")]
-        CommentMultiline = 14,
+        CommentMultiline,
 
         [FieldName("comment.document")]
-        CommentDocument = 15,
+        CommentDocument,
 
         [FieldName("string")]
-        String = 16,
+        String,
 
         [FieldName("string.multiline")]
-        StringMultiline = 17,
+        StringMultiline,
 
         [FieldName("string.macro")]
-        StringMacro = 18,
+        StringMacro,
 
         [FieldName("char")]
-        Char = 19,
+        Char,
 
         [FieldName("preprocessor")]
-        Preprocessor = 20,
+        Preprocessor,
 
         [FieldName("keyword.literal")]
-        Literal = 21,
+        Literal,
 
         [FieldName("regex")]
-        Regex = 22,
+        Regex,
 
         [FieldName("margin.linenumbers")]
-        LineNumbers = 23,
+        LineNumbers,
+
+        [FieldName("margin.currentlinenumber")]
+        CurrentLineNumber,
 
         [FieldName("margin.scrollbar")]
-        ScrollBars = 24,
+        ScrollBars,
+
+        [FieldName("margin.activescrollbar")]
+        ActiveScrollBar,
 
         [FieldName("margin.folding")]
-        Folding = 25,
+        Folding,
+
+        [FieldName("margin.activefolding")]
+        ActiveFolding,
 
         [FieldName("popup")]
-        Popup = 26,
+        Popup,
+
+        [FieldName("popuphover")]
+        PopupHover,
+
+        [FieldName("popupselected")]
+        PopupSelected,
+
+        [FieldName("popupborder")]
+        PopupBorder,
 
         [FieldName("caret")]
-        Caret = 27,
+        Caret,
         
         [FieldName("currentline")]
-        CurrentLine = 28,
+        CurrentLine,
 
         [FieldName("margin.commands")]
-        CommandBar = 29,
+        CommandBar,
+
+        [FieldName("margin.commandscaption")]
+        CommandBarCaption,
 
         [FieldName("word.matched")]
-        MatchedWord = 30,
+        MatchedWord,
 
         [FieldName("search.result")]
-        SearchItem = 31,
+        SearchItem,
 
         [FieldName("error")]
-        Error = 32,
+        Error,
 
         [FieldName("margin.status")]
-        StatusBar = 33
+        StatusBar,
+
+        [FieldName("margin.activestatus")]
+        ActiveStatusBar
     }
 }

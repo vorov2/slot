@@ -1,6 +1,7 @@
 ﻿using CodeBox.Commands;
 using CodeBox.Core;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Themes;
 using CodeBox.ObjectModel;
 using CodeBox.Search;
 using CodeBox.Styling;
@@ -90,7 +91,7 @@ namespace CodeBox
                 foreach (Match m in regex.Matches(ln))
                     if (m.Success && editor.AffinityManager.GetAffinityId(i, m.Index) == grmId)
                     {
-                        var aps = new AppliedStyle((int)StandardStyle.MatchedWord, m.Index, m.Index + m.Length - 1);
+                        var aps = new AppliedStyle(StandardStyle.MatchedWord, m.Index, m.Index + m.Length - 1);
                         line.AppliedStyles.Add(aps);
                         finds.Add(new SearchResult(i, aps));
                     }

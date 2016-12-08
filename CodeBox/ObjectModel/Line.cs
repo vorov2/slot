@@ -1,5 +1,6 @@
 ﻿using CodeBox.Affinity;
 using CodeBox.ComponentModel;
+using CodeBox.Core.Themes;
 using CodeBox.Folding;
 using CodeBox.Styling;
 using System;
@@ -179,33 +180,27 @@ namespace CodeBox.ObjectModel
             foreach (var a in AppliedStyles)
             {
                 if (col >= a.Start && col <= a.End
-                    && a.StyleId == (int)StandardStyle.Hyperlink)
+                    && a.StyleId == StandardStyle.Hyperlink)
                     return a;
             }
 
             return AppliedStyle.Empty;
         }
 
-        internal TextStyle GetStyle(int index, IThemeComponent theme)
+        internal Style GetStyle(int index, IThemeComponent theme)
         {
-            var ret = default(TextStyle);
+            var ret = Style.Empty;
 
             foreach (var a in AppliedStyles)
             {
                 if (index >= a.Start && index <= a.End)
                 {
-                    if (ret == null)
-                        ret = (TextStyle)theme.GetStyle(a.StyleId);
-                    else
-                    {
-                        var next = (TextStyle)theme.GetStyle(a.StyleId);
-                        ret = ret.Combine(next);
-                    }
+                    var next = theme.GetStyle(a.StyleId);
+                    ret = ret.Combine(next);
                 }
             }
 
-            ret = ret ?? (TextStyle)theme.DefaultStyle;
-            return ret;
+            return ret.IsEmpty() ? theme.GetStyle(StandardStyle.Default) : ret;
         }
         #endregion
 

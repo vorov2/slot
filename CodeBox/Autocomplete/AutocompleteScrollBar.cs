@@ -1,4 +1,5 @@
 ﻿using CodeBox.Autocomplete;
+using CodeBox.Core.Themes;
 using CodeBox.Drawing;
 using CodeBox.Styling;
 using System;
@@ -72,7 +73,8 @@ namespace CodeBox.Autocomplete
 
             var scY = window.ScrollPosition;
             var scHeight = window.ScrollMax;
-            var sbs = (MarginStyle)editor.Theme.GetStyle(StandardStyle.ScrollBars);
+            var sbs = editor.Theme.GetStyle(StandardStyle.ScrollBars);
+            var asbs = editor.Theme.GetStyle(StandardStyle.ActiveScrollBar);
             g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             var caretSize = ((double)bounds.Height / (bounds.Height + scHeight)) * bounds.Height;
@@ -89,7 +91,7 @@ namespace CodeBox.Autocomplete
             if (pos + lastCaretSize > window.ClientSize.Height)
                 pos = window.ClientSize.Height - lastCaretSize;
 
-            g.FillRectangle((IsMouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
+            g.FillRectangle((IsMouseDown ? asbs.ForeColor : sbs.ForeColor).Brush(),
                 new Rectangle(bounds.X, pos, bounds.Width, lastCaretSize));
             lastCaretPos = pos;
         }

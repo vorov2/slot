@@ -1,4 +1,5 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Core.Themes;
+using CodeBox.Drawing;
 using CodeBox.Margins;
 using CodeBox.Styling;
 using System;
@@ -27,7 +28,8 @@ namespace CodeBox.StatusBar
         {
             var g = e.Graphics;
             var bounds = e.ClipRectangle;
-            var style = (MarginStyle)Editor.Theme.GetStyle(StandardStyle.StatusBar);
+            var style = Editor.Theme.GetStyle(StandardStyle.StatusBar);
+            var astyle = Editor.Theme.GetStyle(StandardStyle.ActiveStatusBar);
             g.FillRectangle(style.BackColor.Brush(), bounds);
 
             var ys = Dpi.GetHeight(2);
@@ -52,8 +54,8 @@ namespace CodeBox.StatusBar
 
                 if (tile.Hover)
                 {
-                    g.FillRectangle(style.ActiveBackColor.Brush(), rect);
-                    foreColor = style.ActiveForeColor;
+                    g.FillRectangle(astyle.BackColor.Brush(), rect);
+                    foreColor = astyle.ForeColor;
                 }
 
                 tile.Draw(g, foreColor, rect);
@@ -80,8 +82,8 @@ namespace CodeBox.StatusBar
 
                 if (tile.Hover)
                 {
-                    g.FillRectangle(style.ActiveBackColor.Brush(), rect);
-                    foreColor = style.ActiveForeColor;
+                    g.FillRectangle(astyle.BackColor.Brush(), rect);
+                    foreColor = astyle.ForeColor;
                 }
 
                 tile.Left = x;

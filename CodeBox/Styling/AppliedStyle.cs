@@ -1,19 +1,20 @@
-﻿using System;
+﻿using CodeBox.Core.Themes;
+using System;
 
 namespace CodeBox.Styling
 {
     public struct AppliedStyle : IEquatable<AppliedStyle>
     {
-        public static readonly AppliedStyle Empty = new AppliedStyle(-1, -1, -1);
+        public static readonly AppliedStyle Empty = new AppliedStyle(StandardStyle.Default, -1, -1);
 
-        public AppliedStyle(int styleId, int start, int end)
+        public AppliedStyle(StandardStyle styleId, int start, int end)
         {
             StyleId = styleId;
             Start = start;
             End = end;
         }
 
-        public readonly int StyleId;
+        public readonly StandardStyle StyleId;
 
         public readonly int Start;
 

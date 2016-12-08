@@ -1,4 +1,5 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Core.Themes;
+using CodeBox.Drawing;
 using CodeBox.Search;
 using CodeBox.Styling;
 using System;
@@ -25,7 +26,8 @@ namespace CodeBox.Margins
                 return false;
 
             var sc = new Rectangle(Editor.Scroll.ScrollPosition, Editor.Scroll.ScrollBounds);
-            var sbs = (MarginStyle)Editor.Theme.GetStyle(StandardStyle.ScrollBars);
+            var sbs = Editor.Theme.GetStyle(StandardStyle.ScrollBars);
+            var asbs = Editor.Theme.GetStyle(StandardStyle.ActiveScrollBar);
             g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             var caretSize = ((double)bounds.Height / (bounds.Height + sc.Height)) * bounds.Height;
@@ -42,7 +44,7 @@ namespace CodeBox.Margins
             if (pos + LastCaretSize > Editor.ClientSize.Height)
                 pos = Editor.ClientSize.Height - LastCaretSize;
 
-            g.FillRectangle((IsMouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
+            g.FillRectangle((IsMouseDown ? asbs.ForeColor : sbs.ForeColor).Brush(),
                 new Rectangle(bounds.X, pos, bounds.Width, LastCaretSize));
             LastCaretPos = pos;
             var caretLine = Editor.Buffer.Selections.Main.Caret.Line;
@@ -52,8 +54,9 @@ namespace CodeBox.Margins
                 var linePos = s.Caret.Line / (Editor.Lines.Count / 100d);
                 var caretY = Editor.Info.TextTop + linePos * (bounds.Height / 100d);
 
-                g.FillRectangle(Editor.Theme.DefaultStyle.ForeColor.Brush(), new Rectangle(bounds.X, (int)caretY, bounds.Width,
-                    (int)Math.Round(g.DpiY / 96f) * s.Caret.Line == caretLine ? 2 : 1));
+                g.FillRectangle(Editor.Theme.GetStyle(StandardStyle.Default).ForeColor.Brush(),
+                    new Rectangle(bounds.X, (int)caretY, bounds.Width,
+                        (int)Math.Round(g.DpiY / 96f) * s.Caret.Line == caretLine ? 2 : 1));
             }
 
             if (Editor.Search.HasSearchResults)
@@ -86,7 +89,7 @@ namespace CodeBox.Margins
                 var markY = Editor.Info.TextTop + linePos * (bounds.Height / 100f);
                 var w = Dpi.GetWidth(5);
 
-                g.FillRectangle((hl.LineColor.IsEmpty ? hl.BackColor : hl.LineColor).Brush(), new RectangleF(
+                g.FillRectangle((hl.AdornmentColor.IsEmpty ? hl.BackColor : hl.AdornmentColor).Brush(), new RectangleF(
                     bounds.X + (bounds.Width - w) / 2f,
                     markY,
                     w,

@@ -1,4 +1,5 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Core.Themes;
+using CodeBox.Drawing;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
@@ -85,7 +86,8 @@ namespace CodeBox.Margins
                 return false;
 
             var sc = new Rectangle(Editor.Scroll.ScrollPosition, Editor.Scroll.ScrollBounds);
-            var sbs = (MarginStyle)Editor.Theme.GetStyle(StandardStyle.ScrollBars);
+            var sbs = Editor.Theme.GetStyle(StandardStyle.ScrollBars);
+            var asbs = Editor.Theme.GetStyle(StandardStyle.ActiveScrollBar);
             g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             if (Orientation == Orientation.Horizontal)
@@ -99,7 +101,7 @@ namespace CodeBox.Margins
                 var curpos = sc.Width != 0 ? (int)Math.Floor(Math.Floor(sc.X / (sc.Width / 100d)) * perc) : 0;
 
                 LastCaretSize = (int)Math.Floor(caretSize);
-                g.FillRectangle((IsMouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
+                g.FillRectangle((IsMouseDown ? asbs.ForeColor : sbs.ForeColor).Brush(),
                     new Rectangle(bounds.X + Math.Abs(curpos), bounds.Y, LastCaretSize, bounds.Height));
                 LastCaretPos = bounds.X + Math.Abs(curpos);
             }
@@ -119,7 +121,7 @@ namespace CodeBox.Margins
                 if (pos + LastCaretSize > Editor.ClientSize.Height)
                     pos = Editor.ClientSize.Height - LastCaretSize;
 
-                g.FillRectangle((IsMouseDown ? sbs.ActiveForeColor : sbs.ForeColor).Brush(),
+                g.FillRectangle((IsMouseDown ? asbs.ForeColor : sbs.ForeColor).Brush(),
                     new Rectangle(bounds.X, pos, bounds.Width, LastCaretSize));
                 LastCaretPos = pos;
             }

@@ -16,6 +16,7 @@ using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Margins;
 using CodeBox.Core.Keyboard;
+using CodeBox.Core.Themes;
 
 namespace CodeBox.CommandBar
 {
@@ -57,7 +58,8 @@ namespace CodeBox.CommandBar
 
             var g = e.Graphics;
             var bounds = e.ClipRectangle;
-            var cs = (CommandBarStyle)editor.Theme.GetStyle(StandardStyle.CommandBar);
+            var cs = editor.Theme.GetStyle(StandardStyle.CommandBar);
+            var acs = editor.Theme.GetStyle(StandardStyle.CommandBarCaption);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
             lastBounds = bounds;
 
@@ -76,10 +78,10 @@ namespace CodeBox.CommandBar
 
                 y = (bounds.Height - font.Height) / 2;
                 x = editor.Info.CharWidth * 4f;
-                g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextStyle.Format);
+                g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
                 x += /*g.MeasureString(Editor.Buffer.File.Name, font).Width;*/(editor.Buffer.File.Name.Length + 1.5f) * editor.Info.SmallCharWidth;
 
-                g.DrawString(editor.Buffer.File.DirectoryName, font, cs.SpecialColor.Brush(), 
+                g.DrawString(editor.Buffer.File.DirectoryName, font, acs.ForeColor.Brush(), 
                     new RectangleF(x, y, bounds.Width - x - editor.Info.CharWidth, bounds.Height), format);
             }
             else
@@ -344,7 +346,7 @@ namespace CodeBox.CommandBar
                 g.DrawString(c.ToString(), font, 
                     hl && cmt ? brush2
                     : hl && curarg == arg && arg != -1 && c != '|' ? brush1
-                    : hl && curarg == -1 ? brush3 : brush, x, y, TextStyle.Format);
+                    : hl && curarg == -1 ? brush3 : brush, x, y, TextFormats.Compact);
                 x += cw;
                 last = c;
             }

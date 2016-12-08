@@ -39,7 +39,7 @@ namespace CodeBox.Core
 
         public static explicit operator string(Identifier ident) => ident.ToString();
 
-        public bool Equals(Identifier other) => Name.Equals(other.Name) 
+        public bool Equals(Identifier other) => Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase) 
             && (Namespace == null && other.Namespace == null || Namespace.Equals(other.Namespace));
 
         public override bool Equals(object other) => other is Identifier && Equals(this, (Identifier)other);

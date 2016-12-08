@@ -1,5 +1,6 @@
 ﻿using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Themes;
 using CodeBox.Drawing;
 using CodeBox.Styling;
 using System;
@@ -74,8 +75,11 @@ namespace CodeBox.Autocomplete
             base.OnPaint(e);
             var g = e.Graphics;
 
-            var ps = (PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup);
-            var borderPen = ps.BorderColor.Pen();
+            var ps = editor.Theme.GetStyle(StandardStyle.Popup);
+            var hps = editor.Theme.GetStyle(StandardStyle.PopupHover);
+            var sps = editor.Theme.GetStyle(StandardStyle.PopupSelected);
+            var bps = editor.Theme.GetStyle(StandardStyle.PopupBorder);
+            var borderPen = bps.ForeColor.Pen();
             g.FillRectangle(ps.BackColor.Brush(), e.ClipRectangle);
             g.DrawRectangle(borderPen,
                 e.ClipRectangle.Location.X, e.ClipRectangle.Location.Y,
@@ -91,15 +95,21 @@ namespace CodeBox.Autocomplete
 
                     if (y >= CharWidth && y + LineHeight < Height)
                     {
+                        var fc = ps.ForeColor;
+
                         if (hoverLine == i || selectedLine == i)
                         {
-                            g.FillRectangle((selectedLine == i ? ps.SelectedColor : ps.HoverColor).Brush(),
+                            g.FillRectangle((selectedLine == i ? sps.BackColor : hps.BackColor).Brush(),
                                 new Rectangle(0, y, Width - CharWidth, LineHeight));
+                            fc = selectedLine == i ? sps.ForeColor : hps.ForeColor;
+
+                            if (fc.IsEmpty)
+                                fc = ps.ForeColor;
                         }
 
                         g.DrawString(s.Item.ToString(),
                             SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
-                            ps.ForeColor.Brush(),
+                            fc.Brush(),
                             new Rectangle(CharWidth, y, Width - CharWidth*2, LineHeight),
                             format);
 
@@ -111,7 +121,7 @@ namespace CodeBox.Autocomplete
                             {
                                 g.DrawString(mc.ToString(),
                                     SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
-                                    ps.ForeColor.Brush(),
+                                    fc.Brush(),
                                     new Point(x, y),
                                     format);
                                 x += CharWidth;

@@ -132,7 +132,6 @@
     <Compile Include="Affinity\IDocumentAffinity.cs" />
     <Compile Include="AppExtensions.cs" />
     <Compile Include="ComponentModel\ITextEditor.cs" />
-    <Compile Include="ComponentModel\IThemeComponent.cs" />
     <Compile Include="DocumentBufferManager.cs" />
     <Compile Include="Drawing\Dpi.cs" />
     <Compile Include="Drawing\GraphicsExtensions.cs" />
@@ -140,6 +139,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Drawing\SysFont.cs" />
+    <Compile Include="Drawing\TextFormats.cs" />
     <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
@@ -238,26 +238,17 @@
     <Compile Include="StatusBar\StatusBarTile.cs" />
     <Compile Include="StatusBar\TileAlignment.cs" />
     <Compile Include="StatusBar\WrapTile.cs" />
-    <Compile Include="Styling\CommandBarStyle.cs" />
-    <Compile Include="Styling\SearchItemStyle.cs" />
-    <Compile Include="Styling\MarginStyle.cs" />
-    <Compile Include="Styling\PopupStyle.cs" />
-    <Compile Include="Styling\ThemeComponent.cs" />
     <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="CallTips\CallTip.cs" />
     <Compile Include="ComponentModel\IStylerComponent.cs" />
-    <Compile Include="Styling\MarkerStyle.cs" />
-    <Compile Include="Styling\SelectionStyle.cs" />
-    <Compile Include="Styling\StandardStyle.cs" />
-    <Compile Include="Styling\TextStyle.cs" />
-    <Compile Include="Styling\StyleId.cs" />
+    <Compile Include="Drawing\StyleRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\ColorExtensions.cs" />
     <Compile Include="ScrollingManager.cs" />
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
+    <Compile Include="Styling\ThemeProvider.cs" />
     <Compile Include="Styling\ThemeReader.cs" />
-    <Compile Include="Styling\Style.cs" />
     <Compile Include="TextEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>

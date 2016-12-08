@@ -1,4 +1,5 @@
-﻿using CodeBox.Styling;
+﻿using CodeBox.Core.Themes;
+using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

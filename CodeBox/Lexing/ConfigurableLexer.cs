@@ -6,6 +6,7 @@ using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core;
+using CodeBox.Core.Themes;
 
 namespace CodeBox.Lexing
 {
@@ -102,11 +103,11 @@ namespace CodeBox.Lexing
 
                 if (kres > 0 && IsNonIdent(ln.CharAt(i + 1), wordSep))
                 {
-                    var style = (int)mys.IdentifierStyle;
+                    var style = mys.IdentifierStyle;
 
                     if (mys.ContextChars == null || mys.ContextChars.IndexOf(contextChar) != -1)
                     {
-                        style = kres;
+                        style = (StandardStyle)kres;
                         contextChar = '\0';
                         if (mys.ContextChars != null)
                             Editor.CallTips.BindCallTip(

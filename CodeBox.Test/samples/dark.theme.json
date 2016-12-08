@@ -16,41 +16,66 @@
         "key": "popup",
         "color": "#DCDCDC",
         "backColor": "#2D2D30",
-        "hoverColor": "#3E3E42",
-        "selectedColor": "#264F78",
-        "borderColor": "#5F5F66"
+    },
+    {
+        "key": "popupselected",
+        "backColor": "#264F78"
+    },
+    {
+        "key": "popuphover",
+        "backColor": "#3E3E42"
+    },
+    {
+        "key": "popupborder",
+        "color": "#5F5F66"
     },
     {
         "key": "margin.status",
         "color": "#BFBFBF",
-        "backColor": "#161616",
-        "activeBackColor": "#1E1E1E",
-        "activeColor": "#CCCCCC"
+        "backColor": "#161616"
+    },
+    {
+        "key": "margin.activestatus",
+        "cackColor": "#161616",
+        "backColor": "#1E1E1E",
+        "color": "#CCCCCC"
     },
     {
         "key": "margin.commands",
         "color": "white",
-        "specialColor": "#B7B7B7",
         "backColor": "#2D2D30"
+    },
+    {
+        "key": "margin.commandscaption",
+        "color": "#B7B7B7"
     },
     {
         "key": "margin.linenumbers",
         "color": "#505050",
         "backColor": "#1E1E1E",
-        "activeColor": "#848484",
-        "activeBackColor": "#262626"
+    },
+    {
+        "key": "margin.currentlinenumber",
+        "color": "#848484",
+        "backColor": "#262626"
     },
     {
         "key": "margin.scrollbar",
         "color": "#505050",
-        "backColor": "#1E1E1E",
-        "activeColor": "white"
+        "backColor": "#1E1E1E"
+    },
+    {
+        "key": "margin.activescrollbar",
+        "color": "white"
     },
     {
         "key": "margin.folding",
         "color": "#505050",
-        "backColor": "#1E1E1E",
-        "activeColor": "#C0AAF7"
+        "backColor": "#1E1E1E"
+    },
+    {
+        "key": "margin.activefolding",
+        "color": "#C0AAF7"
     },
     {
         "key": "symbol.special",
@@ -134,6 +159,7 @@
     },
     {
         "key": "search.result",
-        "lineColor": "orange"
+        "adornmentColor": "orange",
+        "adornment": "line"
     }
 ]

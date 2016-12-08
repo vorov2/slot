@@ -1,4 +1,5 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Core.Themes;
+using CodeBox.Drawing;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using System;
@@ -91,7 +92,7 @@ namespace CodeBox.CallTips
             var style = default(FontStyle);
             var color = default(Color);
 
-            var ps = (PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup);
+            var ps = editor.Theme.GetStyle(StandardStyle.Popup);
             var doc = new XmlDocument();
             doc.LoadXml("<tip>" + text.Replace("<br>", "<br/>") + "</tip>");
             var node = doc.FirstChild;
@@ -211,9 +212,10 @@ namespace CodeBox.CallTips
 
                 var pt = new Point(x, y);
                 lastTipRectangle = new Rectangle(pt, size);
-                var ps = (PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup);
+                var ps = editor.Theme.GetStyle(StandardStyle.Popup);
+                var bps = editor.Theme.GetStyle(StandardStyle.PopupBorder);
                 g.FillRectangle(ps.BackColor.Brush(), lastTipRectangle);
-                g.DrawRectangle(ps.BorderColor.Pen(), lastTipRectangle);
+                g.DrawRectangle(bps.ForeColor.Pen(), lastTipRectangle);
                 draw(g, pt);
                 shownTip = pos;
             }

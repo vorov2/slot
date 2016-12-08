@@ -1,4 +1,5 @@
 ﻿using CodeBox.Commands;
+using CodeBox.Core.Themes;
 using CodeBox.Drawing;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
@@ -67,7 +68,7 @@ namespace CodeBox.Search
                         foreach (Match match in regex.Matches(ln))
                         {
                             var grp = match.Groups[match.Groups.Count - 1];
-                            var aps = new AppliedStyle((int)StandardStyle.SearchItem, grp.Index, grp.Index + grp.Length - 1);
+                            var aps = new AppliedStyle(StandardStyle.SearchItem, grp.Index, grp.Index + grp.Length - 1);
                             line.AppliedStyles.Add(aps);
                             finds.Add(new SearchResult(i, aps));
                         }

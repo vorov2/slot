@@ -10,6 +10,7 @@ using CodeBox.Drawing;
 using System.Windows.Forms;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Commands;
+using CodeBox.Core.Themes;
 
 namespace CodeBox.Margins
 {

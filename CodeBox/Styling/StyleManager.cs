@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.Styling;
 using System.Drawing;
 using CodeBox.ObjectModel;
-using CodeBox.Lexing;
 using CodeBox.ComponentModel;
-using CodeBox.Core.ComponentModel;
 using CodeBox.Core;
-using System.ComponentModel.Composition;
+using CodeBox.Core.Themes;
 
 namespace CodeBox.Styling
 {
@@ -26,11 +19,8 @@ namespace CodeBox.Styling
 
         public void ClearStyles(int line) => editor.Lines[line].AppliedStyles.Clear();
 
-        public void StyleRange(int style, int line, int start, int end) =>
-            editor.Lines[line].AppliedStyles.Add(new AppliedStyle(style, start, end));
-
         public void StyleRange(StandardStyle style, int line, int start, int end) =>
-            editor.Lines[line].AppliedStyles.Add(new AppliedStyle((int)style, start, end));
+            editor.Lines[line].AppliedStyles.Add(new AppliedStyle(style, start, end));
 
         internal void Restyle()
         {
@@ -39,8 +29,6 @@ namespace CodeBox.Styling
 
             var fvl = editor.FirstEditLine < 0 || editor.FirstEditLine >= editor.Lines.Count
                 ? editor.Scroll.FirstVisibleLine : editor.FirstEditLine;
-            /*editor.FirstEditLine < editor.Scroll.FirstVisibleLine
-                ? editor.FirstEditLine : editor.Scroll.FirstVisibleLine;*/
             var lvl = editor.LastEditLine > editor.Scroll.LastVisibleLine ? editor.LastEditLine
                 : editor.Scroll.LastVisibleLine;
             var state = 0;

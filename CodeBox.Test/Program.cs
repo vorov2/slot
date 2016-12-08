@@ -6,6 +6,7 @@ using CodeBox.Core.ComponentModel;
 using CodeBox.Core.Keyboard;
 using CodeBox.Core.Output;
 using CodeBox.Core.Settings;
+using CodeBox.Core.Themes;
 using CodeBox.Core.ViewModel;
 using CodeBox.Lexing;
 using CodeBox.ObjectModel;
@@ -57,7 +58,7 @@ namespace CodeBox.Test
             CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
 
             var theme = App.Catalog<IThemeComponent>().First();
-            theme.ChangeTheme("dark");
+            theme.ChangeTheme((Identifier)"dark");
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
             var cmd = (Identifier)"file.openfile";

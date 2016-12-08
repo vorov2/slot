@@ -1,13 +1,9 @@
-﻿using CodeBox.Affinity;
-using CodeBox.Core;
-using CodeBox.Styling;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using CodeBox.Drawing;
 using Json;
+using CodeBox.Drawing;
+using CodeBox.Core.Themes;
 
 namespace CodeBox.Styling
 {
@@ -15,17 +11,15 @@ namespace CodeBox.Styling
 
     public static class ThemeReader
     {
-        public static void Read(string source, ThemeComponent comp)
+        public static IEnumerable<StyleInfo> Read(string source)
         {
             ColorExtensions.Clean();
-            var json = new Json.JsonParser(source) { SkipNulls = true };
+            var json = new JsonParser(source);
             var list = json.Parse() as List<object>;
-
-            if (list != null)
-                ReadStyles(list, comp);
+            return list != null ? ReadStyles(list) : Enumerable.Empty<StyleInfo>();
         }
 
-        private static void ReadStyles(List<object> styles, ThemeComponent coll)
+        private static IEnumerable<StyleInfo> ReadStyles(List<object> styles)
         {
             foreach (var o in styles)
             {
@@ -36,44 +30,18 @@ namespace CodeBox.Styling
                     var styleKey = dict.String("key");
 
                     if (styleKey != null)
-                        ReadStyle(coll, styleKey, dict);
+                        yield return new StyleInfo(
+                            StandardStyleConverter.FromString(styleKey), ReadStyle(dict));
                 }
             }
         }
 
-        private static void ReadStyle(ThemeComponent coll, string styleKey, MAP dict)
-        {
-            if (dict == null)
-                return;
-
-            var style = coll.GetStyle(StandardStyleConverter.FromString(styleKey));
-            style.ForeColor = dict.Color("color");
-            style.BackColor = dict.Color("backColor");
-            style.LineColor = dict.Color("lineColor");
-            style.FontStyle = dict.FontStyles();
-            var ms = style as MarginStyle;
-
-            if (ms != null)
-            {
-                ms.ActiveBackColor = dict.Color("activeBackColor");
-                ms.ActiveForeColor = dict.Color("activeColor");
-            }
-            else
-            {
-                var ps = style as PopupStyle;
-
-                if (ps != null)
-                {
-                    ps.HoverColor = dict.Color("hoverColor");
-                    ps.SelectedColor = dict.Color("selectedColor");
-                    ps.BorderColor = dict.Color("borderColor");
-                }
-
-                var cbs = style as CommandBarStyle;
-
-                if (cbs != null)
-                    cbs.SpecialColor = dict.Color("specialColor");
-            }
-        }
+        private static Style ReadStyle(MAP dict) =>
+            new Style(
+                dict.Color("color"),
+                dict.Color("backColor"),
+                dict.Color("adornmentColor"),
+                dict.Adornments(),
+                dict.FontStyles());
     }
 }

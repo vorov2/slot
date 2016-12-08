@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using CodeBox.Styling;
 using System.Windows.Forms;
+using CodeBox.Core.Themes;
 
 namespace CodeBox.Messages
 {
@@ -33,10 +34,10 @@ namespace CodeBox.Messages
         }
 
         public override Color BackgroundColor =>
-            ((PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup)).BackColor;
+            editor.Theme.GetStyle(StandardStyle.Popup).BackColor;
 
         public override Color BorderColor =>
-            ((PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup)).BorderColor;
+            editor.Theme.GetStyle(StandardStyle.PopupBorder).ForeColor;
     }
 
     public enum MessageWindowButtons

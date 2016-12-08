@@ -27,6 +27,7 @@ using CodeBox.ComponentModel;
 using CodeBox.Core.ViewModel;
 using CodeBox.Search;
 using CodeBox.Core.Settings;
+using CodeBox.Core.Themes;
 
 namespace CodeBox
 {
@@ -161,7 +162,7 @@ namespace CodeBox
             CaretRenderer.Suspend();
             var dt = DateTime.Now;
 
-            e.Graphics.FillRectangle(Theme.DefaultStyle.BackColor.Brush(),
+            e.Graphics.FillRectangle(Theme.GetStyle(StandardStyle.Default).BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
 
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -451,9 +452,9 @@ namespace CodeBox
             return App.Ext.Run(this, commandKey, args);
         }
 
-        public override Color BackColor => Theme.DefaultStyle.BackColor;
+        public override Color BackColor => Theme.GetStyle(StandardStyle.Default).BackColor;
 
-        public override Color ForeColor => Theme.DefaultStyle.ForeColor;
+        public override Color ForeColor => Theme.GetStyle(StandardStyle.Default).ForeColor;
 
         public override Font Font => Settings.Font;
 

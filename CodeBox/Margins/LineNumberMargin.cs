@@ -8,6 +8,7 @@ using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Folding;
 using CodeBox.Drawing;
+using CodeBox.Core.Themes;
 
 namespace CodeBox.Margins
 {
@@ -22,7 +23,8 @@ namespace CodeBox.Margins
         {
             OnSizeChanged();
             var sc = Editor.Scroll.ScrollPosition;
-            var lns = (MarginStyle)Editor.Theme.GetStyle(StandardStyle.LineNumbers);
+            var lns = Editor.Theme.GetStyle(StandardStyle.LineNumbers);
+            var alns = Editor.Theme.GetStyle(StandardStyle.CurrentLineNumber);
 
             var lines = Editor.Document.Lines;
             var info = Editor.Info;
@@ -48,15 +50,15 @@ namespace CodeBox.Margins
 
                     if (i == caret.Line && MarkCurrentLine)
                     {
-                        var selBrush = lns.ActiveBackColor.Brush();
+                        var selBrush = alns.BackColor.Brush();
 
                         if (selBrush != backBrush)
                             g.FillRectangle(selBrush, new Rectangle(bounds.X, y, bounds.Width, info.LineHeight));
 
-                        col = lns.ActiveForeColor.Brush();
+                        col = alns.ForeColor.Brush();
                     }
 
-                    g.DrawString(str, font, col, x, y, TextStyle.Format);
+                    g.DrawString(str, font, col, x, y, TextFormats.Compact);
                 }
             }
 

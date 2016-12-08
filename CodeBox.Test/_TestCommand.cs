@@ -4,6 +4,7 @@ using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.Keyboard;
+using CodeBox.Core.Themes;
 using CodeBox.Core.ViewModel;
 using CodeBox.ObjectModel;
 using System;
@@ -43,7 +44,7 @@ namespace CodeBox.Test
         public void ChangeTheme(string themeName)
         {
             var theme = App.Catalog<IThemeComponent>().First();
-            theme.ChangeTheme(themeName);
+            theme.ChangeTheme((Identifier)themeName);
         }
 
     }
@@ -57,8 +58,8 @@ namespace CodeBox.Test
             var str = curvalue as string;
             var theme = App.Catalog<IThemeComponent>().First();
             return theme.EnumerateThemes()
-                .Where(t => str == null || t.Key.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
-                .Select(t => new ValueItem(t.Key, t.Name));
+                .Where(t => str == null || t.Key.ToString().IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
+                .Select(t => new ValueItem(t.Key.ToString(), t.Name));
         }
     }
 

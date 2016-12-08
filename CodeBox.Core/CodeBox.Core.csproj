@@ -84,6 +84,12 @@
     <Compile Include="Settings\SettingsBag.cs" />
     <Compile Include="Settings\SettingsProvider.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Themes\Adornment.cs" />
+    <Compile Include="Themes\IThemeComponent.cs" />
+    <Compile Include="Themes\StandardStyle.cs" />
+    <Compile Include="Themes\Style.cs" />
+    <Compile Include="Themes\StyleInfo.cs" />
+    <Compile Include="Themes\ThemeInfo.cs" />
     <Compile Include="ViewModel\IBuffer.cs" />
     <Compile Include="ViewModel\IBufferManager.cs" />
     <Compile Include="ViewModel\IMaterialBuffer.cs" />

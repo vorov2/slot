@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBox.Affinity;
+using CodeBox.Core.Themes;
 
 namespace CodeBox
 {
@@ -28,9 +29,9 @@ namespace CodeBox
         {
             foreach (var a in line.AppliedStyles)
                 if (col >= a.Start && col <= a.End)
-                    return a.StyleId == (int)StandardStyle.Default
-                        || a.StyleId == (int)StandardStyle.MatchedBracket
-                        || a.StyleId == (int)StandardStyle.Bracket;
+                    return a.StyleId == StandardStyle.Default
+                        || a.StyleId == StandardStyle.MatchedBracket
+                        || a.StyleId == StandardStyle.Bracket;
 
             return true;
         }
@@ -155,7 +156,7 @@ namespace CodeBox
 
         private void Style(int line, int col)
         {
-            var tup = Tuple.Create(line, new AppliedStyle((int)StandardStyle.MatchedBracket, col, col));
+            var tup = Tuple.Create(line, new AppliedStyle(StandardStyle.MatchedBracket, col, col));
             editor.Lines[line].AppliedStyles.Add(tup.Item2);
 
             if (match1 == null)

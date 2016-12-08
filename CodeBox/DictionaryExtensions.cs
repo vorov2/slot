@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Json;
+using CodeBox.Core.Themes;
 
 namespace CodeBox
 {
@@ -22,6 +23,16 @@ namespace CodeBox
                 col = ColorTranslator.FromHtml(str);
 
             return col;
+        }
+
+        public static Adornment Adornments(this Dictionary<string, object> dict)
+        {
+            var ad = Adornment.None;
+            var str = dict.String("adornment") ?? "";
+            
+            if (str.Equals("line", StringComparison.OrdinalIgnoreCase)) ad = Adornment.Line;
+
+            return ad;
         }
 
         public static FontStyle FontStyles(this Dictionary<string, object> dict)

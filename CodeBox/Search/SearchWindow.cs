@@ -1,4 +1,5 @@
 ﻿using CodeBox.Core.Keyboard;
+using CodeBox.Core.Themes;
 using CodeBox.Drawing;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
@@ -188,7 +189,7 @@ namespace CodeBox.Search
         private void DrawButton(Graphics g, string chars, Rectangle rect, bool set)
         {
             var fnt = editor.Settings.Font;
-            var def = editor.Theme.DefaultStyle;
+            var def = editor.Theme.GetStyle(StandardStyle.Default);
             var style = editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
 
             g.FillRectangle(def.BackColor.Brush(),
@@ -214,7 +215,6 @@ namespace CodeBox.Search
 
         public override Color BackgroundColor => editor.Theme.GetStyle(StandardStyle.Default).BackColor;
 
-        public override Color BorderColor =>
-            ((PopupStyle)editor.Theme.GetStyle(StandardStyle.Popup)).BorderColor;
+        public override Color BorderColor => editor.Theme.GetStyle(StandardStyle.PopupBorder).ForeColor;
     }
 }

@@ -1,4 +1,5 @@
-﻿using CodeBox.Folding;
+﻿using CodeBox.Core.Themes;
+using CodeBox.Folding;
 using CodeBox.Margins;
 using CodeBox.ObjectModel;
 using CodeBox.StatusBar;
@@ -37,7 +38,7 @@ namespace CodeBox.Drawing
             x += shift;
             var str = len.ToString();
             g.DrawString(str, editor.Settings.SmallFont, editor.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush(),
-                new PointF(x, y), TextStyle.Format);
+                new PointF(x, y), TextFormats.Compact);
             return shift + (str.Length + 1) * editor.Info.CharWidth;
         }
 
@@ -74,13 +75,13 @@ namespace CodeBox.Drawing
 
         internal int DrawFoldingIndicator(Graphics g, int x, int y)
         {
-            var fs = (MarginStyle)editor.Theme.GetStyle(StandardStyle.Folding);
+            var fs = editor.Theme.GetStyle(StandardStyle.Folding);
             var w = editor.Info.CharWidth * 3;
-            g.FillRectangle(fs.ActiveForeColor.Brush(),
+            g.FillRectangle(editor.Theme.GetStyle(StandardStyle.ActiveFolding).ForeColor.Brush(),
                 new Rectangle(x, y + editor.Info.LineHeight / 4, w, editor.Info.LineHeight / 2));
-            g.DrawString("···", editor.Settings.Font.Get(editor.Theme.DefaultStyle.FontStyle),
+            g.DrawString("···", editor.Settings.Font.Get(editor.Theme.GetStyle(StandardStyle.Default).FontStyle),
                 fs.BackColor.Brush(),
-                new Point(x, y), TextStyle.Format);
+                new Point(x, y), TextFormats.Compact);
             return w;
         }
 
@@ -102,6 +103,7 @@ namespace CodeBox.Drawing
             CurrentFont = editor.Settings.Font;
             var fvl = editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
+            StyleRenderer.DefaultStyle = editor.Theme.GetStyle(StandardStyle.Default);
 
             for (var i = fvl; i < lvl + 1; i++)
             {
@@ -122,7 +124,7 @@ namespace CodeBox.Drawing
             var sel = editor.Buffer.Selections.IsLineSelected(lineIndex);
             var showEol = editor.ShowEol;
             var showWs = editor.ShowWhitespace;
-            var specialSymbol = (TextStyle)editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
+            var specialSymbol = editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
             var indent = -1;
             var nonWs = false;
 
@@ -158,7 +160,7 @@ namespace CodeBox.Drawing
 
                         if (visible)
                         {
-                            var style = default(TextStyle);
+                            var style = Style.Empty;
                             var rect = new Rectangle(x, y, xw, editor.Info.LineHeight);
                             var pos = new Pos(lineIndex, i);
                             var high = sel && editor.Buffer.Selections.IsSelected(pos);
@@ -178,11 +180,11 @@ namespace CodeBox.Drawing
 
                             if (high)
                             {
-                                var sstyle = (TextStyle)editor.Theme.GetStyle(StandardStyle.Selection);
+                                var sstyle = editor.Theme.GetStyle(StandardStyle.Selection);
                                 style = sstyle.Combine(style);
                             }
 
-                            style.DrawAll(g, rect, c, pos);
+                            StyleRenderer.DrawAll(style, g, rect, c, pos);
 
                             if (editor.Buffer.Selections.HasCaret(pos))
                             {
@@ -194,16 +196,15 @@ namespace CodeBox.Drawing
                                     var cg = editor.CaretRenderer.GetDrawingSurface();
                                     cg.Clear(high ? editor.Theme.GetStyle(StandardStyle.Selection).BackColor
                                         : curline ? editor.Theme.GetStyle(StandardStyle.CurrentLine).BackColor
-                                        : editor.Theme.DefaultStyle.BackColor);
-                                    style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
+                                        : StyleRenderer.DefaultStyle.BackColor);
+                                    StyleRenderer.DrawAll(style, cg, new Rectangle(default(Point), rect.Size), c, pos);
 
                                     if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
                                         cg.DrawLine(specialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
 
                                     if (editor.Scroll.ScrollPosition.X != 0 && x + editor.Scroll.ScrollPosition.X == editor.Info.TextLeft)
                                     {
-                                        var cs = editor.Theme.GetStyle(StandardStyle.Default);
-                                        cg.FillRectangle(ControlPaint.Dark(cs.BackColor, .05f).Brush(),
+                                        cg.FillRectangle(ControlPaint.Dark(StyleRenderer.DefaultStyle.BackColor, .05f).Brush(),
                                             new Rectangle(0, 0, Dpi.GetWidth(2), rect.Height));
                                     }
 
