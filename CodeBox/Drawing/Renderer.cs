@@ -128,102 +128,104 @@ namespace CodeBox.Drawing
 
             for (var j = 0; j < line.Stripes; j++)
             {
-                var curline = false;
-
-                if (lineIndex == editor.Buffer.Selections.Main.Caret.Line)
-                    curline = DrawCurrentLineIndicator(g, y);
-
                 var cut = line.GetCut(j);
 
                 if (cut == line.Length)
                     cut++;
 
-                var tet = 0;
-
-                if (indent != -1)
+                if (y + editor.Scroll.ScrollPosition.Y >= tmarg && y + editor.Scroll.ScrollPosition.Y < editor.Info.TextBottom)
                 {
-                    tet = indent;
-                    x += tet * editor.Info.CharWidth;
-                }
+                    var curline = false;
 
-                for (var i = oldcut; i < cut; i++)
-                {
-                    var c = line.CharAt(i);
-                    var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : 1;
-                    tet += ct;
-                    var xw = ct * editor.Info.CharWidth;
-                    var visible = x + editor.Scroll.ScrollPosition.X >= lmarg && x + editor.Scroll.ScrollPosition.X + xw <= cwidth
-                        && y + editor.Scroll.ScrollPosition.Y >= tmarg;
+                    if (lineIndex == editor.Buffer.Selections.Main.Caret.Line)
+                        curline = DrawCurrentLineIndicator(g, y);
 
-                    if (visible)
+                    var tet = 0;
+
+                    if (indent != -1)
                     {
-                        var style = default(TextStyle);
-                        var rect = new Rectangle(x, y, xw, editor.Info.LineHeight);
-                        var pos = new Pos(lineIndex, i);
-                        var high = sel && editor.Buffer.Selections.IsSelected(pos);
-                        var ws = c == '\t' || c == ' ';
-
-                        if (!ws)
-                            nonWs = true;
-
-                        if (c == '\0' && showEol || ws && (showWs == ShowWhitespace.All || showWs == ShowWhitespace.Boundary && !nonWs))
-                        {
-                            c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
-                            style = specialSymbol;
-                            style = style.Combine(line.GetStyle(i, editor.Theme));
-                        }
-                        else
-                            style = line.GetStyle(i, editor.Theme);
-
-                        if (high)
-                        {
-                            var sstyle = (TextStyle)editor.Theme.GetStyle(StandardStyle.Selection);
-                            style = sstyle.Combine(style);
-                        }
-
-                        style.DrawAll(g, rect, c, pos);
-
-                        if (editor.Buffer.Selections.HasCaret(pos))
-                        {
-                            var blink = editor.Buffer.Selections.Main.Caret.Line == lineIndex
-                                && editor.Buffer.Selections.Main.Caret.Col == i;
-
-                            if (blink)
-                            {
-                                var cg = editor.CaretRenderer.GetDrawingSurface();
-                                cg.Clear(high ? editor.Theme.GetStyle(StandardStyle.Selection).BackColor
-                                    : curline ? editor.Theme.GetStyle(StandardStyle.CurrentLine).BackColor
-                                    : editor.Theme.DefaultStyle.BackColor);
-                                style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
-
-                                if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
-                                    cg.DrawLine(specialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
-
-                                if (editor.Scroll.ScrollPosition.X != 0 && x + editor.Scroll.ScrollPosition.X == editor.Info.TextLeft)
-                                {
-                                    var cs = editor.Theme.GetStyle(StandardStyle.Default);
-                                    cg.FillRectangle(ControlPaint.Dark(cs.BackColor, .05f).Brush(),
-                                        new Rectangle(0, 0, Dpi.GetWidth(2), rect.Height));
-                                }
-
-                                editor.CaretRenderer.Resume();
-                            }
-
-                            carets.Add(new CaretData(x, y, pos.Line, pos.Col, blink));
-                        }
+                        tet = indent;
+                        x += tet * editor.Info.CharWidth;
                     }
 
-                    x += xw;
+                    for (var i = oldcut; i < cut; i++)
+                    {
+                        var c = line.CharAt(i);
+                        var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : 1;
+                        tet += ct;
+                        var xw = ct * editor.Info.CharWidth;
+                        var visible = x + editor.Scroll.ScrollPosition.X >= lmarg && x + editor.Scroll.ScrollPosition.X + xw <= cwidth;
+
+                        if (visible)
+                        {
+                            var style = default(TextStyle);
+                            var rect = new Rectangle(x, y, xw, editor.Info.LineHeight);
+                            var pos = new Pos(lineIndex, i);
+                            var high = sel && editor.Buffer.Selections.IsSelected(pos);
+                            var ws = c == '\t' || c == ' ';
+
+                            if (!ws)
+                                nonWs = true;
+
+                            if (c == '\0' && showEol || ws && (showWs == ShowWhitespace.All || showWs == ShowWhitespace.Boundary && !nonWs))
+                            {
+                                c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
+                                style = specialSymbol;
+                                style = style.Combine(line.GetStyle(i, editor.Theme));
+                            }
+                            else
+                                style = line.GetStyle(i, editor.Theme);
+
+                            if (high)
+                            {
+                                var sstyle = (TextStyle)editor.Theme.GetStyle(StandardStyle.Selection);
+                                style = sstyle.Combine(style);
+                            }
+
+                            style.DrawAll(g, rect, c, pos);
+
+                            if (editor.Buffer.Selections.HasCaret(pos))
+                            {
+                                var blink = editor.Buffer.Selections.Main.Caret.Line == lineIndex
+                                    && editor.Buffer.Selections.Main.Caret.Col == i;
+
+                                if (blink)
+                                {
+                                    var cg = editor.CaretRenderer.GetDrawingSurface();
+                                    cg.Clear(high ? editor.Theme.GetStyle(StandardStyle.Selection).BackColor
+                                        : curline ? editor.Theme.GetStyle(StandardStyle.CurrentLine).BackColor
+                                        : editor.Theme.DefaultStyle.BackColor);
+                                    style.DrawAll(cg, new Rectangle(default(Point), rect.Size), c, pos);
+
+                                    if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
+                                        cg.DrawLine(specialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
+
+                                    if (editor.Scroll.ScrollPosition.X != 0 && x + editor.Scroll.ScrollPosition.X == editor.Info.TextLeft)
+                                    {
+                                        var cs = editor.Theme.GetStyle(StandardStyle.Default);
+                                        cg.FillRectangle(ControlPaint.Dark(cs.BackColor, .05f).Brush(),
+                                            new Rectangle(0, 0, Dpi.GetWidth(2), rect.Height));
+                                    }
+
+                                    editor.CaretRenderer.Resume();
+                                }
+
+                                carets.Add(new CaretData(x, y, pos.Line, pos.Col, blink));
+                            }
+                        }
+
+                        x += xw;
+                    }
+
+                    var addedWidth = 0;
+
+                    if (line.Length > 0 && editor.ShowLineLength && j == line.Stripes - 1)
+                        addedWidth = DrawLineLengthIndicator(g, line.Length, x, y);
+
+                    if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < editor.Buffer.Document.Lines.Count &&
+                        editor.Buffer.Document.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
+                        DrawFoldingIndicator(g, x + addedWidth, y);
                 }
-
-                var addedWidth = 0;
-
-                if (line.Length > 0 && editor.ShowLineLength && j == line.Stripes - 1)
-                    addedWidth = DrawLineLengthIndicator(g, line.Length, x, y);
-
-                if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < editor.Buffer.Document.Lines.Count &&
-                    editor.Buffer.Document.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
-                    DrawFoldingIndicator(g, x + addedWidth, y);
 
                 oldcut = cut;
                 y += editor.Info.LineHeight;
