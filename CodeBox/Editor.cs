@@ -85,9 +85,7 @@ namespace CodeBox
         protected override void OnDragEnter(DragEventArgs drgevent)
         {
             if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
-            {
                 drgevent.Effect = DragDropEffects.Copy;
-            }
 
             base.OnDragEnter(drgevent);
         }
