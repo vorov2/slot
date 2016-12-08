@@ -41,6 +41,7 @@ namespace CodeBox.Main.File
             viewManager.ActivateView(view);
         }
 
+        private SwitchBufferControl switchBufferControl;
         [Command]
         public void SwitchBuffer()
         {
@@ -55,19 +56,34 @@ namespace CodeBox.Main.File
             var cur = viewManager.GetActiveView()?.Buffer as IMaterialBuffer;
             var idx = cur != null ? buffers.IndexOf(cur) : 0;
 
-            if (idx < buffers.Count - 1)
-                idx++;
-            else
-                idx = 0;
+            if (switchBufferControl == null)
+            {
+                switchBufferControl = new SwitchBufferControl();
+                switchBufferControl.CloseRequested += (o, ev) =>
+                {
+                    var newBuf = switchBufferControl.Buffers[switchBufferControl.SelectedIndex];
+                    var view = viewManager.EnumerateViews()
+                        .FirstOrDefault(v => v.Buffer == newBuf);
 
-            var newBuf = buffers[idx];
-            var view = viewManager.EnumerateViews()
-                .FirstOrDefault(v => v.Buffer == newBuf);
+                    if (view != null)
+                        viewManager.ActivateView(view);
+                    else
+                        OpenBuffer(newBuf);
 
-            if (view != null)
-                viewManager.ActivateView(view);
-            else
-                OpenBuffer(newBuf);
+                    switchBufferControl.FindForm().Controls.Remove(switchBufferControl);
+                };
+            }
+
+            var frm = Form.ActiveForm;
+            switchBufferControl.Buffers = buffers;
+            switchBufferControl.Width = frm.Width / 3;
+            switchBufferControl.Height = switchBufferControl.CalculateHeight();
+            switchBufferControl.Left = (frm.Width - switchBufferControl.Width) / 2;
+            switchBufferControl.Top = (frm.Height - switchBufferControl.Height) / 2;
+            switchBufferControl.SelectedIndex = idx + 1>= buffers.Count ? 0 : idx + 1;
+            frm.Controls.Add(switchBufferControl);
+            switchBufferControl.BringToFront();
+            switchBufferControl.Focus();
         }
 
         [Command]

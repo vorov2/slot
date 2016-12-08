@@ -16,6 +16,12 @@ namespace CodeBox.Core
         [Export("directory.grammar")]
         public string Grammar => AppSettings["directory.grammar"];
 
+        [Export("directory.settings")]
+        public string Settings => AppSettings["directory.settings"];
+
+        [Export("directory.user.settings")]
+        public string UserSettings => AppSettings["directory.user.settings"];
+
         private string _root;
         [Export("directory.root")]
         public string Root

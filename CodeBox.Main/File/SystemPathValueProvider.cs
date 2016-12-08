@@ -10,7 +10,7 @@ namespace CodeBox.Main.File
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.systempath")]
-    public sealed class SystemPathValueProvider : IArgumentValueProvider
+    public class SystemPathValueProvider : IArgumentValueProvider
     {
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
@@ -33,9 +33,13 @@ namespace CodeBox.Main.File
                     : pat != null && pat.EndsWith(Path.DirectorySeparatorChar.ToString()) ? pat
                     : cur;
 
-                return Directory.EnumerateDirectories(path)
-                    .Select(d => d + Path.DirectorySeparatorChar)
-                    .Concat(Directory.EnumerateFiles(path))
+                var qry = Directory.EnumerateDirectories(path)
+                    .Select(d => d + Path.DirectorySeparatorChar);
+
+                if (IncludeFiles)
+                    qry = qry.Concat(Directory.EnumerateFiles(path));
+
+                return qry
                     .Select(fi => fi.Replace(cur, ""))
                     .Where(fi => pat == null || fi.StartsWith(pat, StringComparison.OrdinalIgnoreCase))
                     .Select(fi => new ValueItem(fi));
@@ -45,5 +49,7 @@ namespace CodeBox.Main.File
                 return null;
             }
         }
+
+        protected virtual bool IncludeFiles => true;
     }
 }

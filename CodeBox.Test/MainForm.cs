@@ -24,6 +24,7 @@ using CodeBox.Core.ComponentModel;
 using CodeBox.ComponentModel;
 using CodeBox.StatusBar;
 using CodeBox.Core.Output;
+using CodeBox.Core.Settings;
 
 namespace CodeBox.Test
 {
@@ -47,13 +48,11 @@ namespace CodeBox.Test
             commandBar = new CommandBarControl(ed) { Dock = DockStyle.Top };
 
 
-            SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed.Settings);
             ed.LeftMargins.Add(new LineNumberMargin(ed) { MarkCurrentLine = true });
             ed.LeftMargins.Add(new FoldingMargin(ed));
             ed.RightMargins.Add(new VerticalScrollBarMargin(ed));
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new TopMargin(ed));
-
             var statusBar = new StatusBarControl(ed) { Dock = DockStyle.Bottom };
             statusBar.Tiles.Add(new HelpTile(ed));
             statusBar.Tiles.Add(new ModeTile(ed));
@@ -88,9 +87,10 @@ namespace CodeBox.Test
             output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));
             output.ThinCaret = true;
 
-            output.Settings.Font = set.SmallFont;
-            output.Settings.ShowEol = output.Settings.ShowLineLength = false;
-            output.Settings.ShowWhitespace = ShowWhitespace.None;
+            //output.Settings.Font = set.SmallFont;
+            //output.Settings.ShowEol = output.Settings.ShowLineLength = false;
+            //output.Settings.ShowWhitespace = ShowWhitespace.None;
+            output.LimitedMode = true;
             output.AttachBuffer(App.Catalog<ILogComponent>().GetComponent((Identifier)"log.application"));
             output.ReadOnly = true;
 

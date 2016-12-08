@@ -61,7 +61,7 @@ namespace Json
         {
             newList = null;
 
-            if (!TryCreateInstance<IList>(newListType, out newList))
+            if (!TryCreateInstance(newListType, out newList))
                 return false;
             
             Type elemType;

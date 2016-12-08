@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using CodeBox.Core;
+using CodeBox.Core.Settings;
 
 namespace CodeBox
 {
-    public sealed class EditorSettings : IDocumentAffinity
+    public sealed class EditorSettings : SettingsBag, IDocumentAffinity
     {
         private const string SEPS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
         private const string BRACKETS = "()[]{}";
@@ -18,13 +19,13 @@ namespace CodeBox
             //Defaults
             NonWordSymbols = SEPS;
             BracketSymbols = BRACKETS;
-            Font = new Font(FontFamily.GenericMonospace, 11);
-            LongLineIndicators = new List<int>();
         }
 
         #region IDocumentAffinity
+        [Setting("editor.delimeters")]
         public string NonWordSymbols { get; set; }
 
+        [Setting("editor.brackets")]
         public string BracketSymbols { get; set; }
 
         public NumberLiteral NumberLiteral { get; set; }
@@ -38,87 +39,183 @@ namespace CodeBox
         public string AutocompleteSymbols { get; set; }
         #endregion
 
+        [Setting("editor.showLineNumbers")]
         public bool ShowLineNumbers { get; set; }
 
+        [Setting("editor.matchWords")]
         public bool MatchWords { get; set; }
 
+        [Setting("editor.matchBrackets")]
         public bool MatchBrackets { get; set; }
 
+        [Setting("editor.wordWrap")]
         public bool WordWrap { get; set; }
 
+        [Setting("editor.wordWrapColumn")]
         public int WordWrapColumn { get; set; }
 
+        [Setting("editor.wrappingIndent")]
         public WrappingIndent WrappingIndent { get; set; }
 
         public Eol Eol { get; set; }
 
+        [Setting("editor.useTabs")]
         public bool UseTabs { get; set; }
 
+        [Setting("editor.indentSize")]
         public int IndentSize { get; set; }
 
+        [Setting("editor.linePadding")]
         public double LinePadding { get; set; }
 
+        [Setting("editor.showEol")]
         public bool ShowEol { get; set; }
 
+        [Setting("editor.showWhitespace")]
         public ShowWhitespace ShowWhitespace { get; set; }
 
+        [Setting("editor.showLineLength")]
         public bool ShowLineLength { get; set; }
 
+        [Setting("editor.currentLineIndicator")]
         public bool CurrentLineIndicator { get; set; }
 
-        internal int CharWidth { get; private set; }
-        internal int CharHeight { get; private set; }
-        internal int SmallCharWidth { get; private set; }
-        internal int SmallCharHeight { get; private set; }
+        private int? _charWidth;
+        internal int CharWidth
+        {
+            get
+            {
+                if (_charWidth == null)
+                    CreateFont();
+                return _charWidth.Value;
+            }
+        }
+
+        private int? _charHeight;
+        internal int CharHeight
+        {
+            get
+            {
+                if (_charHeight == null)
+                    CreateFont();
+                return _charHeight.Value;
+            }
+        }
+
+        private int? _smallCharWidth;
+        internal int SmallCharWidth
+        {
+            get
+            {
+                if (_smallCharWidth == null)
+                    CreateFont();
+                return _smallCharWidth.Value;
+            }
+        }
+
+        private int? _smallCharHeight;
+        internal int SmallCharHeight
+        {
+            get
+            {
+                if (_smallCharHeight == null)
+                    CreateFont();
+                return _smallCharHeight.Value;
+            }
+        }
+
+        private string _fontName;
+        [Setting("editor.font")]
+        public string FontName
+        {
+            get { return _fontName; }
+            set
+            {
+                if (value != _fontName)
+                {
+                    _charWidth = null;
+                    _charHeight = null;
+                    _smallCharHeight = null;
+                    _smallCharWidth = null;
+                    _fontName = value;
+                }
+            }
+        }
+
+        private float _fontSize;
+        [Setting("editor.fontSize")]
+        public float FontSize
+        {
+            get { return _fontSize; }
+            set
+            {
+                if (value != _fontSize)
+                {
+                    _charWidth = null;
+                    _charHeight = null;
+                    _smallCharHeight = null;
+                    _smallCharWidth = null;
+                    _fontSize = value;
+                }
+            }
+        }
+
+        private void CreateFont()
+        {
+            FontExtensions.Clean(_font);
+            _font = new Font(FontName, FontSize, FontStyle.Regular);
+
+            using (var ctl = new Control())
+            using (var g = ctl.CreateGraphics())
+            {
+                var size1 = g.MeasureString("<W>", _font);
+                var size2 = g.MeasureString("<>", _font);
+                _charWidth = (int)(size1.Width - size2.Width);
+                _charHeight = (int)_font.GetHeight(g);
+            }
+        }
+
+        private void CreateSmallFont()
+        {
+            FontExtensions.Clean(_smallFont);
+            _smallFont = new Font(FontName, FontSize - 1, FontStyle.Regular);
+
+            using (var ctl = new Control())
+            using (var g = ctl.CreateGraphics())
+            {
+                var size1 = g.MeasureString("<F>", _smallFont);
+                var size2 = g.MeasureString("<>", _smallFont);
+                _smallCharWidth = (int)(size1.Width - size2.Width);
+                _smallCharHeight = (int)_smallFont.GetHeight(g);
+            }
+        }
 
         private Font _font = SystemFonts.DefaultFont;
         public Font Font
         {
-            get { return _font; }
-            set
+            get
             {
-                if (value != _font)
-                {
-                    FontExtensions.Clean(_font);
-                    _font = value;
-                    SmallFont = new Font(value.Name, value.Size - 1, value.Style);
+                if (_font == null)
+                    CreateFont();
 
-                    using (var ctl = new Control())
-                    using (var g = ctl.CreateGraphics())
-                    {
-                        var size1 = g.MeasureString("<W>", value);
-                        var size2 = g.MeasureString("<>", value);
-                        CharWidth = (int)(size1.Width - size2.Width);
-                        CharHeight = (int)value.GetHeight(g);
-                    }
-                }
+                return _font;
             }
         }
 
         private Font _smallFont;
         public Font SmallFont
         {
-            get { return _smallFont; }
-            private set
+            get
             {
-                if (value != _smallFont)
-                {
-                    FontExtensions.Clean(_smallFont);
-                    _smallFont = value;
+                if (_smallFont == null)
+                    CreateSmallFont();
 
-                    using (var ctl = new Control())
-                    using (var g = ctl.CreateGraphics())
-                    {
-                        var size1 = g.MeasureString("<F>", value);
-                        var size2 = g.MeasureString("<>", value);
-                        SmallCharWidth = (int)(size1.Width - size2.Width);
-                        SmallCharHeight = (int)value.GetHeight(g);
-                    }
-                }
+                return _smallFont;
             }
         }
 
-        public List<int> LongLineIndicators { get; }
+        [Setting("editor.longLineIndicators")]
+        public List<int> LongLineIndicators { get; set; }
     }
 
     public enum Eol

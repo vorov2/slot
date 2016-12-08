@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,8 +46,12 @@
   <ItemGroup>
     <Compile Include="File\EncodingValueProvider.cs" />
     <Compile Include="File\FileCommandDispatcher.cs" />
+    <Compile Include="File\FolderValueProvider.cs" />
     <Compile Include="File\ModifiedDocsValueProvider.cs" />
     <Compile Include="File\RecentDocsValueProvider.cs" />
+    <Compile Include="File\SwitchBufferControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="File\SystemPathValueProvider.cs" />
     <Compile Include="File\ViewsValueProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

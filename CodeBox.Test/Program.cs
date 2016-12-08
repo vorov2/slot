@@ -5,6 +5,7 @@ using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core.Keyboard;
 using CodeBox.Core.Output;
+using CodeBox.Core.Settings;
 using CodeBox.Core.ViewModel;
 using CodeBox.Lexing;
 using CodeBox.ObjectModel;
@@ -31,6 +32,7 @@ namespace CodeBox.Test
             Application.SetCompatibleTextRenderingDefault(false);
 
 
+            App.RegisterCatalog<IComponent>();
             App.RegisterCatalog<ICommandDispatcher>();
             App.RegisterCatalog<ICommandBar>();
             App.RegisterCatalog<IArgumentValueProvider>();
@@ -42,6 +44,7 @@ namespace CodeBox.Test
             App.RegisterCatalog<IBufferManager>();
             App.RegisterCatalog<IViewManager>();
             App.RegisterCatalog<ILogComponent>();
+            App.RegisterCatalog<ISettingsProvider>();
             App.Initialize();
 
             var frm = new MainForm();

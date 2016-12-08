@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace CodeBox.Core.CommandModel
+namespace CodeBox.Core
 {
     public static class Converter
     {
@@ -16,6 +16,10 @@ namespace CodeBox.Core.CommandModel
 
             if (obj is string && targetType == typeof(string))
                 result = obj;
+            else if (obj is double && targetType == typeof(int))
+                result = (int)(double)obj;
+            else if (obj is int && targetType == typeof(double))
+                result = (double)(int)obj;
             else if (obj is string && targetType != typeof(string))
             {
                 var i4 = 0;

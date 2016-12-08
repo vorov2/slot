@@ -26,6 +26,7 @@ using CodeBox.Core.CommandModel;
 using CodeBox.ComponentModel;
 using CodeBox.Core.ViewModel;
 using CodeBox.Search;
+using CodeBox.Core.Settings;
 
 namespace CodeBox
 {
@@ -42,7 +43,7 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor() : this(new EditorSettings())
+        public Editor() : this(App.Catalog<ISettingsProvider>().First().Get<EditorSettings>())
         {
 
         }

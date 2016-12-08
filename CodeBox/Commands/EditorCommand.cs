@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using static CodeBox.Commands.ActionResults;
-using CodeBox.Core.CommandModel;
+using CodeBox.Core;
 
 namespace CodeBox.Commands
 {
