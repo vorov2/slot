@@ -59,6 +59,7 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="ExecResult.cs" />
+    <Compile Include="Files.cs" />
     <Compile Include="Identifier.cs" />
     <Compile Include="CommandModel\CommandCatalog.cs" />
     <Compile Include="CommandModel\CommandMetadata.cs" />

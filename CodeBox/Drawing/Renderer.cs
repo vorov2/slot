@@ -125,6 +125,8 @@ namespace CodeBox.Drawing
             var showEol = editor.ShowEol;
             var showWs = editor.ShowWhitespace;
             var specialSymbol = editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
+            var selection = editor.Theme.GetStyle(StandardStyle.Selection);
+            var currentLine = editor.Theme.GetStyle(StandardStyle.CurrentLine);
             var indent = -1;
             var nonWs = false;
 
@@ -180,7 +182,7 @@ namespace CodeBox.Drawing
 
                             if (high)
                             {
-                                var sstyle = editor.Theme.GetStyle(StandardStyle.Selection);
+                                var sstyle = selection;
                                 style = sstyle.Combine(style);
                             }
 
@@ -194,8 +196,8 @@ namespace CodeBox.Drawing
                                 if (blink)
                                 {
                                     var cg = editor.CaretRenderer.GetDrawingSurface();
-                                    cg.Clear(high ? editor.Theme.GetStyle(StandardStyle.Selection).BackColor
-                                        : curline ? editor.Theme.GetStyle(StandardStyle.CurrentLine).BackColor
+                                    cg.Clear(high ? selection.BackColor
+                                        : curline ? currentLine.BackColor
                                         : StyleRenderer.DefaultStyle.BackColor);
                                     StyleRenderer.DrawAll(style, cg, new Rectangle(default(Point), rect.Size), c, pos);
 

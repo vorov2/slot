@@ -419,6 +419,7 @@ namespace CodeBox.CommandBar
             {
                 ResetBuffer(cmd + " ");
                 commandEditor.Buffer.Selections.Set(new Pos(0, cmd.Length + 1));
+                commandEditor.Styles.RestyleDocument();
             }
 
             commandEditor.Focus();

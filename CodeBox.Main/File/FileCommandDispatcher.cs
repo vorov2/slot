@@ -90,7 +90,14 @@ namespace CodeBox.Main.File
         [Command]
         public void OpenFile(string fileName, Encoding enc = null)
         {
-            var fi = new FileInfo(Uri.UnescapeDataString(fileName));
+            var fi = default(FileInfo);
+
+            if (!Files.TryGetInfo(fileName, out fi))
+            {
+                App.Ext.Log($"Invalid file name: {fileName}.", EntryType.Error);
+                return;
+            }
+
             var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
             OpenBuffer(buffer);
         }

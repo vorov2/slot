@@ -1,6 +1,7 @@
 ﻿using CodeBox.Affinity;
 using CodeBox.ComponentModel;
 using CodeBox.Core.Themes;
+using CodeBox.Drawing;
 using CodeBox.Folding;
 using CodeBox.Styling;
 using System;
@@ -200,7 +201,7 @@ namespace CodeBox.ObjectModel
                 }
             }
 
-            return ret.IsEmpty() ? theme.GetStyle(StandardStyle.Default) : ret;
+            return ret.IsEmpty() ? StyleRenderer.DefaultStyle : ret;
         }
         #endregion
 
