@@ -1,15 +1,14 @@
-﻿using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using CodeBox.Core.CommandModel;
+using CodeBox.Core.ComponentModel;
+using CodeBox.Core.ViewModel;
 
 namespace CodeBox.Core
 {

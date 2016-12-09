@@ -20,5 +20,18 @@ namespace CodeBox
         {
             App.Catalog<ILogComponent>().GetComponent(logKey).Write(message, type);
         }
+
+        public static ExecResult Handle(this IAppExtensions _, Action act)
+        {
+            try
+            {
+                act();
+                return ExecResult.Ok;
+            }
+            catch (Exception ex)
+            {
+                return ExecResult.Failure(ex.Message);
+            }
+        }
     }
 }

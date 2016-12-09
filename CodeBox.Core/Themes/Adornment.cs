@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace CodeBox.Core.Themes
 {
     public enum Adornment

@@ -58,7 +58,7 @@
     <Compile Include="CommandModel\ICommandDispatcher.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="ExecExtensions.cs" />
+    <Compile Include="ExecResult.cs" />
     <Compile Include="Identifier.cs" />
     <Compile Include="CommandModel\CommandCatalog.cs" />
     <Compile Include="CommandModel\CommandMetadata.cs" />
@@ -83,6 +83,7 @@
     <Compile Include="Settings\SettingAttribute.cs" />
     <Compile Include="Settings\SettingsBag.cs" />
     <Compile Include="Settings\SettingsProvider.cs" />
+    <Compile Include="Settings\SettingsScope.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Themes\Adornment.cs" />
     <Compile Include="Themes\IThemeComponent.cs" />

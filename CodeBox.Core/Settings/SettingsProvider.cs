@@ -1,13 +1,9 @@
-﻿using CodeBox.Core.ComponentModel;
-using Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using Json;
+using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Core.Settings
 {
@@ -50,10 +46,19 @@ namespace CodeBox.Core.Settings
             return (T)ret;
         }
 
-        public void ReloadSettings()
+        public void ReloadSettings(SettingsScope scope)
         {
-            settings = userSettings = workspaceSettings = null;
-            LoadSettings();
+            switch (scope)
+            {
+                case SettingsScope.Global:
+                    settings = ReadFile(SettingsDirectory);
+                    break;
+                case SettingsScope.User:
+                    userSettings = ReadFile(UserSettingsDirectory);
+                    break;
+                case SettingsScope.Workspace:
+                    break;
+            }
 
             foreach (var b in bagMap.Values)
                 b.Fill(settings, userSettings, workspaceSettings);

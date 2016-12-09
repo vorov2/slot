@@ -44,7 +44,7 @@ namespace CodeBox
 
             if (!file.Directory.Exists)
             {
-                var res = file.Directory.Exec(d => d.Create());
+                var res = App.Ext.Handle(() => file.Directory.Create());
 
                 if (!res.Success)
                 {
@@ -54,7 +54,7 @@ namespace CodeBox
             }
 
             var txt = docb.GetText();
-            var res1 = file.Exec(fl => File.WriteAllText(fl.FullName, txt, encoding));
+            var res1 = App.Ext.Handle(() => File.WriteAllText(file.FullName, txt, encoding));
 
             if (res1.Success)
             {
@@ -77,7 +77,7 @@ namespace CodeBox
                 return CreateBuffer();
 
             string txt = null;
-            var res = fileName.Exec(fl => txt = File.ReadAllText(fl.FullName, encoding));
+            var res = App.Ext.Handle(() => txt = File.ReadAllText(fileName.FullName, encoding));
 
             if (res.Success)
                 return InternalCreateBuffer(Document.FromString(txt), fileName, encoding);
