@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{706A55BB-8814-48F3-A188-A9AB9F55B1D8}</ProjectGuid>
+    <ProjectGuid>{865BAF51-1C60-4879-B979-8F7EE3320500}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeBox.Main</RootNamespace>
-    <AssemblyName>CodeBox.Main</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>CodeBox.Drawing</RootNamespace>
+    <AssemblyName>CodeBox.Drawing</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -44,34 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnvironmentSettings.cs" />
-    <Compile Include="File\EncodingValueProvider.cs" />
-    <Compile Include="File\FileCommandDispatcher.cs" />
-    <Compile Include="File\FolderValueProvider.cs" />
-    <Compile Include="File\ModifiedDocsValueProvider.cs" />
-    <Compile Include="File\RecentDocsValueProvider.cs" />
-    <Compile Include="File\SwitchBufferControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="File\SystemPathValueProvider.cs" />
-    <Compile Include="File\ViewsValueProvider.cs" />
+    <Compile Include="ColorExtensions.cs" />
+    <Compile Include="Dpi.cs" />
+    <Compile Include="FontExtensions.cs" />
+    <Compile Include="GraphicsExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SysFont.cs" />
+    <Compile Include="TextFormats.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">
-      <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
-      <Name>CodeBox.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeBox.Drawing\CodeBox.Drawing.csproj">
-      <Project>{865baf51-1c60-4879-b979-8f7ee3320500}</Project>
-      <Name>CodeBox.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeBox\CodeBox.csproj">
-      <Project>{a12ac5fd-fddb-4253-ac43-92f305ac9d56}</Project>
-      <Name>CodeBox</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

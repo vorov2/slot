@@ -133,19 +133,14 @@
     <Compile Include="AppExtensions.cs" />
     <Compile Include="ComponentModel\ITextEditor.cs" />
     <Compile Include="DocumentBufferManager.cs" />
-    <Compile Include="Drawing\Dpi.cs" />
-    <Compile Include="Drawing\GraphicsExtensions.cs" />
     <Compile Include="Drawing\Overlay.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Drawing\SysFont.cs" />
-    <Compile Include="Drawing\TextFormats.cs" />
     <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />
     <Compile Include="IEditorLock.cs" />
     <Compile Include="Lexing\ConfigurableLexer.cs" />
-    <Compile Include="Drawing\FontExtensions.cs" />
     <Compile Include="Drawing\CaretData.cs" />
     <Compile Include="Drawing\CaretRenderer.cs" />
     <Compile Include="EditorInfo.cs" />
@@ -244,7 +239,6 @@
     <Compile Include="ComponentModel\IStylerComponent.cs" />
     <Compile Include="Drawing\StyleRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Drawing\ColorExtensions.cs" />
     <Compile Include="ScrollingManager.cs" />
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
     <Compile Include="Styling\ThemeProvider.cs" />
@@ -255,6 +249,10 @@
     <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">
       <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
       <Name>CodeBox.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeBox.Drawing\CodeBox.Drawing.csproj">
+      <Project>{865baf51-1c60-4879-b979-8f7ee3320500}</Project>
+      <Name>CodeBox.Drawing</Name>
     </ProjectReference>
     <ProjectReference Include="..\Util\Json\Json.csproj">
       <Project>{2c727444-c7dd-4db3-8546-964f4b354242}</Project>

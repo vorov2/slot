@@ -164,30 +164,16 @@ namespace CodeBox
         {
             FontExtensions.Clean(_font);
             _font = new Font(FontName, FontSize, FontStyle.Regular);
-
-            using (var ctl = new Control())
-            using (var g = ctl.CreateGraphics())
-            {
-                var size1 = g.MeasureString("<W>", _font);
-                var size2 = g.MeasureString("<>", _font);
-                _charWidth = (int)(size1.Width - size2.Width);
-                _charHeight = (int)_font.GetHeight(g);
-            }
+            _charWidth = _font.Width();
+            _charHeight = _font.Height();
         }
 
         private void CreateSmallFont()
         {
             FontExtensions.Clean(_smallFont);
             _smallFont = new Font(FontName, FontSize - 1, FontStyle.Regular);
-
-            using (var ctl = new Control())
-            using (var g = ctl.CreateGraphics())
-            {
-                var size1 = g.MeasureString("<F>", _smallFont);
-                var size2 = g.MeasureString("<>", _smallFont);
-                _smallCharWidth = (int)(size1.Width - size2.Width);
-                _smallCharHeight = (int)_smallFont.GetHeight(g);
-            }
+            _smallCharWidth = _font.Width();
+            _smallCharHeight = _font.Height();
         }
 
         private Font _font = SystemFonts.DefaultFont;

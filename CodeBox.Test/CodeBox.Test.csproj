@@ -116,6 +116,10 @@
       <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
       <Name>CodeBox.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CodeBox.Drawing\CodeBox.Drawing.csproj">
+      <Project>{865baf51-1c60-4879-b979-8f7ee3320500}</Project>
+      <Name>CodeBox.Drawing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeBox.Main\CodeBox.Main.csproj">
       <Project>{706a55bb-8814-48f3-a188-a9ab9f55b1d8}</Project>
       <Name>CodeBox.Main</Name>
