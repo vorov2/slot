@@ -13,6 +13,8 @@ namespace CodeBox.Core.ViewModel
 
         IMaterialBuffer CreateBuffer(FileInfo fileName, Encoding encoding);
 
+        void CloseBuffer(IBuffer buf);
+
         void SaveBuffer(IMaterialBuffer buffer, FileInfo file, Encoding encoding);
 
         IEnumerable<IBuffer> EnumerateBuffers();

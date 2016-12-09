@@ -10,6 +10,7 @@ using System.IO;
 using CodeBox.ObjectModel;
 using System.Security;
 using CodeBox.Core;
+using CodeBox.Core.Output;
 
 namespace CodeBox
 {
@@ -19,15 +20,22 @@ namespace CodeBox
     {
         public const string Name = "buffermanager.default";
 
-        private readonly Stack<IBuffer> buffers = new Stack<IBuffer>();
+        private readonly List<IBuffer> buffers = new List<IBuffer>();
 
         public IMaterialBuffer CreateBuffer()
         {
             var num = buffers.Count(b => !b.File.Exists);
-            var ret = InternalCreateBuffer(Document.FromString(""),
-                new FileInfo($"untitled-{num + 1}"), Encoding.UTF8);
+            var ret = InternalCreateBuffer(new FileInfo($"untitled-{num + 1}"), Encoding.UTF8);
             ret.Edits++;
             return ret;
+        }
+
+        public void CloseBuffer(IBuffer buffer)
+        {
+            var idx = buffers.IndexOf(buffer);
+
+            if (idx != -1)
+                buffers[idx] = new VirtualBuffer(buffer.File, buffer.Encoding);
         }
 
         public void SaveBuffer(IMaterialBuffer buffer, FileInfo file, Encoding encoding)
@@ -36,7 +44,7 @@ namespace CodeBox
 
             if (docb == null)
             {
-                //Log
+                App.Ext.Log("Invalid document type.", EntryType.Error);
                 return;
             }
 
@@ -48,7 +56,7 @@ namespace CodeBox
 
                 if (!res.Success)
                 {
-                    //Log
+                    App.Ext.Log($"Unable to create file: {res.Reason}", EntryType.Error);
                     return;
                 }
             }
@@ -63,10 +71,7 @@ namespace CodeBox
                 docb.ClearDirtyFlag();
             }
             else
-            {
-                Console.WriteLine(res1.Reason);
-                //Log
-            }
+                App.Ext.Log($"Unable to save file: {res1.Reason}", EntryType.Error);
         }
 
         public IMaterialBuffer CreateBuffer(FileInfo fileName, Encoding encoding)
@@ -74,30 +79,66 @@ namespace CodeBox
             fileName.Refresh();
 
             if (!fileName.Exists)
-                return CreateBuffer();
+            {
+                var buf = InternalCreateBuffer(fileName, encoding);
+                buf.Edits++;
+                return buf;
+            }
+
+            return InternalCreateBuffer(fileName, encoding);
+        }
+
+        private Document CreateDocument(FileInfo fileName, Encoding encoding)
+        {
+            fileName.Refresh();
+
+            if (!fileName.Exists)
+                return Document.FromString("");
 
             string txt = null;
             var res = App.Ext.Handle(() => txt = File.ReadAllText(fileName.FullName, encoding));
 
             if (res.Success)
-                return InternalCreateBuffer(Document.FromString(txt), fileName, encoding);
+                return Document.FromString(txt);
             else
             {
-                //Log
+                App.Ext.Log($"Unable to create buffer: {res.Reason}", EntryType.Error);
                 return null;
             }
         }
 
-        private DocumentBuffer InternalCreateBuffer(Document doc, FileInfo file, Encoding enc)
+        private DocumentBuffer InternalCreateBuffer(FileInfo file, Encoding enc)
         {
-            var buf = new DocumentBuffer(doc, file, enc);
-            buffers.Push(buf);
-            return buf;
+            var buf = buffers.FirstOrDefault(b => 
+                b.File.FullName.Equals(file.FullName, StringComparison.OrdinalIgnoreCase));
+
+            if (buf == null)
+            {
+                var doc = CreateDocument(file, enc);
+
+                if (doc == null)
+                    return null;
+
+                buf = new DocumentBuffer(doc, file, enc);
+                buffers.Add(buf);
+            }
+            else if (buf is VirtualBuffer)
+            {
+                var doc = CreateDocument(file, enc);
+
+                if (doc == null)
+                    return null;
+
+                var idx = buffers.IndexOf(buf);
+                buf = buffers[idx] = new DocumentBuffer(doc, file, enc);
+            }
+
+            return (DocumentBuffer)buf;
         }
 
         public IEnumerable<IBuffer> EnumerateBuffers()
         {
-            return buffers;
+            return buffers.OrderByDescending(b => b.LastAccess);
         }
     }
 }

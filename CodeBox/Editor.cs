@@ -478,6 +478,8 @@ namespace CodeBox
 
             if (Buffer != null && buffer != Buffer)
                 DetachBuffer();
+            else if (Buffer == buffer)
+                return;
 
             var @lock = Buffer?.ObtainLock();
 

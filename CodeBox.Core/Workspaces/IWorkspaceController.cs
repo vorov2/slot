@@ -10,8 +10,10 @@ namespace CodeBox.Core.Workspaces
 
         bool OpenWorkspace(DirectoryInfo dir);
 
+        void CloseWorkspace();
+
         DirectoryInfo CurrentWorkspace { get; }
 
-        event EventHandler WorkspaceOpened;
+        event EventHandler WorkspaceChanged;
     }
 }

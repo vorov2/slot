@@ -39,16 +39,22 @@ namespace CodeBox.Core.Workspaces
             {
                 CurrentWorkspace = dir;
                 Directory.SetCurrentDirectory(dir.FullName);
-                OnWorkspaceOpened();
+                OnWorkspaceChanged();
                 return true;
             }
 
             return OpenWorkspace(dir.Parent);
         }
 
+        public void CloseWorkspace()
+        {
+            CurrentWorkspace = null;
+            OnWorkspaceChanged();
+        }
+
         public DirectoryInfo CurrentWorkspace { get; private set; }
 
-        public event EventHandler WorkspaceOpened;
-        private void OnWorkspaceOpened() => WorkspaceOpened?.Invoke(this, EventArgs.Empty);
+        public event EventHandler WorkspaceChanged;
+        private void OnWorkspaceChanged() => WorkspaceChanged?.Invoke(this, EventArgs.Empty);
     }
 }

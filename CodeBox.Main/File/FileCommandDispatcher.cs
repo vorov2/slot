@@ -49,13 +49,12 @@ namespace CodeBox.Main.File
         {
             var buffers = bufferManager.EnumerateBuffers()
                 .OrderByDescending(b => b.LastAccess)
-                .OfType<IMaterialBuffer>()
                 .ToList();
 
             if (buffers.Count < 2)
                 return;
 
-            var cur = viewManager.GetActiveView()?.Buffer as IMaterialBuffer;
+            var cur = viewManager.GetActiveView()?.Buffer;
             var idx = cur != null ? buffers.IndexOf(cur) : 0;
 
             if (switchBufferControl == null)
@@ -82,7 +81,7 @@ namespace CodeBox.Main.File
             switchBufferControl.Height = switchBufferControl.CalculateHeight();
             switchBufferControl.Left = (frm.Width - switchBufferControl.Width) / 2;
             switchBufferControl.Top = (frm.Height - switchBufferControl.Height) / 2;
-            switchBufferControl.SelectedIndex = idx + 1>= buffers.Count ? 0 : idx + 1;
+            switchBufferControl.SelectedIndex = idx + 1 >= buffers.Count ? 0 : idx + 1;
             frm.Controls.Add(switchBufferControl);
             switchBufferControl.BringToFront();
             switchBufferControl.Focus();
@@ -118,6 +117,12 @@ namespace CodeBox.Main.File
             App.Catalog<IWorkspaceController>().First().CreateWorkspace(new DirectoryInfo(dir));
         }
 
+        [Command]
+        public void CloseFolder()
+        {
+            App.Catalog<IWorkspaceController>().First().CloseWorkspace();
+        }
+
         private bool TryOpenFolder(string dir)
         {
             return App.Catalog<IWorkspaceController>().First().OpenWorkspace(new DirectoryInfo(dir));
@@ -128,6 +133,20 @@ namespace CodeBox.Main.File
         {
             var buffer = bufferManager.CreateBuffer();
             OpenBuffer(buffer);
+        }
+
+        [Command]
+        public void RevertFile()
+        {
+            var buf = viewManager.GetActiveView()?.Buffer;
+
+            if (buf != null && buf.File.Exists)
+            {
+                bufferManager.CloseBuffer(buf);
+                OpenFile(buf.File.FullName);
+            }
+            else if (buf != null && !buf.File.Exists)
+                App.Ext.Log($"Unable to revert a file {buf.File}. File is not yet written to disk.", EntryType.Error);
         }
 
         [Command]

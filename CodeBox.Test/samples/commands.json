@@ -51,7 +51,7 @@
     {
         "key": "file.openfile",
         "alias": "f-o",
-        "title": "Open a file",
+        "title": "File: Open a file",
         "arguments": [
             {
                 "name": "fileName",
@@ -68,7 +68,7 @@
     {
         "key": "file.reopenfile",
         "alias": "f-ro",
-        "title": "Reopen a file with encoding",
+        "title": "File: Reopen a file with encoding",
         "arguments": [
             {
                 "name": "encoding",
@@ -79,7 +79,7 @@
     {
         "key": "file.openrecentfile",
         "alias": "f-or",
-        "title": "Open a recent file",
+        "title": "File: Open a recent file",
         "arguments": [
             {
                 "name": "fileName",
@@ -90,7 +90,7 @@
     {
         "key": "file.openmodifiedfile",
         "alias": "f-om",
-        "title": "Open a modified file",
+        "title": "File: Open a modified file",
         "arguments": [
             {
                 "name": "fileName",
@@ -101,7 +101,7 @@
     {
         "key": "file.savefile",
         "alias": "f-s",
-        "title": "Save file",
+        "title": "File: Save file",
         "arguments": [
             {
                 "name": "fileName",
@@ -112,22 +112,22 @@
     {
         "key": "file.newfile",
         "alias": "f-n",
-        "title": "New file"
+        "title": "File: New file"
     },
     {
         "key": "file.newwindow",
         "alias": "f-wn",
-        "title": "New window"
+        "title": "File: New window"
     },
     {
         "key": "file.closewindow",
         "alias": "f-wc",
-        "title": "Close window"
+        "title": "File: Close window"
     },
     {
         "key": "file.switchview",
         "alias": "f-ws",
-        "title": "Switch view",
+        "title": "File: Switch view",
         "arguments": [
             {
                 "name": "viewName",
@@ -138,18 +138,28 @@
     {
         "key": "file.switchbuffer",
         "alias": "f-bs",
-        "title": "Switch buffer"
+        "title": "File: Switch buffer"
     },
     {
         "key": "file.openFolder",
-        "alias": "f-of",
-        "title": "Open folder",
+        "alias": "f-fo",
+        "title": "File: Open folder",
         "arguments": [
             {
                 "name": "folder",
                 "valueProvider": "values.folders"
             }
         ]
+    },
+    {
+        "key": "file.closeFolder",
+        "alias": "f-fc",
+        "title": "File: Close folder"
+    },
+    {
+        "key": "file.revertFile",
+        "alias": "f-rf",
+        "title": "File: Revert file"
     },
 
 

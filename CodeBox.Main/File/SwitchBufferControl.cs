@@ -101,7 +101,7 @@ namespace CodeBox.Main.File
             return max * height + bag.SmallFont.Width() * 2;
         }
 
-        internal List<IMaterialBuffer> Buffers { get; set; }
+        internal List<IBuffer> Buffers { get; set; }
 
         internal int SelectedIndex { get; set; }
 
