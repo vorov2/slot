@@ -219,7 +219,7 @@ namespace CodeBox.ObjectModel
 
         public FileInfo File { get; internal set; }
 
-        public Encoding Encoding { get; internal set; }
+        public Encoding Encoding { get; set; }
 
         public DateTime LastAccess { get; set; }
 

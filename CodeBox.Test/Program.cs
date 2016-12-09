@@ -8,6 +8,7 @@ using CodeBox.Core.Output;
 using CodeBox.Core.Settings;
 using CodeBox.Core.Themes;
 using CodeBox.Core.ViewModel;
+using CodeBox.Core.Workspaces;
 using CodeBox.Lexing;
 using CodeBox.ObjectModel;
 using System;
@@ -46,6 +47,7 @@ namespace CodeBox.Test
             App.RegisterCatalog<IViewManager>();
             App.RegisterCatalog<ILogComponent>();
             App.RegisterCatalog<ISettingsProvider>();
+            App.RegisterCatalog<IWorkspaceController>();
             App.Initialize();
 
             var frm = new MainForm();

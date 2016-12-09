@@ -78,7 +78,7 @@ namespace CodeBox.Main.File
 
                     foreach (var c in b.File.Name)
                     {
-                        g.DrawString(c.ToString(), font.Get(FontStyle.Underline), ic.Brush(), new Rectangle(x, y,
+                        g.DrawString(c.ToString(), font.Get(FontStyle.Bold), ic.Brush(), new Rectangle(x, y,
                             ClientSize.Width - xPad * 2, font.Height()), TextFormats.Compact);
                         x += bag.Font.Width();
                     }

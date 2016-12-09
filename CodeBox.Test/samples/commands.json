@@ -140,7 +140,17 @@
         "alias": "f-bs",
         "title": "Switch buffer"
     },
-
+    {
+        "key": "file.openFolder",
+        "alias": "f-of",
+        "title": "Open folder",
+        "arguments": [
+            {
+                "name": "folder",
+                "valueProvider": "values.folders"
+            }
+        ]
+    },
 
 
     {

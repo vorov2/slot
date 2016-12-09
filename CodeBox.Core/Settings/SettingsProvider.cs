@@ -7,6 +7,7 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Core.Settings
 {
+    using Workspaces;
     using MAP = Dictionary<string, object>;
     using OMAP = Dictionary<Type, SettingsBag>;
 
@@ -51,12 +52,15 @@ namespace CodeBox.Core.Settings
             switch (scope)
             {
                 case SettingsScope.Global:
-                    settings = ReadFile(SettingsDirectory);
+                    settings = ReadFile(SettingsFile);
                     break;
                 case SettingsScope.User:
-                    userSettings = ReadFile(UserSettingsDirectory);
+                    userSettings = ReadFile(UserSettingsFile);
                     break;
                 case SettingsScope.Workspace:
+                    var dir = App.Catalog<IWorkspaceController>().First().CurrentWorkspace;
+                    if (dir != null)
+                        workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));
                     break;
             }
 
@@ -69,8 +73,13 @@ namespace CodeBox.Core.Settings
             if (settings != null)
                 return;
 
-            settings = ReadFile(SettingsDirectory);
-            userSettings = ReadFile(UserSettingsDirectory);
+            settings = ReadFile(SettingsFile);
+            userSettings = ReadFile(UserSettingsFile);
+
+            var dir = App.Catalog<IWorkspaceController>().First().CurrentWorkspace;
+
+            if (dir != null)
+                workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));
         }
 
         private MAP ReadFile(string fileName)
@@ -82,8 +91,8 @@ namespace CodeBox.Core.Settings
             return json.Parse() as MAP;
         }
 
-        private string SettingsDirectory => Path.Combine(rootDirectory, settingsDirectory, FILE);
+        private string SettingsFile => Path.Combine(rootDirectory, settingsDirectory, FILE);
 
-        private string UserSettingsDirectory => Path.Combine(rootDirectory, userSettingsDirectory, FILE);
+        private string UserSettingsFile => Path.Combine(rootDirectory, userSettingsDirectory, FILE);
     }
 }

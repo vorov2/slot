@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CodeBox.Core.ComponentModel;
 using System.Reflection;
 using System.ComponentModel.Composition;
+using CodeBox.Core.Output;
 
 namespace CodeBox.Core.CommandModel
 {

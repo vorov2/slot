@@ -96,6 +96,8 @@
     <Compile Include="ViewModel\IMaterialBuffer.cs" />
     <Compile Include="ViewModel\IView.cs" />
     <Compile Include="ViewModel\IViewManager.cs" />
+    <Compile Include="Workspaces\IWorkspaceController.cs" />
+    <Compile Include="Workspaces\WorkspaceController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Json\Json.csproj">

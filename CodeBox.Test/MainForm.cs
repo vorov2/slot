@@ -25,6 +25,7 @@ using CodeBox.ComponentModel;
 using CodeBox.StatusBar;
 using CodeBox.Core.Output;
 using CodeBox.Core.Settings;
+using CodeBox.Core.Workspaces;
 
 namespace CodeBox.Test
 {
@@ -108,6 +109,7 @@ namespace CodeBox.Test
         //}
 
 
+
         public SplitContainer SplitContainer => splitContainer;
 
         private string LocalFile(string fileName)
@@ -118,6 +120,10 @@ namespace CodeBox.Test
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            var wc = App.Catalog<IWorkspaceController>().First();
+            wc.WorkspaceOpened +=
+                (o, ev) => Text = $"{wc.CurrentWorkspace.FullName} - {Application.ProductName}";
         }
 
 

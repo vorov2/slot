@@ -1,7 +1,9 @@
 ﻿using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Output;
 using CodeBox.Core.ViewModel;
+using CodeBox.Core.Workspaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -102,19 +104,23 @@ namespace CodeBox.Main.File
             if (buffer != null)
             {
                 if (buffer.IsDirty)
-                {
-                    App.Ext.Log("File is dirty. Save file before reloading.", Core.Output.EntryType.Error);
-                    //Log
-                    return;
-                }
+                    App.Ext.Log("File is dirty. Save file before reloading.", EntryType.Error);
                 else if (!buffer.File.Exists)
-                {
-                    //Log
-                    return;
-                }
-
-                OpenFile(buffer.File.FullName, enc);
+                    buffer.Encoding = enc;
+                else
+                    OpenFile(buffer.File.FullName, enc);
             }
+        }
+
+        [Command]
+        public void OpenFolder(string dir)
+        {
+            App.Catalog<IWorkspaceController>().First().CreateWorkspace(new DirectoryInfo(dir));
+        }
+
+        private bool TryOpenFolder(string dir)
+        {
+            return App.Catalog<IWorkspaceController>().First().OpenWorkspace(new DirectoryInfo(dir));
         }
 
         [Command]
@@ -141,6 +147,7 @@ namespace CodeBox.Main.File
                     ? buffer.File.Directory.FullName : Environment.CurrentDirectory, fileName))
                 : buffer.File;
             bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
+            TryOpenFolder(fi.DirectoryName);
         }
 
         [Command]
@@ -168,7 +175,7 @@ namespace CodeBox.Main.File
                 var view = viewManager.GetActiveView();
                 view.AttachBuffer(buf);
 
-                if (buf?.File.Directory != null)
+                if (buf.File.Directory != null && !TryOpenFolder(buf.File.DirectoryName))
                     Directory.SetCurrentDirectory(buf.File.Directory.FullName);
             }
         }

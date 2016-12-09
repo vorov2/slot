@@ -8,7 +8,7 @@ namespace CodeBox.Core.ViewModel
     {
         FileInfo File { get; }
 
-        Encoding Encoding { get; }
+        Encoding Encoding { get; set; }
 
         DateTime LastAccess { get; }
     }
