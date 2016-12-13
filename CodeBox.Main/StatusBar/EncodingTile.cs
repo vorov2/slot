@@ -1,14 +1,13 @@
 ﻿using CodeBox.Core;
-using CodeBox.Core.ComponentModel;
 using System;
 
-namespace CodeBox.StatusBar
+namespace CodeBox.Main.StatusBar
 {
-    public sealed class EolTile : StatusBarTile
+    public sealed class EncodingTile : StatusBarTile
     {
         private readonly Editor editor;
 
-        public EolTile(Editor editor) : base(TileAlignment.Right)
+        public EncodingTile(Editor editor) : base(TileAlignment.Right)
         {
             this.editor = editor;
         }
@@ -17,14 +16,14 @@ namespace CodeBox.StatusBar
         {
             get
             {
-                return editor.Buffer.Eol.ToString().ToUpper();
+                return editor.Buffer.Encoding.WebName.ToUpper();
             }
             set { base.Text = value; }
         }
 
         protected internal override void PerformClick()
         {
-            App.Ext.Run(editor, Cmd.SetBufferEol);
+            App.Ext.Run(editor, (Identifier)"file.reopenfile");
             base.PerformClick();
         }
     }

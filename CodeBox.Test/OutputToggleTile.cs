@@ -1,5 +1,5 @@
 ﻿using CodeBox.Drawing;
-using CodeBox.StatusBar;
+using CodeBox.Main.StatusBar;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

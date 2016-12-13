@@ -1,12 +1,8 @@
 ﻿using CodeBox.Drawing;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeBox.StatusBar
+namespace CodeBox.Main.StatusBar
 {
     public class StatusBarTile
     {
@@ -37,7 +33,7 @@ namespace CodeBox.StatusBar
         public virtual int MeasureWidth(Graphics g)
         {
             var size = g.MeasureString(Text, Font, int.MaxValue, measureFormat);
-            return (int)Math.Round(size.Width, MidpointRounding.AwayFromZero) + Dpi.GetWidth(10);
+            return (int)Math.Round(size.Width, MidpointRounding.AwayFromZero) + Dpi.GetWidth(8);
         }
 
         internal Font Font { get; set; }

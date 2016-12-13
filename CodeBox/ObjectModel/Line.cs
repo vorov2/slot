@@ -206,7 +206,7 @@ namespace CodeBox.ObjectModel
         #endregion
 
         #region Tetras, cuts and Stripes
-        internal int GetTetras(int pos, int tabSize)
+        public int GetTetras(int pos, int tabSize)
         {
             var tetra = 0;
             var max = pos > chars.Count ? chars.Count : pos;
@@ -313,7 +313,7 @@ namespace CodeBox.ObjectModel
             return col - start;
         }
 
-        internal int GetTetras(int tabSize)
+        public int GetTetras(int tabSize)
         {
             if (tetraCount != -1)
                 return tetraCount;

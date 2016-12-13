@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeBox.ObjectModel;
 using CodeBox.Styling;
 using CodeBox.Drawing;
 using System.Windows.Forms;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Commands;
-using CodeBox.CommandBar;
 using CodeBox.Autocomplete;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
-using CodeBox.Margins;
 using CodeBox.Core.Keyboard;
 using CodeBox.Core.Themes;
+using CodeBox.Core.Settings;
 
-namespace CodeBox.CommandBar
+namespace CodeBox.Main.CommandBar
 {
     public class CommandBarControl : Control
     {
@@ -26,13 +20,6 @@ namespace CodeBox.CommandBar
         private Editor commandEditor;
         private AutocompleteWindow window;
         private Rectangle lastBounds;
-        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
-        {
-            LineAlignment = StringAlignment.Near,
-            Alignment = StringAlignment.Near,
-            Trimming = StringTrimming.EllipsisPath,
-            FormatFlags = StringFormatFlags.NoWrap
-        };
 
         public CommandBarControl(Editor editor)
         {
@@ -46,7 +33,9 @@ namespace CodeBox.CommandBar
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            Height = (int)Math.Round(editor.Info.LineHeight * 1.7, MidpointRounding.AwayFromZero);
+            Height = (int)Math.Round(
+                Math.Max(App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font.Height() * 1.7,
+                    editor.Info.LineHeight * 1.7), MidpointRounding.AwayFromZero);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -65,24 +54,25 @@ namespace CodeBox.CommandBar
 
             if (!ed.Visible)
             {
-                var font = editor.Settings.SmallFont.Get(cs.FontStyle);//SysFont.Font;// 
-                var x = editor.Info.CharWidth * 2f;
-                var h = editor.Info.CharWidth;
+                var baseFont = App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font;
+                var font = baseFont.Get(cs.FontStyle);
+                var x = font.Width() * 2f;
+                var h = font.Width();
                 var y = bounds.Y + ((bounds.Height - h) / 2);
-                var w = editor.Info.CharWidth;
+                var w = font.Width();
 
                 if (editor.Buffer.IsDirty)
                     g.FillRectangle(cs.ForeColor.Brush(), x, y, w, h);
                 else
                     g.DrawRectangle(cs.ForeColor.Pen(), x, y, w, h);
 
-                y = (bounds.Height - font.Height) / 2;
-                x = editor.Info.CharWidth * 4f;
+                y = (bounds.Height - font.Height()) / 2;
+                x = font.Width() * 4f;
                 g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
-                x += /*g.MeasureString(Editor.Buffer.File.Name, font).Width;*/(editor.Buffer.File.Name.Length + 1.5f) * editor.Info.SmallCharWidth;
+                x += g.MeasureString(editor.Buffer.File.Name, font).Width;
 
                 g.DrawString(editor.Buffer.File.DirectoryName, font, acs.ForeColor.Brush(), 
-                    new RectangleF(x, y, bounds.Width - x - editor.Info.CharWidth, bounds.Height), format);
+                    new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
             }
             else
             {
@@ -123,7 +113,7 @@ namespace CodeBox.CommandBar
             var key = KeyboardAdapter.Instance.LastKey;
 
             if (key.Name != "newline" && key.Name != "up" && key.Name != "down" && key.Name != "indent")
-                editor.RunCommand(KeyboardAdapter.Instance.LastKey);
+                App.Ext.Run(editor, KeyboardAdapter.Instance.LastKey);
         }
 
         private AutocompleteWindow GetAutocompleteWindow()
@@ -175,7 +165,7 @@ namespace CodeBox.CommandBar
                     var a = statement.Arguments[arg];
                     commandEditor.Buffer.Selections.Set(new Selection(
                         new Pos(0, a.Location.Start), new Pos(0, a.Location.End)));
-                    commandEditor.RunCommand((Identifier)"editor.insertrange", window.SelectedItem.Value.MakeCharacters());
+                    App.Ext.Run(commandEditor, (Identifier)"editor.insertrange", window.SelectedItem.Value.MakeCharacters());
                 }
                 else
                     InsertCompleteString();
@@ -186,7 +176,7 @@ namespace CodeBox.CommandBar
                     ?.Arguments.Count(a => !a.Optional))
                 ExecuteCommand(commandEditor.Text);
             else if (currentAffinity != ArgumentAffinity.FilePath)
-                commandEditor.RunCommand((Identifier)"editor.insertrange", " ".MakeCharacters());
+                App.Ext.Run(commandEditor, (Identifier)"editor.insertrange", " ".MakeCharacters());
         }
 
         private bool HideAutocompleteWindow()
@@ -229,7 +219,7 @@ namespace CodeBox.CommandBar
         {
             if (statement != null && !string.IsNullOrWhiteSpace(statement.Command))
             {
-                var spaced = commandEditor.Lines[0].Text.EndsWith(" ");
+                var spaced = commandEditor.Document.GetLine(0).Text.EndsWith(" ");
                 var cmd = statement.Command;
                 var arr =
                     CommandCatalog.Instance.EnumerateCommands()
@@ -269,6 +259,8 @@ namespace CodeBox.CommandBar
                     }
                 }
             }
+            else if (commandEditor.Text.Length == 0)
+                DrawStringWithPeriods(e.Graphics, "#Enter a command alias", 0, true);
 
             HideAutocompleteWindow();
         }
@@ -312,7 +304,7 @@ namespace CodeBox.CommandBar
 
         private void DrawStringWithPeriods(Graphics g, string str, int arg, bool hl)
         {
-            var tetras = commandEditor.Lines[0].GetTetras(commandEditor.IndentSize);
+            var tetras = commandEditor.Document.GetLine(0).GetTetras(commandEditor.IndentSize);
             var cw = commandEditor.Info.SmallCharWidth;
             var font = commandEditor.Settings.SmallFont;
             var x = (tetras + 2) * commandEditor.Info.CharWidth;
@@ -387,7 +379,7 @@ namespace CodeBox.CommandBar
             }
 
             var str = window.SelectedItem.Value;
-            commandEditor.RunCommand((Identifier)"editor.insertrange", str.MakeCharacters());
+            App.Ext.Run(commandEditor, (Identifier)"editor.insertrange", str.MakeCharacters());
             HideAutocompleteWindow();
         }
 
@@ -406,13 +398,14 @@ namespace CodeBox.CommandBar
         {
             ContinuationStatement = statement = stmt;
             ShowInput(default(string));
-            commandEditor.Redraw();
+            commandEditor.Invalidate();
         }
 
         public void ShowInput() => ShowInput(default(string));
 
         public void ShowInput(string cmd)
         {
+            ContinuationStatement = statement = null;
             ShowEditor();
 
             if (cmd != null)

@@ -1,4 +1,7 @@
 ﻿{
+    "ui.font": "Segoe UI",
+    "ui.fontSize": 10,
+
     "editor.font": "Consolas",
     "editor.fontSize": 11,
     "editor.linePadding": 0.1,

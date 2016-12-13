@@ -1,12 +1,13 @@
-﻿using System;
+﻿using CodeBox.Core;
+using System;
 
-namespace CodeBox.StatusBar
+namespace CodeBox.Main.StatusBar
 {
-    public sealed class PosTile : StatusBarTile
+    public sealed class EolTile : StatusBarTile
     {
         private readonly Editor editor;
 
-        public PosTile(Editor editor) : base(TileAlignment.Left)
+        public EolTile(Editor editor) : base(TileAlignment.Right)
         {
             this.editor = editor;
         }
@@ -15,15 +16,16 @@ namespace CodeBox.StatusBar
         {
             get
             {
-                var caret = editor.Buffer.Selections.Main.Caret;
-                return $"Ln {caret.Line + 1}, Ch {caret.Col + 1}";
+                return editor.Buffer.Eol.ToString().ToUpper();
             }
             set { base.Text = value; }
         }
 
         protected internal override void PerformClick()
         {
+            App.Ext.Run(editor, Cmd.SetBufferEol);
             base.PerformClick();
         }
     }
+
 }

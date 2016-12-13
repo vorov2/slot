@@ -10,6 +10,11 @@
             }
         ]
     },
+    {
+        "key": "commandbar.toggleCommandBar",
+        "alias": "cb-t",
+        "title": "Toggle command bar"
+    },
 
 
     //Buffer
@@ -473,11 +478,6 @@
         "key": "editor.setcaret",
         "alias": "e-cs",
         "title": "Editor: Put a caret to the position under mouse cursor"
-    },
-    {
-        "key": "editor.togglecommandbar",
-        "alias": "e-cbt",
-        "title": "Editor: Toggle command bar"
     },
     {
         "key": "editor.togglefolding",

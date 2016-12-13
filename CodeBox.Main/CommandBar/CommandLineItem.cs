@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.CommandBar
+namespace CodeBox.Main.CommandBar
 {
     public abstract class CommandLineItem
     {

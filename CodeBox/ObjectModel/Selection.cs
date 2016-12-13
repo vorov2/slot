@@ -13,12 +13,12 @@ namespace CodeBox.ObjectModel
 
         }
 
-        internal Selection(Pos caret) : this(caret, caret)
+        public Selection(Pos caret) : this(caret, caret)
         {
 
         }
 
-        internal Selection(Pos start, Pos end) : base(start, end.IsEmpty ? start : end)
+        public Selection(Pos start, Pos end) : base(start, end.IsEmpty ? start : end)
         {
             
         }

@@ -176,7 +176,7 @@ namespace CodeBox
             _smallCharHeight = _font.Height();
         }
 
-        private Font _font = SystemFonts.DefaultFont;
+        private Font _font;
         public Font Font
         {
             get

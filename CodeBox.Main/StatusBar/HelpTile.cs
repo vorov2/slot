@@ -1,12 +1,6 @@
 ﻿using CodeBox.Core;
-using CodeBox.Core.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeBox.StatusBar
+namespace CodeBox.Main.StatusBar
 {
     public sealed class HelpTile : StatusBarTile
     {

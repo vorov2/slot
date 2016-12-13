@@ -594,7 +594,7 @@ namespace CodeBox
 
         internal Renderer Renderer { get; }
 
-        internal bool LockMouseScrolling { get; set; }
+        public bool LockMouseScrolling { get; set; }
 
         public Pos Caret { get; private set; }
 

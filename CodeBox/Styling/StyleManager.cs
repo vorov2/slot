@@ -43,7 +43,7 @@ namespace CodeBox.Styling
             RestyleRange(range);
         }
 
-        internal void RestyleDocument()
+        public void RestyleDocument()
         {
             var range = new Range(new Pos(0, 0), new Pos(editor.Lines.Count - 1, 0));
             RestyleRange(range);

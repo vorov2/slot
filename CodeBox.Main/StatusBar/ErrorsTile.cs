@@ -1,14 +1,8 @@
 ﻿using CodeBox.Core.Themes;
 using CodeBox.Drawing;
-using CodeBox.Styling;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeBox.StatusBar
+namespace CodeBox.Main.StatusBar
 {
     public sealed class ErrorsTile : StatusBarTile
     {

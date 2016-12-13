@@ -28,6 +28,8 @@ namespace CodeBox.ObjectModel
             return doc;
         }
 
+        public Line GetLine(int index) => Lines[index];
+
         public Guid Id { get; private set; }
 
         internal List<Line> Lines { get; private set; }

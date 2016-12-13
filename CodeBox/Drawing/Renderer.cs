@@ -2,7 +2,6 @@
 using CodeBox.Folding;
 using CodeBox.Margins;
 using CodeBox.ObjectModel;
-using CodeBox.StatusBar;
 using CodeBox.Styling;
 using System;
 using System.Collections.Generic;

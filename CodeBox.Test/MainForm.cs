@@ -19,13 +19,13 @@ using CodeBox.Affinity;
 using CodeBox.Core.Keyboard;
 using CodeBox.Core;
 using CodeBox.Core.CommandModel;
-using CodeBox.CommandBar;
 using CodeBox.Core.ComponentModel;
 using CodeBox.ComponentModel;
-using CodeBox.StatusBar;
+using CodeBox.Main.StatusBar;
 using CodeBox.Core.Output;
 using CodeBox.Core.Settings;
 using CodeBox.Core.Workspaces;
+using CodeBox.Main.CommandBar;
 
 namespace CodeBox.Test
 {

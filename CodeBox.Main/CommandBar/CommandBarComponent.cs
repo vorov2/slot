@@ -9,7 +9,7 @@ using CodeBox.Core.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 
-namespace CodeBox.CommandBar
+namespace CodeBox.Main.CommandBar
 {
     [Export(typeof(ICommandBar))]
     [ComponentData(Name)]

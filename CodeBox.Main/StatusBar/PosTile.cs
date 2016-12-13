@@ -1,14 +1,12 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.ComponentModel;
-using System;
+﻿using System;
 
-namespace CodeBox.StatusBar
+namespace CodeBox.Main.StatusBar
 {
-    public sealed class EncodingTile : StatusBarTile
+    public sealed class PosTile : StatusBarTile
     {
         private readonly Editor editor;
 
-        public EncodingTile(Editor editor) : base(TileAlignment.Right)
+        public PosTile(Editor editor) : base(TileAlignment.Left)
         {
             this.editor = editor;
         }
@@ -17,16 +15,15 @@ namespace CodeBox.StatusBar
         {
             get
             {
-                return editor.Buffer.Encoding.WebName.ToUpper();
+                var caret = editor.Buffer.Selections.Main.Caret;
+                return $"Ln {caret.Line + 1}, Ch {caret.Col + 1}";
             }
             set { base.Text = value; }
         }
 
         protected internal override void PerformClick()
         {
-            App.Ext.Run(editor, (Identifier)"file.reopenfile");
             base.PerformClick();
         }
     }
-
 }

@@ -69,5 +69,5 @@
     "editor.extenddocumenthome": "ctrl+shift+home",
     "editor.extenddocumentend": "ctrl+shift+end",
     "editor.overtype": "ins",
-    "editor.togglecommandbar": "f2"
+    "commandbar.toggleCommandBar": "f2"
 }

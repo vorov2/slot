@@ -44,6 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandBar\CommandBarCommandDispatcher.cs" />
+    <Compile Include="CommandBar\CommandBarComponent.cs" />
+    <Compile Include="CommandBar\CommandBarControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CommandBar\CommandLineItem.cs" />
+    <Compile Include="CommandBar\CommandParser.cs" />
+    <Compile Include="CommandBar\Loc.cs" />
+    <Compile Include="CommandBar\Statement.cs" />
+    <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="EnvironmentSettings.cs" />
     <Compile Include="File\EncodingValueProvider.cs" />
     <Compile Include="File\FileCommandDispatcher.cs" />
@@ -56,6 +66,19 @@
     <Compile Include="File\SystemPathValueProvider.cs" />
     <Compile Include="File\ViewsValueProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatusBar\EncodingTile.cs" />
+    <Compile Include="StatusBar\EolTile.cs" />
+    <Compile Include="StatusBar\ErrorsTile.cs" />
+    <Compile Include="StatusBar\HelpTile.cs" />
+    <Compile Include="StatusBar\ModeTile.cs" />
+    <Compile Include="StatusBar\OvrTile.cs" />
+    <Compile Include="StatusBar\PosTile.cs" />
+    <Compile Include="StatusBar\StatusBarControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="StatusBar\StatusBarTile.cs" />
+    <Compile Include="StatusBar\TileAlignment.cs" />
+    <Compile Include="StatusBar\WrapTile.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">

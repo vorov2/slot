@@ -140,7 +140,7 @@ namespace CodeBox.Autocomplete
                 Height - border*2));
         }
 
-        internal void SelectDown()
+        public void SelectDown()
         {
             selectedLine++;
 
@@ -154,7 +154,7 @@ namespace CodeBox.Autocomplete
             Invalidate();
         }
 
-        internal void SelectUp()
+        public void SelectUp()
         {
             selectedLine--;
 
@@ -269,13 +269,13 @@ namespace CodeBox.Autocomplete
 
         internal int ScrollMax { get; private set; }
 
-        internal int? PreferredWidth { get; set; }
+        public int? PreferredWidth { get; set; }
 
-        internal int MaxItems { get; set; } = 10;
+        public int MaxItems { get; set; } = 10;
 
-        internal bool SmallFont { get; set; }
+        public bool SmallFont { get; set; }
 
-        internal StringTrimming Trimming { get; set; } = StringTrimming.Character;
+        public StringTrimming Trimming { get; set; } = StringTrimming.Character;
 
         internal int CharWidth => SmallFont ? editor.Info.SmallCharWidth : editor.Info.CharWidth;
 
@@ -283,7 +283,7 @@ namespace CodeBox.Autocomplete
 
         internal int LineHeight => CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
 
-        internal ValueItem SelectedItem
+        public ValueItem SelectedItem
         {
             get { return items[selectedLine].Item; }
         }

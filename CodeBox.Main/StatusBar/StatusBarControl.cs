@@ -1,16 +1,15 @@
-﻿using CodeBox.Core.Themes;
+﻿using CodeBox.Core;
+using CodeBox.Core.Settings;
+using CodeBox.Core.Themes;
 using CodeBox.Drawing;
 using CodeBox.Margins;
-using CodeBox.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.StatusBar
+namespace CodeBox.Main.StatusBar
 {
     public sealed class StatusBarControl : Control
     {
@@ -21,7 +20,14 @@ namespace CodeBox.StatusBar
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
             Editor = editor;
-            Height = /*SysFont.Font.Height*/editor.Info.LineHeight + Dpi.GetHeight(4);
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            Height = (int)Math.Round(
+                (double)Math.Max(App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font.Height() + Dpi.GetHeight(4),
+                    Editor.Info.LineHeight + Dpi.GetHeight(4)), MidpointRounding.AwayFromZero);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -30,6 +36,7 @@ namespace CodeBox.StatusBar
             var bounds = e.ClipRectangle;
             var style = Editor.Theme.GetStyle(StandardStyle.StatusBar);
             var astyle = Editor.Theme.GetStyle(StandardStyle.ActiveStatusBar);
+            var font = App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font;
             g.FillRectangle(style.BackColor.Brush(), bounds);
 
             var ys = Dpi.GetHeight(2);
@@ -44,7 +51,7 @@ namespace CodeBox.StatusBar
             foreach (var tile in lefts)
             {
                 var foreColor = style.ForeColor;
-                tile.Font = Editor.Settings.SmallFont;//SysFont.Font;//
+                tile.Font = font;
                 var width = tile.MeasureWidth(g);
 
                 if (x + width > bounds.Width)
@@ -71,7 +78,7 @@ namespace CodeBox.StatusBar
             foreach (var tile in rights)
             {
                 var foreColor = style.ForeColor;
-                tile.Font = Editor.Settings.SmallFont;//SysFont.Font; //
+                tile.Font = font;
                 var width = tile.MeasureWidth(g);
                 x -= width;
 
