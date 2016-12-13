@@ -58,7 +58,7 @@ namespace CodeBox.Core.Settings
                     userSettings = ReadFile(UserSettingsFile);
                     break;
                 case SettingsScope.Workspace:
-                    var dir = App.Catalog<IWorkspaceController>().First().CurrentWorkspace;
+                    var dir = App.Catalog<IWorkspaceController>().Default().CurrentWorkspace;
                     if (dir != null)
                         workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));
                     break;
@@ -76,7 +76,7 @@ namespace CodeBox.Core.Settings
             settings = ReadFile(SettingsFile);
             userSettings = ReadFile(UserSettingsFile);
 
-            var dir = App.Catalog<IWorkspaceController>().First().CurrentWorkspace;
+            var dir = App.Catalog<IWorkspaceController>().Default().CurrentWorkspace;
 
             if (dir != null)
                 workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));

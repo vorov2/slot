@@ -45,7 +45,7 @@ namespace CodeBox.Core.ComponentModel
             return ret;
         }
 
-        public T First()
+        public T Default()
         {
             var ret = componentMap.Values.FirstOrDefault();
 

@@ -34,7 +34,7 @@ namespace CodeBox.Main.CommandBar
         {
             base.OnHandleCreated(e);
             Height = (int)Math.Round(
-                Math.Max(App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font.Height() * 1.7,
+                Math.Max(App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font.Height() * 1.7,
                     editor.Info.LineHeight * 1.7), MidpointRounding.AwayFromZero);
         }
 
@@ -54,7 +54,7 @@ namespace CodeBox.Main.CommandBar
 
             if (!ed.Visible)
             {
-                var baseFont = App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font;
+                var baseFont = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font;
                 var font = baseFont.Get(cs.FontStyle);
                 var x = font.Width() * 2f;
                 var h = font.Width();

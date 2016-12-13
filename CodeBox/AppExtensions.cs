@@ -13,7 +13,7 @@ namespace CodeBox
         public static IGrammarComponent Grammars(this IAppExtensions _)
         {
             if (_grammar == null)
-                _grammar = App.Catalog<IGrammarComponent>().First();
+                _grammar = App.Catalog<IGrammarComponent>().Default();
             return _grammar;
         }
     }

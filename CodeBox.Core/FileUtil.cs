@@ -1,4 +1,5 @@
 ﻿using CodeBox.Core.Output;
+using CodeBox.Core.ViewModel;
 using System;
 using System.IO;
 using System.Text;
@@ -54,6 +55,41 @@ namespace CodeBox.Core
             return true;
         }
 
+        public static bool TryDelete(FileInfo fi)
+        {
+            if (fi == null)
+                return false;
+
+            fi.Refresh();
+
+            if (!fi.Exists)
+                return true;
+
+            var res = App.Ext.Handle(() => File.Delete(fi.FullName));
+
+            if (!res.Success)
+                App.Ext.Log($"Unable to delete file: {res.Reason}", EntryType.Error);
+
+            return res.Success;
+        }
+
+        public static bool TryGetInfo(string name, IBuffer buffer, out FileInfo fileInfo)
+        {
+            try
+            {
+                var fullName = Path.IsPathRooted(name) ? name
+                    : Path.Combine(buffer.File?.Directory != null
+                        ? buffer.File.Directory.FullName : Environment.CurrentDirectory, name);
+                return TryGetInfo(fullName, out fileInfo);
+            }
+            catch (Exception)
+            {
+                App.Ext.Log($"Invalid file name: {name}.", EntryType.Error);
+                fileInfo = null;
+                return false;
+            }
+        }
+
         public static bool TryGetInfo(string name, out FileInfo fileInfo)
         {
             try
@@ -63,6 +99,7 @@ namespace CodeBox.Core
             }
             catch (Exception)
             {
+                App.Ext.Log($"Invalid file name: {name}.", EntryType.Error);
                 fileInfo = null;
                 return false;
             }

@@ -26,7 +26,7 @@ namespace CodeBox.Main.StatusBar
         {
             base.OnHandleCreated(e);
             Height = (int)Math.Round(
-                (double)App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font.Height()
+                (double)App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font.Height()
                     + Dpi.GetHeight(4), MidpointRounding.AwayFromZero);
         }
 
@@ -36,7 +36,7 @@ namespace CodeBox.Main.StatusBar
             var bounds = e.ClipRectangle;
             var style = Editor.Theme.GetStyle(StandardStyle.StatusBar);
             var astyle = Editor.Theme.GetStyle(StandardStyle.ActiveStatusBar);
-            var font = App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font;
+            var font = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font;
             g.FillRectangle(style.BackColor.Brush(), bounds);
 
             var ys = Dpi.GetHeight(2);

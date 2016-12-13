@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<!-- comment line русский текст
+     second comment line -->
+<html>
+    <body>
+        <style>
+            body {
+                width: 120pt;
+                height: 100%;
+                border: solid;
+                color: black;
+            }
+            .highlight {
+                background-color: yellow;
+                color: black;
+            }
+        </style>
+        <ul>
+            <li a="sboc" aria-busy="false"></li>
+        </ul>
+        <script type="text/javascript">
+            internal readonly List<AppliedStyle> AppliedStyles = new List<AppliedStyle>();
+
+            //Remove unneccessary elements.
+            public string NormalizeString(string str)
+            {
+                const string seps = " \t~\r\n\0";
+                var buffer = str.ToCharArray();
+                var sb = new StringBuilder();
+
+                for (var i = 0; i < buffer.Length; i++) {
+                    var c = buffer[i];
+                    if (seps.IndexOf(c) == -1)
+                        sb.Append(c);
+                }
+
+                return sb.ToString();
+            }
+
+            public string[] Words(string str)
+            {
+                const string seps = " \t\r\n,.;!?:;-";
+                return string.Split(seps.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            public string[] Lines(string str)
+            {
+                const string seps = "\r\n";
+                return string.Split(seps.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            public AppliedStyle FindHyperlink(int col)
+            {
+                var x = 12.2d;
+                var str = $"my {x - this.foo} \"string";
+                var str2 = @"multiline
+                string";
+                var seq = from p in db.Products where p.summ > x select p.id;
+
+                foreach (var a in AppliedStyles)
+                {
+                    if (col >= a.Start && col <= a.End && a.StyleId == (int)StandardStyle.Hyperlink)
+                        return a;
+                }
+
+                return AppliedStyle.Empty;
+            }
+
+            internal bool IsDefaultStyle(int col)
+            {
+                foreach (var a in AppliedStyles)
+                    if (col >= a.Start && col <= a.End)
+                        return a.StyleId == (int)StandardStyle.Default
+                            || a.StyleId == (int)StandardStyle.MatchedBracket;
+
+                return true;
+            }
+
+            internal Style GetStyle(int index, StyleManager man)
+            {
+                var ret = default(Style);
+
+                foreach (var a in AppliedStyles)
+                {
+                    if (index >= a.Start && index <= a.End)
+                    {
+                        if (ret == null)
+                            ret = man.GetStyle(a.StyleId);
+                        else
+                        {
+                            var next = man.GetStyle(a.StyleId);
+                            ret = ret.Combine(next);
+                        }
+                    }
+                }
+
+                ret = ret ?? man.GetStyle((int)StandardStyle.Default);
+                return ret;
+            }
+        </script>
+    </body>
+</html>

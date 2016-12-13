@@ -44,7 +44,7 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor() : this(App.Catalog<ISettingsProvider>().First().Get<EditorSettings>())
+        public Editor() : this(App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>())
         {
 
         }
@@ -76,7 +76,7 @@ namespace CodeBox
             Search = new SearchManager(this);
             Settings = settings;
             Styles = new StyleManager(this);
-            Theme = App.Catalog<IThemeComponent>().First();
+            Theme = App.Catalog<IThemeComponent>().Default();
             Text = "";
             InitializeBuffer(Buffer);
 

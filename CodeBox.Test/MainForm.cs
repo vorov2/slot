@@ -121,7 +121,7 @@ namespace CodeBox.Test
         {
             base.OnLoad(e);
 
-            var wc = App.Catalog<IWorkspaceController>().First();
+            var wc = App.Catalog<IWorkspaceController>().Default();
             wc.WorkspaceChanged +=
                 (o, ev) => Text = wc.CurrentWorkspace == null ? Application.ProductName
                     : $"{wc.CurrentWorkspace.FullName} - {Application.ProductName}";

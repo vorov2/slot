@@ -58,7 +58,7 @@ namespace CodeBox.Test
             CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
             
-            var theme = App.Catalog<IThemeComponent>().First();
+            var theme = App.Catalog<IThemeComponent>().Default();
             theme.ChangeTheme((Identifier)"dark");
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//

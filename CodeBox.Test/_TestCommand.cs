@@ -42,7 +42,7 @@ namespace CodeBox.Test
         [Command]
         public void ChangeTheme(string themeName)
         {
-            var theme = App.Catalog<IThemeComponent>().First();
+            var theme = App.Catalog<IThemeComponent>().Default();
             theme.ChangeTheme((Identifier)themeName);
         }
 
@@ -55,7 +55,7 @@ namespace CodeBox.Test
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string;
-            var theme = App.Catalog<IThemeComponent>().First();
+            var theme = App.Catalog<IThemeComponent>().Default();
             return theme.EnumerateThemes()
                 .Where(t => str == null || t.Key.ToString().IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(t => new ValueItem(t.Key.ToString(), t.Name));

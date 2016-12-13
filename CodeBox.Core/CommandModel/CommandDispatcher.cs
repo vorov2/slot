@@ -70,7 +70,7 @@ namespace CodeBox.Core.CommandModel
         protected virtual void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey, object[] args)
         {
             var cmd = CommandCatalog.Instance.GetCommandByKey(commandKey);
-            App.Catalog<ICommandBar>().First().Show(ctx, cmd.Alias, args);
+            App.Catalog<ICommandBar>().Default().Show(ctx, cmd.Alias, args);
         }
 
         private void ResolveCommands()

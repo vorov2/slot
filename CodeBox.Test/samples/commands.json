@@ -183,8 +183,19 @@
         "alias": "f-pc",
         "title": "File: Copy path of active file"
     },
+    {
+        "key": "file.renameFile",
+        "alias": "f-rn",
+        "title": "File: Rename current file",
+        "arguments": [
+            {
+                "name": "name"
+            }
+        ]
+    },
 
 
+    /////////////////////////////////////////
     {
         "key": "test.changetheme",
         "alias": "theme",

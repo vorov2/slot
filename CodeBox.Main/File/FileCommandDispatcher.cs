@@ -98,10 +98,7 @@ namespace CodeBox.Main.File
             var fi = default(FileInfo);
 
             if (!FileUtil.TryGetInfo(fileName, out fi))
-            {
-                App.Ext.Log($"Invalid file name: {fileName}.", EntryType.Error);
                 return;
-            }
 
             var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
             OpenBuffer(buffer);
@@ -126,18 +123,18 @@ namespace CodeBox.Main.File
         [Command]
         public void OpenFolder(string dir)
         {
-            App.Catalog<IWorkspaceController>().First().CreateWorkspace(new DirectoryInfo(dir));
+            App.Catalog<IWorkspaceController>().Default().CreateWorkspace(new DirectoryInfo(dir));
         }
 
         [Command]
         public void CloseFolder()
         {
-            App.Catalog<IWorkspaceController>().First().CloseWorkspace();
+            App.Catalog<IWorkspaceController>().Default().CloseWorkspace();
         }
 
         private bool TryOpenFolder(string dir)
         {
-            return App.Catalog<IWorkspaceController>().First().OpenWorkspace(new DirectoryInfo(dir));
+            return App.Catalog<IWorkspaceController>().Default().OpenWorkspace(new DirectoryInfo(dir));
         }
 
         [Command]
@@ -169,10 +166,16 @@ namespace CodeBox.Main.File
             if (buffer == null)
                 return;
 
-            var fi = fileName != null
-                ? new FileInfo(Path.Combine(buffer.File?.Directory != null
-                    ? buffer.File.Directory.FullName : Environment.CurrentDirectory, fileName))
-                : buffer.File;
+            var fi = default(FileInfo);
+
+            if (fileName != null)
+            {
+                if (!FileUtil.TryGetInfo(fileName, buffer, out fi))
+                    return;
+            }
+            else
+                fi = buffer.File;
+
             bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
             TryOpenFolder(fi.DirectoryName);
         }
@@ -186,6 +189,36 @@ namespace CodeBox.Main.File
                 return;
 
             FileUtil.WriteFile(fileName, buffer.GetContents(), buffer.Encoding);
+        }
+
+        [Command]
+        public void RenameFile(string name)
+        {
+            if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+            {
+                App.Ext.Log($"File name '{name}' is invalid.", EntryType.Error);
+                return;
+            }
+
+            var buffer = GetActiveBuffer();
+
+            if (buffer == null)
+                return;
+
+            var fi = default(FileInfo);
+
+            if (!FileUtil.TryGetInfo(name, buffer, out fi))
+                return;
+
+            if (fi.Exists)
+            {
+                App.Ext.Log($"File '{fi.FullName}' already exists.", EntryType.Error);
+                return;
+            }
+
+            var old = buffer.File;
+            bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
+            FileUtil.TryDelete(old);
         }
 
         [Command]
