@@ -31,7 +31,7 @@ namespace CodeBox.Commands
                 var pos = SelectWordCommand.FindBoundLeft(seps, line, caret.Col - 1, strat);
 
                 if (pos < 0)
-                    return LeftCommand.MoveLeft(ctx.Buffer.Document, sel);
+                    return LeftCommand.MoveLeft(ctx, sel);
 
                 if (Math.Abs(pos - caret.Col) > 1 && pos > 0)
                     pos++;
@@ -39,7 +39,7 @@ namespace CodeBox.Commands
                 return new Pos(caret.Line, pos);
             }
             else
-                return LeftCommand.MoveLeft(ctx.Buffer.Document, sel);
+                return LeftCommand.MoveLeft(ctx, sel);
         }
 
         internal override bool SupportLimitedMode => true;

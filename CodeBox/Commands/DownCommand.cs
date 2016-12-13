@@ -23,7 +23,7 @@ namespace CodeBox.Commands
             do
             {
                 pos = InternalMoveDown(ctx, sel, pos);
-            } while (ctx.Buffer.Document.Lines[pos.Line].Folding.HasFlag(Folding.FoldingStates.Invisible));
+            } while (!ctx.Folding.IsLineVisible(pos.Line));
 
             return pos;
         }

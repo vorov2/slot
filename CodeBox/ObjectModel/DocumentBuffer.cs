@@ -137,6 +137,16 @@ namespace CodeBox.ObjectModel
                 e.Scroll.UpdateVisibleRectangle();
         }
 
+        internal void UpdateScrollInfo(Editor view)
+        {
+            foreach (var e in Views)
+            {
+                e.Scroll.InvalidateLines();
+                if (-e.Scroll.ScrollPosition.Y > e.Scroll.ScrollBounds.Height)
+                    e.Scroll.ScrollPosition = new Point(0, 0);
+            }
+        }
+
         public Point ScrollPosition { get; internal set; }
 
         internal bool LastAtomicChange { get; set; }

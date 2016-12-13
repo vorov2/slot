@@ -107,9 +107,8 @@ namespace CodeBox.Drawing
 
             for (var i = fvl; i < lvl + 1; i++)
             {
-                var ln = editor.Buffer.Document.Lines[i];
-                if (!ln.Folding.Has(FoldingStates.Invisible))
-                    DrawLine(g, ln, i, carets);
+                if (editor.Folding.IsLineVisible(i))
+                    DrawLine(g, editor.Buffer.Document.Lines[i], i, carets);
             }
         }
 
@@ -226,7 +225,7 @@ namespace CodeBox.Drawing
                         addedWidth = DrawLineLengthIndicator(g, line.Length, x, y);
 
                     if (line.Folding.Has(FoldingStates.Header) && lineIndex + 1 < editor.Buffer.Document.Lines.Count &&
-                        editor.Buffer.Document.Lines[lineIndex + 1].Folding.Has(FoldingStates.Invisible))
+                        !editor.Folding.IsLineVisible(lineIndex + 1))
                         DrawFoldingIndicator(g, x + addedWidth, y);
                 }
 

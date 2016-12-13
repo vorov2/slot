@@ -38,7 +38,7 @@ namespace CodeBox.Commands
                 ln--;
             }
 
-            return Modify | ShallowChange;
+            return Modify | ShallowChange | UpdateScrollInfo;
         }
 
         public override ActionResults Undo(out Pos pos)

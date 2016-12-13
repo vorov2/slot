@@ -138,11 +138,12 @@ namespace CodeBox.Folding
         public void SetFoldingHeader(int line)
         {
             var ln = Lines[line];
-            ln.Folding = FoldingStates.Header
-                | (ln.Folding.Has(FoldingStates.Invisible) ? FoldingStates.Invisible : FoldingStates.None);
+            ln.Folding = FoldingStates.Header | ln.Folding;
         }
 
         public bool IsFoldingHeader(int line) => Lines[line].Folding.Has(FoldingStates.Header);
+
+        public bool IsLineVisible(int line) => !Lines[line].Folding.Has(FoldingStates.Invisible);
 
         public event EventHandler<FoldingNeededEventArgs> FoldingNeeded;
 

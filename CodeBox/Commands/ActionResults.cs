@@ -44,7 +44,9 @@ namespace CodeBox.Commands
 
         KeepRedo = 0x2000,
 
-        SetEditRange = 0x4000
+        SetEditRange = 0x4000,
+
+        UpdateScrollInfo = 0x8000
     }
 
     public static class ActionResultsExtensions

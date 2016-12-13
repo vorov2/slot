@@ -10,7 +10,7 @@ namespace CodeBox.Commands
     [ComponentData("editor.extendleft")]
     public sealed class ExtendLeftCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => LeftCommand.MoveLeft(Document, sel);
+        protected override Pos Select(Selection sel) => LeftCommand.MoveLeft(View, sel);
 
         internal override bool SupportLimitedMode => true;
     }

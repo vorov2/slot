@@ -20,7 +20,7 @@ namespace CodeBox.Commands
             {
                 pos = InternalMoveRight(ctx, sel, pos);
 
-                if (ctx.Buffer.Document.Lines[pos.Line].Folding.HasFlag(Folding.FoldingStates.Invisible) && pos.Line < ctx.Buffer.Document.Lines.Count)
+                if (!ctx.Folding.IsLineVisible(pos.Line) && pos.Line < ctx.Buffer.Document.Lines.Count)
                     pos = new Pos(pos.Line + 1, 0);
                 else
                     break;

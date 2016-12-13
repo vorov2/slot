@@ -40,7 +40,7 @@ namespace CodeBox.Margins
                 var x = bounds.X + info.CharWidth;
                 var y = line.Y + sc.Y + info.TextTop;
 
-                if (line.Folding.Has(FoldingStates.Invisible))
+                if (!Editor.Folding.IsLineVisible(i))
                     continue;
 
                 if (line.Y >= sc.Y && y >= bounds.Y)

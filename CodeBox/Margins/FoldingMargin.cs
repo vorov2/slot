@@ -50,12 +50,12 @@ namespace CodeBox.Margins
                 var y = ln.Y + Editor.Info.TextTop + Editor.Scroll.ScrollPosition.Y;
                 y += (h - side) / 2;
 
-                if (ln.Folding.Has(FoldingStates.Header) && !ln.Folding.Has(FoldingStates.Invisible))
+                if (ln.Folding.Has(FoldingStates.Header) && Editor.Folding.IsLineVisible(i))
                 {
                     var arrow = default(Point[]);
                     var b = fs.ForeColor.Brush();
 
-                    if (Editor.Lines.Count > i + 1 && !Editor.Lines[i + 1].Folding.Has(FoldingStates.Invisible))
+                    if (Editor.Lines.Count > i + 1 && Editor.Folding.IsLineVisible(i + 1))
                     {
                         arrow = new Point[]
                         {

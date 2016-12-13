@@ -155,11 +155,10 @@ namespace CodeBox
 
             for (var i = 0; i < len; i++)
             {
-                var ln = editor.Lines[i];
-
-                if (ln.Folding.Has(FoldingStates.Invisible))
+                if (!editor.Folding.IsLineVisible(i))
                     continue;
 
+                var ln = editor.Lines[i];
                 cs += ln.Stripes;
 
                 if (cs == stripes)
@@ -179,11 +178,10 @@ namespace CodeBox
 
             for (var i = FirstVisibleLine; i < len; i++)
             {
-                var ln = editor.Document.Lines[i];
-
-                if (ln.Folding.Has(FoldingStates.Invisible))
+                if (!editor.Folding.IsLineVisible(i))
                     continue;
 
+                var ln = editor.Document.Lines[i];
                 var lnEnd = ln.Y + ln.Stripes * lh;
 
                 if (ln.Y >= maxh)
@@ -230,7 +228,7 @@ namespace CodeBox
                     if (forced)
                         ln.ClearCuts();
 
-                    if (ln.Folding.Has(FoldingStates.Invisible))
+                    if (!editor.Folding.IsLineVisible(i))
                         continue;
 
                     ln.Y = y;
@@ -254,10 +252,10 @@ namespace CodeBox
 
                 for (var i = startLine; i < endLine; i++)
                 {
-                    var ln = editor.Lines[i];
-
-                    if (ln.Folding.Has(FoldingStates.Invisible))
+                    if (!editor.Folding.IsLineVisible(i))
                         continue;
+
+                    var ln = editor.Lines[i];
 
                     if (!ln.Invalidated || forced)
                         ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.IndentSize, editor.Settings.WrappingIndent);

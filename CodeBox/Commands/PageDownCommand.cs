@@ -24,11 +24,10 @@ namespace CodeBox.Commands
 
             for (var i = caret.Line; i < lines.Count; i++)
             {
-                var ln = lines[i];
-
-                if (ln.Folding.Has(FoldingStates.Invisible))
+                if (!ctx.Folding.IsLineVisible(i))
                     continue;
 
+                var ln = lines[i];
                 lastLine = ln;
                 lastLineIndex = i;
                 stripes += lastLine.Stripes;

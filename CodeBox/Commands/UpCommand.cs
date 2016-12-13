@@ -21,7 +21,7 @@ namespace CodeBox.Commands
             do
             {
                 pos = InternalMoveUp(ctx, sel, pos);
-            } while (lines[pos.Line].Folding.Has(FoldingStates.Invisible));
+            } while (!ctx.Folding.IsLineVisible(pos.Line));
 
             return pos;
         }

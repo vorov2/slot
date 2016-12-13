@@ -11,18 +11,18 @@ namespace CodeBox.Commands
     [ComponentData("editor.left")]
     public class LeftCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveLeft(Document, sel);
+        protected override Pos GetPosition(Selection sel) => MoveLeft(View, sel);
 
-        internal static Pos MoveLeft(Document doc, Selection sel)
+        internal static Pos MoveLeft(Editor ctx, Selection sel)
         {
             var pos = new Pos(sel.Caret.Line, sel.Caret.Col - 1);
 
             for (;;)
             {
-                pos = InternalMoveLeft(doc, sel, pos);
+                pos = InternalMoveLeft(ctx.Document, sel, pos);
 
-                if (doc.Lines[pos.Line].Folding.Has(FoldingStates.Invisible) && pos.Line > 0)
-                    pos = new Pos(pos.Line - 1, doc.Lines[pos.Line - 1].Length);
+                if (!ctx.Folding.IsLineVisible(pos.Line) && pos.Line > 0)
+                    pos = new Pos(pos.Line - 1, ctx.Document.Lines[pos.Line - 1].Length);
                 else
                     break;
             }

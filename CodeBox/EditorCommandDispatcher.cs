@@ -233,7 +233,7 @@ namespace CodeBox
                 editor.Scroll.InvalidateLines(
                     exp.Has(AtomicChange) ? InvalidateFlags.Atomic : InvalidateFlags.None);
 
-                if (editor.Scroll.ScrollPosition.Y + editor.Info.TextHeight < -editor.Scroll.ScrollBounds.Height)
+                if (-editor.Scroll.ScrollPosition.Y > editor.Scroll.ScrollBounds.Height)
                     exp |= Scroll;
 
                 if (!exp.Has(ShallowChange))
@@ -265,6 +265,9 @@ namespace CodeBox
                 scrolled = editor.Scroll.UpdateVisibleRectangle();
                 editor.Scroll.SuppressOnScroll = false;
             }
+
+            if (exp.Has(UpdateScrollInfo))
+                editor.Buffer.UpdateScrollInfo(editor);
 
             if (/*scrolled ||*/ exp.Has(Modify))
             {

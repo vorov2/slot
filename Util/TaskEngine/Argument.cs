@@ -8,7 +8,7 @@ namespace TaskEngine
 
         private Argument(string name, object value)
         {
-            Name = String.IsNullOrEmpty(name) ? null : name;
+            Name = string.IsNullOrEmpty(name) ? null : name;
             Value = value;
         }
 
@@ -27,7 +27,7 @@ namespace TaskEngine
             if (Name != null)
                 return $"\"{Name}\"=\"{Value}";
             else
-                return ($"\"{Value}\"" ?? NULL).ToString();
+                return ($"\"{Value ?? NULL}\"").ToString();
         }
 
         public string Name { get; }
