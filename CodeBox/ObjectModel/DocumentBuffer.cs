@@ -61,6 +61,8 @@ namespace CodeBox.ObjectModel
             }
         }
 
+        public string GetContents() => GetText();
+
         public void Truncate(string text = "")
         {
             var @lock = ObtainLock();

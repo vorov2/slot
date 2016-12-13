@@ -20,6 +20,7 @@ namespace CodeBox.Main.File
     public sealed class FileCommandDispatcher : CommandDispatcher
     {
         public const string Name = "file";
+        private SwitchBufferControl switchBufferControl;
 
         [Import]
         private IViewManager viewManager = null;
@@ -43,7 +44,6 @@ namespace CodeBox.Main.File
             viewManager.ActivateView(view);
         }
 
-        private SwitchBufferControl switchBufferControl;
         [Command]
         public void SwitchBuffer()
         {
@@ -75,6 +75,11 @@ namespace CodeBox.Main.File
                 };
             }
 
+            var oldFrm = switchBufferControl.FindForm();
+
+            if (oldFrm != null)
+                oldFrm.Controls.Remove(switchBufferControl);
+
             var frm = Form.ActiveForm;
             switchBufferControl.Buffers = buffers;
             switchBufferControl.Width = frm.Width / 2;
@@ -92,7 +97,7 @@ namespace CodeBox.Main.File
         {
             var fi = default(FileInfo);
 
-            if (!Files.TryGetInfo(fileName, out fi))
+            if (!FileUtil.TryGetInfo(fileName, out fi))
             {
                 App.Ext.Log($"Invalid file name: {fileName}.", EntryType.Error);
                 return;
@@ -159,14 +164,10 @@ namespace CodeBox.Main.File
         [Command]
         public void SaveFile(string fileName = null)
         {
-            var view = viewManager.GetActiveView();
-            var buffer = view.Buffer as IMaterialBuffer;
+            var buffer = GetActiveBuffer();
 
             if (buffer == null)
-            {
-                //basically impossible situation
                 return;
-            }
 
             var fi = fileName != null
                 ? new FileInfo(Path.Combine(buffer.File?.Directory != null
@@ -174,6 +175,43 @@ namespace CodeBox.Main.File
                 : buffer.File;
             bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
             TryOpenFolder(fi.DirectoryName);
+        }
+
+        [Command]
+        public void SaveCopy(string fileName)
+        {
+            var buffer = GetActiveBuffer();
+
+            if (buffer == null)
+                return;
+
+            FileUtil.WriteFile(fileName, buffer.GetContents(), buffer.Encoding);
+        }
+
+        [Command]
+        public void CopyFilePath()
+        {
+            var buffer = GetActiveBuffer();
+
+            if (buffer == null)
+                return;
+
+            Clipboard.SetText(buffer.File.FullName, TextDataFormat.UnicodeText);
+        }
+
+        private IMaterialBuffer GetActiveBuffer()
+        {
+            var view = viewManager.GetActiveView();
+            var buffer = view.Buffer as IMaterialBuffer;
+
+            if (buffer == null)
+            {
+                //Log
+                //basically impossible situation
+                return null;
+            }
+
+            return buffer;
         }
 
         [Command]

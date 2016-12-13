@@ -12,5 +12,7 @@ namespace CodeBox.Core.ViewModel
         void Serialize(Stream stream);
 
         void Truncate(string text = "");
+
+        string GetContents();
     }
 }

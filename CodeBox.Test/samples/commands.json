@@ -161,6 +161,23 @@
         "alias": "f-rf",
         "title": "File: Revert file"
     },
+    {
+        "key": "file.saveCopy",
+        "alias": "f-sc",
+        "title": "File: Save copy",
+        "arguments": [
+            {
+                "name": "fileName",
+                "valueProvider": "values.systempath",
+                "affinity": "FilePath"
+            }
+        ]
+    },
+    {
+        "key": "file.copyFilePath",
+        "alias": "f-pc",
+        "title": "File: Copy path of active file"
+    },
 
 
     {

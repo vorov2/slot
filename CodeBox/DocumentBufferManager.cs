@@ -48,30 +48,14 @@ namespace CodeBox
                 return;
             }
 
-            file.Refresh();
-
-            if (!file.Directory.Exists)
-            {
-                var res = App.Ext.Handle(() => file.Directory.Create());
-
-                if (!res.Success)
-                {
-                    App.Ext.Log($"Unable to create file: {res.Reason}", EntryType.Error);
-                    return;
-                }
-            }
-
             var txt = docb.GetText();
-            var res1 = App.Ext.Handle(() => File.WriteAllText(file.FullName, txt, encoding));
 
-            if (res1.Success)
-            {
-                docb.File = file;
-                docb.Encoding = encoding;
-                docb.ClearDirtyFlag();
-            }
-            else
-                App.Ext.Log($"Unable to save file: {res1.Reason}", EntryType.Error);
+            if (!FileUtil.WriteFile(file, txt, encoding))
+                return;
+
+            docb.File = file;
+            docb.Encoding = encoding;
+            docb.ClearDirtyFlag();
         }
 
         public IMaterialBuffer CreateBuffer(FileInfo fileName, Encoding encoding)
