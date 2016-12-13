@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeBox.Core.Keyboard;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,7 +30,12 @@ namespace CodeBox.Core.CommandModel
         public void RegisterCommands(IEnumerable<CommandMetadata> cmds)
         {
             foreach (var c in cmds)
+            {
                 RegisterCommand(c);
+
+                if (c.Shortcut != null)
+                    KeyboardAdapter.Instance.RegisterInput(c.Key, c.Shortcut);
+            }
         }
 
         public IEnumerable<CommandMetadata> EnumerateCommands()

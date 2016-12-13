@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Keyboard;
 
 namespace CodeBox.Core.CommandModel
 {
     public sealed class CommandMetadata
     {
         public Identifier Key { get; internal set; }
+
+        public Identifier Mode { get; internal set; }
+
+        public string Shortcut { get; internal set; }
 
         public string Alias { get; internal set; }
 
@@ -51,8 +56,6 @@ namespace CodeBox.Core.CommandModel
                         sb.Append(' ');
                 }
             }
-            else
-                sb.Append("");
 
             if (Title != null)
                 sb.Append(" #" + Title);

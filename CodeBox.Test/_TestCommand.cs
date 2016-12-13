@@ -74,24 +74,22 @@ namespace CodeBox.Test
             return CommandCatalog.Instance.EnumerateCommands()
                 .Where(c => c.Alias != "?")
                 .Where(c => c.Title.ContainsAll(strings))
-                .Select(c => new CommandArgumentValue(c, KeyboardAdapter.Instance.GetCommandShortcut(c.Key)));
+                .Select(c => new CommandArgumentValue(c));
         }
 
         class CommandArgumentValue : ValueItem
         {
             private readonly CommandMetadata meta;
-            private readonly KeyInput shortcut;
 
-            internal CommandArgumentValue(CommandMetadata meta, KeyInput shortcut)
+            internal CommandArgumentValue(CommandMetadata meta)
             {
                 this.meta = meta;
-                this.shortcut = shortcut;
             }
 
             public override string Value => meta.Title;
 
             public override string Meta =>
-                shortcut != null ? $"{shortcut} ({meta.Alias})" : $"{meta.Alias}";
+                meta.Shortcut != null ? $"{meta.Shortcut} ({meta.Alias})" : $"{meta.Alias}";
 
             public override string ToString() => Value;
         }

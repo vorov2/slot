@@ -9,7 +9,7 @@ namespace CodeBox.Core.Keyboard
         public KeyInput(Modifiers mod, char key)
         {
             Modifier = mod;
-            Key = (int)(char.ToUpper(key));
+            Key = char.ToUpper(key);
         }
 
         public KeyInput(Modifiers mod, SpecialKey key)
@@ -18,10 +18,7 @@ namespace CodeBox.Core.Keyboard
             Key = (int)key;
         }
 
-        public bool IsEmpty()
-        {
-            return Modifier == Modifiers.None && Key == 0;
-        }
+        public bool IsEmpty() => Modifier == Modifiers.None && Key == 0;
 
         public override int GetHashCode()
         {
@@ -49,15 +46,9 @@ namespace CodeBox.Core.Keyboard
                         : ((SpecialKey)Key).ToString() : ((char)Key).ToString();
         }
 
-        public bool Equals(KeyInput other)
-        {
-            return Modifier == other.Modifier && Key == other.Key;
-        }
+        public bool Equals(KeyInput other) => Modifier == other.Modifier && Key == other.Key;
 
-        public override bool Equals(object obj)
-        {
-            return obj is KeyInput && Equals((KeyInput)obj);
-        }
+        public override bool Equals(object obj) => obj is KeyInput && Equals((KeyInput)obj);
 
         public Modifiers Modifier { get; }
 
