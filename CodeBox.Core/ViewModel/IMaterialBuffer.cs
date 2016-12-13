@@ -9,7 +9,9 @@ namespace CodeBox.Core.ViewModel
 
         bool IsDirty { get; }
 
-        void Serialize(Stream stream);
+        void SerializeState(Stream stream);
+
+        void DeserializeState(Stream stream);
 
         void Truncate(string text = "");
 

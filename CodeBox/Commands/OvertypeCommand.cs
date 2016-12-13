@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            View.Overtype = !View.Overtype;
+            View.Buffer.Overtype = !View.Buffer.Overtype;
             return Clean;
         }
 

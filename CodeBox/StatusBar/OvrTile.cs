@@ -15,14 +15,14 @@ namespace CodeBox.StatusBar
         {
             get
             {
-                return editor.Overtype ? "OVR" : "INS";
+                return editor.Buffer.Overtype ? "OVR" : "INS";
             }
             set { base.Text = value; }
         }
 
         protected internal override void PerformClick()
         {
-            editor.Overtype = !editor.Overtype;
+            editor.Buffer.Overtype = !editor.Buffer.Overtype;
             editor.Focus();
         }
     }

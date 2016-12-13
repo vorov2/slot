@@ -541,21 +541,6 @@ namespace CodeBox
         }
 
         [Browsable(false)]
-        public bool Overtype
-        {
-            get { return Buffer.Overtype; }
-            set
-            {
-                if (value != Buffer.Overtype)
-                {
-                    Buffer.Overtype = value;
-                    CaretRenderer.BlockCaret = value;
-                    Buffer.RequestRedraw();
-                }
-            }
-        }
-
-        [Browsable(false)]
         public bool WordWrap => Buffer.WordWrap ?? Settings.WordWrap;
 
         [Browsable(false)]
