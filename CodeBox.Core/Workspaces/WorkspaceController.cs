@@ -28,22 +28,32 @@ namespace CodeBox.Core.Workspaces
             OpenWorkspace(dir);
         }
 
-        public bool OpenWorkspace(DirectoryInfo dir)
+        public void OpenWorkspace(DirectoryInfo dir)
         {
-            if (dir == null)
-                return false;
+            var baseDir = dir;
 
-            var ws = Path.Combine(dir.FullName, FOLDER);
-
-            if (Directory.Exists(ws))
+            do
             {
-                CurrentWorkspace = dir;
-                Directory.SetCurrentDirectory(dir.FullName);
-                OnWorkspaceChanged();
-                return true;
-            }
+                var ws = Path.Combine(dir.FullName, FOLDER);
 
-            return OpenWorkspace(dir.Parent);
+                if (Directory.Exists(ws))
+                {
+                    DirectOpenWorkspace(dir);
+                    return;
+                }
+
+                dir = dir.Parent;
+            }
+            while (dir != null);
+
+            DirectOpenWorkspace(baseDir);
+        }
+
+        private void DirectOpenWorkspace(DirectoryInfo dir)
+        {
+            CurrentWorkspace = dir;
+            Directory.SetCurrentDirectory(dir.FullName);
+            OnWorkspaceChanged();
         }
 
         public void CloseWorkspace()

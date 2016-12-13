@@ -11,6 +11,8 @@ using CodeBox.Core.CommandModel;
 using CodeBox.Core.Keyboard;
 using CodeBox.Core.Themes;
 using CodeBox.Core.Settings;
+using System.Drawing.Text;
+using System.Drawing.Drawing2D;
 
 namespace CodeBox.Main.CommandBar
 {
@@ -46,6 +48,7 @@ namespace CodeBox.Main.CommandBar
                 HideEditor();
 
             var g = e.Graphics;
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             var bounds = e.ClipRectangle;
             var cs = editor.Theme.GetStyle(StandardStyle.CommandBar);
             var acs = editor.Theme.GetStyle(StandardStyle.CommandBarCaption);
@@ -226,6 +229,8 @@ namespace CodeBox.Main.CommandBar
                     .Where(c => c.Alias != null && (spaced ? c.Alias == cmd : c.Alias.StartsWith(cmd)))
                     .ToList();
                 var g = e.Graphics;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                g.SmoothingMode = SmoothingMode.HighQuality;
 
                 if ((arr.Count > 1 || (arr.Count == 1 && statement.Command.Length < arr[0].Alias.Length)) &&
                     !statement.HasArguments)
@@ -321,8 +326,9 @@ namespace CodeBox.Main.CommandBar
 
             str = TrimToSize(str, x);
             var style = editor.Theme.GetStyle(StandardStyle.Popup);
-            g.DrawRoundedRectangle(style.BackColor, new Rectangle(x - editor.Info.CharWidth, y,
-                editor.Info.SmallCharWidth * (str.Length + 2), (int)(commandEditor.Info.SmallCharHeight * 1.1)));
+            var width = editor.Info.SmallCharWidth * (str.Length + 2);
+            var height = (int)(commandEditor.Info.SmallCharHeight * 1.1);
+            g.DrawRoundedRectangle(style.BackColor, new Rectangle(x - editor.Info.CharWidth, y, width, height));
             var cmt = false;
 
             for (var i = 0; i < str.Length; i++)
@@ -338,7 +344,8 @@ namespace CodeBox.Main.CommandBar
                 g.DrawString(c.ToString(), font, 
                     hl && cmt ? brush2
                     : hl && curarg == arg && arg != -1 && c != '|' ? brush1
-                    : hl && curarg == -1 ? brush3 : brush, x, y, TextFormats.Compact);
+                    : hl && curarg == -1 ? brush3 : brush, 
+                    new Rectangle(x, y, width, editor.Info.SmallCharHeight), TextFormats.Centered);
                 x += cw;
                 last = c;
             }

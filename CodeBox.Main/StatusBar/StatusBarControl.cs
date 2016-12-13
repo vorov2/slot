@@ -6,6 +6,7 @@ using CodeBox.Margins;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -36,7 +37,8 @@ namespace CodeBox.Main.StatusBar
             var bounds = e.ClipRectangle;
             var style = Editor.Theme.GetStyle(StandardStyle.StatusBar);
             var astyle = Editor.Theme.GetStyle(StandardStyle.ActiveStatusBar);
-            var font = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font;
+            var font = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().SmallFont;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             g.FillRectangle(style.BackColor.Brush(), bounds);
 
             var ys = Dpi.GetHeight(2);

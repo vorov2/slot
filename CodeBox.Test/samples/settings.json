@@ -6,7 +6,7 @@
     "editor.fontSize": 11,
     "editor.linePadding": 0.1,
     "editor.showLineNumbers": true,
-    "editor.showWhitespace": "boundary",
+    "editor.showWhitespace": "all",
     "editor.showEol": false,
     "editor.showLineLength": true,
     "editor.currentLineIndicator": true,

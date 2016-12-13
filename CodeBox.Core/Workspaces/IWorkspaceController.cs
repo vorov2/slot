@@ -8,7 +8,7 @@ namespace CodeBox.Core.Workspaces
     {
         void CreateWorkspace(DirectoryInfo dir);
 
-        bool OpenWorkspace(DirectoryInfo dir);
+        void OpenWorkspace(DirectoryInfo dir);
 
         void CloseWorkspace();
 

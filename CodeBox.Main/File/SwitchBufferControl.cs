@@ -6,6 +6,7 @@ using CodeBox.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Windows.Forms;
 
 namespace CodeBox.Main.File
@@ -46,6 +47,7 @@ namespace CodeBox.Main.File
             var style2 = App.Catalog<IThemeComponent>().Default().GetStyle(StandardStyle.PopupBorder);
 
             var g = e.Graphics;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             var xPad = Dpi.GetHeight(3);
             var yPad = Dpi.GetHeight(3);
             var x = xPad;

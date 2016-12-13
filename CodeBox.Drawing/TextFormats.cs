@@ -24,5 +24,13 @@ namespace CodeBox.Drawing
             Trimming = StringTrimming.EllipsisPath,
             FormatFlags = StringFormatFlags.NoWrap
         };
+
+        public static readonly StringFormat Centered = new StringFormat(StringFormat.GenericTypographic)
+        {
+            LineAlignment = StringAlignment.Center,
+            Alignment = StringAlignment.Near,
+            Trimming = StringTrimming.None,
+            FormatFlags = StringFormatFlags.NoWrap
+        };
     }
 }

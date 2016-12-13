@@ -87,7 +87,7 @@ namespace CodeBox
                     editor.FirstEditLine = fel;
                     editor.LastEditLine = lel;
 
-                    if (editor.Buffer.LastAtomicChange)
+                    if (exp.Has(AtomicChange))
                         cmd.GroupUndo = true;
                 }
 
@@ -301,6 +301,7 @@ namespace CodeBox
             var exp = default(ActionResults);
             pos = Pos.Empty;
             count = 0;
+            var posRestore = Pos.Empty;
 
             while (editor.Buffer.UndoStack.Count > 0)
             {
@@ -317,8 +318,13 @@ namespace CodeBox
 
                     exp |= e;
 
-                    if (e.Has(RestoreCaret) && !cmd.Command.GroupUndo)
-                        AttachCaret(editor, p);
+                    if (e.Has(RestoreCaret))
+                    {
+                        if (!cmd.Command.GroupUndo)
+                            AttachCaret(editor, p);
+                        else
+                            posRestore = p;
+                    }
 
                     editor.Buffer.RedoStack.Push(editor.Buffer.UndoStack.Pop());
                     count++;
@@ -326,6 +332,9 @@ namespace CodeBox
                 else
                     break;
             }
+
+            if (!posRestore.IsEmpty)
+                AttachCaret(editor, posRestore);
 
             return exp;
         }
@@ -346,6 +355,7 @@ namespace CodeBox
             var exp = default(ActionResults);
             pos = Pos.Empty;
             count = 0;
+            var posRestore = Pos.Empty;
 
             while (editor.Buffer.RedoStack.Count > 0)
             {
@@ -360,7 +370,12 @@ namespace CodeBox
                     exp |= e;
 
                     if (e.Has(RestoreCaret))
-                        AttachCaret(editor, p);
+                    {
+                        if (!cmd.Command.GroupUndo)
+                            AttachCaret(editor, p);
+                        else
+                            posRestore = p;
+                    }
 
                     editor.Buffer.UndoStack.Push(editor.Buffer.RedoStack.Pop());
                     count++;
@@ -368,6 +383,9 @@ namespace CodeBox
                 else
                     break;
             }
+
+            if (!posRestore.IsEmpty)
+                AttachCaret(editor, posRestore);
 
             return exp;
         }

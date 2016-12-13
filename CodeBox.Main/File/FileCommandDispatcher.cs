@@ -123,18 +123,23 @@ namespace CodeBox.Main.File
         [Command]
         public void OpenFolder(string dir)
         {
-            App.Catalog<IWorkspaceController>().Default().CreateWorkspace(new DirectoryInfo(dir));
+            var dirInfo = default(DirectoryInfo);
+
+            if (!FileUtil.TryGetInfo(dir, out dirInfo))
+                return;
+
+            App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dirInfo);
+        }
+
+        private void OpenFolder(DirectoryInfo dir)
+        {
+            App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dir);
         }
 
         [Command]
         public void CloseFolder()
         {
             App.Catalog<IWorkspaceController>().Default().CloseWorkspace();
-        }
-
-        private bool TryOpenFolder(string dir)
-        {
-            return App.Catalog<IWorkspaceController>().Default().OpenWorkspace(new DirectoryInfo(dir));
         }
 
         [Command]
@@ -177,7 +182,7 @@ namespace CodeBox.Main.File
                 fi = buffer.File;
 
             bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
-            TryOpenFolder(fi.DirectoryName);
+            OpenFolder(fi.Directory);
         }
 
         [Command]
@@ -272,8 +277,8 @@ namespace CodeBox.Main.File
                 var view = viewManager.GetActiveView();
                 view.AttachBuffer(buf);
 
-                if (buf.File.Directory != null && !TryOpenFolder(buf.File.DirectoryName))
-                    Directory.SetCurrentDirectory(buf.File.Directory.FullName);
+                if (buf.File.Directory != null)
+                    OpenFolder(buf.File.Directory);
             }
         }
     }

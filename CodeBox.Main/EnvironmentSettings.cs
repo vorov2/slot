@@ -23,5 +23,17 @@ namespace CodeBox.Main
                 return _font;
             }
         }
+
+        private Font _smallFont;
+        public Font SmallFont
+        {
+            get
+            {
+                if (_smallFont == null)
+                    _smallFont = new Font(FontName, FontSize - 1);
+
+                return _smallFont;
+            }
+        }
     }
 }

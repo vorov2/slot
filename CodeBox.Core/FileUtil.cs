@@ -73,6 +73,38 @@ namespace CodeBox.Core
             return res.Success;
         }
 
+        public static bool TryGetInfo(string name, IBuffer buffer, out DirectoryInfo dir)
+        {
+            try
+            {
+                var fullName = Path.IsPathRooted(name) ? name
+                    : Path.Combine(buffer.File?.Directory != null
+                        ? buffer.File.Directory.FullName : Environment.CurrentDirectory, name);
+                return TryGetInfo(fullName, out dir);
+            }
+            catch (Exception)
+            {
+                App.Ext.Log($"Invalid directory name: {name}.", EntryType.Error);
+                dir = null;
+                return false;
+            }
+        }
+
+        public static bool TryGetInfo(string name, out DirectoryInfo dir)
+        {
+            try
+            {
+                dir = new DirectoryInfo(name);
+                return true;
+            }
+            catch (Exception)
+            {
+                App.Ext.Log($"Invalid directory name: {name}.", EntryType.Error);
+                dir = null;
+                return false;
+            }
+        }
+
         public static bool TryGetInfo(string name, IBuffer buffer, out FileInfo fileInfo)
         {
             try
