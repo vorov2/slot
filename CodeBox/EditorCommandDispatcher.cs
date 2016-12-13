@@ -126,7 +126,7 @@ namespace CodeBox
             if (thisUndo)
                 editor.Buffer.EndUndoAction();
 
-            Console.WriteLine($"FirstEditLine: {editor.FirstEditLine}; LastEditLine: {editor.LastEditLine}");
+            //Console.WriteLine($"FirstEditLine: {editor.FirstEditLine}; LastEditLine: {editor.LastEditLine}");
 
             if (exp != None)
                 DoAftermath(editor, exp, editor.Buffer.Selections.Count, lastSel.Caret, thisUndo ? 1 : 0);
@@ -233,7 +233,7 @@ namespace CodeBox
                 editor.Scroll.InvalidateLines(
                     exp.Has(AtomicChange) ? InvalidateFlags.Atomic : InvalidateFlags.None);
 
-                if (-editor.Scroll.ScrollPosition.Y > editor.Scroll.ScrollBounds.Height)
+                if (editor.Scroll.ScrollPosition.Y + editor.Info.TextHeight < -editor.Scroll.ScrollBounds.Height)
                     exp |= Scroll;
 
                 if (!exp.Has(ShallowChange))

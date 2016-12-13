@@ -13,7 +13,7 @@ namespace CodeBox.Main.StatusBar
 
         public override string Text
         {
-            get { return "WRAP"; }
+            get { return "Wrap"; }
             set { base.Text = value; }
         }
 

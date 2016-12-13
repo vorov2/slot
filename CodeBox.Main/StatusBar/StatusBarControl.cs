@@ -26,8 +26,8 @@ namespace CodeBox.Main.StatusBar
         {
             base.OnHandleCreated(e);
             Height = (int)Math.Round(
-                (double)Math.Max(App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font.Height() + Dpi.GetHeight(4),
-                    Editor.Info.LineHeight + Dpi.GetHeight(4)), MidpointRounding.AwayFromZero);
+                (double)App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>().Font.Height()
+                    + Dpi.GetHeight(4), MidpointRounding.AwayFromZero);
         }
 
         protected override void OnPaint(PaintEventArgs e)

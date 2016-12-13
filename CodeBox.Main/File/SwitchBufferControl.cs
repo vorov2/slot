@@ -40,17 +40,17 @@ namespace CodeBox.Main.File
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            var bag = App.Catalog<ISettingsProvider>().First().Get<EditorSettings>();
+            var bag = App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>();
             var style = App.Catalog<IThemeComponent>().First().GetStyle(StandardStyle.Popup);
             var style1 = App.Catalog<IThemeComponent>().First().GetStyle(StandardStyle.PopupSelected);
             var style2 = App.Catalog<IThemeComponent>().First().GetStyle(StandardStyle.PopupBorder);
 
             var g = e.Graphics;
-            var xPad = bag.SmallFont.Width();
-            var yPad = bag.SmallFont.Width();
+            var xPad = Dpi.GetHeight(3);
+            var yPad = Dpi.GetHeight(3);
             var x = xPad;
             var y = yPad;
-            var height = (int)Math.Round(bag.Font.Height * 1.1, MidpointRounding.AwayFromZero);
+            var height = (int)Math.Round(bag.Font.Height() * 1.1, MidpointRounding.AwayFromZero);
 
             if (SelectedIndex >= 10)
                 y -= height * (SelectedIndex - 9);
@@ -75,17 +75,12 @@ namespace CodeBox.Main.File
                     }
 
                     var font = bag.Font;
+                    var size = g.MeasureString(b.File.Name, font.Get(FontStyle.Bold));
+                    g.DrawString(b.File.Name, font.Get(FontStyle.Bold), ic.Brush(), x, y);
 
-                    foreach (var c in b.File.Name)
-                    {
-                        g.DrawString(c.ToString(), font.Get(FontStyle.Bold), ic.Brush(), new Rectangle(x, y,
-                            ClientSize.Width - xPad * 2, font.Height()), TextFormats.Compact);
-                        x += bag.Font.Width();
-                    }
-
-                    x += bag.Font.Width();
+                    x += (int)size.Width;
                     g.DrawString(b.File.DirectoryName, font, ic.Brush(),
-                        new RectangleF(x, y, ClientSize.Width - xPad * 2 - x, bag.SmallFont.Height()), TextFormats.Path);
+                        new RectangleF(x, y, ClientSize.Width - xPad * 2 - x, bag.Font.Height()), TextFormats.Path);
                     x = xPad;
                 }
 
@@ -96,9 +91,9 @@ namespace CodeBox.Main.File
         internal int CalculateHeight()
         {
             var max = Buffers.Count > 10 ? 10 : Buffers.Count;
-            var bag = App.Catalog<ISettingsProvider>().First().Get<EditorSettings>();
-            var height = (int)Math.Round(bag.Font.Height * 1.1, MidpointRounding.AwayFromZero);
-            return max * height + bag.SmallFont.Width() * 2;
+            var bag = App.Catalog<ISettingsProvider>().First().Get<EnvironmentSettings>();
+            var height = (int)Math.Round(bag.Font.Height() * 1.1, MidpointRounding.AwayFromZero);
+            return max * height + Dpi.GetHeight(3) * 2;
         }
 
         internal List<IBuffer> Buffers { get; set; }
