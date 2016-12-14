@@ -7,6 +7,7 @@ using CodeBox.Core.ComponentModel;
 
 namespace CodeBox.Core.Settings
 {
+    using ViewModel;
     using Workspaces;
     using MAP = Dictionary<string, object>;
     using OMAP = Dictionary<Type, SettingsBag>;
@@ -25,6 +26,9 @@ namespace CodeBox.Core.Settings
 
         [Import("directory.root")]
         private string rootDirectory = null;
+
+        [Import]
+        private IViewManager viewManager = null;
 
         private MAP settings;
         private MAP userSettings;
@@ -58,7 +62,7 @@ namespace CodeBox.Core.Settings
                     userSettings = ReadFile(UserSettingsFile);
                     break;
                 case SettingsScope.Workspace:
-                    var dir = App.Catalog<IWorkspaceController>().Default().CurrentWorkspace;
+                    var dir = App.Catalog<IViewManager>().Default()?.GetActiveView()?.Workspace;
                     if (dir != null)
                         workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));
                     break;
@@ -76,7 +80,7 @@ namespace CodeBox.Core.Settings
             settings = ReadFile(SettingsFile);
             userSettings = ReadFile(UserSettingsFile);
 
-            var dir = App.Catalog<IWorkspaceController>().Default().CurrentWorkspace;
+            var dir = viewManager.GetActiveView()?.Workspace;
 
             if (dir != null)
                 workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));

@@ -1,5 +1,6 @@
 ﻿using System;
 using CodeBox.Core.ComponentModel;
+using System.IO;
 
 namespace CodeBox.Core.ViewModel
 {
@@ -12,5 +13,9 @@ namespace CodeBox.Core.ViewModel
         void Close();
 
         IBuffer Buffer { get; }
+
+        DirectoryInfo Workspace { get; set; }
+
+        string Mode { get; set; }
     }
 }

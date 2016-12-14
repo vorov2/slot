@@ -4,6 +4,7 @@ using CodeBox.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +13,11 @@ using System.Windows.Forms;
 namespace CodeBox.Test
 {
     [Export(typeof(IViewManager))]
+    [ComponentData(Name)]
     public sealed class ViewManager : IViewManager
     {
+        public const string Name = "views.default";
+
         public IView CreateView()
         {
             var frm = new MainForm();
@@ -51,6 +55,9 @@ namespace CodeBox.Test
             {
                 editor.Buffer.LastAccess = DateTime.Now;
                 editor.FindForm().Activate();
+
+                if (view.Workspace != null)
+                    Directory.SetCurrentDirectory(view.Workspace.FullName);
             }
         }
     }

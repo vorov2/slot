@@ -157,11 +157,6 @@
         ]
     },
     {
-        "key": "file.closeFolder",
-        "alias": "f-fc",
-        "title": "File: Close folder"
-    },
-    {
         "key": "file.revertFile",
         "alias": "f-rf",
         "title": "File: Revert file"

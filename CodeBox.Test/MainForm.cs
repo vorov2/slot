@@ -26,6 +26,7 @@ using CodeBox.Core.Output;
 using CodeBox.Core.Settings;
 using CodeBox.Core.Workspaces;
 using CodeBox.Main.CommandBar;
+using CodeBox.Core.ViewModel;
 
 namespace CodeBox.Test
 {
@@ -123,8 +124,12 @@ namespace CodeBox.Test
 
             var wc = App.Catalog<IWorkspaceController>().Default();
             wc.WorkspaceChanged +=
-                (o, ev) => Text = wc.CurrentWorkspace == null ? Application.ProductName
-                    : $"{wc.CurrentWorkspace.FullName} - {Application.ProductName}";
+                (o, ev) =>
+                {
+                    var wm = App.Catalog<IViewManager>().Default()?.GetActiveView();
+                    Text = wm.Workspace == null ? Application.ProductName
+                        : $"{wm.Workspace.FullName} - {Application.ProductName}";
+                };
         }
 
 

@@ -34,11 +34,10 @@ namespace CodeBox.Main.File
                     : cur;
 
                 var qry = Directory.EnumerateDirectories(path)
-                    .Where(d => !Path.GetFileName(d).StartsWith("."))
                     .Select(d => d + Path.DirectorySeparatorChar);
 
                 if (IncludeFiles)
-                    qry = qry.Concat(Directory.EnumerateFiles(path).Where(f => !Path.GetFileName(f).StartsWith(".")));
+                    qry = qry.Concat(Directory.EnumerateFiles(path));
 
                 return qry
                     .Select(fi => fi.Replace(cur, ""))

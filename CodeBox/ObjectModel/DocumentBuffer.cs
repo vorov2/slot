@@ -161,9 +161,12 @@ namespace CodeBox.ObjectModel
         {
             foreach (var e in Views)
             {
-                e.Scroll.InvalidateLines();
-                if (-e.Scroll.ScrollPosition.Y > e.Scroll.ScrollBounds.Height)
-                    e.Scroll.ScrollPosition = new Point(0, 0);
+                if (e != view)
+                {
+                    e.Scroll.InvalidateLines();
+                    if (-e.Scroll.ScrollPosition.Y > e.Scroll.ScrollBounds.Height)
+                        e.Scroll.ScrollPosition = new Point(0, 0);
+                }
             }
         }
 

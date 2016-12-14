@@ -137,12 +137,6 @@ namespace CodeBox.Main.File
         }
 
         [Command]
-        public void CloseFolder()
-        {
-            App.Catalog<IWorkspaceController>().Default().CloseWorkspace();
-        }
-
-        [Command]
         public void NewFile()
         {
             var buffer = bufferManager.CreateBuffer();

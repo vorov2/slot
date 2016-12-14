@@ -1,4 +1,5 @@
 ﻿using CodeBox.Core.ComponentModel;
+using CodeBox.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -16,17 +17,8 @@ namespace CodeBox.Core.Workspaces
         public const string Name = "workspaces.default";
         private const string FOLDER = ".codebox";
 
-        public void CreateWorkspace(DirectoryInfo dir)
-        {
-            var ws = Path.Combine(dir.FullName, FOLDER);
-
-            if (!Directory.Exists(ws))
-            {
-                Directory.CreateDirectory(ws);
-            }
-
-            OpenWorkspace(dir);
-        }
+        [Import]
+        private IViewManager viewManager = null;
 
         public void OpenWorkspace(DirectoryInfo dir)
         {
@@ -51,18 +43,11 @@ namespace CodeBox.Core.Workspaces
 
         private void DirectOpenWorkspace(DirectoryInfo dir)
         {
-            CurrentWorkspace = dir;
-            Directory.SetCurrentDirectory(dir.FullName);
+            var view = viewManager.GetActiveView();
+            view.Workspace = dir;
+            Directory.SetCurrentDirectory(view.Workspace.FullName);
             OnWorkspaceChanged();
         }
-
-        public void CloseWorkspace()
-        {
-            CurrentWorkspace = null;
-            OnWorkspaceChanged();
-        }
-
-        public DirectoryInfo CurrentWorkspace { get; private set; }
 
         public event EventHandler WorkspaceChanged;
         private void OnWorkspaceChanged() => WorkspaceChanged?.Invoke(this, EventArgs.Empty);

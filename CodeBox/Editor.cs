@@ -520,6 +520,42 @@ namespace CodeBox
             FindForm().Close();
         }
 
+        private DirectoryInfo _workspace;
+        DirectoryInfo IView.Workspace
+        {
+            get { return _workspace; }
+            set
+            {
+                if (value != _workspace)
+                {
+                    if (Buffer?.File?.Directory != null)
+                    {
+                        var dir = Buffer.File.Directory;
+
+                        do
+                        {
+                            if (string.Equals(dir.FullName, value.FullName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                _workspace = value;
+                                return;
+                            }
+
+                            dir = dir.Parent;
+                        }
+                        while (dir != null);
+
+                        throw new CodeBoxException("A workspace can be either a direct buffer directory or one of the parent directories.");
+                    }
+                }
+            }
+        }
+
+        string IView.Mode
+        {
+            get { return Buffer.Mode; }
+            set { Buffer.Mode = value; }
+        }
+
         [Browsable(false)]
         public DocumentBuffer Buffer { get; private set; }
 
