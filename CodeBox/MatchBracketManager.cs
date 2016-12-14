@@ -36,6 +36,19 @@ namespace CodeBox
             return true;
         }
 
+        public void ClearMatches()
+        {
+            if (match1 != null && match2 != null)
+            {
+                if (editor.Lines.Count > match1.Item1)
+                    editor.Lines[match1.Item1].AppliedStyles.Remove(match1.Item2);
+                if (editor.Lines.Count > match2.Item1)
+                    editor.Lines[match2.Item1].AppliedStyles.Remove(match2.Item2);
+                match1 = null;
+                match2 = null;
+            }
+        }
+
         public void Match()
         {
             if (!editor.Settings.MatchBrackets
@@ -49,16 +62,7 @@ namespace CodeBox
             docId = editor.Document.Id;
             edits = editor.Buffer.Edits;
             lastPos = editor.Buffer.Selections.Main.Caret;
-
-            if (match1 != null && match2 != null)
-            {
-                if (editor.Lines.Count > match1.Item1)
-                    editor.Lines[match1.Item1].AppliedStyles.Remove(match1.Item2);
-                if (editor.Lines.Count > match2.Item1)
-                    editor.Lines[match2.Item1].AppliedStyles.Remove(match2.Item2);
-                match1 = null;
-                match2 = null;
-            }
+            ClearMatches();
 
             foreach (var sel in editor.Buffer.Selections)
             {

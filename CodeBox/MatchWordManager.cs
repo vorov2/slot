@@ -38,6 +38,25 @@ namespace CodeBox
             requestTime = DateTime.Now;
         }
 
+        public void ClearMatches() => InternalClearMatches();
+
+        private bool InternalClearMatches()
+        {
+            var clear = false;
+
+            foreach (var f in finds)
+            {
+                if (editor.Lines.Count > f.Line)
+                {
+                    editor.Lines[f.Line].AppliedStyles.Remove(f.Style);
+                    clear = true;
+                }
+            }
+
+            finds.Clear();
+            return clear;
+        }
+
         private void Match()
         {
             if (!editor.Settings.MatchWords)
@@ -50,18 +69,8 @@ namespace CodeBox
             if (txt == lastWord && finds.Count > 0)
                 return;
 
-            var needRedraw = false;
-
-            foreach (var f in finds)
-            {
-                if (editor.Lines.Count > f.Line)
-                    editor.Lines[f.Line].AppliedStyles.Remove(f.Style);
-
-                needRedraw = true;
-            }
-
-            finds.Clear();
-
+            var needRedraw = InternalClearMatches();
+            
             if (caret != requestCaret || (DateTime.Now - requestTime).TotalMilliseconds < 500)
             {
                 if (needRedraw)

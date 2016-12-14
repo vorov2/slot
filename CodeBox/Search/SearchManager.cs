@@ -52,7 +52,7 @@ namespace CodeBox.Search
         private void Search()
         {
             var txt = overlay.SearchBox.Buffer.GetText();
-            ClearFinds();
+            ClearMatches();
 
             if (!string.IsNullOrEmpty(txt))
             {
@@ -102,7 +102,7 @@ namespace CodeBox.Search
             }
         }
 
-        private void ClearFinds()
+        public void ClearMatches()
         {
             foreach (var f in finds)
             {
@@ -137,7 +137,7 @@ namespace CodeBox.Search
         {
             if (overlay != null)
                 overlay.Visible = false;
-            ClearFinds();
+            ClearMatches();
         }
 
         public void UpdateSearchPanel()

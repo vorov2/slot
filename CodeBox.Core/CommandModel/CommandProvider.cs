@@ -30,6 +30,7 @@ namespace CodeBox.Core.CommandModel
 
             var metas = CommandReader.Read(File.ReadAllText(Path.Combine(rootPath, commandsPath, "commands.json")));
             RegisterCommands(metas);
+            loaded = true;
         }
 
         public void RegisterCommand(CommandMetadata cmd)

@@ -203,6 +203,17 @@
         ]
     },
 
+    //Editor
+    {
+        "key": "editor.gotoLine",
+        "alias": ":",
+        "title": "Editor: Go to line",
+        "arguments": [
+            {
+                "name": "line"
+            }
+        ]
+    },
     {
         "key": "editor.showsearch",
         "alias": "s-f",

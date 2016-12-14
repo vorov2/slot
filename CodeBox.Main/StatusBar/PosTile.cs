@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeBox.Core;
+using System;
 
 namespace CodeBox.Main.StatusBar
 {
@@ -23,6 +24,7 @@ namespace CodeBox.Main.StatusBar
 
         protected internal override void PerformClick()
         {
+            App.Ext.Run(editor, Cmd.GotoLine);
             base.PerformClick();
         }
     }

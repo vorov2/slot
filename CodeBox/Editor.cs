@@ -465,6 +465,9 @@ namespace CodeBox
             {
                 buf.ScrollPosition = Scroll.ScrollPosition;
                 buf.Views.Remove(this);
+                MatchWords.ClearMatches();
+                MatchBrackets.ClearMatches();
+                Search.ClearMatches();
             }
         }
 
@@ -523,30 +526,7 @@ namespace CodeBox
         DirectoryInfo IView.Workspace
         {
             get { return _workspace; }
-            set
-            {
-                if (value != _workspace)
-                {
-                    if (Buffer?.File?.Directory != null)
-                    {
-                        var dir = Buffer.File.Directory;
-
-                        do
-                        {
-                            if (string.Equals(dir.FullName, value.FullName, StringComparison.OrdinalIgnoreCase))
-                            {
-                                _workspace = value;
-                                return;
-                            }
-
-                            dir = dir.Parent;
-                        }
-                        while (dir != null);
-
-                        throw new CodeBoxException("A workspace can be either a direct buffer directory or one of the parent directories.");
-                    }
-                }
-            }
+            set { _workspace = value; }
         }
 
         string IView.Mode

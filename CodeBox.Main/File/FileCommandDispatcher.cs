@@ -178,8 +178,8 @@ namespace CodeBox.Main.File
             else
                 fi = buffer.File;
 
-            bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
             OpenFolder(fi.Directory);
+            bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
         }
 
         [Command]
@@ -271,11 +271,11 @@ namespace CodeBox.Main.File
         {
             if (buf != null)
             {
-                var view = viewManager.GetActiveView();
-                view.AttachBuffer(buf);
-
                 if (buf.File.Directory != null)
                     OpenFolder(buf.File.Directory);
+
+                var view = viewManager.GetActiveView();
+                view.AttachBuffer(buf);
             }
         }
     }

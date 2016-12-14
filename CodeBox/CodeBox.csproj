@@ -92,6 +92,7 @@
     <Compile Include="Commands\ExtendWordLeftCommand.cs" />
     <Compile Include="Commands\ExtendWordRightCommand.cs" />
     <Compile Include="Commands\FollowLinkCommand.cs" />
+    <Compile Include="Commands\GotoLineCommand.cs" />
     <Compile Include="Commands\InsertCharCommand.cs" />
     <Compile Include="Commands\DownCommand.cs" />
     <Compile Include="Commands\EndCommand.cs" />

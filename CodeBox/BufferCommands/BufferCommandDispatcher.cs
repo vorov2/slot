@@ -1,6 +1,7 @@
 ﻿using CodeBox.Core;
 using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Settings;
 using CodeBox.Core.ViewModel;
 using CodeBox.ObjectModel;
 using System;
@@ -36,7 +37,11 @@ namespace CodeBox.BufferCommands
             var buf = GetBuffer();
 
             if (buf != null)
-                buf.WordWrap = !buf.WordWrap;
+            {
+                var val = buf.WordWrap != null ? buf.WordWrap.Value
+                    : App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>().WordWrap;
+                buf.WordWrap = !val;
+            }
         }
 
         [Command]
