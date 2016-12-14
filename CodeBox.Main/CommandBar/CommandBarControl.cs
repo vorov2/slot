@@ -21,7 +21,6 @@ namespace CodeBox.Main.CommandBar
         private Editor editor;
         private Editor commandEditor;
         private AutocompleteWindow window;
-        private Rectangle lastBounds;
 
         public CommandBarControl(Editor editor)
         {
@@ -30,18 +29,22 @@ namespace CodeBox.Main.CommandBar
             SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
+            AdjustHeight();
         }
 
-        protected override void OnHandleCreated(EventArgs e)
+        private void AdjustHeight()
         {
-            base.OnHandleCreated(e);
-            Height = (int)Math.Round(
+            var h = (int)Math.Round(
                 Math.Max(App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font.Height() * 1.7,
                     editor.Info.LineHeight * 1.7), MidpointRounding.AwayFromZero);
+
+            if (Height != h)
+                Height = h;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            AdjustHeight();
             var ed = GetEditor();
 
             if (ed.Width != PreferredEditorWidth)
@@ -49,11 +52,10 @@ namespace CodeBox.Main.CommandBar
 
             var g = e.Graphics;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            var bounds = e.ClipRectangle;
+            var bounds = ClientRectangle;
             var cs = editor.Theme.GetStyle(StandardStyle.CommandBar);
             var acs = editor.Theme.GetStyle(StandardStyle.CommandBarCaption);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
-            lastBounds = bounds;
 
             if (!ed.Visible)
             {
@@ -147,7 +149,7 @@ namespace CodeBox.Main.CommandBar
             {
                 wnd.SetItems(items);
                 wnd.Left = commandEditor.Left - editor.Info.SmallCharWidth;
-                wnd.Top = lastBounds.Top + lastBounds.Height;
+                wnd.Top = Top + ClientRectangle.Height;
                 window.Trimming = currentAffinity == ArgumentAffinity.FilePath ?
                     StringTrimming.EllipsisPath : StringTrimming.EllipsisCharacter;
                 wnd.Visible = true;
@@ -175,7 +177,7 @@ namespace CodeBox.Main.CommandBar
             }
 
             if (currentAffinity != ArgumentAffinity.FilePath
-                && statement.Arguments.Count >= CommandCatalog.Instance.GetCommandByAlias(statement.Command)
+                && statement.Arguments.Count >= App.Catalog<ICommandProvider>().Default().GetCommandByAlias(statement.Command)
                     ?.Arguments.Count(a => !a.Optional))
                 ExecuteCommand(commandEditor.Text);
             else if (currentAffinity != ArgumentAffinity.FilePath)
@@ -225,7 +227,7 @@ namespace CodeBox.Main.CommandBar
                 var spaced = commandEditor.Document.GetLine(0).Text.EndsWith(" ");
                 var cmd = statement.Command;
                 var arr =
-                    CommandCatalog.Instance.EnumerateCommands()
+                    App.Catalog<ICommandProvider>().Default().EnumerateCommands()
                     .Where(c => c.Alias != null && (spaced ? c.Alias == cmd : c.Alias.StartsWith(cmd)))
                     .ToList();
                 var g = e.Graphics;
@@ -429,8 +431,10 @@ namespace CodeBox.Main.CommandBar
 
         private void ShowEditor()
         {
-            var ed = GetEditor();
-            ed.Top = (lastBounds.Height - ed.Height) / 2;
+            AdjustHeight();
+            var ed = (LineEditor)GetEditor();
+            ed.AdjustHeight();
+            ed.Top = (ClientRectangle.Height - ed.Height) / 2;
             ed.Left = editor.ClientSize.Width / 20;
             ed.Width = PreferredEditorWidth;
             ed.Visible = true;
@@ -456,7 +460,8 @@ namespace CodeBox.Main.CommandBar
         private void ExecuteCommand(string command)
         {
             statement = new CommandParser(ContinuationStatement?.Clone()).Parse(command);
-            var md = statement != null && statement.Command != null ? CommandCatalog.Instance.GetCommandByAlias(statement.Command) : null;
+            var md = statement != null && statement.Command != null
+                ? App.Catalog<ICommandProvider>().Default().GetCommandByAlias(statement.Command) : null;
 
             if (md != null)
             {

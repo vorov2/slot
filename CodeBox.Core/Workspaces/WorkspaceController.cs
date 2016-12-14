@@ -1,4 +1,5 @@
 ﻿using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Settings;
 using CodeBox.Core.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -44,9 +45,14 @@ namespace CodeBox.Core.Workspaces
         private void DirectOpenWorkspace(DirectoryInfo dir)
         {
             var view = viewManager.GetActiveView();
-            view.Workspace = dir;
-            Directory.SetCurrentDirectory(view.Workspace.FullName);
-            OnWorkspaceChanged();
+
+            if (!string.Equals(view.Workspace?.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase))
+            {
+                view.Workspace = dir;
+                Directory.SetCurrentDirectory(view.Workspace.FullName);
+                App.Catalog<ISettingsProvider>().Default().ReloadSettings(SettingsScope.Workspace);
+                OnWorkspaceChanged();
+            }
         }
 
         public event EventHandler WorkspaceChanged;

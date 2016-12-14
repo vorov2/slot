@@ -47,6 +47,7 @@ namespace CodeBox.Test
             App.RegisterCatalog<ILogComponent>();
             App.RegisterCatalog<ISettingsProvider>();
             App.RegisterCatalog<IWorkspaceController>();
+            App.RegisterCatalog<ICommandProvider>();
             App.Initialize();
 
             var frm = new MainForm();
@@ -55,7 +56,6 @@ namespace CodeBox.Test
             var ed = frm.Editor;
 
             //SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
-            CommandCatalog.Instance.RegisterCommands(CommandReader.Read(File.ReadAllText(LocalFile("samples\\commands.json"))));
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
             
             var theme = App.Catalog<IThemeComponent>().Default();

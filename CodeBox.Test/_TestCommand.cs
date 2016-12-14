@@ -27,7 +27,7 @@ namespace CodeBox.Test
         [Command]
         public void CommandPalette(string commandName)
         {
-            var cmd = CommandCatalog.Instance.EnumerateCommands()
+            var cmd = App.Catalog<ICommandProvider>().Default().EnumerateCommands()
                 .FirstOrDefault(c => c.Title.Equals(commandName, StringComparison.OrdinalIgnoreCase));
 
             if (cmd == null)
@@ -70,7 +70,7 @@ namespace CodeBox.Test
         {
             var strings = (curvalue as string ?? "")
                 .Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            return CommandCatalog.Instance.EnumerateCommands()
+            return App.Catalog<ICommandProvider>().Default().EnumerateCommands()
                 .Where(c => c.Alias != "?")
                 .Where(c => c.Title.ContainsAll(strings))
                 .Select(c => new CommandArgumentValue(c));

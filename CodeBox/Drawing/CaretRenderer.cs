@@ -17,6 +17,8 @@ namespace CodeBox.Drawing
         private Graphics bmpGraphics;
         private int caretX;
         private int caretY;
+        private int bitmapW;
+        private int bitmapH;
         
         public CaretRenderer(Editor editor)
         {
@@ -35,16 +37,21 @@ namespace CodeBox.Drawing
                 timer = null;
             }
 
+            Reset();
+        }
+
+        internal void Reset()
+        {
             if (bmpGraphics != null)
             {
                 bmpGraphics.Dispose();
                 bmpGraphics = null;
             }
-            
-            if (bmpGraphics != null)
+
+            if (timerBitmap != null)
             {
-                bmpGraphics.Dispose();
-                bmpGraphics = null;
+                timerBitmap.Dispose();
+                timerBitmap = null;
             }
         }
 
@@ -89,9 +96,14 @@ namespace CodeBox.Drawing
         {
             var w = editor.Info.CharWidth;
             var h = editor.Info.LineHeight;
-            
+
+            if ((w != bitmapW || h != bitmapH) && timerBitmap != null)
+                Reset();
+
             if (timerBitmap == null)
             {
+                bitmapW = w;
+                bitmapH = h;
                 timerBitmap = new Bitmap(w, h);
                 bmpGraphics = Graphics.FromImage(timerBitmap);
             }

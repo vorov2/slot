@@ -8,6 +8,22 @@ namespace CodeBox.Core
 {
     public static class FileUtil
     {
+        public static bool ReadFile(FileInfo fileName, Encoding encoding, out string content)
+        {
+            var data = "";
+            var res = App.Ext.Handle(() =>
+            {
+                using (var fs = new StreamReader(fileName.FullName, encoding, false))
+                    data = fs.ReadToEnd();
+            });
+
+            if (!res.Success)
+                App.Ext.Log($"Unable to read file: {res.Reason}", EntryType.Error);
+
+            content = data;
+            return res.Success;
+        }
+
         public static bool WriteFile(string fileName, string text, Encoding encoding)
         {
             var fi = default(FileInfo);

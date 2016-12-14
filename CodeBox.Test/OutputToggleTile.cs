@@ -1,4 +1,7 @@
-﻿using CodeBox.Drawing;
+﻿using CodeBox.Core;
+using CodeBox.Core.Settings;
+using CodeBox.Drawing;
+using CodeBox.Main;
 using CodeBox.Main.StatusBar;
 using System;
 using System.Collections.Generic;
@@ -40,6 +43,7 @@ namespace CodeBox.Test
             form.SplitContainer.SplitterDistance = (int)(form.ClientSize.Height * 0.5);
         }
 
-        public override int MeasureWidth(Graphics g) => form.Editor.Info.CharWidth * 2;
+        public override int MeasureWidth(Graphics g) =>
+            (int)Math.Round(Font.Width() * 1.5, MidpointRounding.AwayFromZero);
     }
 }

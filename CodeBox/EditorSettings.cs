@@ -108,7 +108,7 @@ namespace CodeBox
             get
             {
                 if (_smallCharWidth == null)
-                    CreateFont();
+                    CreateSmallFont();
                 return _smallCharWidth.Value;
             }
         }
@@ -119,7 +119,7 @@ namespace CodeBox
             get
             {
                 if (_smallCharHeight == null)
-                    CreateFont();
+                    CreateSmallFont();
                 return _smallCharHeight.Value;
             }
         }
@@ -133,10 +133,7 @@ namespace CodeBox
             {
                 if (value != _fontName)
                 {
-                    _charWidth = null;
-                    _charHeight = null;
-                    _smallCharHeight = null;
-                    _smallCharWidth = null;
+                    ResetFontInfo();
                     _fontName = value;
                 }
             }
@@ -151,12 +148,31 @@ namespace CodeBox
             {
                 if (value != _fontSize)
                 {
-                    _charWidth = null;
-                    _charHeight = null;
-                    _smallCharHeight = null;
-                    _smallCharWidth = null;
+                    ResetFontInfo();
                     _fontSize = value;
                 }
+            }
+        }
+
+        private void ResetFontInfo()
+        {
+            _charWidth = null;
+            _charHeight = null;
+            _smallCharHeight = null;
+            _smallCharWidth = null;
+
+            if (_font != null)
+            {
+                FontExtensions.Clean(_font);
+                _font.Dispose();
+                _font = null;
+            }
+
+            if (_smallFont != null)
+            {
+                FontExtensions.Clean(_smallFont);
+                _smallFont.Dispose();
+                _smallFont = null;
             }
         }
 

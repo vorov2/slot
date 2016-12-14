@@ -64,7 +64,7 @@ namespace CodeBox.Core.Settings
                 case SettingsScope.Workspace:
                     var dir = App.Catalog<IViewManager>().Default()?.GetActiveView()?.Workspace;
                     if (dir != null)
-                        workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));
+                        workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".codebox", FILE));
                     break;
             }
 
@@ -83,7 +83,7 @@ namespace CodeBox.Core.Settings
             var dir = viewManager.GetActiveView()?.Workspace;
 
             if (dir != null)
-                workspaceSettings = ReadFile(Path.Combine(dir.FullName, FILE));
+                workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".codebox", FILE));
         }
 
         private MAP ReadFile(string fileName)

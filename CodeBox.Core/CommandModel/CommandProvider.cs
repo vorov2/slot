@@ -1,18 +1,35 @@
-﻿using CodeBox.Core.Keyboard;
+﻿using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Keyboard;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 
 namespace CodeBox.Core.CommandModel
 {
-    public sealed class CommandCatalog
+    [Export(typeof(ICommandProvider))]
+    [ComponentData(Name)]
+    public sealed class CommandProvider : ICommandProvider
     {
+        public const string Name = "commands.default";
         private readonly Dictionary<Identifier, CommandMetadata> commands = new Dictionary<Identifier, CommandMetadata>();
         private readonly Dictionary<string, CommandMetadata> commandsAlias = new Dictionary<string, CommandMetadata>();
+        private volatile bool loaded;
 
-        private CommandCatalog()
+        [Import("directory.commands")]
+        private string commandsPath = null;
+
+        [Import("directory.root")]
+        private string rootPath = null;
+
+        private void EnsureLoaded()
         {
+            if (loaded)
+                return;
 
+            var metas = CommandReader.Read(File.ReadAllText(Path.Combine(rootPath, commandsPath, "commands.json")));
+            RegisterCommands(metas);
         }
 
         public void RegisterCommand(CommandMetadata cmd)
@@ -40,11 +57,13 @@ namespace CodeBox.Core.CommandModel
 
         public IEnumerable<CommandMetadata> EnumerateCommands()
         {
+            EnsureLoaded();
             return commands.Select(p => p.Value);
         }
         
         public CommandMetadata GetCommandByAlias(string alias)
         {
+            EnsureLoaded();
             CommandMetadata ret;
             commandsAlias.TryGetValue(alias, out ret);
             return ret;
@@ -52,11 +71,10 @@ namespace CodeBox.Core.CommandModel
 
         public CommandMetadata GetCommandByKey(Identifier key)
         {
+            EnsureLoaded();
             CommandMetadata ret;
             commands.TryGetValue(key, out ret);
             return ret;
         }
-
-        public static CommandCatalog Instance { get; } = new CommandCatalog();
     }
 }

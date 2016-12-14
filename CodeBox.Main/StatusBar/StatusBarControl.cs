@@ -21,18 +21,22 @@ namespace CodeBox.Main.StatusBar
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
             Editor = editor;
+            AdjustHeight();
         }
 
-        protected override void OnHandleCreated(EventArgs e)
+        private void AdjustHeight()
         {
-            base.OnHandleCreated(e);
-            Height = (int)Math.Round(
+            var h = (int)Math.Round(
                 (double)App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font.Height()
                     + Dpi.GetHeight(4), MidpointRounding.AwayFromZero);
+
+            if (Height != h)
+                Height = h;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            AdjustHeight();
             var g = e.Graphics;
             var bounds = e.ClipRectangle;
             var style = Editor.Theme.GetStyle(StandardStyle.StatusBar);

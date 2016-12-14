@@ -50,6 +50,7 @@
     <Compile Include="ApplicationPath.cs" />
     <Compile Include="CommandModel\ArgumentAffinity.cs" />
     <Compile Include="CommandModel\ArgumentMetadata.cs" />
+    <Compile Include="CommandModel\ICommandProvider.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="CommandModel\ICommandBar.cs" />
     <Compile Include="CommandModel\ValueItem.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="ExecResult.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="Identifier.cs" />
-    <Compile Include="CommandModel\CommandCatalog.cs" />
+    <Compile Include="CommandModel\CommandProvider.cs" />
     <Compile Include="CommandModel\CommandMetadata.cs" />
     <Compile Include="CommandModel\CommandReader.cs" />
     <Compile Include="ComponentModel\ComponentCatalog.cs" />

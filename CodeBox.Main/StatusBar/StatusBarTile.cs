@@ -36,7 +36,7 @@ namespace CodeBox.Main.StatusBar
             return (int)Math.Round(size.Width, MidpointRounding.AwayFromZero) + Dpi.GetWidth(8);
         }
 
-        internal Font Font { get; set; }
+        internal protected Font Font { get; internal set; }
 
         internal protected virtual void PerformClick() => OnClick();
 

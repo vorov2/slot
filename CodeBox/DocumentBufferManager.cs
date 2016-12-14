@@ -80,15 +80,8 @@ namespace CodeBox
                 return Document.FromString("");
 
             string txt = null;
-            var res = App.Ext.Handle(() => txt = File.ReadAllText(fileName.FullName, encoding));
-
-            if (res.Success)
-                return Document.FromString(txt);
-            else
-            {
-                App.Ext.Log($"Unable to create buffer: {res.Reason}", EntryType.Error);
-                return null;
-            }
+            var res = FileUtil.ReadFile(fileName, encoding, out txt);
+            return res ? Document.FromString(txt) : null;
         }
 
         private DocumentBuffer InternalCreateBuffer(FileInfo file, Encoding enc)

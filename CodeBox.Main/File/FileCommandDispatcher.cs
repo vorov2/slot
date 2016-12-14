@@ -116,7 +116,10 @@ namespace CodeBox.Main.File
                 else if (!buffer.File.Exists)
                     buffer.Encoding = enc;
                 else
+                {
+                    bufferManager.CloseBuffer(buffer);
                     OpenFile(buffer.File.FullName, enc);
+                }
             }
         }
 

@@ -25,7 +25,7 @@ namespace CodeBox.Core.Keyboard
             shortcuts.Remove(key);
             shortcuts.Add(key, chord);
 
-            var cmd = CommandCatalog.Instance.GetCommandByKey(key);
+            var cmd = App.Catalog<ICommandProvider>().Default().GetCommandByKey(key);
             if (cmd != null)
                 cmd.Shortcut = chord.ToString();
         }

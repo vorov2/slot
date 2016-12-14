@@ -13,6 +13,9 @@ namespace CodeBox.Core
         [Export("directory.theme")]
         public string Theme => AppSettings["directory.theme"];
 
+        [Export("directory.commands")]
+        public string Commands => AppSettings["directory.commands"];
+
         [Export("directory.grammar")]
         public string Grammar => AppSettings["directory.grammar"];
 
