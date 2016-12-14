@@ -22,6 +22,10 @@ namespace CodeBox.Margins
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
             OnSizeChanged();
+
+            if (!Enabled)
+                return false;
+
             var sc = Editor.Scroll.ScrollPosition;
             var lns = Editor.Theme.GetStyle(StandardStyle.LineNumbers);
             var alns = Editor.Theme.GetStyle(StandardStyle.CurrentLineNumber);
@@ -65,8 +69,10 @@ namespace CodeBox.Margins
             return true;
         }
 
+        public bool Enabled => Editor.ShowLineNumbers;
+
         public override int CalculateSize() =>
-            (Editor.Document.Lines.Count.ToString().Length + 2) * Editor.Info.CharWidth;
+            Enabled ? (Editor.Document.Lines.Count.ToString().Length + 2) * Editor.Info.CharWidth : 0;
 
         public bool MarkCurrentLine { get; set; }
     }

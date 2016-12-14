@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace CodeBox.Main.File
@@ -61,7 +63,8 @@ namespace CodeBox.Main.File
             var pen = style2.ForeColor.Pen();
             g.DrawRectangle(pen, new Rectangle(e.ClipRectangle.Location,
                 new Size(e.ClipRectangle.Width - (int)pen.Width, e.ClipRectangle.Height - (int)pen.Width)));
-            
+            var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace;
+
             for (var i = 0; i < Buffers.Count; i++)
             {
                 if (y > 0 && y < ClientSize.Height - yPad)
@@ -81,13 +84,31 @@ namespace CodeBox.Main.File
                     g.DrawString(b.File.Name, font.Get(FontStyle.Bold), ic.Brush(), x, y);
 
                     x += (int)size.Width;
-                    g.DrawString(b.File.DirectoryName, font, ic.Brush(),
+                    var dirName = GetDirectoryName(ws, b.File.Directory);
+                    g.DrawString(dirName, font, ic.Brush(),
                         new RectangleF(x, y, ClientSize.Width - xPad * 2 - x, bag.Font.Height()), TextFormats.Path);
                     x = xPad;
                 }
 
                 y += height;
             }
+        }
+
+        private string GetDirectoryName(DirectoryInfo ws, DirectoryInfo dir)
+        {
+            var seq = new List<string>();
+
+            do
+            {
+                if (string.Equals(dir.FullName, ws.FullName, StringComparison.OrdinalIgnoreCase))
+                    break;
+
+                seq.Add(dir.Name.Trim('/', '\\'));
+                dir = dir.Parent;
+            } while (dir != null);
+
+            seq.Reverse();
+            return string.Join(Path.DirectorySeparatorChar.ToString(), seq);
         }
 
         internal int CalculateHeight()

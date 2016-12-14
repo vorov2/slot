@@ -153,8 +153,7 @@ namespace CodeBox
 
         private void InitializeBuffer(DocumentBuffer buffer)
         {
-            buffer.Eol = Settings.Eol;
-            buffer.WordWrap = Settings.WordWrap;
+            //Idle
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -597,6 +596,9 @@ namespace CodeBox
 
         [Browsable(false)]
         public bool ShowLineLength => !LimitedMode && (Buffer.ShowLineLength ?? Settings.ShowLineLength);
+
+        [Browsable(false)]
+        public bool ShowLineNumbers => !LimitedMode && Settings.ShowLineNumbers;
 
         [Browsable(false)]
         public bool CurrentLineIndicator => !LimitedMode && (Buffer.CurrentLineIndicator ?? Settings.CurrentLineIndicator);

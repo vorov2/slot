@@ -13,6 +13,8 @@ using CodeBox.Core.Themes;
 using CodeBox.Core.Settings;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
+using System.IO;
+using CodeBox.Core.ViewModel;
 
 namespace CodeBox.Main.CommandBar
 {
@@ -76,7 +78,10 @@ namespace CodeBox.Main.CommandBar
                 g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
                 x += g.MeasureString(editor.Buffer.File.Name, font).Width;
 
-                g.DrawString(editor.Buffer.File.DirectoryName, font, acs.ForeColor.Brush(), 
+                var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace.FullName.Length;
+                var dirName = editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
+
+                g.DrawString(dirName, font, acs.ForeColor.Brush(), 
                     new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
             }
             else

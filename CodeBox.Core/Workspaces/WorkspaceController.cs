@@ -23,6 +23,9 @@ namespace CodeBox.Core.Workspaces
 
         public void OpenWorkspace(DirectoryInfo dir)
         {
+            if (IsChildFolder(viewManager.GetActiveView().Workspace, dir))
+                return;
+
             var baseDir = dir;
 
             do
@@ -40,6 +43,23 @@ namespace CodeBox.Core.Workspaces
             while (dir != null);
 
             DirectOpenWorkspace(baseDir);
+        }
+
+        private bool IsChildFolder(DirectoryInfo ws, DirectoryInfo dir)
+        {
+            if (ws == null)
+                return false;
+
+            do
+            {
+                if (string.Equals(ws.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                dir = dir.Parent;
+            }
+            while (dir != null);
+
+            return false;
         }
 
         private void DirectOpenWorkspace(DirectoryInfo dir)
