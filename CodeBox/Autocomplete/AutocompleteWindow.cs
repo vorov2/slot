@@ -100,7 +100,7 @@ namespace CodeBox.Autocomplete
                         if (hoverLine == i || selectedLine == i)
                         {
                             g.FillRectangle((selectedLine == i ? sps.BackColor : hps.BackColor).Brush(),
-                                new Rectangle(0, y, Width - CharWidth, LineHeight));
+                                new Rectangle(Dpi.GetWidth(1), y, Width - CharWidth - Dpi.GetWidth(1), LineHeight));
                             fc = selectedLine == i ? sps.ForeColor : hps.ForeColor;
 
                             if (fc.IsEmpty)

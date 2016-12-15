@@ -74,8 +74,8 @@ namespace CodeBox.Main.File
 
                     if (i == SelectedIndex)
                     {
-                        g.FillRectangle(style1.BackColor.Brush(), new Rectangle(x - xPad, y,
-                            ClientSize.Width, height));
+                        g.FillRectangle(style1.BackColor.Brush(), new Rectangle(x - xPad + Dpi.GetWidth(1), y,
+                            ClientSize.Width - 2 * Dpi.GetWidth(1), height));
                         ic = style1.ForeColor.IsEmpty ? style.ForeColor : style1.ForeColor;
                     }
 

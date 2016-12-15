@@ -15,10 +15,29 @@
     {
         "key": "popup",
         "color": "black",
-        "backColor": "#F2F2F2",
-        "hoverColor": "#D6D6D6",
-        "selectedColor": "#ADD6FF",
-        "borderColor": "darkgray"
+        "backColor": "#EAEAEA"
+    },
+    {
+        "key": "popupselected",
+        "backColor": "#ADD6FF"
+    },
+    {
+        "key": "popuphover",
+        "backColor": "#D6D6D6"
+    },
+    {
+        "key": "popupborder",
+        "color": "#007ACC"
+    },
+    {
+        "key": "margin.status",
+        "color": "white",
+        "backColor": "#007ACC"
+    },
+    {
+        "key": "margin.activestatus",
+        "backColor": "#1E8AD2",
+        "color": "white"
     },
     {
         "key": "margin.commands",
@@ -27,27 +46,41 @@
         "bold": true
     },
     {
+        "key": "margin.commandscaption",
+        "color": "#303030",
+        "bold": false
+    },
+    {
         "key": "margin.linenumbers",
         "color": "#6D6D6D",
-        "backColor": "#F2F2F2",
-        "activeColor": "black",
-        "activeBackColor": "#F2F2F2" //E2E2E2
+        "backColor": "#F2F2F2"
+    },
+    {
+        "key": "margin.currentlinenumber",
+        "color": "black",
+        "backColor": "#F2F2F2" //E2E2E2
     },
     {
         "key": "margin.scrollbar",
         "color": "#ADADAD",
-        "backColor": "#F2F2F2",
-        "activeColor": "#6D6D6D"
+        "backColor": "#EAEAEA"
+    },
+    {
+        "key": "margin.activescrollbar",
+        "color": "#6D6D6D"
     },
     {
         "key": "margin.folding",
         "color": "#6D6D6D",
-        "backColor": "white",
-        "activeColor": "#4800FF"
+        "backColor": "white"
+    },
+    {
+        "key": "margin.activefolding",
+        "color": "#4800FF"
     },
     {
         "key": "symbol.special",
-        "color": "#6D6D6D"
+        "color": "#999999"
     },
     {
         "key": "selection",
@@ -123,10 +156,11 @@
     },
     {
         "key": "word.matched",
-        "backColor": "#CCCFFF"
+        "backColor": "#BFC3FF"
     },
     {
         "key": "search.result",
-        "lineColor": "red"
+        "adornmentColor": "#FF00DC",
+        "adornment": "line"
     }
 ]

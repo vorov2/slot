@@ -79,8 +79,7 @@ namespace CodeBox.Main.CommandBar
 
                 var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace.FullName.Length;
                 var dirName = editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
-
-                g.DrawString(dirName, font, acs.ForeColor.Brush(), 
+                g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
                     new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
             }
             else
