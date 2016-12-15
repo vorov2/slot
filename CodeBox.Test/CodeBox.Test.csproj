@@ -77,7 +77,6 @@
     <EmbeddedResource Include="OutputForm.resx">
       <DependentUpon>OutputForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Properties\app.icns" />
     <None Include="samples\calc.cs" />
     <Compile Include="SplitContainerEx.cs">
       <SubType>Component</SubType>
@@ -151,7 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\app.ico" />
-    <Content Include="Properties\app1.ico" />
     <Content Include="test.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
