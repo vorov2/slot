@@ -30,7 +30,7 @@ namespace CodeBox.Commands
                 var ln = lines[i];
                 lastLine = ln;
                 lastLineIndex = i;
-                stripes += lastLine.Stripes;
+                stripes += ln.Stripes;
 
                 if (stripes >= ctx.Info.StripesPerScreen)
                     break;

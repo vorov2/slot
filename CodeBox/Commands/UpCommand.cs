@@ -4,6 +4,8 @@ using CodeBox.Folding;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core.Settings;
+using CodeBox.Core;
 
 namespace CodeBox.Commands
 {
@@ -36,6 +38,9 @@ namespace CodeBox.Commands
                 var stripe = ln.GetStripe(pos.Col);
                 var tetra = ln.GetStripeCol(pos.Col, stripe);
                 tetra = tetra > sel.RestoreCaretCol ? tetra : sel.RestoreCaretCol;
+                var set = App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>();
+                var shift = set.WrappingIndent == WrappingIndent.Same ? ln.Indent
+                    : set.WrappingIndent == WrappingIndent.Indent ? ln.Indent /*+ set.IndentSize*/ : 0;
 
                 if (stripe == 0)
                 {
@@ -48,7 +53,8 @@ namespace CodeBox.Commands
                         var newCut = newLn.GetCut(strp < 0 ? 0 : strp);
                         if (newCut != newLn.Length)
                         {
-                            var nc = newCut + tetra;
+                            shift = strp <= 0 ? 0 : shift;
+                            var nc = newCut + tetra - shift;
                             return new Pos(pos.Line - 1, nc > newLn.Length ? newLn.Length : nc);
                         }
                         else
@@ -57,9 +63,10 @@ namespace CodeBox.Commands
                 }
                 else
                 {
-                    var newStart = stripe > 1 ? ln.GetCut(stripe - 2) + 1 : 0;
+                    var newStart = stripe > 1 ? ln.GetCut(stripe - 2) : 0;
                     var newEnd = ln.GetCut(stripe - 1);
-                    var nc = newStart + tetra;
+                    shift = stripe - 1 == 0 ? 0 : shift;
+                    var nc = newStart + tetra - shift;
                     return new Pos(pos.Line, nc > newEnd ? newEnd : nc);
                 }
             }

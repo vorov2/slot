@@ -20,7 +20,7 @@ namespace CodeBox.ObjectModel
 
         public Selection(Pos start, Pos end) : base(start, end.IsEmpty ? start : end)
         {
-            
+
         }
 
         public static Selection FromRange(Range range) => new Selection(range.Start, range.End);

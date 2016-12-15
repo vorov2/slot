@@ -7,6 +7,8 @@ using CodeBox.ObjectModel;
 using CodeBox.ComponentModel;
 using System.ComponentModel.Composition;
 using CodeBox.Core.ComponentModel;
+using CodeBox.Core;
+using CodeBox.Core.Settings;
 
 namespace CodeBox.Commands
 {
@@ -38,6 +40,9 @@ namespace CodeBox.Commands
                 var stripe = ln.GetStripe(pos.Col);
                 var tetra = ln.GetStripeCol(pos.Col, stripe);
                 tetra = tetra > sel.RestoreCaretCol ? tetra : sel.RestoreCaretCol;
+                var set = App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>();
+                var shift = set.WrappingIndent == WrappingIndent.Same ? ln.Indent
+                    : set.WrappingIndent == WrappingIndent.Indent ? ln.Indent /*+ set.IndentSize*/ : 0;
 
                 if (stripe == ln.Stripes - 1)
                 {
@@ -52,9 +57,10 @@ namespace CodeBox.Commands
                 }
                 else
                 {
-                    var newStart = ln.GetCut(stripe) + 1;
+                    var newStart = ln.GetCut(stripe);// + 1;
                     var newEnd = ln.GetCut(stripe + 1);
-                    return new Pos(pos.Line, newStart + tetra > newEnd ? newEnd : newStart + tetra);
+                    var nc = newStart + tetra - shift;
+                    return new Pos(pos.Line, nc > newEnd ? newEnd : nc);
                 }
 
             }

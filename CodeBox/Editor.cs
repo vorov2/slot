@@ -78,7 +78,6 @@ namespace CodeBox
             Styles = new StyleManager(this);
             Theme = App.Catalog<IThemeComponent>().Default();
             Text = "";
-            InitializeBuffer(Buffer);
 
             timer.Tick += Tick;
         }
@@ -149,11 +148,6 @@ namespace CodeBox
             }
 
             base.WndProc(ref m);
-        }
-
-        private void InitializeBuffer(DocumentBuffer buffer)
-        {
-            //Idle
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -501,8 +495,7 @@ namespace CodeBox
 
                 Buffer.GrammarKey = App.Ext.Grammars()
                     .GetGrammarByFile(buffer.File)?.Key;
-                InitializeBuffer(Buffer);
-                Scroll.InvalidateLines();
+                Scroll.InvalidateLines(InvalidateFlags.Force);
                 Scroll.ScrollPosition = buffer.ScrollPosition;
                 Styles.RestyleDocument();
                 Folding.RebuildFolding(full: true);
