@@ -320,7 +320,8 @@ namespace CodeBox.Main.CommandBar
             var font = commandEditor.Settings.SmallFont;
             var x = (tetras + 2) * commandEditor.Info.CharWidth;
             var y = (commandEditor.Height - (int)(commandEditor.Info.SmallCharHeight * 1.1)) / 2;
-            var brush = commandEditor.Theme.GetStyle(StandardStyle.Default).ForeColor.Brush();
+            var style = editor.Theme.GetStyle(StandardStyle.Hint);
+            var brush = style.ForeColor.Brush();
             var brush1 = commandEditor.Theme.GetStyle(StandardStyle.KeywordSpecial).ForeColor.Brush();
             var brush2 = commandEditor.Theme.GetStyle(StandardStyle.Comment).ForeColor.Brush();
             var brush3 = commandEditor.Theme.GetStyle(StandardStyle.Keyword).ForeColor.Brush();
@@ -331,7 +332,6 @@ namespace CodeBox.Main.CommandBar
                 return;
 
             str = TrimToSize(str, x);
-            var style = editor.Theme.GetStyle(StandardStyle.Popup);
             var width = editor.Info.SmallCharWidth * (str.Length + 2);
             var height = (int)(commandEditor.Info.SmallCharHeight * 1.1);
             g.DrawRoundedRectangle(style.BackColor, new Rectangle(x - editor.Info.CharWidth, y, width, height));
@@ -347,7 +347,7 @@ namespace CodeBox.Main.CommandBar
                 if (c == '#')
                     cmt = true;
 
-                g.DrawString(c.ToString(), font, 
+                g.DrawString(c.ToString(), font.Get(style.FontStyle),
                     hl && cmt ? brush2
                     : hl && curarg == arg && arg != -1 && c != '|' ? brush1
                     : hl && curarg == -1 ? brush3 : brush, 

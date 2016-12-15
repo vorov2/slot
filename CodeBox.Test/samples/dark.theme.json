@@ -9,6 +9,11 @@
         "color": "white"
     },
     {
+        "key": "hint",
+        "backColor": "#2D2D30",
+        "color": "#DCDCDC"
+    },
+    {
         "key": "currentline",
         "backColor": "#262626"
     },

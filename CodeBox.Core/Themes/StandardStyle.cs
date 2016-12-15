@@ -19,6 +19,9 @@ namespace CodeBox.Core.Themes
         [FieldName("bracket.matched")]
         MatchedBracket,
 
+        [FieldName("hint")]
+        Hint,
+
         [FieldName("number")]
         Number,
 

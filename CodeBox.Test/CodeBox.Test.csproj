@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\app.ico" />
+    <Content Include="Properties\app1.ico" />
     <Content Include="test.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -58,7 +58,13 @@ namespace CodeBox.Core.CommandModel
             }
 
             if (Title != null)
-                sb.Append(" #" + Title);
+            {
+                var str = Title;
+                var idx = str.IndexOf(':');
+                if (idx != -1)
+                    str = str.Substring(idx + 1).Trim();
+                sb.Append(" #" + str);
+            }
 
             return sb.ToString();
         }

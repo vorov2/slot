@@ -9,13 +9,18 @@
         "color": "black"
     },
     {
+        "key": "hint",
+        "backColor": "#EAEAEA",
+        "color": "black"
+    },
+    {
         "key": "currentline",
         "backColor": "#E2E2E2"
     },
     {
         "key": "popup",
         "color": "black",
-        "backColor": "#EAEAEA"
+        "backColor": "white"
     },
     {
         "key": "popupselected",

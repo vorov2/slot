@@ -66,13 +66,13 @@ namespace CodeBox.Search
                 if (x > 0)
                 {
                     SearchBox.CaretRenderer.Suspend();
-                    var style = editor.Theme.GetStyle(StandardStyle.Popup);
+                    var style = editor.Theme.GetStyle(StandardStyle.Hint);
                     g.DrawRoundedRectangle(style.BackColor,
                         new Rectangle(x - editor.Info.SmallCharWidth, 0, width + editor.Info.SmallCharWidth * 2, editor.Info.LineHeight));
 
                     foreach (var c in tip)
                     {
-                        g.DrawString(c.ToString(), editor.Settings.SmallFont, style.ForeColor.Brush(),
+                        g.DrawString(c.ToString(), editor.Settings.SmallFont.Get(style.FontStyle), style.ForeColor.Brush(),
                             new Rectangle(x, 0, editor.Info.SmallCharWidth, editor.Info.LineHeight), format);
                         x += editor.Info.SmallCharWidth;
                     }

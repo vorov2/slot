@@ -12,7 +12,7 @@
     "keywords": [
         {
             "style": "keyword",
-            "words": "class delegate enum struct interface abstract const explicit extern implicit internal namespace operator override partial private protected public readonly sealed static volatile virtual var dynamic as base break case catch checked continue default do else finally fixed for add get foreach global goto if is lock new out params ref remove return set sizeof stackalloc switch this throw try typeof unchecked unsafe using while yield"
+            "words": "ascending by equals from in into join let on orderby select group where descending class delegate enum struct interface abstract const explicit extern implicit internal namespace operator override private protected public readonly sealed static volatile virtual as base break case catch checked continue default do else finally fixed for foreach goto if is lock new out params ref return sizeof stackalloc switch this throw try typeof unchecked unsafe using while"
         },
         {
             "style": "keyword.typename",
@@ -20,7 +20,7 @@
         },
         {
             "style": "keyword.special",
-            "words": "ascending async await by equals from in into join let on orderby select group where descending value"
+            "words": "partial global var dynamic add get set remove value async await yield"
         },
         {
             "style": "keyword.literal",
