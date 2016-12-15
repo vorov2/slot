@@ -40,7 +40,7 @@ namespace CodeBox.Commands
             else if (pos.Col < 0)
                 pos = new Pos(pos.Line, 0);
 
-            sel.SetToRestore(pos);
+            sel.SetToRestore(doc.Lines[pos.Line].GetStripeCol(pos.Col));
             return pos;
         }
 

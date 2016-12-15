@@ -27,9 +27,7 @@ namespace CodeBox.ObjectModel
 
         internal void Clear() => Clear(End);
 
-        internal void SetToRestore() => RestoreCaretCol = Caret.Col;
-
-        internal void SetToRestore(Pos caret) => RestoreCaretCol = caret.Col;
+        internal void SetToRestore(int pos) => RestoreCaretCol = pos;
 
         internal void Clear(Pos pos) => Start = End = pos;
 

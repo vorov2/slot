@@ -13,7 +13,7 @@ namespace CodeBox.Commands
         protected override Pos GetPosition(Selection sel)
         {
             var pos = MoveHome(Document, sel.Caret);
-            sel.SetToRestore(pos);
+            sel.SetToRestore(Document.Lines[pos.Line].GetStripeCol(pos.Col));
             return pos;
         }
 

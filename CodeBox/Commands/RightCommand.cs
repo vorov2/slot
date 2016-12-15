@@ -39,7 +39,7 @@ namespace CodeBox.Commands
             else if (pos.Col > line.Length)
                 pos = new Pos(pos.Line, line.Length);
 
-            sel.SetToRestore(pos);
+            sel.SetToRestore(ctx.Document.Lines[pos.Line].GetStripeCol(pos.Col));
             return pos;
         }
 

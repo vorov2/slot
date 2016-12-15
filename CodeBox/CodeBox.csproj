@@ -210,7 +210,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Search\ShowSearchCommand.cs" />
-    <Compile Include="SettingsReader.cs" />
     <Compile Include="Styling\StyleManager.cs" />
     <Compile Include="Styling\AppliedStyle.cs" />
     <Compile Include="CallTips\CallTip.cs" />

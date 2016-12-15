@@ -321,7 +321,7 @@ namespace CodeBox
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            //base.OnMouseDown(e);
+            base.OnMouseDown(e);
             var mouse = e.GetSpecialKey();
 
             if (e.Button == MouseButtons.Left)
@@ -338,7 +338,11 @@ namespace CodeBox
                     var idx = Buffer.Selections.IndexOfCaret(pos);
 
                     if (idx != -1)
-                        Buffer.Selections[idx].SetToRestore();
+                    {
+                        var sca = Buffer.Selections[idx].Caret;
+                        Buffer.Selections[idx].SetToRestore(
+                            Document.Lines[sca.Line].GetStripeCol(sca.Col));
+                    }
 
                     if (Lines[pos.Line].Length == pos.Col && Folding.IsCollapsedHeader(pos.Line))
                     {

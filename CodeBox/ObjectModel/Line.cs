@@ -271,11 +271,9 @@ namespace CodeBox.ObjectModel
             Invalidated = true;
         }
 
-        private bool IsSep(char ch)
-        {
-            return ch == ' ' || ch == '\t' || ch == ' ' || ch == '.' || ch == '!'
+        private bool IsSep(char ch) =>
+            ch == ' ' || ch == '\t' || ch == ' ' || ch == '.' || ch == '!'
                 || ch == '?' || ch == ',' || ch == ';' || ch == '(' || ch == ')';
-        }
 
         private int GetNextWordTetras(int index, int tabSize)
         {
@@ -306,6 +304,8 @@ namespace CodeBox.ObjectModel
 
             return Stripes - 1;
         }
+
+        internal int GetStripeCol(int col) => GetStripeCol(col, GetStripe(col));
 
         internal int GetStripeCol(int col, int stripe)
         {
@@ -348,10 +348,7 @@ namespace CodeBox.ObjectModel
             return tetra;
         }
 
-        internal static int GetIndentationSize(int tet, int tabSize)
-        {
-            return tabSize - tet % tabSize;
-        }
+        internal static int GetIndentationSize(int tet, int tabSize) => tabSize - tet % tabSize;
 
         private void AddCut(int cut)
         {
