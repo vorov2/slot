@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CodeBox.Test
 {
@@ -37,10 +38,19 @@ namespace CodeBox.Test
 
         protected override void PerformClick()
         {
-            form.SplitContainer.BackColor = form.SplitContainer.Panel1.BackColor
-                = form.SplitContainer.Panel2.BackColor = form.Editor.BackColor;
-            form.SplitContainer.Panel2Collapsed = !form.SplitContainer.Panel2Collapsed;
-            form.SplitContainer.SplitterDistance = (int)(form.ClientSize.Height * 0.5);
+            //form.SplitContainer.BackColor = form.SplitContainer.Panel1.BackColor
+            //    = form.SplitContainer.Panel2.BackColor = form.Editor.BackColor;
+            //form.SplitContainer.Panel2Collapsed = !form.SplitContainer.Panel2Collapsed;
+            //form.SplitContainer.SplitterDistance = (int)(form.ClientSize.Height * 0.5);
+
+            foreach (Form f in Application.OpenForms)
+                if (f is OutputForm)
+                {
+                    f.Activate();
+                    return;
+                }
+
+            new OutputForm().Show(Form.ActiveForm);
         }
 
         public override int MeasureWidth(Graphics g) =>

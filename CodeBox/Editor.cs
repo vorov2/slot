@@ -220,7 +220,7 @@ namespace CodeBox
                 Mono ? PointToClient(e.Location) : e.Location))
                 return;
 
-            if (LockMouseScrolling || LimitedMode)
+            if (LockMouseScrolling || Lines.Count < 2)
                 return;
 
             base.OnMouseWheel(e);
