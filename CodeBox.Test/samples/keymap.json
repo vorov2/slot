@@ -1,5 +1,6 @@
 ﻿{
-    "test.commandpalette": "f1",
+    "app.commandPalette": "f1",
+    "app.toggleCommandBar": "f2",
 
     "file.newfile": "ctrl+n",
     "file.newwindow": "ctrl+shift+n",
@@ -71,6 +72,5 @@
     "editor.documentend": "ctrl+end",
     "editor.extenddocumenthome": "ctrl+shift+home",
     "editor.extenddocumentend": "ctrl+shift+end",
-    "editor.overtype": "ins",
-    "commandbar.toggleCommandBar": "f2"
+    "editor.overtype": "ins"
 }

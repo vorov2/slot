@@ -6,7 +6,7 @@ using CodeBox.Core.CommandModel;
 using CodeBox.Core.ComponentModel;
 using CodeBox.Core;
 
-namespace CodeBox.BufferCommands
+namespace CodeBox.Main
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.modes")]

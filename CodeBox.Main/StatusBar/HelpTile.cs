@@ -19,7 +19,7 @@ namespace CodeBox.Main.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.Run(editor, (Identifier)"test.commandpalette");
+            App.Ext.Run(editor, (Identifier)"app.commandPalette");
             base.PerformClick();
         }
     }

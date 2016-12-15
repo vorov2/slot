@@ -53,18 +53,6 @@ namespace CodeBox.BufferCommands
                 buf.ReadOnly = !buf.ReadOnly;
         }
 
-        [Command]
-        public void ChangeBufferMode(string mode)
-        {
-            if (mode != null && App.Ext.Grammars().GetGrammar(mode) != null)
-            {
-                var buffer = GetBuffer();
-
-                if (buffer != null)
-                    buffer.Mode = mode;
-            }
-        }
-
         private DocumentBuffer GetBuffer()
         {
             var view = viewManager.GetActiveView();

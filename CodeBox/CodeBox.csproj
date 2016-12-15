@@ -59,7 +59,6 @@
     <Compile Include="Autocomplete\ICompleteSource.cs" />
     <Compile Include="BufferCommands\BufferCommandDispatcher.cs" />
     <Compile Include="BufferCommands\EolValueProvider.cs" />
-    <Compile Include="BufferCommands\ModeValueProvider.cs" />
     <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
     <Compile Include="Cmd.cs" />

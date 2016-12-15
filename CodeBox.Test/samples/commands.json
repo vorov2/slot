@@ -1,6 +1,6 @@
 ﻿[
     {
-        "key": "test.commandpalette",
+        "key": "app.commandPalette",
         "alias": "?",
         "title": "Command Palette",
         "arguments": [
@@ -11,11 +11,32 @@
         ]
     },
     {
-        "key": "commandbar.toggleCommandBar",
+        "key": "app.toggleCommandBar",
         "alias": "cb-t",
         "title": "Toggle command bar"
     },
-
+    {
+        "key": "app.changeTheme",
+        "alias": "theme",
+        "title": "Change visual theme",
+        "arguments": [
+            {
+                "name": "theme",
+                "valueProvider": "values.themes"
+            }
+        ]
+    },
+    {
+        "key": "app.changeMode",
+        "alias": "mode",
+        "title": "Change language mode",
+        "arguments": [
+            {
+                "name": "mode",
+                "valueProvider": "values.modes"
+            }
+        ]
+    },
 
     //Buffer
     {
@@ -38,17 +59,6 @@
         "key": "buffer.toggleReadOnly",
         "alias": "b-sr",
         "title": "Buffer: Toggle write protect"
-    },
-    {
-        "key": "buffer.changeBufferMode",
-        "alias": "mode",
-        "title": "Buffer: Change language mode",
-        "arguments": [
-            {
-                "name": "mode",
-                "valueProvider": "values.modes"
-            }
-        ]
     },
 
 
@@ -189,19 +199,6 @@
         ]
     },
 
-
-    /////////////////////////////////////////
-    {
-        "key": "test.changetheme",
-        "alias": "theme",
-        "title": "Change visual theme",
-        "arguments": [
-            {
-                "name": "theme",
-                "valueProvider": "values.themes"
-            }
-        ]
-    },
 
     //Editor
     {

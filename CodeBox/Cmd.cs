@@ -8,7 +8,6 @@ namespace CodeBox
     {
         public static readonly Identifier SetBufferEol = new Identifier("buffer.setBufferEol");
         public static readonly Identifier ToggleWordWrap = new Identifier("buffer.toggleWordWrap");
-        public static readonly Identifier ChangeBufferMode = new Identifier("buffer.changeBufferMode");
         public static readonly Identifier GotoLine = new Identifier(GotoLineCommand.Name);
     }
 }

@@ -26,7 +26,7 @@ namespace CodeBox.Main.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.Run(editor, Cmd.ChangeBufferMode);
+            App.Ext.Run(editor, (Identifier)"app.changeMode");
             base.PerformClick();
         }
     }
