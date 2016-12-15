@@ -82,7 +82,7 @@ namespace CodeBox.Main.File
 
             var frm = Form.ActiveForm;
             switchBufferControl.Buffers = buffers;
-            switchBufferControl.Width = frm.Width / 2;
+            switchBufferControl.Width = frm.Width / 3;
             switchBufferControl.Height = switchBufferControl.CalculateHeight();
             switchBufferControl.Left = (frm.Width - switchBufferControl.Width) / 2;
             switchBufferControl.Top = (frm.Height - switchBufferControl.Height) / 2;

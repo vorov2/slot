@@ -63,10 +63,15 @@
     <Compile Include="CallTips\CallTipManager.cs" />
     <Compile Include="CodeBoxException.cs" />
     <Compile Include="Cmd.cs" />
+    <Compile Include="Commands\AddCaretAboveCommand.cs" />
+    <Compile Include="Commands\AddCaretBelowCommand.cs" />
+    <Compile Include="Commands\AddSelectionCaretsCommand.cs" />
     <Compile Include="Commands\AutocompleteCommand.cs" />
     <Compile Include="Commands\AddCaretCommand.cs" />
     <Compile Include="Commands\BlockSelectCommand.cs" />
     <Compile Include="Commands\ClearSelectionCommand.cs" />
+    <Compile Include="Commands\DeleteAllLeftCommand.cs" />
+    <Compile Include="Commands\DeleteAllRightCommand.cs" />
     <Compile Include="Commands\DeleteLineCommand.cs" />
     <Compile Include="Commands\EditorCommand.cs" />
     <Compile Include="Commands\ActionResults.cs" />

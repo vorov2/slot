@@ -38,8 +38,7 @@ namespace CodeBox.Main.CommandBar
         {
             var h = (int)Math.Round(
                 Math.Max(App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font.Height() * 1.7,
-                    editor.Info.LineHeight * 1.7), MidpointRounding.AwayFromZero);
-
+                    editor.Info.CharHeight * 1.9), MidpointRounding.AwayFromZero);
             if (Height != h)
                 Height = h;
         }
@@ -112,7 +111,8 @@ namespace CodeBox.Main.CommandBar
                 commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
                 commandEditor.CommandRejected += EditorCommandRejected;
                 ResetBuffer();
-                Controls.Add(commandEditor);
+                FindForm().Controls.Add(commandEditor);
+                commandEditor.BringToFront();
             }
 
             return commandEditor;

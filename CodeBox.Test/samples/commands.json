@@ -205,6 +205,21 @@
 
     //Editor
     {
+        "key": "editor.deleteAllLeft",
+        "alias": "e-dal",
+        "title": "Editor: Delete all left"
+    },
+    {
+        "key": "editor.deleteAllRight",
+        "alias": "e-dar",
+        "title": "Editor: Delete all right"
+    },
+    {
+        "key": "editor.addCaretsToSelection",
+        "alias": "e-cas",
+        "title": "Editor: Adds carets to line ends in selection"
+    },
+    {
         "key": "editor.gotoLine",
         "alias": ":",
         "title": "Editor: Go to line",
@@ -283,7 +298,17 @@
     {
         "key": "editor.addcaret",
         "alias": "e-ca",
-        "title": "Editor: Add a caret at mouse cursor position"
+        "title": "Editor: Add caret at mouse cursor position"
+    },
+    {
+        "key": "editor.addCaretAbove",
+        "alias": "e-caa",
+        "title": "Editor: Add caret above"
+    },
+    {
+        "key": "editor.addCaretBelow",
+        "alias": "e-cab",
+        "title": "Editor: Add caret below"
     },
     {
         "key": "editor.autocomplete",
