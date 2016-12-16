@@ -1,11 +1,12 @@
-﻿using Slot.Core.ComponentModel;
+﻿using System;
+using Slot.Core.ComponentModel;
 using Slot.Editor.ObjectModel;
-using System;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.ComponentModel
 {
     public interface IFoldingComponent : IComponent
     {
-        void Fold(IExecutionContext context, Range range);
+        void Fold(IView view, Range range);
     }
 }

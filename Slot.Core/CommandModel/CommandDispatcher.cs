@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Slot.Core.ComponentModel;
 using System.Reflection;
-using System.ComponentModel.Composition;
-using Slot.Core.Output;
+using Slot.Core.ViewModel;
 
 namespace Slot.Core.CommandModel
 {
@@ -14,7 +9,7 @@ namespace Slot.Core.CommandModel
     {
         private Dictionary<string, MethodInfo> commands;
 
-        public bool Execute(IExecutionContext ctx, Identifier commandKey, params object[] args)
+        public bool Execute(IView ctx, Identifier commandKey, params object[] args)
         {
             ResolveCommands();
             MethodInfo cmd;
@@ -67,7 +62,7 @@ namespace Slot.Core.CommandModel
             }
         }
 
-        protected virtual void ProcessNotEnoughArguments(IExecutionContext ctx, Identifier commandKey, object[] args)
+        protected virtual void ProcessNotEnoughArguments(IView ctx, Identifier commandKey, object[] args)
         {
             var cmd = App.Catalog<ICommandProvider>().Default().GetCommandByKey(commandKey);
             App.Catalog<ICommandBar>().Default().Show(ctx, cmd.Alias, args);

@@ -145,7 +145,7 @@
         "title": "File: Switch window",
         "arguments": [
             {
-                "name": "viewName",
+                "name": "window",
                 "valueProvider": "values.windows"
             }
         ]

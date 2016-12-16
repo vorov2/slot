@@ -7,6 +7,7 @@ using Slot.Editor.ObjectModel;
 using Slot.Editor.Lexing;
 using Slot.Editor.Affinity;
 using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Autocomplete
 {
@@ -19,9 +20,9 @@ namespace Slot.Editor.Autocomplete
         private EditorControl editor;
         private const string SEPS = " \r\n\t`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?";
 
-        public void Initialize(IExecutionContext context)
+        public void Initialize(IView view)
         {
-            this.editor = (EditorControl)context;
+            this.editor = (EditorControl)view;
         }
 
         public IEnumerable<string> GetItems()

@@ -70,7 +70,6 @@
     <Compile Include="CommandModel\IArgumentValueProvider.cs" />
     <Compile Include="ComponentModel\IComponent.cs" />
     <Compile Include="ComponentModel\IComponentMetadata.cs" />
-    <Compile Include="ComponentModel\IExecutionContext.cs" />
     <Compile Include="FieldNameAttribute.cs" />
     <Compile Include="Keyboard\InputState.cs" />
     <Compile Include="Keyboard\KeyboardAdapter.cs" />

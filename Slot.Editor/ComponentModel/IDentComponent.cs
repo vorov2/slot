@@ -1,10 +1,11 @@
 ﻿using System;
 using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.ComponentModel
 {
     public interface IDentComponent : IComponent
     {
-        int CalculateIndentation(IExecutionContext ctx, int lineIndex);
+        int CalculateIndentation(IView view, int lineIndex);
     }
 }

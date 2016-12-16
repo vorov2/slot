@@ -1,10 +1,11 @@
-﻿using Slot.Core.ComponentModel;
-using System;
+﻿using System;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Core.CommandModel
 {
     public interface ICommandDispatcher : IComponent
     {
-        bool Execute(IExecutionContext ctx, Identifier commandKey, params object[] args);
+        bool Execute(IView ctx, Identifier commandKey, params object[] args);
     }
 }

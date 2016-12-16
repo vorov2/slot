@@ -1,12 +1,13 @@
-﻿using Slot.Editor.Commands;
-using Slot.Core;
-using Slot.Core.CommandModel;
-using Slot.Core.ComponentModel;
-using Slot.Editor.ObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
+using Slot.Editor.Commands;
+using Slot.Editor.ObjectModel;
 using static Slot.Editor.Commands.ActionResults;
 
 namespace Slot.Editor
@@ -42,9 +43,9 @@ namespace Slot.Editor
             return ret;
         }
 
-        public bool Execute(IExecutionContext ctx, Identifier commandKey, params object[] args)
+        public bool Execute(IView view, Identifier commandKey, params object[] args)
         {
-            var editor = ctx as EditorControl;
+            var editor = view as EditorControl;
 
             if (editor == null)
                 return false;

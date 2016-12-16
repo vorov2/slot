@@ -6,10 +6,10 @@ namespace Slot.Core.CommandModel
 {
     public interface ICommandBar : IComponent
     {
-        void Show(IExecutionContext ctx);
+        void Show(IView view);
 
-        void Show(IExecutionContext ctx, string commandAlias, params object[] args);
+        void Show(IView view, string commandAlias, params object[] args);
 
-        void Hide(IExecutionContext ctx);
+        void Hide(IView view);
     }
 }

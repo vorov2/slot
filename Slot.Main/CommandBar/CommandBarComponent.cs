@@ -17,9 +17,9 @@ namespace Slot.Main.CommandBar
     {
         public const string Name = "commandbar.default";
 
-        public void Show(IExecutionContext view) => Show(view, null);
+        public void Show(IView view) => Show(view, null);
 
-        public void Show(IExecutionContext view, string commandAlias, params object[] args)
+        public void Show(IView view, string commandAlias, params object[] args)
         {
             var cm = GetCommandBarControl();
 
@@ -38,7 +38,7 @@ namespace Slot.Main.CommandBar
             }
         }
 
-        public void Hide(IExecutionContext view)
+        public void Hide(IView view)
         {
             var cm = GetCommandBarControl();
 

@@ -1,8 +1,8 @@
-﻿using Slot.Core;
+﻿using System;
+using Slot.Core;
 using Slot.Core.CommandModel;
-using Slot.Core.ComponentModel;
 using Slot.Core.Output;
-using System;
+using Slot.Core.ViewModel;
 
 namespace Slot
 {
@@ -10,10 +10,10 @@ namespace Slot
     {
         private readonly static Identifier logKey = new Identifier("log.application");
 
-        public static bool Run(this IAppExtensions _, IExecutionContext ctx, Identifier key, params object[] args)
+        public static bool Run(this IAppExtensions _, IView view, Identifier key, params object[] args)
         {
             var disp = App.Catalog<ICommandDispatcher>().GetComponent(key.Namespace);
-            return disp != null ? disp.Execute(ctx, key, args) : false;
+            return disp != null ? disp.Execute(view, key, args) : false;
         }
 
         public static void Log(this IAppExtensions _, string message, EntryType type)

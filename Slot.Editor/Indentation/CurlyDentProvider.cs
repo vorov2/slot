@@ -1,7 +1,8 @@
-﻿using Slot.Editor.ComponentModel;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
 using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
+using Slot.Editor.ComponentModel;
 
 namespace Slot.Editor.Indentation
 {
@@ -11,13 +12,13 @@ namespace Slot.Editor.Indentation
     {
         public const string Name = "indent.curly";
 
-        public int CalculateIndentation(IExecutionContext context, int lineIndex)
+        public int CalculateIndentation(IView view, int lineIndex)
         {
-            var ctx = (EditorControl)context;
+            var editor = (EditorControl)view;
 
             if (lineIndex > 0)
             {
-                var ln = ctx.Buffer.Document.Lines[lineIndex - 1];
+                var ln = editor.Buffer.Document.Lines[lineIndex - 1];
                 var idx = ln.Length - 1;
                 var indent = 0;
                 var curly = false;
@@ -39,12 +40,12 @@ namespace Slot.Editor.Indentation
                     if (c.Char == ' ')
                         indent++;
                     else if (c.Char == '\t')
-                        indent += ctx.IndentSize;
+                        indent += editor.IndentSize;
                     else
                         break;
                 
                 if (curly)
-                    indent += ctx.IndentSize;
+                    indent += editor.IndentSize;
 
                 return indent;
             }

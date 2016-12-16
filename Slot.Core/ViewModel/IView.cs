@@ -1,10 +1,9 @@
 ﻿using System;
-using Slot.Core.ComponentModel;
 using System.IO;
 
 namespace Slot.Core.ViewModel
 {
-    public interface IView : IExecutionContext
+    public interface IView
     {
         void AttachBuffer(IBuffer buffer);
 

@@ -1,15 +1,12 @@
-﻿using Slot.Editor.ObjectModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
+using Slot.Editor.ObjectModel;
 
 namespace Slot.ComponentModel
 {
     public interface IStylerComponent : IComponent
     {
-        void Style(IExecutionContext context, Range range);
+        void Style(IView view, Range range);
     }
 }

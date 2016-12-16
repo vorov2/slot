@@ -7,6 +7,7 @@ using System.ComponentModel.Composition;
 using Slot.Core.ComponentModel;
 using Slot.Core;
 using Slot.Core.Themes;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Lexing
 {
@@ -23,14 +24,14 @@ namespace Slot.Editor.Lexing
 
         }
 
-        public void Style(IExecutionContext context, Range range)
+        public void Style(IView view, Range range)
         {
-            var ctx = (EditorControl)context;
+            var ed = (EditorControl)view;
 
-            if (ctx.Buffer.GrammarKey == null)
+            if (ed.Buffer.GrammarKey == null)
                 return;
 
-            Editor = ctx;
+            Editor = ed;
             App.Ext.Grammars().GetGrammar(Editor.Buffer.GrammarKey).Sections.Reset();
             Parse(new State(0, Editor.Buffer.GrammarKey, false), range);
         }

@@ -45,6 +45,13 @@ namespace Slot.Main.File
         }
 
         [Command]
+        public void CloseWindow()
+        {
+            var view = viewManager.GetActiveView();
+            view.Close();
+        }
+
+        [Command]
         public void SwitchBuffer()
         {
             var buffers = bufferManager.EnumerateBuffers()
@@ -62,6 +69,7 @@ namespace Slot.Main.File
                 switchBufferControl = new SwitchBufferControl();
                 switchBufferControl.CloseRequested += (o, ev) =>
                 {
+                    switchBufferControl.FindForm().Controls.Remove(switchBufferControl);
                     var newBuf = switchBufferControl.Buffers[switchBufferControl.SelectedIndex];
                     var view = viewManager.EnumerateViews()
                         .FirstOrDefault(v => v.Buffer == newBuf);
@@ -70,8 +78,6 @@ namespace Slot.Main.File
                         viewManager.ActivateView(view);
                     else
                         OpenBuffer(newBuf);
-
-                    switchBufferControl.FindForm().Controls.Remove(switchBufferControl);
                 };
             }
 
@@ -259,13 +265,6 @@ namespace Slot.Main.File
 
         [Command]
         public void OpenModifiedFile(string fileName) => OpenRecentFile(fileName);
-
-        [Command]
-        public void CloseWindow()
-        {
-            var view = viewManager.GetActiveView();
-            view.Close();
-        }
 
         private void OpenBuffer(IBuffer buf)
         {
