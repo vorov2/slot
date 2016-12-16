@@ -5,6 +5,7 @@
     "editor.font": "Consolas",
     "editor.fontSize": 11,
     "editor.linePadding": 0.1,
+    "editor.showIndentationGuides": true,
     "editor.showLineNumbers": true,
     "editor.showWhitespace": "all",
     "editor.showEol": false,

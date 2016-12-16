@@ -91,7 +91,8 @@ namespace CodeBox
             for (var i = sc; i < cut + 1; i++)
             {
                 var c = line.CharAt(i);
-                var cw = c == '\t' ? editor.IndentSize * editor.Info.CharWidth : editor.Info.CharWidth;
+                var cw = c == '\t' ? editor.IndentSize * editor.Info.CharWidth
+                    : Line.GetCharWidth(c) * editor.Info.CharWidth;
 
                 if (locX >= width - app && locX <= width + cw - app)
                     return i;

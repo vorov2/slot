@@ -20,8 +20,11 @@ namespace CodeBox.Test
 
         public IView CreateView()
         {
+            var act = GetActiveView();
             var frm = new MainForm();
             frm.Show();
+            ((IView)frm.Editor).Workspace = act.Workspace;
+            frm.UpdateTitle();
             return frm.Editor;
         }
 

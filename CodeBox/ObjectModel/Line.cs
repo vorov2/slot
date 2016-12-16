@@ -31,6 +31,19 @@ namespace CodeBox.ObjectModel
             this.chars = new List<Character>(chars.Select(c => new Character(c)));
         }
 
+        internal static int GetCharWidth(char c)
+        {
+            switch (char.GetUnicodeCategory(c))
+            {
+                case System.Globalization.UnicodeCategory.OtherLetter:
+                case System.Globalization.UnicodeCategory.OtherNumber:
+                case System.Globalization.UnicodeCategory.OtherNotAssigned:
+                case System.Globalization.UnicodeCategory.OtherSymbol:
+                    return 2;
+                default: return 1;
+            }
+        }
+
         public static Line Empty() => new Line(emptyArray);
 
         public static Line FromString(string line) =>
@@ -242,7 +255,7 @@ namespace CodeBox.ObjectModel
             for (var i = 0; i < chars.Count; i++)
             {
                 var c = chars[i];
-                var ct = c.Char == '\t' ? GetIndentationSize(tetra, tabSize) : 1;
+                var ct = c.Char == '\t' ? GetIndentationSize(tetra, tabSize) : GetCharWidth(c.Char);
                 tetra += ct;
                 var w = ct * charWidth;
 
@@ -282,7 +295,7 @@ namespace CodeBox.ObjectModel
             for (var i = index; i < chars.Count; i++)
             {
                 var c = chars[i];
-                var ct = c.Char == '\t' ? GetTetras(i, tabSize) : 1;
+                var ct = c.Char == '\t' ? GetTetras(i, tabSize) : GetCharWidth(c.Char);
                 tetras += ct;
 
                 if (IsSep(c.Char))

@@ -127,6 +127,8 @@ namespace CodeBox.Drawing
             var currentLine = editor.Theme.GetStyle(StandardStyle.CurrentLine);
             var indent = -1;
             var nonWs = false;
+            var showInd = editor.Settings.ShowIndentationGuides;
+            var indentSize = editor.IndentSize;
 
             for (var j = 0; j < line.Stripes; j++)
             {
@@ -153,11 +155,13 @@ namespace CodeBox.Drawing
                     for (var i = oldcut; i < cut; i++)
                     {
                         var c = line.CharAt(i);
-                        var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : 1;
+                        var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : Line.GetCharWidth(c);
+
                         tet += ct;
                         var xw = ct * editor.Info.CharWidth;
                         var visible = x + editor.Scroll.ScrollPosition.X >= lmarg && x + editor.Scroll.ScrollPosition.X + xw <= cwidth;
-
+                        var guide = false;
+                        
                         if (visible)
                         {
                             var style = Style.Empty;
@@ -166,10 +170,18 @@ namespace CodeBox.Drawing
                             var high = sel && editor.Buffer.Selections.IsSelected(pos);
                             var ws = c == '\t' || c == ' ';
 
-                            if (!ws)
+                            if (!ws && !nonWs)
                                 nonWs = true;
 
-                            if (c == '\0' && showEol || ws && (showWs == ShowWhitespace.All || showWs == ShowWhitespace.Boundary && !nonWs))
+                            if (!nonWs && showInd && (tet - ct) % indentSize == 0)
+                            {
+                                DrawIndentationGuide(g, specialSymbol, x, y);
+                                guide = true;
+                            }
+
+                            if (c == '\0' && showEol || ws && (showWs == ShowWhitespace.All
+                                || showWs == ShowWhitespace.Boundary && !nonWs
+                                || showWs == ShowWhitespace.Selection && high))
                             {
                                 c = c == '\0' ? '\u00B6' : c == '\t' ? '\u2192' : '·';
                                 style = specialSymbol;
@@ -201,6 +213,9 @@ namespace CodeBox.Drawing
 
                                     if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
                                         cg.DrawLine(specialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
+
+                                    if (guide)
+                                        DrawIndentationGuide(cg, specialSymbol, 0, 0);
 
                                     if (editor.Scroll.ScrollPosition.X != 0 && x + editor.Scroll.ScrollPosition.X == editor.Info.TextLeft)
                                     {
@@ -255,6 +270,11 @@ namespace CodeBox.Drawing
                 m.Draw(g, bounds);
                 start += m.CalculateSize();
             }
+        }
+
+        internal void DrawIndentationGuide(Graphics g, Style style, int x, int y)
+        {
+            g.DrawLine(style.ForeColor.DottedPen(), x, y, x, y + editor.Info.LineHeight);
         }
 
         internal static Font CurrentFont { get; private set; }

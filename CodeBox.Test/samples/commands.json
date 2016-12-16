@@ -140,13 +140,13 @@
         "title": "File: Close window"
     },
     {
-        "key": "file.switchview",
+        "key": "file.switchWindow",
         "alias": "f-ws",
-        "title": "File: Switch view",
+        "title": "File: Switch window",
         "arguments": [
             {
                 "name": "viewName",
-                "valueProvider": "values.views"
+                "valueProvider": "values.windows"
             }
         ]
     },

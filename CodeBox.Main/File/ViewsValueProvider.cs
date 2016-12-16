@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace CodeBox.Main.File
 {
     [Export(typeof(IArgumentValueProvider))]
-    [ComponentData("values.views")]
+    [ComponentData("values.windows")]
     public sealed class ViewsValueProvider : IArgumentValueProvider
     {
         [Import]
@@ -22,7 +22,7 @@ namespace CodeBox.Main.File
             var act = viewManager.GetActiveView();
             return viewManager.EnumerateViews()
                 .Where(f => str == null || f.Buffer.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
-                .Select(f => new ValueItem(f.Buffer.File.Name, f == act ? "Current view" : ""));
+                .Select(f => new ValueItem(f.Buffer.File.Name, f == act ? "Current window" : ""));
         }
     }
 }
