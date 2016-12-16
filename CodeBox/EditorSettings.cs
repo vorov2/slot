@@ -42,6 +42,9 @@ namespace CodeBox
         [Setting("editor.showLineNumbers")]
         public bool ShowLineNumbers { get; set; }
 
+        [Setting("editor.showIndentationGuides")]
+        public bool ShowIndentationGuides { get; set; }
+
         [Setting("editor.matchWords")]
         public bool MatchWords { get; set; }
 
@@ -256,7 +259,10 @@ namespace CodeBox
         All,
 
         [FieldName("Boundary")]
-        Boundary
+        Boundary,
+
+        [FieldName("Selection")]
+        Selection
     }
 
     internal static class EolExtensions

@@ -10,6 +10,7 @@ namespace CodeBox.Drawing
         private static readonly Dictionary<Color, Brush> brushCache = new Dictionary<Color, Brush>();
         private static readonly Dictionary<Color, Pen> penCache = new Dictionary<Color, Pen>();
         private static readonly Dictionary<Color, Pen> dashedPenCache = new Dictionary<Color, Pen>();
+        private static readonly Dictionary<Color, Pen> dottedPenCache = new Dictionary<Color, Pen>();
         private static readonly Dictionary<Color, Pen> thickPenCache = new Dictionary<Color, Pen>();
 
         public static void Clean()
@@ -17,6 +18,7 @@ namespace CodeBox.Drawing
             Clean(brushCache);
             Clean(penCache);
             Clean(dashedPenCache);
+            Clean(dottedPenCache);
         }
 
         private static void Clean<T>(Dictionary<Color,T> cache) where T : IDisposable
@@ -43,9 +45,7 @@ namespace CodeBox.Drawing
             if (!penCache.TryGetValue(color, out p))
             {
                 p = new Pen(color);
-                using (var c = new Control())
-                using (var g = c.CreateGraphics())
-                    p.Width = (g.DpiY / 96f);
+                p.Width = Dpi.GetWidth(1);
                 penCache.Add(color, p);
             }
 
@@ -59,9 +59,7 @@ namespace CodeBox.Drawing
             if (!thickPenCache.TryGetValue(color, out p))
             {
                 p = new Pen(color);
-                using (var c = new Control())
-                using (var g = c.CreateGraphics())
-                    p.Width = (g.DpiY / 96f) * 2;
+                p.Width = Dpi.GetWidth(2);
                 thickPenCache.Add(color, p);
             }
 
@@ -75,11 +73,24 @@ namespace CodeBox.Drawing
             if (!dashedPenCache.TryGetValue(color, out p))
             {
                 p = new Pen(color);
-                using (var c = new Control())
-                using (var g = c.CreateGraphics())
-                    p.Width = (g.DpiY / 96f);
+                p.Width = Dpi.GetWidth(1);
                 p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 dashedPenCache.Add(color, p);
+            }
+
+            return p;
+        }
+
+        public static Pen DottedPen(this Color color)
+        {
+            Pen p;
+
+            if (!dottedPenCache.TryGetValue(color, out p))
+            {
+                p = new Pen(color);
+                p.Width = Dpi.GetWidth(1);
+                p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                dottedPenCache.Add(color, p);
             }
 
             return p;
