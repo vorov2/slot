@@ -15,7 +15,7 @@ namespace Slot.Editor.ObjectModel
 
         public Selection(Pos caret) : this(caret, caret)
         {
-
+            RestoreCaretCol = caret.Col;
         }
 
         public Selection(Pos start, Pos end) : base(start, end.IsEmpty ? start : end)
@@ -29,7 +29,13 @@ namespace Slot.Editor.ObjectModel
 
         internal void SetToRestore(int pos) => RestoreCaretCol = pos;
 
-        internal void Clear(Pos pos) => Start = End = pos;
+        internal void Clear(Pos pos)
+        {
+            if (Caret.Line == pos.Line)
+                RestoreCaretCol = pos.Col;
+
+            Start = End = pos;
+        }
 
         internal void Update(Selection sel)
         {
@@ -45,6 +51,6 @@ namespace Slot.Editor.ObjectModel
 
         public Pos Caret => End;
 
-        internal int RestoreCaretCol { get; private set; }
+        internal int RestoreCaretCol { get; set; }
     }
 }
