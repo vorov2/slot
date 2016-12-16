@@ -15,7 +15,7 @@ namespace CodeBox.ObjectModel
 {
     public sealed class Line : IEnumerable<Character>
     {
-        private static readonly char[] emptyArray = new char[0]; 
+        private static readonly char[] emptyArray = new char[0];
         private List<Character> chars;
         private List<int> cuts;
         private int tetraCount = -1;
