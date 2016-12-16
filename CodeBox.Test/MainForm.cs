@@ -123,15 +123,15 @@ namespace CodeBox.Test
             base.OnLoad(e);
 
             var wc = App.Catalog<IWorkspaceController>().Default();
-            wc.WorkspaceChanged +=
-                (o, ev) =>
-                {
-                    var wm = App.Catalog<IViewManager>().Default()?.GetActiveView();
-                    Text = wm.Workspace == null ? Application.ProductName
-                        : $"{wm.Workspace.FullName} - {Application.ProductName}";
-                };
+            wc.WorkspaceChanged += (o, ev) => UpdateTitle();
         }
 
+        internal void UpdateTitle()
+        {
+            var wm = App.Catalog<IViewManager>().Default()?.GetActiveView();
+            Text = wm.Workspace == null ? Application.ProductName
+                : $"{wm.Workspace.FullName} - {Application.ProductName}";
+        }
 
         private void Form1_Activated(object sender, EventArgs e)
         {

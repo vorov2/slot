@@ -37,7 +37,7 @@ namespace CodeBox.Main.File
         }
 
         [Command]
-        public void SwitchView(string viewName)
+        public void SwitchWindow(string viewName)
         {
             var view = viewManager.EnumerateViews()
                  .FirstOrDefault(v => v.Buffer.File.Name.Contains(viewName));
