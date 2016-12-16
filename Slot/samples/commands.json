@@ -151,6 +151,12 @@
         ]
     },
     {
+        "key": "file.toggleWindowTopmost",
+        "alias": "f-wt",
+        "title": "File: Toggle current window topmost"
+    },
+
+    {
         "key": "file.switchbuffer",
         "alias": "f-bs",
         "title": "File: Switch buffer"

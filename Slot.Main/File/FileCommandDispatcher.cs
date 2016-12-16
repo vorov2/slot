@@ -52,6 +52,14 @@ namespace Slot.Main.File
         }
 
         [Command]
+        public void ToggleWindowTopmost()
+        {
+            var view = viewManager.GetActiveView();
+            var frm = ((Control)view).FindForm();
+            frm.TopMost = !frm.TopMost;
+        }
+
+        [Command]
         public void SwitchBuffer()
         {
             var buffers = bufferManager.EnumerateBuffers()
