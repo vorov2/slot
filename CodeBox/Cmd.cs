@@ -1,8 +1,8 @@
 ﻿using System;
-using CodeBox.Core;
-using CodeBox.Commands;
+using Slot.Core;
+using Slot.Editor.Commands;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public static class Cmd
     {

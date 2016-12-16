@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core;
-using CodeBox.Core.Settings;
+using Slot.Core.ComponentModel;
+using Slot.Core;
+using Slot.Core.Settings;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.down")]
@@ -18,7 +13,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => MoveDown(View, sel);
 
-        internal static Pos MoveDown(Editor ctx, Selection sel)
+        internal static Pos MoveDown(EditorControl ctx, Selection sel)
         {
             var pos = sel.Caret;
 
@@ -30,7 +25,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        private static Pos InternalMoveDown(Editor ctx, Selection sel, Pos pos)
+        private static Pos InternalMoveDown(EditorControl ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
 

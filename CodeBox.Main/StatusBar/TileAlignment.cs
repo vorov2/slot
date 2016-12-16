@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public enum TileAlignment
     {

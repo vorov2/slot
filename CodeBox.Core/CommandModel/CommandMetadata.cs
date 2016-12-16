@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Keyboard;
+using Slot.Core.ComponentModel;
+using Slot.Core.Keyboard;
 
-namespace CodeBox.Core.CommandModel
+namespace Slot.Core.CommandModel
 {
     public sealed class CommandMetadata
     {

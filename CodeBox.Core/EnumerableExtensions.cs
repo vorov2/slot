@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public static class EnumerableExtensions
     {

@@ -1,13 +1,14 @@
-﻿using CodeBox.Core;
+﻿using Slot.Core;
 using System;
+using Slot.Editor;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public sealed class PosTile : StatusBarTile
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        public PosTile(Editor editor) : base(TileAlignment.Left)
+        public PosTile(EditorControl editor) : base(TileAlignment.Left)
         {
             this.editor = editor;
         }

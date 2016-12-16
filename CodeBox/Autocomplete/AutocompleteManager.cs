@@ -1,9 +1,9 @@
-﻿using CodeBox.Autocomplete;
-using CodeBox.Commands;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.ObjectModel;
+﻿using Slot.Editor.Autocomplete;
+using Slot.Editor.Commands;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,17 +12,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Autocomplete
+namespace Slot.Editor.Autocomplete
 {
     public sealed class AutocompleteManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private AutocompleteWindow window;
         private StringBuilder completeString;
         private IEnumerable<string> items;
         private int lastCol;
 
-        internal AutocompleteManager(Editor editor)
+        internal AutocompleteManager(EditorControl editor)
         {
             this.editor = editor;
         }

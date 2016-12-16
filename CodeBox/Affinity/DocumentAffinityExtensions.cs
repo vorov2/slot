@@ -1,32 +1,25 @@
-﻿using CodeBox.Core;
-using CodeBox.Indentation;
-using CodeBox.ObjectModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Slot.Core;
 
-namespace CodeBox.Affinity
+namespace Slot.Editor.Affinity
 {
     public static class DocumentAffinityExtensions
     {
-        public static string GetNonWordSymbols(this IDocumentAffinity aff, Editor ctx)
+        public static string GetNonWordSymbols(this IDocumentAffinity aff, EditorControl ctx)
         {
             return aff.NonWordSymbols ?? ctx.Settings.NonWordSymbols;
         }
 
-        public static string GetBracketSymbols(this IDocumentAffinity aff, Editor ctx)
+        public static string GetBracketSymbols(this IDocumentAffinity aff, EditorControl ctx)
         {
             return aff.BracketSymbols ?? ctx.Settings.BracketSymbols;
         }
 
-        public static string GetAutocompleteSymbols(this IDocumentAffinity aff, Editor ctx)
+        public static string GetAutocompleteSymbols(this IDocumentAffinity aff, EditorControl ctx)
         {
             return aff.AutocompleteSymbols ?? ctx.Settings.AutocompleteSymbols;
         }
 
-        public static Identifier GetIndentComponentKey(this IDocumentAffinity aff, Editor ctx)
+        public static Identifier GetIndentComponentKey(this IDocumentAffinity aff, EditorControl ctx)
         {
             return aff.IndentComponentKey ?? ctx.Settings.IndentComponentKey;
         }

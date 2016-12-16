@@ -1,16 +1,16 @@
-﻿using CodeBox.Core.Themes;
-using CodeBox.Styling;
+﻿using Slot.Core.Themes;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Slot.Drawing;
 
-namespace CodeBox.Drawing
+namespace Slot.Editor.Drawing
 {
     internal sealed class CaretRenderer : IDisposable
     {
         private const int INTERVAL = 500;
         
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private Timer timer;
         private bool timerDraw;
         private Bitmap timerBitmap;
@@ -20,7 +20,7 @@ namespace CodeBox.Drawing
         private int bitmapW;
         private int bitmapH;
         
-        public CaretRenderer(Editor editor)
+        public CaretRenderer(EditorControl editor)
         {
             this.editor = editor;
             this.timer = new Timer();

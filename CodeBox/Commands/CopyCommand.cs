@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Windows.Forms;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using static Slot.Editor.Commands.ActionResults;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.copy")]
@@ -32,7 +31,7 @@ namespace CodeBox.Commands
             return Pure;
         }
 
-        internal static string GetTextRange(Editor ctx, Range range)
+        internal static string GetTextRange(EditorControl ctx, Range range)
         {
             var doc = ctx.Buffer.Document;
             var sel = range.Normalize();

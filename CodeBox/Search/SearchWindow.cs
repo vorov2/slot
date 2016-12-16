@@ -1,8 +1,8 @@
-﻿using CodeBox.Core.Keyboard;
-using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
+﻿using Slot.Core.Keyboard;
+using Slot.Core.Themes;
+using Slot.Drawing;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,12 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Editor.Drawing;
 
-namespace CodeBox.Search
+namespace Slot.Editor.Search
 {
     public sealed class SearchWindow : Overlay
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
         {
             LineAlignment = StringAlignment.Center,
@@ -23,7 +24,7 @@ namespace CodeBox.Search
             Trimming = StringTrimming.None
         };
 
-        public SearchWindow(Editor editor)
+        public SearchWindow(EditorControl editor)
         {
             this.editor = editor;
             Cursor = Cursors.Default;

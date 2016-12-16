@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Main.CommandBar
+namespace Slot.Main.CommandBar
 {
     public sealed class StatementArgument : CommandLineItem
     {

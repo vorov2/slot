@@ -1,5 +1,5 @@
-﻿using CodeBox.Core.Themes;
-using CodeBox.Styling;
+﻿using Slot.Core.Themes;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Messages
+namespace Slot.Editor.Messages
 {
     public sealed class MessageWindowButton : Control
     {

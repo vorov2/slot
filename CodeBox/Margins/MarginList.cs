@@ -2,19 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.ObjectModel;
 
-namespace CodeBox.Margins
+namespace Slot.Editor.Margins
 {
     public sealed class MarginList : IEnumerable<Margin>
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private readonly List<Margin> margins = new List<Margin>();
 
-        internal MarginList(Editor editor)
+        internal MarginList(EditorControl editor)
         {
             this.editor = editor;
         }

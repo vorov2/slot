@@ -1,10 +1,8 @@
 ﻿using System;
-using CodeBox.ObjectModel;
+using Slot.Editor.ObjectModel;
 using System.Drawing;
-using CodeBox.Folding;
-using CodeBox.Commands;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     [Flags]
     public enum InvalidateFlags
@@ -15,10 +13,10 @@ namespace CodeBox
     }
     public sealed class ScrollingManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private Point pointer;
 
-        internal ScrollingManager(Editor editor)
+        internal ScrollingManager(EditorControl editor)
         {
             this.editor = editor;
         }

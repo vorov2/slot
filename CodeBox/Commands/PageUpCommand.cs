@@ -1,11 +1,11 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.Folding;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Folding;
+using Slot.ComponentModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.pageup")]
@@ -13,7 +13,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => PageUp(View);
 
-        internal static Pos PageUp(Editor ctx)
+        internal static Pos PageUp(EditorControl ctx)
         {
             var lines = ctx.Buffer.Document.Lines;
             var caret = ctx.Buffer.Selections.Main.Caret;

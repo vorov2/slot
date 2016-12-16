@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Json;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public sealed class Identifier : IEquatable<Identifier>
     {

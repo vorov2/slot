@@ -1,16 +1,12 @@
-﻿using CodeBox.Core;
-using CodeBox.Styling;
+﻿using Slot.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Json;
-using CodeBox.Core.Themes;
+using Slot.Core.Themes;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     internal static class DictionaryExtensions
     {

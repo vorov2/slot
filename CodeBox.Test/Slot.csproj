@@ -7,8 +7,8 @@
     <ProjectGuid>{3A814CEE-1A58-46D0-97E7-DCD93A86F726}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeBox.Test</RootNamespace>
-    <AssemblyName>CodeBox.Test</AssemblyName>
+    <RootNamespace>Slot</RootNamespace>
+    <AssemblyName>Slot</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -123,21 +123,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">
+    <ProjectReference Include="..\CodeBox.Core\Slot.Core.csproj">
       <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
-      <Name>CodeBox.Core</Name>
+      <Name>Slot.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeBox.Drawing\CodeBox.Drawing.csproj">
+    <ProjectReference Include="..\CodeBox.Drawing\Slot.Drawing.csproj">
       <Project>{865baf51-1c60-4879-b979-8f7ee3320500}</Project>
-      <Name>CodeBox.Drawing</Name>
+      <Name>Slot.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeBox.Main\CodeBox.Main.csproj">
+    <ProjectReference Include="..\CodeBox.Main\Slot.Main.csproj">
       <Project>{706a55bb-8814-48f3-a188-a9ab9f55b1d8}</Project>
-      <Name>CodeBox.Main</Name>
+      <Name>Slot.Main</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeBox\CodeBox.csproj">
+    <ProjectReference Include="..\CodeBox\Slot.Editor.csproj">
       <Project>{a12ac5fd-fddb-4253-ac43-92f305ac9d56}</Project>
-      <Name>CodeBox</Name>
+      <Name>Slot.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Util\Json\Json.csproj">
       <Project>{2c727444-c7dd-4db3-8546-964f4b354242}</Project>

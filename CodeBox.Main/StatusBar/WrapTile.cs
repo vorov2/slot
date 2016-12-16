@@ -1,12 +1,13 @@
-﻿using CodeBox.Core;
+﻿using Slot.Core;
+using Slot.Editor;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public sealed class WrapTile : StatusBarTile
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        public WrapTile(Editor editor) : base(TileAlignment.Right)
+        public WrapTile(EditorControl editor) : base(TileAlignment.Right)
         {
             this.editor = editor;
         }

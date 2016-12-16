@@ -8,32 +8,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CodeBox.Margins;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
-using CodeBox.Commands;
-using CodeBox.Folding;
-using CodeBox.Lexing;
-using CodeBox.Indentation;
-using CodeBox.Affinity;
-using CodeBox.Core.Keyboard;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.ComponentModel;
-using CodeBox.Main.StatusBar;
-using CodeBox.Core.Output;
-using CodeBox.Core.Settings;
-using CodeBox.Core.Workspaces;
-using CodeBox.Main.CommandBar;
-using CodeBox.Core.ViewModel;
+using Slot.Editor.Margins;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
+using Slot.Editor.Commands;
+using Slot.Editor.Folding;
+using Slot.Editor.Lexing;
+using Slot.Editor.Indentation;
+using Slot.Editor.Affinity;
+using Slot.Core.Keyboard;
+using Slot.Editor;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.ComponentModel;
+using Slot.Main.StatusBar;
+using Slot.Core.Output;
+using Slot.Core.Settings;
+using Slot.Core.Workspaces;
+using Slot.Main.CommandBar;
+using Slot.Core.ViewModel;
 
-namespace CodeBox.Test
+namespace Slot
 {
     public partial class MainForm : Form
     {
-        private Editor ed;
-        private Editor output;
+        private EditorControl ed;
+        private EditorControl output;
         private CommandBarControl commandBar;
 
         public MainForm()
@@ -45,7 +46,7 @@ namespace CodeBox.Test
 
         private void Initialize()
         {
-            ed = new Editor { Dock = DockStyle.Fill };
+            ed = new EditorControl { Dock = DockStyle.Fill };
 
             commandBar = new CommandBarControl(ed) { Dock = DockStyle.Top };
 
@@ -83,7 +84,7 @@ namespace CodeBox.Test
 
         private void InitializeOutput(EditorSettings set)
         {
-            output = new Editor { Dock = DockStyle.Fill };
+            output = new EditorControl { Dock = DockStyle.Fill };
             output.LeftMargins.Add(new GutterMargin(output));
             output.RightMargins.Add(new ScrollBarMargin(output, Orientation.Vertical));
             output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));
@@ -144,7 +145,7 @@ namespace CodeBox.Test
             //Focus();
         }
 
-        public Editor Editor => ed;
+        public EditorControl Editor => ed;
 
         public int Activations { get; private set; }
 

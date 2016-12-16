@@ -1,12 +1,12 @@
-﻿using CodeBox.Core.Themes;
-using CodeBox.Styling;
+﻿using Slot.Core.Themes;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     public class GrammarSection
     {

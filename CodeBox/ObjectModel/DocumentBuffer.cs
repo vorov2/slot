@@ -1,18 +1,18 @@
-﻿using CodeBox.Commands;
-using CodeBox.Styling;
+﻿using Slot.Editor.Commands;
+using Slot.Editor.Styling;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeBox.CallTips;
+using Slot.Editor.CallTips;
 using System.Text;
-using CodeBox.Core.ViewModel;
+using Slot.Core.ViewModel;
 using System.IO;
 using System.Drawing;
-using CodeBox.Core.Output;
-using CodeBox.Folding;
+using Slot.Core.Output;
+using Slot.Editor.Folding;
 
-namespace CodeBox.ObjectModel
+namespace Slot.Editor.ObjectModel
 {
     public class DocumentBuffer : IMaterialBuffer
     {
@@ -124,7 +124,7 @@ namespace CodeBox.ObjectModel
             RequestRedraw();
         }
 
-        internal readonly List<Editor> Views = new List<Editor>();
+        internal readonly List<EditorControl> Views = new List<EditorControl>();
         public void RequestRedraw()
         {
             if (!Locked)
@@ -157,7 +157,7 @@ namespace CodeBox.ObjectModel
                     e.Scroll.UpdateVisibleRectangle();
         }
 
-        internal void UpdateScrollInfo(Editor view)
+        internal void UpdateScrollInfo(EditorControl view)
         {
             foreach (var e in Views)
             {

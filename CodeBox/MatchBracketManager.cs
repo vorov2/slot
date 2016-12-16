@@ -1,26 +1,26 @@
-﻿using CodeBox.ObjectModel;
-using CodeBox.Styling;
+﻿using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CodeBox.Affinity;
-using CodeBox.Core.Themes;
+using Slot.Editor.Affinity;
+using Slot.Core.Themes;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public sealed class MatchBracketManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private int edits;
         private Pos lastPos = Pos.Empty;
         private Guid docId;
         private Tuple<int, AppliedStyle> match1;
         private Tuple<int, AppliedStyle> match2;
 
-        public MatchBracketManager(Editor editor)
+        public MatchBracketManager(EditorControl editor)
         {
             this.editor = editor;
         }

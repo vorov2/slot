@@ -1,12 +1,12 @@
-﻿using CodeBox.Core;
-using CodeBox.Indentation;
+﻿using Slot.Core;
+using Slot.Editor.Indentation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Affinity
+namespace Slot.Editor.Affinity
 {
     public interface IDocumentAffinity
     {

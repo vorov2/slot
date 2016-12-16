@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core.Themes
+namespace Slot.Core.Themes
 {
     public enum Adornment
     {

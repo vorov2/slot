@@ -1,8 +1,8 @@
-﻿using CodeBox.Drawing;
+﻿using Slot.Drawing;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CodeBox.Test
+namespace Slot
 {
     public class SplitContainerEx : SplitContainer
     {

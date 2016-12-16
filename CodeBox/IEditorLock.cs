@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public interface IEditorLock
     {

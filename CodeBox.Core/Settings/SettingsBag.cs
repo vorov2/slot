@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace CodeBox.Core.Settings
+namespace Slot.Core.Settings
 {
     using MAP = Dictionary<string, object>;
     using TUP = Tuple<SettingAttribute, PropertyInfo>;

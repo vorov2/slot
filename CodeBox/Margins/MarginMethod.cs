@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Margins
+namespace Slot.Editor.Margins
 {
     internal enum MarginMethod
     {

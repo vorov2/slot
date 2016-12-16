@@ -1,13 +1,13 @@
-﻿using CodeBox.Drawing;
-using CodeBox.Affinity;
+﻿using Slot.Drawing;
+using Slot.Editor.Affinity;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using CodeBox.Core;
-using CodeBox.Core.Settings;
+using Slot.Core;
+using Slot.Core.Settings;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public sealed class EditorSettings : SettingsBag, IDocumentAffinity
     {

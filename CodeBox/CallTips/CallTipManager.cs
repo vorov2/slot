@@ -1,20 +1,18 @@
-﻿using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
+﻿using Slot.Core.Themes;
+using Slot.Editor.Drawing;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
+using Slot.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 
-namespace CodeBox.CallTips
+namespace Slot.Editor.CallTips
 {
     public sealed class CallTipManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private Pos shownTip = Pos.Empty;
         private CallTip lastTip;
         private Rectangle lastTipRectangle;
@@ -45,7 +43,7 @@ namespace CodeBox.CallTips
             public Color Color;
         }
 
-        internal CallTipManager(Editor editor)
+        internal CallTipManager(EditorControl editor)
         {
             this.editor = editor;
         }

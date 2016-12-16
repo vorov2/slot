@@ -1,12 +1,12 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
+﻿using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 
-namespace CodeBox.Main
+namespace Slot.Main
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.commands")]

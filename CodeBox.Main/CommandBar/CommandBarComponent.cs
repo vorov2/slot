@@ -1,15 +1,15 @@
-﻿using CodeBox.Core.CommandModel;
+﻿using Slot.Core.CommandModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBox.Core.ViewModel;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ViewModel;
+using Slot.Core.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 
-namespace CodeBox.Main.CommandBar
+namespace Slot.Main.CommandBar
 {
     [Export(typeof(ICommandBar))]
     [ComponentData(Name)]

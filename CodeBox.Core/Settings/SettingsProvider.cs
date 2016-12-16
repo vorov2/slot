@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using Json;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
-namespace CodeBox.Core.Settings
+namespace Slot.Core.Settings
 {
-    using ViewModel;
-    using Workspaces;
     using MAP = Dictionary<string, object>;
     using OMAP = Dictionary<Type, SettingsBag>;
 

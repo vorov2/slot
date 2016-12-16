@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace CodeBox.Core.ViewModel
+namespace Slot.Core.ViewModel
 {
     public interface IBuffer
     {

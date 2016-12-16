@@ -1,12 +1,12 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
+using Slot.Editor.ObjectModel;
+using static Slot.Editor.Commands.ActionResults;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core;
+using Slot.Core.CommandModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData(Name)]

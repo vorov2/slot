@@ -1,4 +1,4 @@
-﻿namespace CodeBox.Test
+﻿namespace Slot
 {
     partial class MainForm
     {
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.splitContainer = new CodeBox.Test.SplitContainerEx();
+            this.splitContainer = new Slot.SplitContainerEx();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.SuspendLayout();
             this.SuspendLayout();

@@ -1,13 +1,13 @@
-﻿using CodeBox.Affinity;
-using CodeBox.Core;
-using CodeBox.Styling;
+﻿using Slot.Editor.Affinity;
+using Slot.Core;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Json;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     public static class GrammarReader
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeBox.Core.Keyboard
+namespace Slot.Core.Keyboard
 {
     public static class KeymapReader
     {

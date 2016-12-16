@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System.ComponentModel.Composition;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Core.ComponentModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.indent")]
@@ -131,7 +129,7 @@ namespace CodeBox.Commands
                 return base.Undo(out pos);
         }
 
-        internal static List<int> Indent(Editor ctx, Selection sel)
+        internal static List<int> Indent(EditorControl ctx, Selection sel)
         {
             var norm = sel.Normalize();
             var undos = new List<int>();

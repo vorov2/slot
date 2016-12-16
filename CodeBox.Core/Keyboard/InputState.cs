@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core.Keyboard
+namespace Slot.Core.Keyboard
 {
     public enum InputState
     {

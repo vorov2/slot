@@ -1,14 +1,15 @@
-﻿using CodeBox.Core.Themes;
-using CodeBox.Drawing;
+﻿using Slot.Core.Themes;
+using Slot.Drawing;
 using System.Drawing;
+using Slot.Editor;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public sealed class ErrorsTile : StatusBarTile
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        public ErrorsTile(Editor editor) : base(TileAlignment.Left)
+        public ErrorsTile(EditorControl editor) : base(TileAlignment.Left)
         {
             this.editor = editor;
         }

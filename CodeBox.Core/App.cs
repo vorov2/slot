@@ -6,11 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.ViewModel;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public static class App
     {

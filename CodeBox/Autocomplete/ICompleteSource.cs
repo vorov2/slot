@@ -1,12 +1,12 @@
-﻿using CodeBox.Core.ComponentModel;
-using CodeBox.ObjectModel;
+﻿using Slot.Core.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Autocomplete
+namespace Slot.Editor.Autocomplete
 {
     public interface ICompleteSource
     {

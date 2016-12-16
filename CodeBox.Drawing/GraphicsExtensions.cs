@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Drawing
+namespace Slot.Drawing
 {
     public static class GraphicsExtensions
     {

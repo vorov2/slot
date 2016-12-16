@@ -1,8 +1,8 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
+using Slot.Editor.ObjectModel;
+using static Slot.Editor.Commands.ActionResults;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     public abstract class CaretCommand : EditorCommand
     {

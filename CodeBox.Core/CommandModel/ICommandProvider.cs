@@ -1,7 +1,7 @@
-﻿using CodeBox.Core.ComponentModel;
+﻿using Slot.Core.ComponentModel;
 using System.Collections.Generic;
 
-namespace CodeBox.Core.CommandModel
+namespace Slot.Core.CommandModel
 {
     public interface ICommandProvider : IComponent
     {

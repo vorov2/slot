@@ -7,8 +7,8 @@
     <ProjectGuid>{775EBB61-7C2A-407E-B8A5-7C8BAC575538}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeBox.Core</RootNamespace>
-    <AssemblyName>CodeBox.Core</AssemblyName>
+    <RootNamespace>Slot.Core</RootNamespace>
+    <AssemblyName>Slot.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

@@ -1,9 +1,9 @@
 ﻿using System;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
 using System.ComponentModel.Composition;
 
-namespace CodeBox.Main.File
+namespace Slot.Main.File
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.folders")]

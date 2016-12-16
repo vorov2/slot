@@ -1,10 +1,10 @@
-﻿using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Output;
-using CodeBox.ObjectModel;
+﻿using Slot.Core.ComponentModel;
+using Slot.Core.Output;
+using Slot.Editor.ObjectModel;
 using System;
 using System.ComponentModel.Composition;
 
-namespace CodeBox.Test
+namespace Slot
 {
     [Export(typeof(ILogComponent))]
     [ComponentData("log.application")]

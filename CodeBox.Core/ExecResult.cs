@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public sealed class ExecResult
     {

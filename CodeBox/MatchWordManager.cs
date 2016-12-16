@@ -1,10 +1,10 @@
-﻿using CodeBox.Commands;
-using CodeBox.Core;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Themes;
-using CodeBox.ObjectModel;
-using CodeBox.Search;
-using CodeBox.Styling;
+﻿using Slot.Editor.Commands;
+using Slot.Core;
+using Slot.Core.ComponentModel;
+using Slot.Core.Themes;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Search;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +13,18 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public sealed class MatchWordManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private readonly List<SearchResult> finds = new List<SearchResult>();
         private string lastWord;
         private Pos requestCaret = Pos.Empty;
         private DateTime requestTime;
         private readonly Timer timer = new Timer();
 
-        public MatchWordManager(Editor editor)
+        public MatchWordManager(EditorControl editor)
         {
             this.editor = editor;
             timer.Interval = 500;

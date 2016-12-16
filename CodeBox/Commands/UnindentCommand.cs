@@ -1,13 +1,13 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.ComponentModel;
 using System.ComponentModel.Composition;
-using static CodeBox.Commands.ActionResults;
+using static Slot.Editor.Commands.ActionResults;
 using System.Linq;
 using System.Collections.Generic;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.unindent")]
@@ -88,7 +88,7 @@ namespace CodeBox.Commands
             return new UnindentCommand();
         }
 
-        internal static List<int> Unindent(Editor ctx, Selection sel)
+        internal static List<int> Unindent(EditorControl ctx, Selection sel)
         {
             var norm = sel.Normalize();
             var indents = new List<int>();

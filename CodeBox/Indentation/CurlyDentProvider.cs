@@ -1,9 +1,9 @@
-﻿using CodeBox.ComponentModel;
+﻿using Slot.Editor.ComponentModel;
 using System;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Indentation
+namespace Slot.Editor.Indentation
 {
     [Export(typeof(IDentComponent))]
     [ComponentData(Name)]
@@ -13,7 +13,7 @@ namespace CodeBox.Indentation
 
         public int CalculateIndentation(IExecutionContext context, int lineIndex)
         {
-            var ctx = (Editor)context;
+            var ctx = (EditorControl)context;
 
             if (lineIndex > 0)
             {

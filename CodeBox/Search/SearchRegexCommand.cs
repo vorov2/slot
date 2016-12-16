@@ -1,9 +1,9 @@
-﻿using CodeBox.Commands;
-using CodeBox.ObjectModel;
-using CodeBox.Core.ComponentModel;
+﻿using Slot.Editor.Commands;
+using Slot.Editor.ObjectModel;
+using Slot.Core.ComponentModel;
 using System.ComponentModel.Composition;
 
-namespace CodeBox.Search
+namespace Slot.Editor.Search
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.searchregex")]

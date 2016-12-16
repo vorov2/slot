@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CodeBox.ObjectModel;
 
-namespace CodeBox.Margins
+namespace Slot.Editor.Margins
 {
     public abstract class Margin
     {
-        protected Margin(Editor editor)
+        protected Margin(EditorControl editor)
         {
             Editor = editor;
         }
@@ -37,7 +31,7 @@ namespace CodeBox.Margins
 
         public abstract int CalculateSize();
 
-        protected Editor Editor { get; }
+        protected EditorControl Editor { get; }
 
         internal Rectangle Bounds { get; private set;  }
 

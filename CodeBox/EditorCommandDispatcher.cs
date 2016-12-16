@@ -1,15 +1,15 @@
-﻿using CodeBox.Commands;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.ObjectModel;
+﻿using Slot.Editor.Commands;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using static CodeBox.Commands.ActionResults;
+using static Slot.Editor.Commands.ActionResults;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     [Export(typeof(ICommandDispatcher))]
     [ComponentData(Name)]
@@ -44,7 +44,7 @@ namespace CodeBox
 
         public bool Execute(IExecutionContext ctx, Identifier commandKey, params object[] args)
         {
-            var editor = ctx as Editor;
+            var editor = ctx as EditorControl;
 
             if (editor == null)
                 return false;
@@ -157,7 +157,7 @@ namespace CodeBox
             return true;
         }
 
-        private void SetEditLines(Editor editor)
+        private void SetEditLines(EditorControl editor)
         {
             foreach (var s in editor.Buffer.Selections)
             {
@@ -173,7 +173,7 @@ namespace CodeBox
             }
         }
 
-        private void AttachCaret(Editor editor, Pos pos)
+        private void AttachCaret(EditorControl editor, Pos pos)
         {
             var line = editor.Lines[pos.Line];
 
@@ -186,7 +186,7 @@ namespace CodeBox
                 line.TrailingCaret = true;
         }
 
-        private void SetCarets(Editor editor, int count, Pos pos)
+        private void SetCarets(EditorControl editor, int count, Pos pos)
         {
             var sels = editor.Buffer.Selections;
             sels.Clear();
@@ -224,7 +224,7 @@ namespace CodeBox
             }
         }
 
-        private void DoAftermath(Editor editor, ActionResults exp, int selCount, Pos caret, int edit = 0)
+        private void DoAftermath(EditorControl editor, ActionResults exp, int selCount, Pos caret, int edit = 0)
         {
             var scrolled = false;
 
@@ -285,7 +285,7 @@ namespace CodeBox
                 editor.Buffer.Selections.Truncate();
         }
 
-        private void Undo(Editor editor)
+        private void Undo(EditorControl editor)
         {
             if (editor.Buffer.UndoStack.Count > 0)
             {
@@ -296,7 +296,7 @@ namespace CodeBox
             }
         }
 
-        private ActionResults Undo(Editor editor, int id, out int count, out Pos pos)
+        private ActionResults Undo(EditorControl editor, int id, out int count, out Pos pos)
         {
             var exp = default(ActionResults);
             pos = Pos.Empty;
@@ -339,7 +339,7 @@ namespace CodeBox
             return exp;
         }
 
-        private void Redo(Editor editor)
+        private void Redo(EditorControl editor)
         {
             if (editor.Buffer.RedoStack.Count > 0)
             {
@@ -350,7 +350,7 @@ namespace CodeBox
             }
         }
 
-        private ActionResults Redo(Editor editor, int id, out int count, out Pos pos)
+        private ActionResults Redo(EditorControl editor, int id, out int count, out Pos pos)
         {
             var exp = default(ActionResults);
             pos = Pos.Empty;

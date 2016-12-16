@@ -1,10 +1,10 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Lexing;
+﻿using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Editor.Lexing;
 using System;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public static class AppExtensions
     {

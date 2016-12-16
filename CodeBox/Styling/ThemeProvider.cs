@@ -1,7 +1,7 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Themes;
-using CodeBox.Core.ViewModel;
+﻿using Slot.Core;
+using Slot.Core.ComponentModel;
+using Slot.Core.Themes;
+using Slot.Core.ViewModel;
 using Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 
-namespace CodeBox.Styling
+namespace Slot.Editor.Styling
 {
     [Export(typeof(IThemeComponent))]
     [ComponentData(Name)]
@@ -45,7 +45,7 @@ namespace CodeBox.Styling
                     foreach (var s in ThemeReader.Read(File.ReadAllText(th.File.FullName)))
                         Register(s.StyleId, s.Style);
 
-                    foreach (var v in viewManager.EnumerateViews().OfType<Editor>())
+                    foreach (var v in viewManager.EnumerateViews().OfType<EditorControl>())
                         v.Redraw();
                 }
 

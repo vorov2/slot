@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CodeBox.Core.Themes
+namespace Slot.Core.Themes
 {
     public struct Style : IEquatable<Style>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Folding
+namespace Slot.Editor.Folding
 {
     [Flags]
     internal enum FoldingStates : byte
@@ -12,7 +12,7 @@ namespace CodeBox.Folding
         Header = 0x02
     }
 
-    internal static class VisibleStatesExtensions
+    internal static class FoldingStatesExtensions
     {
         public static bool Has(this FoldingStates enu, FoldingStates flag) => (enu & flag) == flag;
     }

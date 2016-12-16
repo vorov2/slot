@@ -1,10 +1,9 @@
-﻿using CodeBox.Affinity;
-using CodeBox.Core;
-using CodeBox.Indentation;
+﻿using Slot.Editor.Affinity;
+using Slot.Core;
 using System;
 using System.Collections.Generic;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     public sealed class Grammar : IDocumentAffinity
     {

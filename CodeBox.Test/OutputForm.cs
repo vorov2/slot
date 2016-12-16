@@ -1,6 +1,6 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.Output;
-using CodeBox.Margins;
+﻿using Slot.Core;
+using Slot.Core.Output;
+using Slot.Editor.Margins;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,12 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Editor;
 
-namespace CodeBox.Test
+namespace Slot
 {
     public partial class OutputForm : Form
     {
-        private Editor output;
+        private EditorControl output;
 
         public OutputForm()
         {
@@ -25,7 +26,7 @@ namespace CodeBox.Test
 
         private void InitializeOutput()
         {
-            output = new Editor { Dock = DockStyle.Fill };
+            output = new EditorControl { Dock = DockStyle.Fill };
             output.LeftMargins.Add(new GutterMargin(output));
             output.RightMargins.Add(new ScrollBarMargin(output, Orientation.Vertical));
             output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));

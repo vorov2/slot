@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 using static System.Configuration.ConfigurationManager;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     [Export(typeof(IComponent))]
     [ComponentData("core.path")]

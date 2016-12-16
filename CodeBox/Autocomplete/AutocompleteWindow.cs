@@ -1,8 +1,9 @@
-﻿using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.Styling;
+﻿using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.Themes;
+using Slot.Drawing;
+using Slot.Editor.Drawing;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,11 +12,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Autocomplete
+namespace Slot.Editor.Autocomplete
 {
     public sealed class AutocompleteWindow : Control
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private List<ItemInfo> items;
         private readonly AutocompleteScrollBar scrollBar;
         private int hoverLine;
@@ -33,7 +34,7 @@ namespace CodeBox.Autocomplete
             public int Y;
         }
 
-        public AutocompleteWindow(Editor editor)
+        public AutocompleteWindow(EditorControl editor)
         {
             this.editor = editor;
             SetStyle(ControlStyles.Selectable, false);

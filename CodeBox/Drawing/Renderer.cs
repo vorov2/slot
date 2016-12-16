@@ -1,8 +1,8 @@
-﻿using CodeBox.Core.Themes;
-using CodeBox.Folding;
-using CodeBox.Margins;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
+﻿using Slot.Core.Themes;
+using Slot.Editor.Folding;
+using Slot.Editor.Margins;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,12 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Drawing;
 
-namespace CodeBox.Drawing
+namespace Slot.Editor.Drawing
 {
     internal sealed class Renderer
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
         {
             LineAlignment = StringAlignment.Center,
@@ -23,7 +24,7 @@ namespace CodeBox.Drawing
             Trimming = StringTrimming.None
         };
 
-        public Renderer(Editor editor)
+        public Renderer(EditorControl editor)
         {
             this.editor = editor;
         }

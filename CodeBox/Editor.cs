@@ -5,26 +5,27 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
-using CodeBox.Margins;
-using CodeBox.ObjectModel;
-using CodeBox.Drawing;
-using CodeBox.Styling;
-using CodeBox.Folding;
-using CodeBox.Autocomplete;
-using CodeBox.Affinity;
-using CodeBox.CallTips;
-using CodeBox.Core;
-using CodeBox.Core.Keyboard;
+using Slot.Editor.Margins;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Drawing;
+using Slot.Editor.Styling;
+using Slot.Editor.Folding;
+using Slot.Editor.Autocomplete;
+using Slot.Editor.Affinity;
+using Slot.Editor.CallTips;
+using Slot.Core;
+using Slot.Core.Keyboard;
 using System.Text;
 using System.IO;
-using CodeBox.Core.ViewModel;
-using CodeBox.Search;
-using CodeBox.Core.Settings;
-using CodeBox.Core.Themes;
+using Slot.Core.ViewModel;
+using Slot.Editor.Search;
+using Slot.Core.Settings;
+using Slot.Core.Themes;
+using Slot.Drawing;
 
-namespace CodeBox
+namespace Slot.Editor
 {
-    public class Editor : Control, IView
+    public class EditorControl : Control, IView
     {
         public readonly static bool Mono = Type.GetType("Mono.Runtime") != null;
         private const int WM_POINTERDOWN = 0x0246;
@@ -37,12 +38,12 @@ namespace CodeBox
         private Pos movePosition;
         private Point mousePosition;
 
-        public Editor() : this(App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>())
+        public EditorControl() : this(App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>())
         {
 
         }
 
-        public Editor(EditorSettings settings)
+        public EditorControl(EditorSettings settings)
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw

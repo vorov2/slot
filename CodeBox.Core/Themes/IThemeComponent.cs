@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Core.Themes
+namespace Slot.Core.Themes
 {
     public interface IThemeComponent : IComponent
     {

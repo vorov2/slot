@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Core;
+using Slot.Editor.ObjectModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Core;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     public abstract class EditorCommand
     {
@@ -35,7 +31,7 @@ namespace CodeBox.Commands
             return Converter.Convert(obj, typeof(T), out res) ? (T)res : def;
         }
 
-        internal Editor View { get; set; }
+        internal EditorControl View { get; set; }
 
         internal bool GroupUndo { get; set; }
 

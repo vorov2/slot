@@ -1,7 +1,7 @@
 ﻿using System;
-using CodeBox.ObjectModel;
+using Slot.Editor.ObjectModel;
 
-namespace CodeBox.Folding
+namespace Slot.Editor.Folding
 {
     public sealed class FoldingNeededEventArgs : EventArgs
     {

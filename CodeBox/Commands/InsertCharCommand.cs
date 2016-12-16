@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Affinity;
+using Slot.Editor.ObjectModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Editor.Affinity;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.insertchar")]

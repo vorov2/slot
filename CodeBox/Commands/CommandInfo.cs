@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     internal sealed class CommandInfo
     {

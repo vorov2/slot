@@ -1,8 +1,8 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.Settings;
-using CodeBox.Drawing;
-using CodeBox.Main;
-using CodeBox.Main.StatusBar;
+﻿using Slot.Core;
+using Slot.Core.Settings;
+using Slot.Drawing;
+using Slot.Main;
+using Slot.Main.StatusBar;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Test
+namespace Slot
 {
     public sealed class OutputToggleTile : StatusBarTile
     {

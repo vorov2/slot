@@ -1,21 +1,21 @@
-﻿using CodeBox.Drawing;
+﻿using Slot.Editor.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using CodeBox.Styling;
+using Slot.Editor.Styling;
 using System.Windows.Forms;
-using CodeBox.Core.Themes;
+using Slot.Core.Themes;
 
-namespace CodeBox.Messages
+namespace Slot.Editor.Messages
 {
     public sealed class MessageWindow : Overlay
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        public MessageWindow(Editor editor)
+        public MessageWindow(EditorControl editor)
         {
             this.editor = editor;
         }

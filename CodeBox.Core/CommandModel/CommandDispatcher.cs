@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 using System.Reflection;
 using System.ComponentModel.Composition;
-using CodeBox.Core.Output;
+using Slot.Core.Output;
 
-namespace CodeBox.Core.CommandModel
+namespace Slot.Core.CommandModel
 {
     public abstract class CommandDispatcher : ICommandDispatcher
     {

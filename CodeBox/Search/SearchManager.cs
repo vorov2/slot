@@ -1,8 +1,8 @@
-﻿using CodeBox.Commands;
-using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
+﻿using Slot.Editor.Commands;
+using Slot.Core.Themes;
+using Slot.Drawing;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,16 +12,16 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Search
+namespace Slot.Editor.Search
 {
     public sealed class SearchManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private SearchWindow overlay;
         private DateTime requestTime;
         private readonly Timer timer = new Timer();
 
-        public SearchManager(Editor editor)
+        public SearchManager(EditorControl editor)
         {
             this.editor = editor;
             timer.Interval = 500;

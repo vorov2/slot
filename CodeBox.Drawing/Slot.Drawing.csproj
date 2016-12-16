@@ -7,8 +7,8 @@
     <ProjectGuid>{865BAF51-1C60-4879-B979-8F7EE3320500}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeBox.Drawing</RootNamespace>
-    <AssemblyName>CodeBox.Drawing</AssemblyName>
+    <RootNamespace>Slot.Drawing</RootNamespace>
+    <AssemblyName>Slot.Drawing</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

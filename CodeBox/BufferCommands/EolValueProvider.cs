@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.BufferCommands
+namespace Slot.Editor.BufferCommands
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.eol")]

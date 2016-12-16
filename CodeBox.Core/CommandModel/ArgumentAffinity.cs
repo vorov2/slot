@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core.CommandModel
+namespace Slot.Core.CommandModel
 {
     public enum ArgumentAffinity
     {

@@ -1,8 +1,8 @@
-﻿using CodeBox.Core.ComponentModel;
+﻿using Slot.Core.ComponentModel;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     public interface IGrammarComponent : IComponent
     {

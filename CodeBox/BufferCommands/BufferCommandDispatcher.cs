@@ -1,9 +1,9 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Settings;
-using CodeBox.Core.ViewModel;
-using CodeBox.ObjectModel;
+﻿using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.Settings;
+using Slot.Core.ViewModel;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.BufferCommands
+namespace Slot.Editor.BufferCommands
 {
     [Export(typeof(ICommandDispatcher))]
     [ComponentData(Name)]

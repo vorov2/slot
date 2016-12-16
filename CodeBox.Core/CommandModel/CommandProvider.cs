@@ -1,12 +1,12 @@
-﻿using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Keyboard;
+﻿using Slot.Core.ComponentModel;
+using Slot.Core.Keyboard;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 
-namespace CodeBox.Core.CommandModel
+namespace Slot.Core.CommandModel
 {
     [Export(typeof(ICommandProvider))]
     [ComponentData(Name)]

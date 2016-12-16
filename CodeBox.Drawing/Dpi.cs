@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Drawing
+namespace Slot.Drawing
 {
     public static class Dpi
     {

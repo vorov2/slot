@@ -1,7 +1,7 @@
-﻿using CodeBox.Core.Themes;
+﻿using Slot.Core.Themes;
 using System;
 
-namespace CodeBox.Styling
+namespace Slot.Editor.Styling
 {
     public struct AppliedStyle : IEquatable<AppliedStyle>
     {

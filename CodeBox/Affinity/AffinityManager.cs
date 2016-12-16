@@ -1,15 +1,15 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Indentation;
-using CodeBox.Lexing;
-using CodeBox.ObjectModel;
+﻿using Slot.Core;
+using Slot.Core.ComponentModel;
+using Slot.Editor.Indentation;
+using Slot.Editor.Lexing;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Affinity
+namespace Slot.Editor.Affinity
 {
     internal struct GrammarInfo
     {
@@ -19,9 +19,9 @@ namespace CodeBox.Affinity
 
     public sealed class AffinityManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        internal AffinityManager(Editor editor)
+        internal AffinityManager(EditorControl editor)
         {
             this.editor = editor;
         }

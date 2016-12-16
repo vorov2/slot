@@ -4,19 +4,19 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
-using CodeBox.Folding;
-using CodeBox.Commands;
-using CodeBox.Drawing;
-using CodeBox.Core;
-using CodeBox.Core.Themes;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
+using Slot.Editor.Folding;
+using Slot.Editor.Commands;
+using Slot.Drawing;
+using Slot.Core;
+using Slot.Core.Themes;
 
-namespace CodeBox.Margins
+namespace Slot.Editor.Margins
 {
     public class FoldingMargin : Margin
     {
-        public FoldingMargin(Editor editor) : base(editor)
+        public FoldingMargin(EditorControl editor) : base(editor)
         {
 
         }

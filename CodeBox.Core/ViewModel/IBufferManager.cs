@@ -1,11 +1,11 @@
-﻿using CodeBox.Core.ComponentModel;
+﻿using Slot.Core.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace CodeBox.Core.ViewModel
+namespace Slot.Core.ViewModel
 {
     public interface IBufferManager : IComponent
     {

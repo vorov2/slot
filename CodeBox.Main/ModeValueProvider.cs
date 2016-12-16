@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core;
+using Slot.Editor;
 
-namespace CodeBox.Main
+namespace Slot.Main
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.modes")]

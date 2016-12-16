@@ -1,12 +1,12 @@
-﻿using CodeBox.Core.ComponentModel;
-using CodeBox.Core.ViewModel;
+﻿using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Core.Output
+namespace Slot.Core.Output
 {
     public interface ILogComponent : IMaterialBuffer, IComponent
     {

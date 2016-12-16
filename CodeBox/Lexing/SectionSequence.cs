@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     public sealed class SectionSequence
     {

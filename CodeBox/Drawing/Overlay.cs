@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Drawing;
 
-namespace CodeBox.Drawing
+namespace Slot.Editor.Drawing
 {
     public class Overlay : Control
     {

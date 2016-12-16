@@ -1,8 +1,8 @@
-﻿using CodeBox.Drawing;
+﻿using Slot.Drawing;
 using System;
 using System.Drawing;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public class StatusBarTile
     {

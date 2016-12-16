@@ -1,20 +1,16 @@
-﻿using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.Search;
-using CodeBox.Styling;
+﻿using Slot.Core.Themes;
+using Slot.Drawing;
+using Slot.Editor.Search;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Margins
+namespace Slot.Editor.Margins
 {
     public sealed class VerticalScrollBarMargin : ScrollBarMargin
     {
-        public VerticalScrollBarMargin(Editor editor) : base(editor, Orientation.Vertical)
+        public VerticalScrollBarMargin(EditorControl editor) : base(editor, Orientation.Vertical)
         {
         }
 

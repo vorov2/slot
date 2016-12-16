@@ -1,11 +1,11 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.Affinity;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Affinity;
+using Slot.Editor.ComponentModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.wordright")]
@@ -18,7 +18,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        internal static Pos WordRight(Editor ctx, Selection sel)
+        internal static Pos WordRight(EditorControl ctx, Selection sel)
         {
             var caret = sel.Caret;
             var line = ctx.Buffer.Document.Lines[caret.Line];

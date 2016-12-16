@@ -1,8 +1,8 @@
 ﻿using System;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 using System.IO;
 
-namespace CodeBox.Core.Workspaces
+namespace Slot.Core.Workspaces
 {
     public interface IWorkspaceController : IComponent
     {

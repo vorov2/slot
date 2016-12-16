@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using CodeBox.Lexing;
-using CodeBox.Affinity;
-using CodeBox.Core.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Lexing;
+using Slot.Editor.Affinity;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Autocomplete
+namespace Slot.Editor.Autocomplete
 {
     public sealed class DocumentCompleteSource : ICompleteSource
     {
@@ -16,12 +16,12 @@ namespace CodeBox.Autocomplete
         private volatile bool busy;
         private DateTime lastUpdate;
         private int lastEdits = -1;
-        private Editor editor;
+        private EditorControl editor;
         private const string SEPS = " \r\n\t`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?";
 
         public void Initialize(IExecutionContext context)
         {
-            this.editor = (Editor)context;
+            this.editor = (EditorControl)context;
         }
 
         public IEnumerable<string> GetItems()
@@ -55,7 +55,7 @@ namespace CodeBox.Autocomplete
             return Enumerable.Empty<string>();
         }
 
-        private void WalkDocument(Editor ctx)
+        private void WalkDocument(EditorControl ctx)
         {
             if (ctx.Buffer.Edits == lastEdits)
                 return;

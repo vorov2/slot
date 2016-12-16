@@ -1,8 +1,8 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.Settings;
-using CodeBox.Core.Themes;
-using CodeBox.Core.ViewModel;
-using CodeBox.Drawing;
+﻿using Slot.Core;
+using Slot.Core.Settings;
+using Slot.Core.Themes;
+using Slot.Core.ViewModel;
+using Slot.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +11,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CodeBox.Main.File
+namespace Slot.Main.File
 {
     public sealed class SwitchBufferControl : Control
     {

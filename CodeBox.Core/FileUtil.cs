@@ -1,10 +1,10 @@
-﻿using CodeBox.Core.Output;
-using CodeBox.Core.ViewModel;
+﻿using Slot.Core.Output;
+using Slot.Core.ViewModel;
 using System;
 using System.IO;
 using System.Text;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public static class FileUtil
     {

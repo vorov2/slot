@@ -1,13 +1,13 @@
-﻿using CodeBox.ComponentModel;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Keyboard;
-using CodeBox.Core.Output;
-using CodeBox.Core.Themes;
-using CodeBox.Core.ViewModel;
-using CodeBox.Main.CommandBar;
-using CodeBox.ObjectModel;
+﻿using Slot.ComponentModel;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.Keyboard;
+using Slot.Core.Output;
+using Slot.Core.Themes;
+using Slot.Core.ViewModel;
+using Slot.Main.CommandBar;
+using Slot.Editor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Test
+namespace Slot.Test
 {
     [Export(typeof(ICommandDispatcher))]
     [ComponentData("app")]
@@ -29,7 +29,7 @@ namespace CodeBox.Test
         [Command]
         public void ToggleCommandBar()
         {
-            var ed = viewManager.GetActiveView() as Editor;
+            var ed = viewManager.GetActiveView() as EditorControl;
 
             if (ed != null)
             {

@@ -1,14 +1,9 @@
-﻿using CodeBox.ComponentModel;
-using CodeBox.ObjectModel;
-using System;
-using System.Collections.Generic;
+﻿using Slot.Editor.ObjectModel;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Core.ComponentModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.clearselections")]

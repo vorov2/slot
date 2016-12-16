@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Flags]
     public enum ActionResults

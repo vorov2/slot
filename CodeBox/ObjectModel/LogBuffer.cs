@@ -1,14 +1,9 @@
-﻿using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Output;
+﻿using Slot.Core.Output;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeBox.ObjectModel
+namespace Slot.Editor.ObjectModel
 {
     public class LogBuffer : DocumentBuffer, ILogComponent
     {

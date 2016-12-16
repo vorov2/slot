@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Drawing;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
-using CodeBox.Core;
-using CodeBox.Core.Themes;
+using Slot.Editor.ObjectModel;
+using Slot.ComponentModel;
+using Slot.Core;
+using Slot.Core.Themes;
 
-namespace CodeBox.Styling
+namespace Slot.Editor.Styling
 {
     public sealed class StyleManager
     {
         private static readonly Identifier defaultStyler = (Identifier)"styler.default";
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        public StyleManager(Editor editor)
+        public StyleManager(EditorControl editor)
         {
             this.editor = editor;
         }

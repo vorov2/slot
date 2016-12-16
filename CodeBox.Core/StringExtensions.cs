@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public static class StringExtensions
     {

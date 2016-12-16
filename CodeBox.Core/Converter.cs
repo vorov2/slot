@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public static class Converter
     {

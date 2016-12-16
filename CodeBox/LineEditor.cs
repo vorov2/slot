@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox
+namespace Slot.Editor
 {
-    public sealed class LineEditor : Editor
+    public sealed class LineEditor : EditorControl
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        public LineEditor(Editor editor) : base(editor.Settings)
+        public LineEditor(EditorControl editor) : base(editor.Settings)
         {
             LimitedMode = true;
             this.editor = editor;

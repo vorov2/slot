@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.ObjectModel
+namespace Slot.Editor.ObjectModel
 {
     public struct Pos : IComparable<Pos>
     {

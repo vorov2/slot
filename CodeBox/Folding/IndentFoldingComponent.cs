@@ -1,11 +1,11 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.Commands;
-using CodeBox.ComponentModel;
-using CodeBox.Core.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Commands;
+using Slot.Core.ComponentModel;
 using System.ComponentModel.Composition;
+using Slot.Editor.ComponentModel;
 
-namespace CodeBox.Folding
+namespace Slot.Editor.Folding
 {
     [Export(typeof(IFoldingComponent))]
     [ComponentData(Name)]
@@ -15,7 +15,7 @@ namespace CodeBox.Folding
 
         public void Fold(IExecutionContext context, Range range)
         {
-            var ctx = (Editor)context;
+            var ctx = (EditorControl)context;
             var prevIndent = 0;
             var li = range.Start.Line;
 

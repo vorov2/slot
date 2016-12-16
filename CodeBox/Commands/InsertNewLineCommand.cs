@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
-using CodeBox.Affinity;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Affinity;
 using System.ComponentModel.Composition;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Core.ComponentModel;
+using Slot.Core;
+using Slot.Editor.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.newline")]

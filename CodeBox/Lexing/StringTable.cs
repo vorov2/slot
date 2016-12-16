@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     public sealed class StringTable
     {

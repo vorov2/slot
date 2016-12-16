@@ -1,10 +1,10 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.ComponentModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.right")]
@@ -12,7 +12,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => MoveRight(View, sel);
 
-        internal static Pos MoveRight(Editor ctx, Selection sel)
+        internal static Pos MoveRight(EditorControl ctx, Selection sel)
         {
             var pos = new Pos(sel.Caret.Line, sel.Caret.Col + 1);
 
@@ -29,7 +29,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        private static Pos InternalMoveRight(Editor ctx, Selection sel, Pos pos)
+        private static Pos InternalMoveRight(EditorControl ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
             var line = doc.Lines[pos.Line];

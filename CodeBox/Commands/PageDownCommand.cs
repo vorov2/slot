@@ -1,11 +1,9 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.Folding;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.pagedown")]
@@ -13,7 +11,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => PageDown(View);
 
-        internal static Pos PageDown(Editor ctx)
+        internal static Pos PageDown(EditorControl ctx)
         {
             var lines = ctx.Buffer.Document.Lines;
             var caret = ctx.Buffer.Selections.Main.Caret;

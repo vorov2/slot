@@ -1,7 +1,7 @@
 ﻿using System;
-using CodeBox.ObjectModel;
+using Slot.Editor.ObjectModel;
 
-namespace CodeBox.Styling
+namespace Slot.Editor.Styling
 {
     public sealed class StyleNeededEventArgs : EventArgs
     {

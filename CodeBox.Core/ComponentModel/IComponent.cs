@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core.ComponentModel
+namespace Slot.Core.ComponentModel
 {
     public interface IComponent
     {

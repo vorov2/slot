@@ -1,6 +1,6 @@
-﻿using CodeBox.Core.ComponentModel;
-using CodeBox.Core.ViewModel;
-using CodeBox.ObjectModel;
+﻿using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -9,8 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Editor;
 
-namespace CodeBox.Test
+namespace Slot
 {
     [Export(typeof(IViewManager))]
     [ComponentData(Name)]
@@ -52,7 +53,7 @@ namespace CodeBox.Test
 
         public void ActivateView(IView view)
         {
-            var editor = view as Editor;
+            var editor = view as EditorControl;
 
             if (editor != null)
             {

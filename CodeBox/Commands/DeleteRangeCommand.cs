@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
+using Slot.Editor.ObjectModel;
+using static Slot.Editor.Commands.ActionResults;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     public class DeleteRangeCommand : EditorCommand
     {
@@ -39,7 +39,7 @@ namespace CodeBox.Commands
             return new DeleteRangeCommand();
         }
 
-        internal static IEnumerable<Character> DeleteRange(Editor ctx, Selection selection)
+        internal static IEnumerable<Character> DeleteRange(EditorControl ctx, Selection selection)
         {
             var doc = ctx.Buffer.Document;
             var sel = selection.Normalize();

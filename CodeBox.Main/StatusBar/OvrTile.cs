@@ -1,12 +1,13 @@
 ﻿using System;
+using Slot.Editor;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public sealed class OvrTile : StatusBarTile
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        public OvrTile(Editor editor) : base(TileAlignment.Right)
+        public OvrTile(EditorControl editor) : base(TileAlignment.Right)
         {
             this.editor = editor;
         }

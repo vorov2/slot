@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
-using CodeBox.Commands;
-using CodeBox.Drawing;
-using CodeBox.Core;
-using CodeBox.Core.Themes;
+using Slot.Drawing;
+using Slot.Core;
+using Slot.Core.Themes;
 
-namespace CodeBox.Margins
+namespace Slot.Editor.Margins
 {
     public class GutterMargin : Margin
     {
-        public GutterMargin(Editor editor) : base(editor)
+        public GutterMargin(EditorControl editor) : base(editor)
         {
 
         }

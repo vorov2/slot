@@ -1,9 +1,8 @@
-﻿using CodeBox.Commands;
-using CodeBox.Core.ComponentModel;
-using CodeBox.ObjectModel;
+﻿using Slot.Core.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System;
 
-namespace CodeBox.ComponentModel
+namespace Slot.Editor.ComponentModel
 {
     public interface IFoldingComponent : IComponent
     {

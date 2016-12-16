@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core.Settings
+namespace Slot.Core.Settings
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class SettingAttribute : Attribute

@@ -1,12 +1,12 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.Affinity;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Affinity;
+using Slot.ComponentModel;
 using System.ComponentModel.Composition;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Core.ComponentModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.selectword")]
@@ -48,7 +48,7 @@ namespace CodeBox.Commands
 
         protected virtual void Select(Range range) => Buffer.Selections.Set(Selection.FromRange(range));
 
-        internal static Range SelectWord(Editor ctx, Pos caret, Strategy strategy = Strategy.None)
+        internal static Range SelectWord(EditorControl ctx, Pos caret, Strategy strategy = Strategy.None)
         {
             var doc = ctx.Buffer.Document;
             var line = doc.Lines[caret.Line];

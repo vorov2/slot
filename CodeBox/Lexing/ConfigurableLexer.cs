@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
+using Slot.ComponentModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core;
-using CodeBox.Core.Themes;
+using Slot.Core.ComponentModel;
+using Slot.Core;
+using Slot.Core.Themes;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     [Export(typeof(IStylerComponent))]
     [ComponentData(Name)]
@@ -25,7 +25,7 @@ namespace CodeBox.Lexing
 
         public void Style(IExecutionContext context, Range range)
         {
-            var ctx = (Editor)context;
+            var ctx = (EditorControl)context;
 
             if (ctx.Buffer.GrammarKey == null)
                 return;
@@ -330,6 +330,6 @@ namespace CodeBox.Lexing
 
         internal StyleManager Styles => Editor.Styles;
 
-        public Editor Editor { get; private set; }
+        public EditorControl Editor { get; private set; }
     }
 }

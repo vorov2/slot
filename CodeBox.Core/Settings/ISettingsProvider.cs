@@ -1,7 +1,7 @@
 ﻿using System;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Core.Settings
+namespace Slot.Core.Settings
 {
     public interface ISettingsProvider : IComponent
     {

@@ -1,18 +1,16 @@
-﻿using CodeBox.Core.ComponentModel;
-using CodeBox.Core.ViewModel;
+﻿using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using CodeBox.ObjectModel;
-using System.Security;
-using CodeBox.Core;
-using CodeBox.Core.Output;
+using Slot.Editor.ObjectModel;
+using Slot.Core;
+using Slot.Core.Output;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     [Export(typeof(IBufferManager))]
     [ComponentData(Name)]

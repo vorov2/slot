@@ -1,13 +1,13 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.Folding;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Folding;
+using Slot.Editor.ComponentModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Settings;
-using CodeBox.Core;
+using Slot.Core.ComponentModel;
+using Slot.Core.Settings;
+using Slot.Core;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.up")]
@@ -15,7 +15,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => MoveUp(View, sel);
 
-        internal static Pos MoveUp(Editor ctx, Selection sel)
+        internal static Pos MoveUp(EditorControl ctx, Selection sel)
         {
             var pos = sel.Caret;
             var lines = ctx.Buffer.Document.Lines;
@@ -28,7 +28,7 @@ namespace CodeBox.Commands
             return pos;
         }
 
-        private static Pos InternalMoveUp(Editor ctx, Selection sel, Pos pos)
+        private static Pos InternalMoveUp(EditorControl ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
 

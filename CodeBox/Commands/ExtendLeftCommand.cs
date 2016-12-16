@@ -1,10 +1,9 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.extendleft")]

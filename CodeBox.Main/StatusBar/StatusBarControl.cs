@@ -1,20 +1,21 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.Settings;
-using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.Margins;
+﻿using Slot.Core;
+using Slot.Core.Settings;
+using Slot.Core.Themes;
+using Slot.Drawing;
+using Slot.Editor.Margins;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
+using Slot.Editor;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public sealed class StatusBarControl : Control
     {
-        public StatusBarControl(Editor editor)
+        public StatusBarControl(EditorControl editor)
         {
             SetStyle(ControlStyles.Selectable, false);
             SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer
@@ -145,7 +146,7 @@ namespace CodeBox.Main.StatusBar
                 tile.PerformClick();
         }
 
-        public Editor Editor { get; }
+        public EditorControl Editor { get; }
 
         public List<StatusBarTile> Tiles { get; } = new List<StatusBarTile>();
     }

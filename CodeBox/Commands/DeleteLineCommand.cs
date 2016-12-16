@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeBox.ObjectModel;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System.ComponentModel.Composition;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Core.ComponentModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.deleteline")]

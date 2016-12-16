@@ -5,7 +5,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 
-namespace CodeBox.Core.ComponentModel
+namespace Slot.Core.ComponentModel
 {
     public sealed class ComponentCatalog<T> where T : IComponent
     {

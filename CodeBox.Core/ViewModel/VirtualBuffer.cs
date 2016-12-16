@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Core.ViewModel
+namespace Slot.Core.ViewModel
 {
     public sealed class VirtualBuffer : IBuffer
     {

@@ -1,7 +1,7 @@
-﻿using CodeBox.ObjectModel;
+﻿using Slot.Editor.ObjectModel;
 using System;
 
-namespace CodeBox.CallTips
+namespace Slot.Editor.CallTips
 {
     public struct CallTip : IEquatable<CallTip>
     {

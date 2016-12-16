@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using CodeBox.Core.Settings;
+using Slot.Core.Settings;
 
-namespace CodeBox.Main
+namespace Slot.Main
 {
     public class EnvironmentSettings : SettingsBag
     {

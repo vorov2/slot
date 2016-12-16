@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
 using System.ComponentModel.Composition;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.Core.ComponentModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.followlink")]

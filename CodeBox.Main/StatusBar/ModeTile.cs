@@ -1,13 +1,14 @@
-﻿using CodeBox.Core;
+﻿using Slot.Core;
+using Slot.Editor;
 
-namespace CodeBox.Main.StatusBar
+namespace Slot.Main.StatusBar
 {
     public sealed class ModeTile : StatusBarTile
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private string lastGrammar;
 
-        public ModeTile(Editor editor) : base(TileAlignment.Right)
+        public ModeTile(EditorControl editor) : base(TileAlignment.Right)
         {
             this.editor = editor;
         }

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Json;
-using CodeBox.Drawing;
-using CodeBox.Core.Themes;
+using Slot.Drawing;
+using Slot.Core.Themes;
 
-namespace CodeBox.Styling
+namespace Slot.Editor.Styling
 {
     using MAP = Dictionary<string, object>;
 

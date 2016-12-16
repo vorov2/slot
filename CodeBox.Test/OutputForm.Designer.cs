@@ -1,4 +1,4 @@
-﻿namespace CodeBox.Test
+﻿namespace Slot
 {
     partial class OutputForm
     {

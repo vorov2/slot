@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Affinity
+namespace Slot.Editor.Affinity
 {
     public sealed class NumberLiteral
     {

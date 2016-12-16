@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace CodeBox.Core.Themes
+namespace Slot.Core.Themes
 {
     public sealed class ThemeInfo
     {

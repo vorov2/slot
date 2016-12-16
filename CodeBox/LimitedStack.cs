@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     internal sealed class LimitedStack<T> : IEnumerable<T>
     {

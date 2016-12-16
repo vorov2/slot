@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace CodeBox.Core.ViewModel
+namespace Slot.Core.ViewModel
 {
     public interface IMaterialBuffer : IBuffer
     {

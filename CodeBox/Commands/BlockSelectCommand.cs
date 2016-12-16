@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using CodeBox.ObjectModel;
-using static CodeBox.Commands.ActionResults;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
+using static Slot.Editor.Commands.ActionResults;
+using Slot.ComponentModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.selectblock")]

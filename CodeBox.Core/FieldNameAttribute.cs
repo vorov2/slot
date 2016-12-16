@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public sealed class FieldNameAttribute : Attribute

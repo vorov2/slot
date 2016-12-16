@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace CodeBox.Core.Keyboard
+namespace Slot.Core.Keyboard
 {
     using CommandModel;
     using MAP = Dictionary<KeyInput, Identifier>;

@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public sealed class EditorInfo
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        internal EditorInfo(Editor editor)
+        internal EditorInfo(EditorControl editor)
         {
             this.editor = editor;
         }

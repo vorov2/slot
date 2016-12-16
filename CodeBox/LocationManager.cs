@@ -1,17 +1,17 @@
-﻿using CodeBox.Folding;
-using CodeBox.Margins;
-using CodeBox.ObjectModel;
+﻿using Slot.Editor.Folding;
+using Slot.Editor.Margins;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CodeBox
+namespace Slot.Editor
 {
     public sealed class LocationManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
 
-        internal LocationManager(Editor editor)
+        internal LocationManager(EditorControl editor)
         {
             this.editor = editor;
         }

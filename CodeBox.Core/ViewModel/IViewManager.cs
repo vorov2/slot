@@ -1,8 +1,8 @@
-﻿using CodeBox.Core.ComponentModel;
+﻿using Slot.Core.ComponentModel;
 using System;
 using System.Collections.Generic;
 
-namespace CodeBox.Core.ViewModel
+namespace Slot.Core.ViewModel
 {
     public interface IViewManager : IComponent
     {

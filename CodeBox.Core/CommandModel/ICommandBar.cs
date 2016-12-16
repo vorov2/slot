@@ -1,8 +1,8 @@
 ﻿using System;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.ViewModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
-namespace CodeBox.Core.CommandModel
+namespace Slot.Core.CommandModel
 {
     public interface ICommandBar : IComponent
     {

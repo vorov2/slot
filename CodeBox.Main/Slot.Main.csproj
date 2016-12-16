@@ -7,8 +7,8 @@
     <ProjectGuid>{706A55BB-8814-48F3-A188-A9AB9F55B1D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeBox.Main</RootNamespace>
-    <AssemblyName>CodeBox.Main</AssemblyName>
+    <RootNamespace>Slot.Main</RootNamespace>
+    <AssemblyName>Slot.Main</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -84,17 +84,17 @@
     <Compile Include="EnvironmentCommandDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeBox.Core\CodeBox.Core.csproj">
+    <ProjectReference Include="..\CodeBox.Core\Slot.Core.csproj">
       <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
-      <Name>CodeBox.Core</Name>
+      <Name>Slot.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeBox.Drawing\CodeBox.Drawing.csproj">
+    <ProjectReference Include="..\CodeBox.Drawing\Slot.Drawing.csproj">
       <Project>{865baf51-1c60-4879-b979-8f7ee3320500}</Project>
-      <Name>CodeBox.Drawing</Name>
+      <Name>Slot.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeBox\CodeBox.csproj">
+    <ProjectReference Include="..\CodeBox\Slot.Editor.csproj">
       <Project>{a12ac5fd-fddb-4253-ac43-92f305ac9d56}</Project>
-      <Name>CodeBox</Name>
+      <Name>Slot.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

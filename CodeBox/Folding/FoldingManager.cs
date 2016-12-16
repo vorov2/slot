@@ -1,21 +1,17 @@
-﻿using CodeBox.ComponentModel;
-using CodeBox.Core;
-using CodeBox.Core.ComponentModel;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
+﻿using Slot.Core;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Threading.Tasks;
+using Slot.Editor.ComponentModel;
 
-namespace CodeBox.Folding
+namespace Slot.Editor.Folding
 {
     public sealed class FoldingManager
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private volatile bool busy;
 
-        internal FoldingManager(Editor editor)
+        internal FoldingManager(EditorControl editor)
         {
             this.editor = editor;
         }

@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
-using CodeBox.Drawing;
+using Slot.Drawing;
 using System.Windows.Forms;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Commands;
-using CodeBox.Core.Themes;
+using Slot.Core.Themes;
 
-namespace CodeBox.Margins
+namespace Slot.Editor.Margins
 {
     public sealed class TopMargin : Margin
     {
-        public TopMargin(Editor editor) : base(editor)
+        public TopMargin(EditorControl editor) : base(editor)
         {
 
         }

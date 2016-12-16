@@ -3,9 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     [Export(typeof(IGrammarComponent))]
     [ComponentData(Name)]

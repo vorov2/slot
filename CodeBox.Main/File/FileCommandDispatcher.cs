@@ -1,9 +1,9 @@
-﻿using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Output;
-using CodeBox.Core.ViewModel;
-using CodeBox.Core.Workspaces;
+﻿using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.Output;
+using Slot.Core.ViewModel;
+using Slot.Core.Workspaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CodeBox.Main.File
+namespace Slot.Main.File
 {
     [Export(typeof(ICommandDispatcher))]
     [ComponentData(Name)]

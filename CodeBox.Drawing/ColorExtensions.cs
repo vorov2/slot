@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CodeBox.Drawing
+namespace Slot.Drawing
 {
     public static class ColorExtensions
     {

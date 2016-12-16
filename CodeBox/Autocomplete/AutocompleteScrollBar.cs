@@ -1,25 +1,19 @@
-﻿using CodeBox.Autocomplete;
-using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.Styling;
+﻿using Slot.Core.Themes;
+using Slot.Drawing;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeBox.Autocomplete
+namespace Slot.Editor.Autocomplete
 {
     public sealed class AutocompleteScrollBar
     {
-        private readonly Editor editor;
+        private readonly EditorControl editor;
         private readonly AutocompleteWindow window;
         private int lastCaretPos;
         private int lastCaretSize;
         private int diff;
 
-        public AutocompleteScrollBar(Editor editor, AutocompleteWindow window)
+        public AutocompleteScrollBar(EditorControl editor, AutocompleteWindow window)
         {
             this.editor = editor;
             this.window = window;

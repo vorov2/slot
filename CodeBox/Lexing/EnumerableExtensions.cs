@@ -1,11 +1,11 @@
-﻿using CodeBox.ObjectModel;
+﻿using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeBox.Lexing
+namespace Slot.Editor.Lexing
 {
     public static class EnumerableExtensions
     {

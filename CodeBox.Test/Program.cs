@@ -1,15 +1,15 @@
-﻿using CodeBox.ComponentModel;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.Keyboard;
-using CodeBox.Core.Output;
-using CodeBox.Core.Settings;
-using CodeBox.Core.Themes;
-using CodeBox.Core.ViewModel;
-using CodeBox.Core.Workspaces;
-using CodeBox.Lexing;
-using CodeBox.ObjectModel;
+﻿using Slot.ComponentModel;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.Keyboard;
+using Slot.Core.Output;
+using Slot.Core.Settings;
+using Slot.Core.Themes;
+using Slot.Core.ViewModel;
+using Slot.Core.Workspaces;
+using Slot.Editor.Lexing;
+using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,8 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Editor.ComponentModel;
 
-namespace CodeBox.Test
+namespace Slot
 {
     static class Program
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace CodeBox.Core
+namespace Slot.Core
 {
     public static class Enums
     {

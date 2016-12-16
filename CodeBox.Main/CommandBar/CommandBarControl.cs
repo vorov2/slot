@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using CodeBox.ObjectModel;
-using CodeBox.Styling;
-using CodeBox.Drawing;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Styling;
+using Slot.Drawing;
 using System.Windows.Forms;
-using CodeBox.Autocomplete;
-using CodeBox.Core;
-using CodeBox.Core.CommandModel;
-using CodeBox.Core.Keyboard;
-using CodeBox.Core.Themes;
-using CodeBox.Core.Settings;
+using Slot.Editor.Autocomplete;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.Keyboard;
+using Slot.Core.Themes;
+using Slot.Core.Settings;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
 using System.IO;
-using CodeBox.Core.ViewModel;
+using Slot.Core.ViewModel;
+using Slot.Editor;
 
-namespace CodeBox.Main.CommandBar
+namespace Slot.Main.CommandBar
 {
     public class CommandBarControl : Control
     {
-        private Editor editor;
-        private Editor commandEditor;
+        private EditorControl editor;
+        private EditorControl commandEditor;
         private AutocompleteWindow window;
 
-        public CommandBarControl(Editor editor)
+        public CommandBarControl(EditorControl editor)
         {
             this.editor = editor;
             SetStyle(ControlStyles.Selectable, false);
@@ -98,7 +99,7 @@ namespace CodeBox.Main.CommandBar
             base.OnMouseDown(e);
         }
 
-        private Editor GetEditor()
+        private EditorControl GetEditor()
         {
             if (commandEditor == null)
             {

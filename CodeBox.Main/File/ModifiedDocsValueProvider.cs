@@ -1,12 +1,12 @@
-﻿using CodeBox.Core.CommandModel;
-using CodeBox.Core.ComponentModel;
-using CodeBox.Core.ViewModel;
+﻿using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 
-namespace CodeBox.Main.File
+namespace Slot.Main.File
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.modifieddocs")]

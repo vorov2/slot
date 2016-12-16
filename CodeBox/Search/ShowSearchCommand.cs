@@ -1,14 +1,14 @@
-﻿using CodeBox.Commands;
+﻿using Slot.Editor.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBox.ObjectModel;
-using CodeBox.Core.ComponentModel;
+using Slot.Editor.ObjectModel;
+using Slot.Core.ComponentModel;
 using System.ComponentModel.Composition;
 
-namespace CodeBox.Search
+namespace Slot.Editor.Search
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.showsearch")]

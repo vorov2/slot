@@ -1,17 +1,13 @@
-﻿using CodeBox.Affinity;
-using CodeBox.ComponentModel;
-using CodeBox.Core.Themes;
-using CodeBox.Drawing;
-using CodeBox.Folding;
-using CodeBox.Styling;
+﻿using Slot.Editor.Affinity;
+using Slot.Core.Themes;
+using Slot.Editor.Folding;
+using Slot.Editor.Styling;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Slot.Editor.Drawing;
 
-namespace CodeBox.ObjectModel
+namespace Slot.Editor.ObjectModel
 {
     public sealed class Line : IEnumerable<Character>
     {

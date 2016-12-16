@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Drawing;
-using CodeBox.Core.Themes;
-using CodeBox.ObjectModel;
+using Slot.Core.Themes;
+using Slot.Drawing;
+using Slot.Editor.ObjectModel;
 
-namespace CodeBox.Drawing
+namespace Slot.Editor.Drawing
 {
     internal static class StyleRenderer
     {

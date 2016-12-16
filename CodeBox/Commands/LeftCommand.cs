@@ -1,11 +1,9 @@
 ﻿using System;
-using CodeBox.ObjectModel;
-using CodeBox.Folding;
-using CodeBox.ComponentModel;
+using Slot.Editor.ObjectModel;
 using System.ComponentModel.Composition;
-using CodeBox.Core.ComponentModel;
+using Slot.Core.ComponentModel;
 
-namespace CodeBox.Commands
+namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
     [ComponentData("editor.left")]
@@ -13,7 +11,7 @@ namespace CodeBox.Commands
     {
         protected override Pos GetPosition(Selection sel) => MoveLeft(View, sel);
 
-        internal static Pos MoveLeft(Editor ctx, Selection sel)
+        internal static Pos MoveLeft(EditorControl ctx, Selection sel)
         {
             var pos = new Pos(sel.Caret.Line, sel.Caret.Col - 1);
 
