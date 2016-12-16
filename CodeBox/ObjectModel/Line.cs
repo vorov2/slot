@@ -36,7 +36,7 @@ namespace CodeBox.ObjectModel
             switch (char.GetUnicodeCategory(c))
             {
                 case System.Globalization.UnicodeCategory.OtherLetter:
-                case System.Globalization.UnicodeCategory.OtherPunctuation:
+                //case System.Globalization.UnicodeCategory.OtherPunctuation:
                 case System.Globalization.UnicodeCategory.OtherNumber:
                 case System.Globalization.UnicodeCategory.OtherNotAssigned:
                 case System.Globalization.UnicodeCategory.OtherSymbol:
