@@ -84,15 +84,15 @@
     <Compile Include="EnvironmentCommandDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeBox.Core\Slot.Core.csproj">
+    <ProjectReference Include="..\Slot.Core\Slot.Core.csproj">
       <Project>{775ebb61-7c2a-407e-b8a5-7c8bac575538}</Project>
       <Name>Slot.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeBox.Drawing\Slot.Drawing.csproj">
+    <ProjectReference Include="..\Slot.Drawing\Slot.Drawing.csproj">
       <Project>{865baf51-1c60-4879-b979-8f7ee3320500}</Project>
       <Name>Slot.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeBox\Slot.Editor.csproj">
+    <ProjectReference Include="..\Slot.Editor\Slot.Editor.csproj">
       <Project>{a12ac5fd-fddb-4253-ac43-92f305ac9d56}</Project>
       <Name>Slot.Editor</Name>
     </ProjectReference>

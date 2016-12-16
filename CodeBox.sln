@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Editor", "CodeBox\Slot.Editor.csproj", "{A12AC5FD-FDDB-4253-AC43-92F305AC9D56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Editor", "Slot.Editor\Slot.Editor.csproj", "{A12AC5FD-FDDB-4253-AC43-92F305AC9D56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot", "Slot\Slot.csproj", "{3A814CEE-1A58-46D0-97E7-DCD93A86F726}"
 EndProject
@@ -11,15 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{DBF27ABF-8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json", "Util\Json\Json.csproj", "{2C727444-C7DD-4DB3-8546-964F4B354242}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Core", "CodeBox.Core\Slot.Core.csproj", "{775EBB61-7C2A-407E-B8A5-7C8BAC575538}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Core", "Slot.Core\Slot.Core.csproj", "{775EBB61-7C2A-407E-B8A5-7C8BAC575538}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringMacro", "Util\StringMacro\StringMacro.csproj", "{B807ABF9-7E51-4508-8E5E-5679429A1A2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Main", "CodeBox.Main\Slot.Main.csproj", "{706A55BB-8814-48F3-A188-A9AB9F55B1D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Main", "Slot.Main\Slot.Main.csproj", "{706A55BB-8814-48F3-A188-A9AB9F55B1D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskEngine", "Util\TaskEngine\TaskEngine.csproj", "{7362AF58-9084-455A-97EC-EB0F5D85599F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Drawing", "CodeBox.Drawing\Slot.Drawing.csproj", "{865BAF51-1C60-4879-B979-8F7EE3320500}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slot.Drawing", "Slot.Drawing\Slot.Drawing.csproj", "{865BAF51-1C60-4879-B979-8F7EE3320500}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
