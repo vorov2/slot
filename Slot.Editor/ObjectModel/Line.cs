@@ -223,7 +223,7 @@ namespace Slot.Editor.ObjectModel
             for (var i = 0; i < max; i++)
             {
                 var c = chars[i];
-                tetra += c.Char == '\t' ? GetIndentationSize(tetra, tabSize) : 1;
+                tetra += c.Char == '\t' ? GetIndentationSize(tetra, tabSize) : GetCharWidth(c.Char);
             }
 
             return tetra;
@@ -307,7 +307,7 @@ namespace Slot.Editor.ObjectModel
             {
                 var cut = GetCut(i);
 
-                if (col <= cut)
+                if (col < cut)
                     return i;
             }
 
@@ -333,7 +333,7 @@ namespace Slot.Editor.ObjectModel
                 if (chars[i].Char == '\t')
                     c += GetIndentationSize(c, tabSize);
                 else
-                    c++;
+                    c += GetCharWidth(chars[i].Char);
 
             return tetraCount = c;
         }
@@ -348,7 +348,7 @@ namespace Slot.Editor.ObjectModel
             for (var i = 0; i < chars.Count; i++)
             {
                 var c = chars[i].Char;
-                oldtetra += c == '\t' ? GetIndentationSize(oldtetra, tabSize) : 1;
+                oldtetra += c == '\t' ? GetIndentationSize(oldtetra, tabSize) : GetCharWidth(c);
 
                 if (oldtetra >= tetra)
                     return i+1;

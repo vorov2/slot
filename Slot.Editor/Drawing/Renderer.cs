@@ -17,12 +17,6 @@ namespace Slot.Editor.Drawing
     internal sealed class Renderer
     {
         private readonly EditorControl editor;
-        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic)
-        {
-            LineAlignment = StringAlignment.Center,
-            Alignment = StringAlignment.Center,
-            Trimming = StringTrimming.None
-        };
 
         public Renderer(EditorControl editor)
         {

@@ -47,7 +47,7 @@
     {
         "key": "margin.commands",
         "color": "black",
-        "backColor": "#D8D8D8",
+        "backColor": "#DCE7F5",//"#D8D8D8",
         "bold": true
     },
     {
