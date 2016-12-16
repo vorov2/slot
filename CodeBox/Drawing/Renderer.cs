@@ -155,12 +155,13 @@ namespace CodeBox.Drawing
                     for (var i = oldcut; i < cut; i++)
                     {
                         var c = line.CharAt(i);
-                        var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : 1;
+                        var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : Line.GetCharWidth(c);
+
                         tet += ct;
                         var xw = ct * editor.Info.CharWidth;
                         var visible = x + editor.Scroll.ScrollPosition.X >= lmarg && x + editor.Scroll.ScrollPosition.X + xw <= cwidth;
                         var guide = false;
-
+                        
                         if (visible)
                         {
                             var style = Style.Empty;
