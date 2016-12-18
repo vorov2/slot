@@ -318,7 +318,7 @@ namespace Slot.Editor.ObjectModel
 
         internal int GetStripeCol(int col, int stripe)
         {
-            var start = stripe > 0 ? GetCut(stripe - 1) + 1 : 0;
+            var start = stripe > 0 ? GetCut(stripe - 1) : 0;
             return col - start;
         }
 

@@ -87,6 +87,7 @@ namespace Slot.Editor
                     editor.Buffer.AddCommand(cmd);
                     editor.FirstEditLine = fel;
                     editor.LastEditLine = lel;
+                    lastSel.SetToRestore(0);
 
                     if (exp.Has(AtomicChange))
                         cmd.GroupUndo = true;
@@ -115,6 +116,7 @@ namespace Slot.Editor
                             editor.FirstEditLine = fel;
                         if (lel > editor.LastEditLine)
                             editor.LastEditLine = lel;
+                        sel.SetToRestore(0);
                     }
 
                     if (e.Has(RestoreCaret))

@@ -27,8 +27,6 @@ namespace Slot.Editor.ObjectModel
 
         internal void Clear() => Clear(End);
 
-        internal void SetToRestore() => SetToRestore(Caret.Col);
-
         internal void SetToRestore(int pos) => RestoreCaretCol = pos;
 
         internal void Clear(Pos pos)

@@ -16,7 +16,7 @@ namespace Slot.Core.Workspaces
     public sealed class WorkspaceController : IWorkspaceController
     {
         public const string Name = "workspaces.default";
-        private const string FOLDER = ".codebox";
+        private const string FOLDER = ".slot";
 
         [Import]
         private IViewManager viewManager = null;

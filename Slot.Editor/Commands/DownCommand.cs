@@ -29,6 +29,9 @@ namespace Slot.Editor.Commands
         {
             var doc = ctx.Buffer.Document;
 
+            if (sel.RestoreCaretCol == 0 && pos.Col != 0)
+                sel.SetToRestore(doc.Lines[pos.Line].GetStripeCol(pos.Col));
+
             if (ctx.WordWrap)
             {
                 var ln = doc.Lines[pos.Line];

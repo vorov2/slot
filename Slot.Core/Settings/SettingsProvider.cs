@@ -63,7 +63,7 @@ namespace Slot.Core.Settings
                 case SettingsScope.Workspace:
                     var dir = App.Catalog<IViewManager>().Default()?.GetActiveView()?.Workspace;
                     if (dir != null)
-                        workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".codebox", FILE));
+                        workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".slot", FILE));
                     break;
             }
 
@@ -82,7 +82,7 @@ namespace Slot.Core.Settings
             var dir = viewManager.GetActiveView()?.Workspace;
 
             if (dir != null)
-                workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".codebox", FILE));
+                workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".slot", FILE));
         }
 
         private MAP ReadFile(string fileName)
