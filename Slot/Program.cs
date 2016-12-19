@@ -19,12 +19,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Editor.ComponentModel;
+using System.Runtime.Remoting.Channels.Ipc;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting;
+using System.Security.Permissions;
 
 namespace Slot
 {
     static class Program
     {
-        private static Process applicationProcess;
+        private static ApplicationServer slotServer;
 
         /// <summary>
         /// The main entry point for the application.
@@ -32,22 +36,16 @@ namespace Slot
         [STAThread]
         static void Main(string[] args)
         {
-            //applicationProcess = Process.GetCurrentProcess();
-            //var p = ProcessController.FindProcess();
+            slotServer = new ApplicationServer();
+            var instance = slotServer.ConnectServer();
 
-            //if (p != null)
-            //{
-            //    p.StandardInput.WriteLine($"Hello from {applicationProcess.Id}");
-                
-            //    return;
-            //}
+            if (instance != null)
+            {
+                instance.OpenView(args != null && args.Length > 0 ? args[0].Trim('"') : null);
+                return;
+            }
 
-            applicationProcess.StartInfo.RedirectStandardInput = true;
-            applicationProcess.StartInfo.RedirectStandardOutput = true;
-            applicationProcess.EnableRaisingEvents = true;
-            applicationProcess.Refresh();
-            applicationProcess.OutputDataReceived += ApplicationProcess_OutputDataReceived;
-
+            slotServer.StartServer();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -76,45 +74,112 @@ namespace Slot
 
             //SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
             KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
-            
+
             var theme = App.Catalog<IThemeComponent>().Default();
             theme.ChangeTheme((Identifier)"dark");
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
             var cmd = (Identifier)"file.openFile";
             App.Ext.Run(ed, cmd, fl);
+
+            Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();
         }
-
-        private static void ApplicationProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            MessageBox.Show(e.Data);
-        }
-
         private static string LocalFile(string fileName)
         {
             return Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, fileName);
         }
     }
 
-    public static class ProcessController
+    [Serializable]
+    public sealed class ApplicationServer : MarshalByRefObject
     {
-        public static void OpenView(string fileName = null)
-        {
-            var view = App.Catalog<IViewManager>().Default().CreateView();
-            var buf = App.Catalog<IBufferManager>().Default();
-            FileInfo fi;
+        private const string SERVER = "Slot.ApplicationServer";
+        private const string INSTANCE = "Slot";
+        private const string LOCK = "Slot-19645371-4E1B-4517-9CC9-1D5F5AA618B7";
+        private IpcChannel serverChannel;
+        private FileStream fileStream;
 
-            if (fileName != null && FileUtil.TryGetInfo(fileName, out fi))
-                view.AttachBuffer(buf.CreateBuffer(fi, Encoding.UTF8));
-            else
-                view.AttachBuffer(buf.CreateBuffer());
+        private string FileName => Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.LocalApplicationData), LOCK);
+
+        public void OpenView(string fileName = null)
+        {
+            Application.OpenForms[0].Invoke((MethodInvoker)(() =>
+            {
+                var view = App.Catalog<IViewManager>().Default().CreateView();
+                var buf = App.Catalog<IBufferManager>().Default();
+                FileInfo fi;
+
+                if (fileName != null && FileUtil.TryGetInfo(fileName, out fi))
+                    view.AttachBuffer(buf.CreateBuffer(fi, Encoding.UTF8));
+                else
+                    view.AttachBuffer(buf.CreateBuffer());
+
+                App.Catalog<IViewManager>().Default().ActivateView(view);
+            }));
         }
 
-        public static Process FindProcess()
+        public void StopServer()
         {
-            var cur = Process.GetCurrentProcess();
-            return Process.GetProcessesByName("Slot"/*cur.ProcessName*/).FirstOrDefault(p => p.Id != cur.Id);
+            fileStream.Unlock(0, fileStream.Length);
+            fileStream.Dispose();
+            ChannelServices.UnregisterChannel(serverChannel);
+            Process.GetCurrentProcess().Kill();
         }
+
+        public void StartServer()
+        {
+            fileStream = ObtainLock();
+            fileStream.Lock(0, fileStream.Length);
+            serverChannel = new IpcChannel(SERVER);
+            ChannelServices.RegisterChannel(serverChannel, false);
+            RemotingConfiguration.RegisterWellKnownServiceType(
+                typeof(ApplicationServer), INSTANCE,
+                WellKnownObjectMode.Singleton);
+        }
+
+        private FileStream ObtainLock()
+        {
+            try
+            {
+                return File.Open(FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch //TODO
+            {
+                return null;
+            }
+        }
+
+        public ApplicationServer ConnectServer()
+        {
+            var fs = ObtainLock();
+
+            if (fs != null)
+            {
+                fs.Close();
+                return null;
+            }
+
+            try
+            {
+                var obj = Activator.GetObject(typeof(ApplicationServer),
+                    $"ipc://{SERVER}/{INSTANCE}") as ApplicationServer;
+
+                var _ = obj.Ping(); //TODO: ugly
+                return obj;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public Guid Ping()
+        {
+            return Id;
+        }
+
+        public Guid Id { get; } = Guid.NewGuid();
     }
 }
