@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using Slot.Core.ViewModel;
 
 namespace Slot.Core.CommandModel
 {
@@ -16,6 +17,9 @@ namespace Slot.Core.CommandModel
         private readonly Dictionary<Identifier, CommandMetadata> commands = new Dictionary<Identifier, CommandMetadata>();
         private readonly Dictionary<string, CommandMetadata> commandsAlias = new Dictionary<string, CommandMetadata>();
         private volatile bool loaded;
+
+        [Import]
+        private IViewManager viewManager = null;
 
         [Import("directory.commands")]
         private string commandsPath = null;
@@ -59,7 +63,11 @@ namespace Slot.Core.CommandModel
         public IEnumerable<CommandMetadata> EnumerateCommands()
         {
             EnsureLoaded();
-            return commands.Select(p => p.Value);
+            var mode = viewManager.GetActiveView()?.Mode;
+            return commands
+                .Where(p => p.Value.Mode == null
+                    || string.Equals(p.Value.Mode, mode, StringComparison.OrdinalIgnoreCase))
+                .Select(p => p.Value);
         }
         
         public CommandMetadata GetCommandByAlias(string alias)

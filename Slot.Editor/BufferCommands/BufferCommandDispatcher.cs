@@ -19,9 +19,6 @@ namespace Slot.Editor.BufferCommands
     {
         public const string Name = "buffer";
 
-        [Import]
-        private IViewManager viewManager = null;
-
         [Command]
         public void SetBufferEol(Eol eol)
         {
@@ -55,7 +52,7 @@ namespace Slot.Editor.BufferCommands
 
         private DocumentBuffer GetBuffer()
         {
-            var view = viewManager.GetActiveView();
+            var view = ViewManager.GetActiveView();
             return view?.Buffer as DocumentBuffer;
         }
     }

@@ -23,13 +23,10 @@ namespace Slot.Test
     [ComponentData("app")]
     public sealed class EnvironmentCommandDispatcher : CommandDispatcher
     {
-        [Import]
-        private IViewManager viewManager = null;
-
         [Command]
         public void ToggleCommandBar()
         {
-            var ed = viewManager.GetActiveView() as EditorControl;
+            var ed = ViewManager.GetActiveView() as EditorControl;
 
             if (ed != null)
             {
@@ -54,7 +51,7 @@ namespace Slot.Test
                 return;
             }
 
-            App.Ext.Run(viewManager.GetActiveView(), cmd.Key);
+            App.Ext.Run(ViewManager.GetActiveView(), cmd.Key);
         }
 
         [Command]
@@ -68,7 +65,7 @@ namespace Slot.Test
         public void ChangeMode(string mode)
         {
             if (mode != null && App.Ext.Grammars().GetGrammar(mode) != null)
-                viewManager.GetActiveView().Mode = mode;
+                ViewManager.GetActiveView().Mode = mode;
             else
                 App.Ext.Log($"Unknown mode: {mode}.", EntryType.Error);
         }

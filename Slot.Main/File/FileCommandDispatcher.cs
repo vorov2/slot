@@ -23,38 +23,35 @@ namespace Slot.Main.File
         private SwitchBufferControl switchBufferControl;
 
         [Import]
-        private IViewManager viewManager = null;
-
-        [Import]
         private IBufferManager bufferManager = null;
 
         [Command]
         public void NewWindow()
         {
-            var act = viewManager.GetActiveView();
-            var view = viewManager.CreateView();
+            var act = ViewManager.GetActiveView();
+            var view = ViewManager.CreateView();
             view.AttachBuffer(act.Buffer);
         }
 
         [Command]
         public void SwitchWindow(string viewName)
         {
-            var view = viewManager.EnumerateViews()
+            var view = ViewManager.EnumerateViews()
                  .FirstOrDefault(v => v.Buffer.File.Name.Contains(viewName));
-            viewManager.ActivateView(view);
+            ViewManager.ActivateView(view);
         }
 
         [Command]
         public void CloseWindow()
         {
-            var view = viewManager.GetActiveView();
+            var view = ViewManager.GetActiveView();
             view.Close();
         }
 
         [Command]
         public void ToggleWindowTopmost()
         {
-            var view = viewManager.GetActiveView();
+            var view = ViewManager.GetActiveView();
             var frm = ((Control)view).FindForm();
             frm.TopMost = !frm.TopMost;
         }
@@ -69,7 +66,7 @@ namespace Slot.Main.File
             if (buffers.Count < 2)
                 return;
 
-            var cur = viewManager.GetActiveView()?.Buffer;
+            var cur = ViewManager.GetActiveView()?.Buffer;
             var idx = cur != null ? buffers.IndexOf(cur) : 0;
 
             if (switchBufferControl == null)
@@ -79,11 +76,11 @@ namespace Slot.Main.File
                 {
                     switchBufferControl.FindForm().Controls.Remove(switchBufferControl);
                     var newBuf = switchBufferControl.Buffers[switchBufferControl.SelectedIndex];
-                    var view = viewManager.EnumerateViews()
+                    var view = ViewManager.EnumerateViews()
                         .FirstOrDefault(v => v.Buffer == newBuf);
 
                     if (view != null)
-                        viewManager.ActivateView(view);
+                        ViewManager.ActivateView(view);
                     else
                         OpenBuffer(newBuf);
                 };
@@ -121,7 +118,7 @@ namespace Slot.Main.File
         [Command]
         public void ReopenFile(Encoding enc)
         {
-            var buffer = viewManager.GetActiveView()?.Buffer as IMaterialBuffer;
+            var buffer = ViewManager.GetActiveView()?.Buffer as IMaterialBuffer;
 
             if (buffer != null)
             {
@@ -163,7 +160,7 @@ namespace Slot.Main.File
         [Command]
         public void RevertFile()
         {
-            var buf = viewManager.GetActiveView()?.Buffer;
+            var buf = ViewManager.GetActiveView()?.Buffer;
 
             if (buf != null && buf.File.Exists)
             {
@@ -250,7 +247,7 @@ namespace Slot.Main.File
 
         private IMaterialBuffer GetActiveBuffer()
         {
-            var view = viewManager.GetActiveView();
+            var view = ViewManager.GetActiveView();
             var buffer = view.Buffer as IMaterialBuffer;
 
             if (buffer == null)
@@ -281,7 +278,7 @@ namespace Slot.Main.File
                 if (buf.File.Directory != null)
                     OpenFolder(buf.File.Directory);
 
-                var view = viewManager.GetActiveView();
+                var view = ViewManager.GetActiveView();
                 view.AttachBuffer(buf);
             }
         }

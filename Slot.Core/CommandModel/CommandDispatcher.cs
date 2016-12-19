@@ -1,21 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Reflection;
+using Slot.Core.Output;
 using Slot.Core.ViewModel;
 
 namespace Slot.Core.CommandModel
 {
     public abstract class CommandDispatcher : ICommandDispatcher
     {
+        [Import]
+        protected IViewManager ViewManager = null;
+
+        [Import]
+        protected ICommandProvider CommandProvider = null;
+
         private Dictionary<string, MethodInfo> commands;
 
-        public bool Execute(IView ctx, Identifier commandKey, params object[] args)
+        public bool Execute(IView ctx, Identifier commandKey, params object[] args) 
         {
             ResolveCommands();
             MethodInfo cmd;
 
             if (!commands.TryGetValue(commandKey.Name, out cmd))
                 return false;
+
+            var meta = CommandProvider.GetCommandByKey(commandKey);
+            var mode = ViewManager.GetActiveView()?.Mode;
+
+            if (meta.Mode != null && !meta.Mode.Equals(mode, StringComparison.OrdinalIgnoreCase))
+            {
+                App.Ext.Log($"Unable to execute command '{commandKey}' in mode '{mode}'.", EntryType.Error);
+                return false;
+            }
 
             try
             {
@@ -39,7 +56,7 @@ namespace Slot.Core.CommandModel
 
                         if (!Converter.Convert(cval, pars[i].ParameterType, out fval) && cval != null)
                         {
-                            //log
+                            App.Ext.Log($"Invalid type of an argument '{pars[i].Name}' of command '{commandKey}'.", EntryType.Error);
                             return false;
                         }
 

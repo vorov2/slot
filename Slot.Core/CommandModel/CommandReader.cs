@@ -37,7 +37,7 @@ namespace Slot.Core.CommandModel
             var met = new CommandMetadata
             {
                 Key = (Identifier)dict.String("key"),
-                Mode = (Identifier)dict.String("mode"),
+                Mode = dict.String("mode"),
                 Alias = dict.String("alias"),
                 Title = dict.String("title"),
                 Shortcut = dict.String("shortcut")

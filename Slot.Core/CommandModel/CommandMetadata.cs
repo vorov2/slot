@@ -12,7 +12,7 @@ namespace Slot.Core.CommandModel
     {
         public Identifier Key { get; internal set; }
 
-        public Identifier Mode { get; internal set; }
+        public string Mode { get; internal set; }
 
         public string Shortcut { get; internal set; }
 
