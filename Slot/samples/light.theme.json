@@ -47,7 +47,7 @@
     {
         "key": "margin.commands",
         "color": "black",
-        "backColor": "#DCE7F5",//"#D8D8D8",
+        "backColor": "#DCE7F5", //"#D8D8D8",
         "bold": true
     },
     {
@@ -154,6 +154,14 @@
     {
         "key": "error",
         "color": "#FF0000"
+    },
+    {
+        "key": "warning",
+        "color": "#F4443F"
+    },
+    {
+        "key": "information",
+        "color": "#007ACC"
     },
     {
         "key": "preprocessor",
