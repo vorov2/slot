@@ -1,0 +1,29 @@
+---
+---
+
+@import "";
+
+body {
+  background-color: #1E1E1E !important;
+  color: #DCDCDC;
+}
+
+.page-header {
+  padding: 0px !important;
+  background-color: #2D2D30 !important;
+  border-bottom: solid 0.2em #141414 !important;
+}
+
+.main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
+  color: #569cd6 !important;
+}
+
+.site-footer {
+  display: none;
+}
+
+.project-name {
+  font-size: 4rem !important;
+  color: #44c7ae !important;
+  font-weight: normal !important;
+}
