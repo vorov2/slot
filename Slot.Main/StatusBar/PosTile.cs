@@ -25,7 +25,7 @@ namespace Slot.Main.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.Run(editor, Cmd.GotoLine);
+            App.Ext.Run(editor, Editor.Cmd.GotoLine);
             base.PerformClick();
         }
     }

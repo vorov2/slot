@@ -38,6 +38,14 @@ namespace Slot.Main.CommandBar
             }
         }
 
+        public void ToggleMessage()
+        {
+            var cm = GetCommandBarControl();
+
+            if (cm != null)
+                cm.ToggleTip();
+        }
+
         public void Hide(IView view)
         {
             var cm = GetCommandBarControl();

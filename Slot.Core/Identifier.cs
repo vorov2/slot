@@ -16,7 +16,7 @@ namespace Slot.Core
             if (ident == null)
                 throw new ArgumentNullException(nameof(ident));
 
-            hash = ident.GetHashCode();
+            hash = ident.ToUpper().GetHashCode();
             ParseIdent(ident);
         }
 

@@ -63,7 +63,7 @@ namespace Slot
             theme.ChangeTheme((Identifier)"dark");
 
             var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
-            var cmd = (Identifier)"file.openfile";
+            var cmd = (Identifier)"file.openFile";
             App.Ext.Run(ed, cmd, fl);
             Application.Run();
         }

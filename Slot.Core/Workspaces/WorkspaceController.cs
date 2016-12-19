@@ -21,10 +21,10 @@ namespace Slot.Core.Workspaces
         [Import]
         private IViewManager viewManager = null;
 
-        public void OpenWorkspace(DirectoryInfo dir)
+        public bool OpenWorkspace(DirectoryInfo dir)
         {
             if (IsChildFolder(viewManager.GetActiveView().Workspace, dir))
-                return;
+                return false;
 
             var baseDir = dir;
 
@@ -33,16 +33,13 @@ namespace Slot.Core.Workspaces
                 var ws = Path.Combine(dir.FullName, FOLDER);
 
                 if (Directory.Exists(ws))
-                {
-                    DirectOpenWorkspace(dir);
-                    return;
-                }
+                    return DirectOpenWorkspace(dir);
 
                 dir = dir.Parent;
             }
             while (dir != null);
 
-            DirectOpenWorkspace(baseDir);
+            return DirectOpenWorkspace(baseDir);
         }
 
         private bool IsChildFolder(DirectoryInfo ws, DirectoryInfo dir)
@@ -62,7 +59,7 @@ namespace Slot.Core.Workspaces
             return false;
         }
 
-        private void DirectOpenWorkspace(DirectoryInfo dir)
+        private bool DirectOpenWorkspace(DirectoryInfo dir)
         {
             var view = viewManager.GetActiveView();
 
@@ -72,7 +69,10 @@ namespace Slot.Core.Workspaces
                 Directory.SetCurrentDirectory(view.Workspace.FullName);
                 App.Catalog<ISettingsProvider>().Default().ReloadSettings(SettingsScope.Workspace);
                 OnWorkspaceChanged();
+                return true;
             }
+
+            return false;
         }
 
         public event EventHandler WorkspaceChanged;

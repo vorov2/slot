@@ -23,6 +23,9 @@ namespace Slot.Test
     [ComponentData("app")]
     public sealed class EnvironmentCommandDispatcher : CommandDispatcher
     {
+        [Import]
+        private ICommandBar commandBar = null;
+
         [Command]
         public void ToggleCommandBar()
         {
@@ -34,10 +37,13 @@ namespace Slot.Test
 
                 if (cm != null && cm.IsActive)
                     cm.CloseInput();
-                else
+                else if (cm != null)
                     cm.ShowInput();
             }
         }
+
+        [Command]
+        public void ToggleMessage() => commandBar.ToggleMessage();
 
         [Command]
         public void CommandPalette(string commandName)

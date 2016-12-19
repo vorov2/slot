@@ -21,6 +21,10 @@ namespace Slot.Core
                 App.Ext.Log($"Unable to read file: {res.Reason}", EntryType.Error);
 
             content = data;
+
+            if (res.Success)
+                App.Ext.Log($"File read: {fileName}", EntryType.Info);
+
             return res.Success;
         }
 
@@ -31,7 +35,12 @@ namespace Slot.Core
             if (!TryGetInfo(fileName, out fi))
                 return false;
 
-            return WriteFile(fi, text, encoding);
+            var ret = WriteFile(fi, text, encoding);
+
+            if (ret)
+                App.Ext.Log($"File written: {fileName}", EntryType.Info);
+
+            return ret;
         }
 
         public static bool WriteFile(FileInfo fi, string text, Encoding encoding)

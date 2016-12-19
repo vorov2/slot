@@ -10,6 +10,8 @@ namespace Slot.Core.CommandModel
 
         void Show(IView view, string commandAlias, params object[] args);
 
+        void ToggleMessage();
+
         void Hide(IView view);
     }
 }

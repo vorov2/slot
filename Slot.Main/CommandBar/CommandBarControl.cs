@@ -81,6 +81,7 @@ namespace Slot.Main.CommandBar
                 HideEditor();
 
             var g = e.Graphics;
+            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             var bounds = ClientRectangle;
             var cs = editor.Theme.GetStyle(StandardStyle.CommandBar);
@@ -92,18 +93,20 @@ namespace Slot.Main.CommandBar
                 var baseFont = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font;
                 var font = baseFont.Get(cs.FontStyle);
                 var x = font.Width() * 2f;
-                var h = font.Width();
+                var h = font.Width() / 1.8f;
                 var y = bounds.Y + ((bounds.Height - h) / 2);
-                var ry = y;
-                var w = font.Width();
+                var w = h;
 
                 if (editor.Buffer.IsDirty)
-                    g.FillRectangle(cs.ForeColor.Brush(), x, y, w, h);
+                    g.FillEllipse(cs.ForeColor.Brush(), x, y, w, h);//g.FillRectangle(cs.ForeColor.Brush(), x, y, w, h);
                 else
-                    g.DrawRectangle(cs.ForeColor.Pen(), x, y, w, h);
+                {
+                    g.DrawEllipse(cs.ForeColor.Pen(), x, y, w, h);
+                }
+                    //g.DrawRectangle(cs.ForeColor.Pen(), x, y, w, h);
 
                 y = (bounds.Height - font.Height()) / 2;
-                x = font.Width() * 4f;
+                x += font.Width();
                 g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
                 x += g.MeasureString(editor.Buffer.File.Name, font).Width;
 
@@ -112,7 +115,8 @@ namespace Slot.Main.CommandBar
                 g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
                     new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
 
-                var tipRect = new Rectangle(bounds.Width - w * 2, ry, w, h);
+                var tipRect = new Rectangle(bounds.Width - font.Width() * 2,
+                    bounds.Y + ((bounds.Height - font.Width()) / 2), font.Width(), font.Width());
 
                 if (error != null)
                 {
@@ -154,18 +158,21 @@ namespace Slot.Main.CommandBar
 
             if (loc.X >= errorButton.Left && loc.X <= errorButton.Right
                 && loc.Y >= errorButton.Top && loc.Y <= errorButton.Bottom)
-            {
-                var wnd = GetMessageOverlay();
-                if (wnd == null || !wnd.Visible)
-                    ShowTip();
-                else
-                    HideTip();
-            }
+                ToggleTip();
             else
-                App.Ext.Run(editor, (Identifier)"file.openfile");
+                App.Ext.Run(editor, Cmd.OpenFile);
 
             Invalidate();
             base.OnMouseDown(e);
+        }
+
+        public void ToggleTip()
+        {
+            var wnd = GetMessageOverlay();
+            if (wnd == null || !wnd.Visible)
+                ShowTip();
+            else
+                HideTip();
         }
 
         private void ShowTip()
@@ -194,9 +201,11 @@ namespace Slot.Main.CommandBar
         private void HideTip()
         {
             var ovl = GetMessageOverlay();
-            if (ovl != null)
+            if (ovl != null && ovl.Visible)
+            {
                 ovl.Visible = false;
-            error = null;
+                error = null;
+            }
         }
 
         private EditorControl GetEditor()

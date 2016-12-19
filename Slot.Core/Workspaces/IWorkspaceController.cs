@@ -6,7 +6,7 @@ namespace Slot.Core.Workspaces
 {
     public interface IWorkspaceController : IComponent
     {
-        void OpenWorkspace(DirectoryInfo dir);
+        bool OpenWorkspace(DirectoryInfo dir);
 
         event EventHandler WorkspaceChanged;
     }

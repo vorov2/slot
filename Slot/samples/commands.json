@@ -12,8 +12,13 @@
     },
     {
         "key": "app.toggleCommandBar",
-        "alias": "cb-t",
+        "alias": "cmd",
         "title": "Toggle command bar"
+    },
+    {
+        "key": "app.toggleMessage",
+        "alias": "cmd-msg",
+        "title": "Disply or hide error or warning message"
     },
     {
         "key": "app.changeTheme",
@@ -102,7 +107,7 @@
 
     //File
     {
-        "key": "file.openfile",
+        "key": "file.openFile",
         "alias": "f-o",
         "title": "File: Open a file",
         "arguments": [

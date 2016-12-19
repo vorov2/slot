@@ -92,7 +92,7 @@ namespace Slot.Main.File
             if (buffer != null)
             {
                 if (buffer.IsDirty)
-                    App.Ext.Log("File is dirty. Save file before reloading. Because otherwise you will loose your changes and this is very important not to loose changes because your changes are very important to us.", EntryType.Error);
+                    App.Ext.Log("File is dirty. Save file before reloading.", EntryType.Error);
                 else if (!buffer.File.Exists)
                     buffer.Encoding = enc;
                 else
@@ -114,9 +114,9 @@ namespace Slot.Main.File
             App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dirInfo);
         }
 
-        private void OpenFolder(DirectoryInfo dir)
+        private bool OpenFolder(DirectoryInfo dir)
         {
-            App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dir);
+            return App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dir);
         }
 
         [Command]
@@ -212,6 +212,7 @@ namespace Slot.Main.File
                 return;
 
             Clipboard.SetText(buffer.File.FullName, TextDataFormat.UnicodeText);
+            App.Ext.Log($"File path {buffer.File.FullName} is copied to clipboard.", EntryType.Info);
         }
 
         private IMaterialBuffer GetActiveBuffer()
@@ -221,7 +222,6 @@ namespace Slot.Main.File
 
             if (buffer == null)
             {
-                //Log
                 //basically impossible situation
                 return null;
             }
@@ -244,11 +244,13 @@ namespace Slot.Main.File
         {
             if (buf != null)
             {
-                if (buf.File.Directory != null)
-                    OpenFolder(buf.File.Directory);
-
                 var view = ViewManager.GetActiveView();
+
+                if (buf.File.Directory != null && OpenFolder(buf.File.Directory))
+                    App.Ext.Log($"Workspace opened: {view.Workspace}", EntryType.Info);
+
                 view.AttachBuffer(buf);
+                App.Ext.Log($"Buffer opened: {buf.File}", EntryType.Info);
             }
         }
     }
