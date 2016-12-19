@@ -7,11 +7,11 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Slot.Main.File
+namespace Slot.Main.View
 {
     [Export(typeof(IArgumentValueProvider))]
-    [ComponentData("values.windows")]
-    public sealed class ViewsValueProvider : IArgumentValueProvider
+    [ComponentData("values.views")]
+    public sealed class ViewValueProvider : IArgumentValueProvider
     {
         [Import]
         private IViewManager viewManager = null;
@@ -22,7 +22,7 @@ namespace Slot.Main.File
             var act = viewManager.GetActiveView();
             return viewManager.EnumerateViews()
                 .Where(f => str == null || f.Buffer.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
-                .Select(f => new ValueItem(f.Buffer.File.Name, f == act ? "Current window" : ""));
+                .Select(f => new ValueItem(f.Buffer.File.Name, f == act ? "Current view" : ""));
         }
     }
 }

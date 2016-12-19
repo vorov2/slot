@@ -2,8 +2,10 @@
     "app.commandPalette": "f1",
     "app.toggleCommandBar": "f2",
 
+    "view.newView": "ctrl+shift+n",
+    "view.closeView": "ctrl+w",
+    
     "file.newfile": "ctrl+n",
-    "file.newwindow": "ctrl+shift+n",
     "file.openfile": "ctrl+o",
     "file.openrecentfile": "ctrl+shift+o",
     "file.savefile": "ctrl+s",

@@ -26,37 +26,6 @@ namespace Slot.Main.File
         private IBufferManager bufferManager = null;
 
         [Command]
-        public void NewWindow()
-        {
-            var act = ViewManager.GetActiveView();
-            var view = ViewManager.CreateView();
-            view.AttachBuffer(act.Buffer);
-        }
-
-        [Command]
-        public void SwitchWindow(string viewName)
-        {
-            var view = ViewManager.EnumerateViews()
-                 .FirstOrDefault(v => v.Buffer.File.Name.Contains(viewName));
-            ViewManager.ActivateView(view);
-        }
-
-        [Command]
-        public void CloseWindow()
-        {
-            var view = ViewManager.GetActiveView();
-            view.Close();
-        }
-
-        [Command]
-        public void ToggleWindowTopmost()
-        {
-            var view = ViewManager.GetActiveView();
-            var frm = ((Control)view).FindForm();
-            frm.TopMost = !frm.TopMost;
-        }
-
-        [Command]
         public void SwitchBuffer()
         {
             var buffers = bufferManager.EnumerateBuffers()

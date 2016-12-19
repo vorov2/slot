@@ -64,7 +64,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="File\SystemPathValueProvider.cs" />
-    <Compile Include="File\ViewsValueProvider.cs" />
+    <Compile Include="View\ViewValueProvider.cs" />
     <Compile Include="ModeValueProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatusBar\EncodingTile.cs" />
@@ -82,6 +82,7 @@
     <Compile Include="StatusBar\WrapTile.cs" />
     <Compile Include="ThemeValueProvider.cs" />
     <Compile Include="EnvironmentCommandDispatcher.cs" />
+    <Compile Include="View\ViewCommandDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Slot.Core\Slot.Core.csproj">

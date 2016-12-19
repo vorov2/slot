@@ -38,6 +38,44 @@
         ]
     },
 
+    //View
+    {
+        "key": "view.newView",
+        "alias": "v-n",
+        "title": "View: New view"
+    },
+    {
+        "key": "view.closeView",
+        "alias": "v-c",
+        "title": "View: Close view"
+    },
+    {
+        "key": "view.switchView",
+        "alias": "v-s",
+        "title": "View: Switch view",
+        "arguments": [
+            {
+                "name": "viewName",
+                "valueProvider": "values.views"
+            }
+        ]
+    },
+    {
+        "key": "view.toggleViewTopmost",
+        "alias": "v-t",
+        "title": "View: Toggle current view topmost"
+    },
+    {
+        "key": "view.toggleViewState",
+        "alias": "v-st",
+        "title": "View: Toggle current view state"
+    },
+    {
+        "key": "view.toggleFullScreen",
+        "alias": "v-f",
+        "title": "View: Toggle current view full screen (Zen mode)"
+    },
+
     //Buffer
     {
         "key": "buffer.setBufferEol",
@@ -129,32 +167,7 @@
         "alias": "f-n",
         "title": "File: New file"
     },
-    {
-        "key": "file.newwindow",
-        "alias": "f-wn",
-        "title": "File: New window"
-    },
-    {
-        "key": "file.closewindow",
-        "alias": "f-wc",
-        "title": "File: Close window"
-    },
-    {
-        "key": "file.switchWindow",
-        "alias": "f-ws",
-        "title": "File: Switch window",
-        "arguments": [
-            {
-                "name": "window",
-                "valueProvider": "values.windows"
-            }
-        ]
-    },
-    {
-        "key": "file.toggleWindowTopmost",
-        "alias": "f-wt",
-        "title": "File: Toggle current window topmost"
-    },
+
 
     {
         "key": "file.switchbuffer",
