@@ -98,12 +98,9 @@ namespace Slot.Main.CommandBar
                 var w = h;
 
                 if (editor.Buffer.IsDirty)
-                    g.FillEllipse(cs.ForeColor.Brush(), x, y, w, h);//g.FillRectangle(cs.ForeColor.Brush(), x, y, w, h);
+                    g.FillEllipse(cs.ForeColor.Brush(), x, y, w, h);
                 else
-                {
                     g.DrawEllipse(cs.ForeColor.Pen(), x, y, w, h);
-                }
-                    //g.DrawRectangle(cs.ForeColor.Pen(), x, y, w, h);
 
                 y = (bounds.Height - font.Height()) / 2;
                 x += font.Width();
