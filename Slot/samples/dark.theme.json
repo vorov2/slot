@@ -20,7 +20,7 @@
     {
         "key": "popup",
         "color": "#DCDCDC",
-        "backColor": "#2D2D30",
+        "backColor": "#2D2D30"
     },
     {
         "key": "popupselected",
@@ -56,7 +56,7 @@
     {
         "key": "margin.linenumbers",
         "color": "#505050",
-        "backColor": "#1E1E1E",
+        "backColor": "#1E1E1E"
     },
     {
         "key": "margin.currentlinenumber",
@@ -152,6 +152,14 @@
     {
         "key": "error",
         "color": "#F4443F"
+    },
+    {
+        "key": "warning",
+        "color": "#F4443F"
+    },
+    {
+        "key": "information",
+        "color": "#007ACC"
     },
     {
         "key": "preprocessor",

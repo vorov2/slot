@@ -16,6 +16,8 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using Slot.Core.ViewModel;
 using Slot.Editor;
+using Slot.Core.Output;
+using Slot.Editor.Drawing;
 
 namespace Slot.Main.CommandBar
 {
@@ -24,15 +26,41 @@ namespace Slot.Main.CommandBar
         private EditorControl editor;
         private EditorControl commandEditor;
         private AutocompleteWindow window;
+        private string error;
+        private Rectangle errorButton;
+        private MessageOverlay overlay;
 
         public CommandBarControl(EditorControl editor)
         {
             this.editor = editor;
+            editor.Escape += EditorEscape;
             SetStyle(ControlStyles.Selectable, false);
             SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
             AdjustHeight();
+            App.Catalog<ILogComponent>().Default().EntryWritten += (o, e) =>
+            {
+                var ovl = GetMessageOverlay();
+
+                if (ovl != null && ovl.Visible)
+                    HideTip();
+
+                if (e.Type == EntryType.Error)
+                    error = e.Data;
+                else
+                    error = null;
+
+                Invalidate();
+            };
+        }
+
+        private void EditorEscape(object sender, EventArgs e)
+        {
+            var ovl = GetMessageOverlay();
+
+            if (ovl != null && ovl.Visible)
+                HideTip();
         }
 
         private void AdjustHeight()
@@ -66,6 +94,7 @@ namespace Slot.Main.CommandBar
                 var x = font.Width() * 2f;
                 var h = font.Width();
                 var y = bounds.Y + ((bounds.Height - h) / 2);
+                var ry = y;
                 var w = font.Width();
 
                 if (editor.Buffer.IsDirty)
@@ -82,6 +111,20 @@ namespace Slot.Main.CommandBar
                 var dirName = editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
                 g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
                     new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
+
+                var tipRect = new Rectangle(bounds.Width - w * 2, ry, w, h);
+
+                if (error != null)
+                {
+                    errorButton = tipRect;
+                    g.FillRectangle(editor.Theme.GetStyle(StandardStyle.Error).ForeColor.Brush(), errorButton);
+                }
+                else
+                {
+                    errorButton = default(Rectangle);
+                    g.FillRectangle(editor.Theme.GetStyle(StandardStyle.Default).BackColor.Brush(), tipRect);
+                    g.DrawRectangle(ControlPaint.Dark(cs.BackColor, .2f).Pen(), tipRect);
+                }
             }
             else
             {
@@ -92,11 +135,68 @@ namespace Slot.Main.CommandBar
             }
         }
 
+        private MessageOverlay GetMessageOverlay()
+        {
+            if (overlay == null)
+            {
+                overlay = new MessageOverlay();
+                overlay.Visible = false;
+                FindForm().Controls.Add(overlay);
+                overlay.BringToFront();
+            }
+
+            return overlay;
+        }
+
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            App.Ext.Run(editor, (Identifier)"file.openfile");
+            var loc = e.Location;
+
+            if (loc.X >= errorButton.Left && loc.X <= errorButton.Right
+                && loc.Y >= errorButton.Top && loc.Y <= errorButton.Bottom)
+            {
+                var wnd = GetMessageOverlay();
+                if (wnd == null || !wnd.Visible)
+                    ShowTip();
+                else
+                    HideTip();
+            }
+            else
+                App.Ext.Run(editor, (Identifier)"file.openfile");
+
             Invalidate();
             base.OnMouseDown(e);
+        }
+
+        private void ShowTip()
+        {
+            var font = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font;
+            var eWidth = editor.Info.TextWidth / 2;
+            Size size;
+            var err = "M " + error;
+            error = null;
+
+            using (var g = CreateGraphics())
+                size = g.MeasureString(err, font, eWidth).ToSize();
+
+            var ovl = GetMessageOverlay();
+            var xpad = Dpi.GetWidth(8);
+            var ypad = Dpi.GetHeight(4);
+            ovl.Padding = new Padding(xpad, ypad, xpad, ypad);
+            ovl.Width = size.Width + xpad * 2 + ovl.BorderWidth * 2;
+            ovl.Height = size.Height + ypad * 2 + ovl.BorderWidth * 2;
+            ovl.Location = new Point(FindForm().ClientRectangle.Width - ovl.Width, ClientSize.Height + editor.Info.TextTop);
+            ovl.Font = font;
+            ovl.Text = err;
+            ovl.Visible = true;
+        }
+
+        private void HideTip()
+        {
+            var ovl = GetMessageOverlay();
+            if (ovl != null)
+                ovl.Visible = false;
+            error = null;
         }
 
         private EditorControl GetEditor()
@@ -436,6 +536,7 @@ namespace Slot.Main.CommandBar
 
         private void ShowEditor()
         {
+            HideTip();
             AdjustHeight();
             var ed = (LineEditor)GetEditor();
             ed.AdjustHeight();

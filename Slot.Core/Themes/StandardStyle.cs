@@ -118,6 +118,12 @@ namespace Slot.Core.Themes
         [FieldName("error")]
         Error,
 
+        [FieldName("warning")]
+        Warning,
+
+        [FieldName("information")]
+        Information,
+
         [FieldName("margin.status")]
         StatusBar,
 

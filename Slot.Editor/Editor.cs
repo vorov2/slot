@@ -655,6 +655,10 @@ namespace Slot.Editor
 
         public event EventHandler ContentModified;
         internal bool HasContentModified => ContentModified != null;
-        internal void OnContentModified() => ContentModified?.Invoke(this, EventArgs.Empty); 
+        internal void OnContentModified() => ContentModified?.Invoke(this, EventArgs.Empty);
+
+        public event EventHandler Escape;
+        internal bool HasEscape => Escape != null;
+        internal void OnEscape() => Escape?.Invoke(this, EventArgs.Empty);
     }
 }

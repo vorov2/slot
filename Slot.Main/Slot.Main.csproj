@@ -51,6 +51,9 @@
     <Compile Include="CommandBar\CommandLineItem.cs" />
     <Compile Include="CommandBar\CommandParser.cs" />
     <Compile Include="CommandBar\Loc.cs" />
+    <Compile Include="CommandBar\MessageOverlay.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CommandBar\Statement.cs" />
     <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="CommandsValueProvider.cs" />

@@ -19,6 +19,9 @@ namespace Slot.Editor.Commands
             if (!View.Focused)
                 View.Focus();
 
+            if (View.HasEscape)
+                View.OnEscape();
+
             return Clean;
         }
 

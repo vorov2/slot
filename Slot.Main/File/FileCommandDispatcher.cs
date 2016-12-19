@@ -92,7 +92,7 @@ namespace Slot.Main.File
             if (buffer != null)
             {
                 if (buffer.IsDirty)
-                    App.Ext.Log("File is dirty. Save file before reloading.", EntryType.Error);
+                    App.Ext.Log("File is dirty. Save file before reloading. Because otherwise you will loose your changes and this is very important not to loose changes because your changes are very important to us.", EntryType.Error);
                 else if (!buffer.File.Exists)
                     buffer.Encoding = enc;
                 else
