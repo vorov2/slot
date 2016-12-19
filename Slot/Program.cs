@@ -19,15 +19,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Editor.ComponentModel;
-using System.Runtime.Remoting.Channels.Ipc;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting;
 
 namespace Slot
 {
     static class Program
     {
-        private static ApplicationServer slotServer;
+        private static Process applicationProcess;
 
         /// <summary>
         /// The main entry point for the application.
@@ -35,17 +32,22 @@ namespace Slot
         [STAThread]
         static void Main(string[] args)
         {
-            //slotServer = new ApplicationServer();
+            //applicationProcess = Process.GetCurrentProcess();
+            //var p = ProcessController.FindProcess();
 
-            //var instance = slotServer.ConnectServer();
-            
-            //if (instance != null)
+            //if (p != null)
             //{
-            //    instance.OpenView(args != null && args.Length > 0 ? args[0].Trim('"') : null);
+            //    p.StandardInput.WriteLine($"Hello from {applicationProcess.Id}");
+                
             //    return;
             //}
 
-            //slotServer.StartServer();
+            applicationProcess.StartInfo.RedirectStandardInput = true;
+            applicationProcess.StartInfo.RedirectStandardOutput = true;
+            applicationProcess.EnableRaisingEvents = true;
+            applicationProcess.Refresh();
+            applicationProcess.OutputDataReceived += ApplicationProcess_OutputDataReceived;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -83,21 +85,21 @@ namespace Slot
             App.Ext.Run(ed, cmd, fl);
             Application.Run();
         }
+
+        private static void ApplicationProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            MessageBox.Show(e.Data);
+        }
+
         private static string LocalFile(string fileName)
         {
             return Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, fileName);
         }
     }
 
-    [Serializable]
-    public sealed class ApplicationServer : MarshalByRefObject
+    public static class ProcessController
     {
-        private const string SERVER = "Slot.ApplicationServer";
-        private const string CLIENT = "Slot.ApplicationClient";
-        private const string INSTANCE = "Slot";
-        private IpcChannel serverChannel;
-
-        public void OpenView(string fileName = null)
+        public static void OpenView(string fileName = null)
         {
             var view = App.Catalog<IViewManager>().Default().CreateView();
             var buf = App.Catalog<IBufferManager>().Default();
@@ -109,35 +111,10 @@ namespace Slot
                 view.AttachBuffer(buf.CreateBuffer());
         }
 
-        public void StartServer()
+        public static Process FindProcess()
         {
-            serverChannel = new IpcChannel(SERVER);
-            ChannelServices.RegisterChannel(serverChannel, false);
-            RemotingConfiguration.RegisterWellKnownServiceType(typeof(ApplicationServer),
-                INSTANCE, WellKnownObjectMode.SingleCall);
+            var cur = Process.GetCurrentProcess();
+            return Process.GetProcessesByName("Slot"/*cur.ProcessName*/).FirstOrDefault(p => p.Id != cur.Id);
         }
-
-        public ApplicationServer ConnectServer()
-        {
-            var obj = (ApplicationServer)Activator.GetObject(typeof(ApplicationServer),
-                $"ipc://{SERVER}/{INSTANCE}");
-
-            try
-            {
-                var _ = obj.Ping(); //TODO: ugly
-                return obj;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public Guid Ping()
-        {
-            return Id;
-        }
-
-        public Guid Id { get; } = Guid.NewGuid();
     }
 }
