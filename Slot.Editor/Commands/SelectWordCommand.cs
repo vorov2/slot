@@ -54,7 +54,7 @@ namespace Slot.Editor.Commands
             var line = doc.Lines[caret.Line];
             var seps = ctx.AffinityManager.GetAffinity(caret).GetNonWordSymbols(ctx);
 
-            if (caret.Col >= line.Length - 1)
+            if (caret.Col >= line.Length)
                 return null;
             else
             {

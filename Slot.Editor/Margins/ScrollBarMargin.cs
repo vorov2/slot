@@ -83,7 +83,7 @@ namespace Slot.Editor.Margins
             var sc = new Rectangle(Editor.Scroll.ScrollPosition, Editor.Scroll.ScrollBounds);
             var sbs = Editor.Theme.GetStyle(StandardStyle.ScrollBars);
             var asbs = Editor.Theme.GetStyle(StandardStyle.ActiveScrollBar);
-            g.FillRectangle(sbs.BackColor.Brush(), bounds);
+            //g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             if (Orientation == Orientation.Horizontal)
             {

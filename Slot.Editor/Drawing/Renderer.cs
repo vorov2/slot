@@ -50,7 +50,7 @@ namespace Slot.Editor.Drawing
                     continue;
 
                 g.DrawLine(editor.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Pen(),
-                    x, editor.Info.TextTop, x, editor.Info.TextBottom);
+                    x, editor.Info.TextTop, x, editor.ClientSize.Height);// editor.Info.TextBottom);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Slot.Editor.Drawing
             var ccs = editor.Theme.GetStyle(StandardStyle.CurrentLine);
             g.FillRectangle(ccs.BackColor.Brush(),
                 new Rectangle(editor.Info.TextLeft - editor.Scroll.ScrollPosition.X,
-                    y, editor.Info.TextWidth, editor.Info.LineHeight));
+                    y, editor.ClientSize.Width - editor.Info.TextLeft, editor.Info.LineHeight));
             return true;
         }
 
@@ -110,7 +110,7 @@ namespace Slot.Editor.Drawing
         {
             var lmarg = editor.Info.TextLeft;
             var tmarg = editor.Info.TextTop;
-            var cwidth = editor.Info.TextRight;
+            var cwidth = editor.ClientSize.Width;//editor.Info.TextRight;
             var x = lmarg;
             var y = tmarg + line.Y;
             var oldcut = 0;
@@ -132,7 +132,7 @@ namespace Slot.Editor.Drawing
                 if (cut == line.Length)
                     cut++;
 
-                if (y + editor.Scroll.ScrollPosition.Y >= tmarg && y + editor.Scroll.ScrollPosition.Y < editor.Info.TextBottom)
+                if (y + editor.Scroll.ScrollPosition.Y >= tmarg && y + editor.Scroll.ScrollPosition.Y < editor.ClientSize.Height/*editor.Info.TextBottom*/)
                 {
                     var curline = false;
 

@@ -16,15 +16,10 @@ namespace Slot.Editor.Margins
 
         protected override bool OnDraw(Graphics g, Rectangle bounds)
         {
-            Enabled = CalculateSize() != 0;
-
-            if (!Enabled)
-                return false;
-
             var sc = new Rectangle(Editor.Scroll.ScrollPosition, Editor.Scroll.ScrollBounds);
             var sbs = Editor.Theme.GetStyle(StandardStyle.ScrollBars);
             var asbs = Editor.Theme.GetStyle(StandardStyle.ActiveScrollBar);
-            g.FillRectangle(sbs.BackColor.Brush(), bounds);
+            //g.FillRectangle(sbs.BackColor.Brush(), bounds);
 
             var caretSize = ((double)bounds.Height / (bounds.Height + sc.Height)) * bounds.Height;
 
@@ -40,8 +35,10 @@ namespace Slot.Editor.Margins
             if (pos + LastCaretSize > Editor.ClientSize.Height)
                 pos = Editor.ClientSize.Height - LastCaretSize;
 
-            g.FillRectangle((IsMouseDown ? asbs.ForeColor : sbs.ForeColor).Brush(),
-                new Rectangle(bounds.X, pos, bounds.Width, LastCaretSize));
+            if (LastCaretSize != bounds.Height)
+                g.FillRectangle((IsMouseDown ? asbs.ForeColor : sbs.ForeColor).Brush(),
+                    new Rectangle(bounds.X, pos, bounds.Width, LastCaretSize));
+
             LastCaretPos = pos;
             var caretLine = Editor.Buffer.Selections.Main.Caret.Line;
 
@@ -94,12 +91,6 @@ namespace Slot.Editor.Margins
             }
         }
 
-        public override int CalculateSize()
-        {
-            if (Editor.Scroll.ScrollBounds.Height == 0)
-                return 0;
-            else
-                return (int)(Editor.Info.CharWidth * 1.5);
-        }
+        public override int CalculateSize() => (int)(Editor.Info.CharWidth * 1.5);
     }
 }

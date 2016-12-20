@@ -35,11 +35,19 @@ namespace Slot.Core
             Name = ident;
         }
 
+        public static bool Equals(Identifier fst, Identifier snd) =>
+            ReferenceEquals(fst, null) && ReferenceEquals(snd, null) || fst.Equals(snd);
+
+        public static bool operator ==(Identifier fst, Identifier snd) => Equals(fst, snd);
+
+        public static bool operator !=(Identifier fst, Identifier snd) => !Equals(fst, snd);
+
         public static explicit operator Identifier(string str) => str != null ? new Identifier(str) : null;
 
         public static explicit operator string(Identifier ident) => ident.ToString();
 
-        public bool Equals(Identifier other) => Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase) 
+        public bool Equals(Identifier other) => !ReferenceEquals(other, null) 
+            && Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase) 
             && (Namespace == null && other.Namespace == null || Namespace.Equals(other.Namespace));
 
         public override bool Equals(object other) => other is Identifier && Equals(this, (Identifier)other);
