@@ -15,6 +15,6 @@ namespace Slot.Core.ViewModel
 
         DirectoryInfo Workspace { get; set; }
 
-        string Mode { get; set; }
+        Identifier Mode { get; set; }
     }
 }

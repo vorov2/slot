@@ -70,8 +70,10 @@ namespace Slot.Test
         [Command]
         public void ChangeMode(string mode)
         {
-            if (mode != null && App.Ext.Grammars().GetGrammar(mode) != null)
-                ViewManager.GetActiveView().Mode = mode;
+            var mi = (Identifier)mode;
+
+            if (mi != null && App.Ext.Grammars().GetGrammar(mi) != null)
+                ViewManager.GetActiveView().Mode = mi;
             else
                 App.Ext.Log($"Unknown mode: {mode}.", EntryType.Error);
         }

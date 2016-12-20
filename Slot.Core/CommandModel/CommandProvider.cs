@@ -62,8 +62,7 @@ namespace Slot.Core.CommandModel
             EnsureLoaded();
             var mode = viewManager.GetActiveView()?.Mode;
             return commands
-                .Where(p => p.Value.Mode == null
-                    || string.Equals(p.Value.Mode, mode, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Value.Mode == null || p.Value.Mode == mode)
                 .Select(p => p.Value);
         }
         

@@ -30,21 +30,6 @@ namespace Slot.Editor.Lexing
 
         public Identifier StylerKey { get; set; }
 
-        public string Key { get; set; }
-
-        public string Name { get; set; }
-
-        public List<string> Extensions { get; } = new List<string>();
-
-        public GrammarSection AddSection(GrammarSection section)
-        {
-            section.GrammarKey = Key;
-            Sections.Add(section);
-            if (section.Id != 0)
-                Sections[section.ParentId].Sections.Add(section);
-            return section;
-        }
-
         internal int GlobalId { get; set; }
 
         internal List<GrammarSection> Sections { get; } = new List<GrammarSection>();

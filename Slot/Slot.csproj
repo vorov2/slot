@@ -78,6 +78,9 @@
     <EmbeddedResource Include="OutputForm.resx">
       <DependentUpon>OutputForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages\slot\data\grammars\default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="samples\calc.cs" />
     <Compile Include="SplitContainerEx.cs">
       <SubType>Component</SubType>
@@ -86,16 +89,16 @@
       <DependentUpon>MainForm.cs</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <None Include="grammars\csharp.grammar.json">
+    <None Include="packages\slot\data\grammars\csharp.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="grammars\css.grammar.json">
+    <None Include="packages\slot\data\grammars\css.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="grammars\html.grammar.json">
+    <None Include="packages\slot\data\grammars\html.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="grammars\json.grammar.json">
+    <None Include="packages\slot\data\grammars\json.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="samples\commands.json">
@@ -110,13 +113,10 @@
     <None Include="samples\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages\slot\data\dark.theme.json">
+    <None Include="packages\slot\data\themes\dark.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages\slot\data\light.theme.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="samples\themes.json">
+    <None Include="packages\slot\data\themes\light.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="test.json">

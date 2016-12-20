@@ -28,7 +28,7 @@ namespace Slot.Core.CommandModel
             var meta = CommandProvider.GetCommandByKey(commandKey);
             var mode = ViewManager.GetActiveView()?.Mode;
 
-            if (meta.Mode != null && !meta.Mode.Equals(mode, StringComparison.OrdinalIgnoreCase))
+            if (meta.Mode != null && meta.Mode != mode)
             {
                 App.Ext.Log($"Unable to execute command '{commandKey}' in mode '{mode}'.", EntryType.Error);
                 return false;

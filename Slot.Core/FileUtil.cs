@@ -8,6 +8,17 @@ namespace Slot.Core
 {
     public static class FileUtil
     {
+        public static bool ReadFile(string fileName, Encoding encoding, out string content)
+        {
+            FileInfo fi;
+            content = null;
+
+            if (!TryGetInfo(fileName, out fi))
+                return false;
+
+            return ReadFile(fi, encoding, out content);
+        }
+
         public static bool ReadFile(FileInfo fileName, Encoding encoding, out string content)
         {
             var data = "";

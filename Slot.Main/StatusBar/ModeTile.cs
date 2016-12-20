@@ -1,4 +1,6 @@
 ﻿using Slot.Core;
+using Slot.Core.Modes;
+using Slot.Core.ViewModel;
 using Slot.Editor;
 
 namespace Slot.Main.StatusBar
@@ -6,7 +8,7 @@ namespace Slot.Main.StatusBar
     public sealed class ModeTile : StatusBarTile
     {
         private readonly EditorControl editor;
-        private string lastGrammar;
+        private ModeMetadata lastMode;
 
         public ModeTile(EditorControl editor) : base(TileAlignment.Right)
         {
@@ -17,10 +19,14 @@ namespace Slot.Main.StatusBar
         {
             get
             {
-                return (lastGrammar == null && editor.Buffer.GrammarKey != null)
-                        || (editor.Buffer.GrammarKey != lastGrammar && editor.Buffer.GrammarKey != null)
-                    ? (lastGrammar = App.Ext.Grammars().GetGrammar(editor.Buffer.GrammarKey).Name)
-                    : lastGrammar;
+                if ((lastMode == null && editor.Buffer.GrammarKey != null)
+                        || (editor.Buffer.GrammarKey != lastMode.Key && editor.Buffer.GrammarKey != null))
+                {
+                    lastMode = App.Catalog<IModeManager>().Default().GetMode(editor.Buffer.GrammarKey);
+                    return lastMode.Name;
+                }
+                else
+                    return lastMode.Name;
             }
             set { base.Text = value; }
         }

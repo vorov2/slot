@@ -5,50 +5,60 @@ using System.IO;
 using System.ComponentModel.Composition;
 using Slot.Core.ComponentModel;
 using Slot.Core;
+using Slot.Core.Packages;
+using Json;
+using System.Text;
 
 namespace Slot.Editor.Lexing
 {
+    internal sealed class GrammarInfo
+    {
+        public Identifier Key { get; set; }
+
+        public Identifier Mode { get; set; }
+
+        public FileInfo File { get; set; }
+    }
+
     [Export(typeof(IGrammarComponent))]
     [ComponentData(Name)]
     public sealed class GrammarComponent : IGrammarComponent
     {
-        public const string Name = "grammar.default";
+        public const string Name = "grammars.default";
 
-        private readonly Dictionary<string, Grammar> grammars = new Dictionary<string, Grammar>();
+        private readonly Dictionary<Identifier, Grammar> grammars = new Dictionary<Identifier, Grammar>();
         private readonly List<Grammar> index = new List<Grammar>();
+        private readonly Dictionary<Identifier, GrammarInfo> infos = new Dictionary<Identifier, GrammarInfo>();
 
-        [Import("directory.grammar")]
-        private string grammarPath = null;
+        [Import]
+        private IPackageManager packageManager = null;
 
         private void LoadGrammars()
         {
-            if (index.Count > 0)
+            if (infos.Count > 0)
                 return;
 
-            var dir = new DirectoryInfo(grammarPath);
-            
-            foreach (var fi in dir.GetFiles("*.grammar.json"))
-            {
-                var grm = GrammarReader.Read(File.ReadAllText(fi.FullName));
-                RegisterGrammar(grm);
-            }
+            foreach (var pkg in packageManager.EnumeratePackages())
+                foreach (var e in pkg.GetMetadata(PackageSection.Grammars))
+                {
+                    FileInfo fi;
+
+                    if (!FileUtil.TryGetInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")), out fi))
+                        continue;
+
+                    var key = (Identifier)e.String("key");
+                    infos.Add(
+                        key,
+                        new GrammarInfo
+                        {
+                            Key = key,
+                            Mode = (Identifier)e.String("mode"),
+                            File = fi
+                        });
+                }
         }
 
-        private void RegisterGrammar(Grammar grammar)
-        {
-            grammars.Remove(grammar.Key);
-            grammars.Add(grammar.Key, grammar);
-            index.Add(grammar);
-            grammar.GlobalId = index.Count;
-        }
-
-        public IEnumerable<Grammar> EnumerateGrammars()
-        {
-            LoadGrammars();
-            return index;
-        }
- 
-        public Grammar GetGrammar(string key)
+        public Grammar GetGrammar(Identifier key)
         {
             if (key == null)
                 return null;
@@ -57,18 +67,26 @@ namespace Slot.Editor.Lexing
             Grammar grammar;
 
             if (!grammars.TryGetValue(key, out grammar))
-                throw new SlotException($"Grammar '{key}' not found!");
+            {
+                GrammarInfo inf;
+
+                if (!infos.TryGetValue(key, out inf))
+                    throw new SlotException($"Grammar '{key}' not found!");
+                else
+                {
+                    string content;
+                    if (!FileUtil.ReadFile(inf.File, Encoding.UTF8, out content))
+                        throw new SlotException($"Unable to read grammar '{key}'!");
+
+                    grammar = GrammarReader.Read(key, content);
+                    grammars.Remove(inf.Key);
+                    grammars.Add(inf.Key, grammar);
+                    index.Add(grammar);
+                    grammar.GlobalId = index.Count;
+                }
+            }
 
             return grammar;
-        }
-
-        public Grammar GetGrammarByFile(FileInfo fi)
-        {
-            LoadGrammars();
-            var ext = fi.Extension.TrimStart('.');
-            var ret = grammars
-                .FirstOrDefault(g => g.Value.Extensions.Any(s => s.Equals(ext, StringComparison.OrdinalIgnoreCase)));
-            return ret.Value;
         }
 
         public Grammar GetGrammar(int id)

@@ -1,10 +1,11 @@
 ﻿using System;
+using Slot.Core;
 
 namespace Slot.Editor.Lexing
 {
     internal struct State
     {
-        public State(int sectionId, string grammarKey, bool matchAnyState)
+        public State(int sectionId, Identifier grammarKey, bool matchAnyState)
         {
             SectionId = sectionId;
             GrammarKey = grammarKey;
@@ -13,7 +14,7 @@ namespace Slot.Editor.Lexing
 
         public readonly int SectionId;
 
-        public readonly string GrammarKey;
+        public readonly Identifier GrammarKey;
 
         public readonly bool MatchAnyState;
     }

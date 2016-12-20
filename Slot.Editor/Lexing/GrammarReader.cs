@@ -11,7 +11,7 @@ namespace Slot.Editor.Lexing
 {
     public static class GrammarReader
     {
-        public static Grammar Read(string source)
+        public static Grammar Read(Identifier grammarKey, string source)
         {
             var json = new Json.JsonParser(source) { SkipNulls = true };
             var dict = json.Parse() as Dictionary<string, object>;
@@ -22,8 +22,6 @@ namespace Slot.Editor.Lexing
                 var sectionMap = new Dictionary<string, Tuple<string, string, GrammarSection>>();
                 var grammar = new Grammar
                 {
-                    Key = dict.String("key"),
-                    Name = dict.String("name"),
                     StylerKey = (Identifier)dict.String("stylerKey"),
                     BracketSymbols = dict.String("brackets"),
                     NonWordSymbols = dict.String("delimeters"),
@@ -34,27 +32,22 @@ namespace Slot.Editor.Lexing
                     AutocompleteSymbols = dict.String("autocompleteSymbols")
                 };
 
-                var lst = dict.Object("extensions") as List<object>;
-
-                if (lst != null)
-                    grammar.Extensions.AddRange(lst.OfType<string>());
-
-                var rt = ProcessSection(grammar.Key, dict);
+                var rt = ProcessSection(grammarKey, dict);
                 sectionMap.Add("root", rt);
                 grammar.Sections.Add(rt.Item3);
-                var sections = dict.Object("sections") as List<object>;
+                var sections = dict.Object("sections") as List<object> ?? new List<object>();
 
                 foreach (var o in sections)
                 {
                     var nd = o as Dictionary<string, object>;
-                    var tup = ProcessSection(grammar.Key, nd);
+                    var tup = ProcessSection(grammarKey, nd);
                     tup.Item3.Id = grammar.Sections.Count;
                     grammar.Sections.Add(tup.Item3) ;
 
                     var key = tup.Item1 ?? "root";
 
                     if (sectionMap.ContainsKey(key))
-                        throw new SlotException($"Duplicate section key '{tup.Item1}' in grammar '{grammar.Key}'.");
+                        throw new SlotException($"Duplicate section key '{tup.Item1}' in grammar '{grammarKey}'.");
 
                     sectionMap.Add(key, tup);
                 }
@@ -68,7 +61,7 @@ namespace Slot.Editor.Lexing
                     Tuple<string, string, GrammarSection> parent = null;
 
                     if (!sectionMap.TryGetValue(parentKey, out parent))
-                        throw new SlotException($"A parent section with key '{parentKey}' not found in grammar '{grammar.Key}'.");
+                        throw new SlotException($"A parent section with key '{parentKey}' not found in grammar '{grammarKey}'.");
 
                     tup.Item3.ParentId = parent.Item3.Id;
                     parent.Item3.Sections.Add(tup.Item3);
@@ -80,7 +73,7 @@ namespace Slot.Editor.Lexing
             return null;
         }
 
-        private static Tuple<string, string, GrammarSection> ProcessSection(string grammar, Dictionary<string, object> dict)
+        private static Tuple<string, string, GrammarSection> ProcessSection(Identifier grammar, Dictionary<string, object> dict)
         {
             if (dict == null)
                 return null;
@@ -91,7 +84,7 @@ namespace Slot.Editor.Lexing
             var sect = new GrammarSection
             {
                 GrammarKey = grammar,
-                ExternalGrammarKey = dict.String("grammar"),
+                ExternalGrammarKey = (Identifier)dict.String("grammar"),
                 IgnoreCase = ignoreCase,
                 ContextChars = dict.String("context"),
                 ContinuationChar = dict.Char("contination"),

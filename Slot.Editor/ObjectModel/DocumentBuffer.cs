@@ -308,7 +308,7 @@ namespace Slot.Editor.ObjectModel
             set { _eol = value; }
         }
 
-        public string GrammarKey { get; set; }
+        public Identifier GrammarKey { get; set; }
 
         public FileInfo File { get; internal set; }
 
@@ -316,7 +316,7 @@ namespace Slot.Editor.ObjectModel
 
         public DateTime LastAccess { get; set; }
 
-        public string Mode
+        public Identifier Mode
         {
             get { return GrammarKey; }
             set
@@ -352,7 +352,7 @@ namespace Slot.Editor.ObjectModel
                 buffer.ReadOnly = sr.ReadBoolean();
                 buffer.Encoding = Encoding.GetEncoding(sr.ReadInt32());
                 buffer.File = new FileInfo(sr.ReadString());
-                buffer.GrammarKey = sr.ReadString();
+                buffer.GrammarKey = (Identifier)sr.ReadString();
 
                 //ScrollPosition
                 buffer.ScrollPosition = new Point(sr.ReadInt32(), sr.ReadInt32());
@@ -403,7 +403,7 @@ namespace Slot.Editor.ObjectModel
             sw.Write(buffer.ReadOnly);
             sw.Write(buffer.Encoding.CodePage);
             sw.Write(buffer.File.FullName);
-            sw.Write(buffer.GrammarKey);
+            sw.Write(buffer.GrammarKey.ToString());
 
             //ScrollPosition
             sw.Write(buffer.ScrollPosition.X);

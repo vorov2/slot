@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Slot.Core;
 
 namespace Slot.Editor.Lexing
 {
@@ -20,9 +21,9 @@ namespace Slot.Editor.Lexing
 
         public int Id { get; set; }
 
-        public string GrammarKey { get; set; }
+        public Identifier GrammarKey { get; set; }
 
-        public string ExternalGrammarKey { get; set; }
+        public Identifier ExternalGrammarKey { get; set; }
 
         public int ParentId { get; set; }
 

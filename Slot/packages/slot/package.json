@@ -3,26 +3,67 @@
          {
             "key": "light",
             "name": "Default Light",
-            "file": "light.theme.json"
+            "file": "themes/light.json"
         },
         {
             "key": "dark",
             "name": "Default Dark",
-            "file": "dark.theme.json"
+            "file": "themes/dark.json"
         }
     ],
     "modes": [
         {
+            "key": "text",
+            "name": "Plain Text",
+            "kind": "default",
+            "extensions": [ "txt" ]
+        },
+        {
             "key": "csharp",
             "name": "C#",
-            "kind": "suppressing",
             "extensions": [ "cs" ]
+        },
+        {
+            "key": "html",
+            "name": "HTML",
+            "extensions": [ "htm", "html" ]
+        },
+        {
+            "key": "json",
+            "name": "JSON",
+            "extensions": [ "json" ]
+        },
+        {
+            "key": "css",
+            "name": "CSS",
+            "extensions": [ "css" ]
         }
     ],
     "grammars": [
         {
+            "key": "text",
+            "mode": "text",
+            "file": "grammars/default.json"
+        },
+        {
+            "key": "csharp",
             "mode": "csharp",
-            "file": "csharp.grammar.json"
+            "file": "grammars/csharp.json"
+        },
+        {
+            "key": "css",
+            "mode": "css",
+            "file": "grammars/css.json"
+        },
+        {
+            "key": "html",
+            "mode": "html",
+            "file": "grammars/html.json"
+        },
+        {
+            "key": "json",
+            "mode": "json",
+            "file": "grammars/json.json"
         }
     ]
 }

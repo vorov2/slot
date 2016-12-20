@@ -22,6 +22,7 @@ using Slot.Editor.Search;
 using Slot.Core.Settings;
 using Slot.Core.Themes;
 using Slot.Drawing;
+using Slot.Core.Modes;
 
 namespace Slot.Editor
 {
@@ -476,8 +477,8 @@ namespace Slot.Editor
                     Buffer = buffer;
                 }
 
-                Buffer.GrammarKey = App.Ext.Grammars()
-                    .GetGrammarByFile(buffer.File)?.Key;
+                Buffer.GrammarKey = App.Catalog<IModeManager>().Default()
+                    .SelectMode(buffer.File).Key;
                 Scroll.InvalidateLines(InvalidateFlags.Force);
                 Scroll.ScrollPosition = buffer.ScrollPosition;
                 Styles.RestyleDocument();
@@ -509,7 +510,7 @@ namespace Slot.Editor
             set { _workspace = value; }
         }
 
-        string IView.Mode
+        Identifier IView.Mode
         {
             get { return Buffer.Mode; }
             set { Buffer.Mode = value; }

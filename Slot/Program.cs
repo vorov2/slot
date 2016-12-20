@@ -24,6 +24,8 @@ using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting;
 using System.Security.Permissions;
+using Slot.Core.Modes;
+using Slot.Core.Packages;
 
 namespace Slot
 {
@@ -67,6 +69,8 @@ namespace Slot
             App.RegisterCatalog<ISettingsProvider>();
             App.RegisterCatalog<IWorkspaceController>();
             App.RegisterCatalog<ICommandProvider>();
+            App.RegisterCatalog<IModeManager>();
+            App.RegisterCatalog<IPackageManager>();
             App.Initialize();
 
             var frm = new MainForm();

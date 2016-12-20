@@ -33,6 +33,22 @@ namespace Slot.Core.Modes
             loaded = true;
         }
 
+        public IEnumerable<ModeMetadata> EnumerateModes()
+        {
+            EnsureLoad();
+            return modes;
+        }
+
+        public ModeMetadata GetMode(Identifier key)
+        {
+            var ret = modes.FirstOrDefault(m => m.Key == key);
+
+            if (ret == null)
+                throw new SlotException($"Unknown app mode: {key}!");
+
+            return ret;
+        }
+
         public ModeMetadata SelectMode(FileInfo file)
         {
             EnsureLoad();
