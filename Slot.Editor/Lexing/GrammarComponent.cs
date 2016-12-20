@@ -19,15 +19,12 @@ namespace Slot.Editor.Lexing
         [Import("directory.grammar")]
         private string grammarPath = null;
 
-        [Import("directory.root")]
-        private string rootPath = null;
-
         private void LoadGrammars()
         {
             if (index.Count > 0)
                 return;
 
-            var dir = new DirectoryInfo(Path.Combine(rootPath, grammarPath));
+            var dir = new DirectoryInfo(grammarPath);
             
             foreach (var fi in dir.GetFiles("*.grammar.json"))
             {

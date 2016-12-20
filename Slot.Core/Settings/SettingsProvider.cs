@@ -23,9 +23,6 @@ namespace Slot.Core.Settings
         [Import("directory.user.settings")]
         private string userSettingsDirectory = null;
 
-        [Import("directory.root")]
-        private string rootDirectory = null;
-
         [Import]
         private IViewManager viewManager = null;
 
@@ -94,8 +91,8 @@ namespace Slot.Core.Settings
             return json.Parse() as MAP;
         }
 
-        private string SettingsFile => Path.Combine(rootDirectory, settingsDirectory, FILE);
+        private string SettingsFile => Path.Combine(settingsDirectory, FILE);
 
-        private string UserSettingsFile => Path.Combine(rootDirectory, userSettingsDirectory, FILE);
+        private string UserSettingsFile => Path.Combine(userSettingsDirectory, FILE);
     }
 }

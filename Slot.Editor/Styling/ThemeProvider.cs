@@ -22,9 +22,6 @@ namespace Slot.Editor.Styling
         [Import("directory.theme")]
         private string themePath = null;
 
-        [Import("directory.root")]
-        private string rootPath = null;
-
         [Import]
         private IViewManager viewManager = null;
 
@@ -62,7 +59,7 @@ namespace Slot.Editor.Styling
             if (themes.Count > 0)
                 return;
 
-            var fi = new FileInfo(Path.Combine(rootPath, themePath, "themes.json"));
+            var fi = new FileInfo(Path.Combine(themePath, "themes.json"));
 
             if (fi.Exists)
             {
@@ -75,7 +72,7 @@ namespace Slot.Editor.Styling
                         .ForEach(
                         e => themes.Add((Identifier)e.String("key"),
                             new ThemeInfo((Identifier)e.String("key"), e.String("name"),
-                                new FileInfo(Path.Combine(rootPath, themePath, e.String("file")))
+                                new FileInfo(Path.Combine(themePath, e.String("file")))
                             )));
             }
         }

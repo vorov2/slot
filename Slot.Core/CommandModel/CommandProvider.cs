@@ -24,15 +24,12 @@ namespace Slot.Core.CommandModel
         [Import("directory.commands")]
         private string commandsPath = null;
 
-        [Import("directory.root")]
-        private string rootPath = null;
-
         private void EnsureLoaded()
         {
             if (loaded)
                 return;
 
-            var metas = CommandReader.Read(File.ReadAllText(Path.Combine(rootPath, commandsPath, "commands.json")));
+            var metas = CommandReader.Read(File.ReadAllText(Path.Combine(commandsPath, "commands.json")));
             RegisterCommands(metas);
             loaded = true;
         }
