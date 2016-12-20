@@ -10,6 +10,7 @@ body {
   padding: 0px !important;
   background-color: #2D2D30 !important;
   border-bottom: solid 0.2em #141414 !important;
+  background-image: none;
 }
 .main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
   color: #569cd6 !important;
