@@ -11,6 +11,7 @@ using System.IO;
 using System.Drawing;
 using Slot.Core.Output;
 using Slot.Editor.Folding;
+using Slot.Core;
 
 namespace Slot.Editor.ObjectModel
 {
@@ -340,7 +341,7 @@ namespace Slot.Editor.ObjectModel
             var sr = new BinaryReader(stream, Encoding.UTF8);
 
             if (sr.ReadInt32() != VERSION)
-                throw new CodeBoxException($"Invalid version of document state. Expected: {VERSION}.");
+                throw new SlotException($"Invalid version of document state. Expected: {VERSION}.");
 
             var @lock = buffer.ObtainLock();
 

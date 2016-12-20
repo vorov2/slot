@@ -54,7 +54,7 @@ namespace Slot.Editor.Lexing
                     var key = tup.Item1 ?? "root";
 
                     if (sectionMap.ContainsKey(key))
-                        throw new CodeBoxException($"Duplicate section key '{tup.Item1}' in grammar '{grammar.Key}'.");
+                        throw new SlotException($"Duplicate section key '{tup.Item1}' in grammar '{grammar.Key}'.");
 
                     sectionMap.Add(key, tup);
                 }
@@ -68,7 +68,7 @@ namespace Slot.Editor.Lexing
                     Tuple<string, string, GrammarSection> parent = null;
 
                     if (!sectionMap.TryGetValue(parentKey, out parent))
-                        throw new CodeBoxException($"A parent section with key '{parentKey}' not found in grammar '{grammar.Key}'.");
+                        throw new SlotException($"A parent section with key '{parentKey}' not found in grammar '{grammar.Key}'.");
 
                     tup.Item3.ParentId = parent.Item3.Id;
                     parent.Item3.Sections.Add(tup.Item3);

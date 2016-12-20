@@ -60,7 +60,6 @@
     <Compile Include="BufferCommands\BufferCommandDispatcher.cs" />
     <Compile Include="BufferCommands\EolValueProvider.cs" />
     <Compile Include="CallTips\CallTipManager.cs" />
-    <Compile Include="CodeBoxException.cs" />
     <Compile Include="Cmd.cs" />
     <Compile Include="Commands\AddCaretAboveCommand.cs" />
     <Compile Include="Commands\AddCaretBelowCommand.cs" />
@@ -193,6 +192,7 @@
     <Compile Include="Editor.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ObjectModel\JsonException.cs" />
     <Compile Include="ObjectModel\Line.cs" />
     <Compile Include="ObjectModel\Document.cs" />
     <Compile Include="ObjectModel\LogBuffer.cs" />

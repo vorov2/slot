@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Slot.Editor.Drawing;
+using Slot.Core;
 
 namespace Slot.Editor.ObjectModel
 {
@@ -91,7 +92,7 @@ namespace Slot.Editor.ObjectModel
         public bool WhiteSpaceBefore(int col)
         {
             if (col < 0)
-                throw new CodeBoxException(
+                throw new SlotException(
                     $"Negative value for the {nameof(col)} argument is not allowed.");
 
             for (var i = 0; i < col; i++)

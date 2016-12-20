@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using Slot.Core.Packages;
 
 namespace Slot.Editor.Styling
 {
@@ -18,9 +19,9 @@ namespace Slot.Editor.Styling
         public const string Name = "theme.default";
         private readonly Dictionary<Identifier, ThemeInfo> themes = new Dictionary<Identifier, ThemeInfo>();
         private readonly Dictionary<StandardStyle, Style> styles = new Dictionary<StandardStyle, Style>();
-
-        [Import("directory.theme")]
-        private string themePath = null;
+        
+        [Import]
+        private IPackageManager packageManager = null;
 
         [Import]
         private IViewManager viewManager = null;
@@ -59,22 +60,15 @@ namespace Slot.Editor.Styling
             if (themes.Count > 0)
                 return;
 
-            var fi = new FileInfo(Path.Combine(themePath, "themes.json"));
-
-            if (fi.Exists)
-            {
-                var json = new JsonParser(File.ReadAllText(fi.FullName));
-                var list = json.Parse() as List<object>;
-
-                if (list != null)
-                    list.OfType<Dictionary<string, object>>()
-                        .ToList()
-                        .ForEach(
-                        e => themes.Add((Identifier)e.String("key"),
-                            new ThemeInfo((Identifier)e.String("key"), e.String("name"),
-                                new FileInfo(Path.Combine(themePath, e.String("file")))
-                            )));
-            }
+            foreach (var pkg in packageManager.EnumeratePackages())
+                foreach (var e in pkg.GetMetadata(PackageSection.Themes))
+                    themes.Add(
+                        (Identifier)e.String("key"),
+                        new ThemeInfo(
+                            (Identifier)e.String("key"),
+                            e.String("name"),
+                            new FileInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")))
+                        ));
         }
 
         public Style GetStyle(StandardStyle style)

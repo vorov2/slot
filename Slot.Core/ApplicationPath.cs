@@ -14,6 +14,9 @@ namespace Slot.Core
     {
         private Dictionary<string, string> macroVariables;
 
+        [Export("directory.packages")]
+        public string Packages => ParsePath(AppSettings["directory.packages"]);
+
         [Export("directory.theme")]
         public string Theme => ParsePath(AppSettings["directory.theme"]);
 

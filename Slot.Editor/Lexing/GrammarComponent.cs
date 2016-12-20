@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.ComponentModel.Composition;
 using Slot.Core.ComponentModel;
+using Slot.Core;
 
 namespace Slot.Editor.Lexing
 {
@@ -56,7 +57,7 @@ namespace Slot.Editor.Lexing
             Grammar grammar;
 
             if (!grammars.TryGetValue(key, out grammar))
-                throw new CodeBoxException($"Grammar '{key}' not found!");
+                throw new SlotException($"Grammar '{key}' not found!");
 
             return grammar;
         }

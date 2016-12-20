@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Json
 {
@@ -55,6 +53,19 @@ namespace Json
             object res;
             dict.TryGetValue(key, out res);
             return res != null ? res.ToString()[0] : '\0';
+        }
+
+        public static List<T> List<T>(this Dictionary<string, object> dict, string key)
+        {
+            var list = Object(dict, key) as List<object>;
+
+            if (list == null)
+                return null;
+
+            if (typeof(T) == typeof(int))
+                return list.OfType<double>().Cast<T>().ToList();
+            else
+                return list.OfType<T>().ToList();
         }
     }
 }

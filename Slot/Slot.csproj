@@ -104,13 +104,16 @@
     <None Include="samples\keymap.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages\slot\package.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="samples\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="samples\dark.theme.json">
+    <None Include="packages\slot\data\dark.theme.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="samples\light.theme.json">
+    <None Include="packages\slot\data\light.theme.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="samples\themes.json">
