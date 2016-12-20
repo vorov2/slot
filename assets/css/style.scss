@@ -11,6 +11,8 @@ body {
   background-color: #2D2D30 !important;
   border-bottom: solid 0.2em #141414 !important;
   background-image: none;
+  padding-left: 1em !important;
+  text-align:left !important;
 }
 .main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
   color: #569cd6 !important;
@@ -22,4 +24,17 @@ body {
   font-size: 4rem !important;
   color: #44c7ae !important;
   font-weight: normal !important;
+  display: inline !important;
+}
+.btn {
+  display: inline !important;
+  float: right !important;
+  margin-right: 1rem !important;
+  padding: 0.75rem 1rem;
+  margin-top: 1.5em !important;
+}
+.project-tagline {
+  display: inline !important;
+  vertical-align: super !important;
+  padding-left: 1em !important;
 }
