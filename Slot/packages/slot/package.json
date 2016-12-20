@@ -1,0 +1,28 @@
+{
+    "themes": [
+         {
+            "key": "light",
+            "name": "Default Light",
+            "file": "light.theme.json"
+        },
+        {
+            "key": "dark",
+            "name": "Default Dark",
+            "file": "dark.theme.json"
+        }
+    ],
+    "modes": [
+        {
+            "key": "csharp",
+            "name": "C#",
+            "kind": "suppressing",
+            "extensions": [ "cs" ]
+        }
+    ],
+    "grammars": [
+        {
+            "mode": "csharp",
+            "file": "csharp.grammar.json"
+        }
+    ]
+}
