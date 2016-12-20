@@ -6,15 +6,18 @@ namespace Slot.Core.Modes
 {
     public sealed class ModeMetadata
     {
-        internal ModeMetadata(Identifier key, string name, ModeKind kind, IEnumerable<string> extensions)
+        internal ModeMetadata(Identifier key, Identifier grammarKey, string name, ModeKind kind, IEnumerable<string> extensions)
         {
             Key = key;
+            GrammarKey = grammarKey;
             Name = name;
             Kind = kind;
             Extensions = extensions;
         }
 
         public Identifier Key { get; }
+
+        public Identifier GrammarKey { get; }
 
         public string Name { get; }
 

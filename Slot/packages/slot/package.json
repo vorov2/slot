@@ -14,27 +14,32 @@
     "modes": [
         {
             "key": "text",
+            "grammar": "text",
             "name": "Plain Text",
             "kind": "default",
             "extensions": [ "txt" ]
         },
         {
             "key": "csharp",
+            "grammar": "csharp",
             "name": "C#",
             "extensions": [ "cs" ]
         },
         {
             "key": "html",
+            "grammar": "html",
             "name": "HTML",
             "extensions": [ "htm", "html" ]
         },
         {
             "key": "json",
+            "grammar": "json",
             "name": "JSON",
             "extensions": [ "json" ]
         },
         {
             "key": "css",
+            "grammar": "css",
             "name": "CSS",
             "extensions": [ "css" ]
         }
@@ -42,27 +47,22 @@
     "grammars": [
         {
             "key": "text",
-            "mode": "text",
             "file": "grammars/default.json"
         },
         {
             "key": "csharp",
-            "mode": "csharp",
             "file": "grammars/csharp.json"
         },
         {
             "key": "css",
-            "mode": "css",
             "file": "grammars/css.json"
         },
         {
             "key": "html",
-            "mode": "html",
             "file": "grammars/html.json"
         },
         {
             "key": "json",
-            "mode": "json",
             "file": "grammars/json.json"
         }
     ]

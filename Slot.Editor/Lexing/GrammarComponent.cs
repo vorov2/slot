@@ -11,15 +11,6 @@ using System.Text;
 
 namespace Slot.Editor.Lexing
 {
-    internal sealed class GrammarInfo
-    {
-        public Identifier Key { get; set; }
-
-        public Identifier Mode { get; set; }
-
-        public FileInfo File { get; set; }
-    }
-
     [Export(typeof(IGrammarComponent))]
     [ComponentData(Name)]
     public sealed class GrammarComponent : IGrammarComponent
@@ -28,7 +19,7 @@ namespace Slot.Editor.Lexing
 
         private readonly Dictionary<Identifier, Grammar> grammars = new Dictionary<Identifier, Grammar>();
         private readonly List<Grammar> index = new List<Grammar>();
-        private readonly Dictionary<Identifier, GrammarInfo> infos = new Dictionary<Identifier, GrammarInfo>();
+        private readonly Dictionary<Identifier, FileInfo> infos = new Dictionary<Identifier, FileInfo>();
 
         [Import]
         private IPackageManager packageManager = null;
@@ -47,14 +38,7 @@ namespace Slot.Editor.Lexing
                         continue;
 
                     var key = (Identifier)e.String("key");
-                    infos.Add(
-                        key,
-                        new GrammarInfo
-                        {
-                            Key = key,
-                            Mode = (Identifier)e.String("mode"),
-                            File = fi
-                        });
+                    infos.Add(key, fi);
                 }
         }
 
@@ -68,19 +52,19 @@ namespace Slot.Editor.Lexing
 
             if (!grammars.TryGetValue(key, out grammar))
             {
-                GrammarInfo inf;
+                FileInfo inf;
 
                 if (!infos.TryGetValue(key, out inf))
                     throw new SlotException($"Grammar '{key}' not found!");
                 else
                 {
                     string content;
-                    if (!FileUtil.ReadFile(inf.File, Encoding.UTF8, out content))
+                    if (!FileUtil.ReadFile(inf, Encoding.UTF8, out content))
                         throw new SlotException($"Unable to read grammar '{key}'!");
 
                     grammar = GrammarReader.Read(key, content);
-                    grammars.Remove(inf.Key);
-                    grammars.Add(inf.Key, grammar);
+                    grammars.Remove(key);
+                    grammars.Add(key, grammar);
                     index.Add(grammar);
                     grammar.GlobalId = index.Count;
                 }

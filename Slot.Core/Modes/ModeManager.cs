@@ -28,7 +28,7 @@ namespace Slot.Core.Modes
             foreach (var pkg in packageManager.EnumeratePackages())
                 foreach (var m in pkg.GetMetadata(PackageSection.Modes))
                     modes.Add(new ModeMetadata(
-                        (Identifier)m.String("key"), m.String("name"),
+                        (Identifier)m.String("key"), (Identifier)m.String("grammar"), m.String("name"),
                         m.Enum<ModeKind>("kind"), m.List<string>("extensions")));
             loaded = true;
         }
