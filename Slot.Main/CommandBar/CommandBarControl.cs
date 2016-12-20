@@ -107,7 +107,7 @@ namespace Slot.Main.CommandBar
                 g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
                 x += g.MeasureString(editor.Buffer.File.Name, font).Width;
 
-                var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace.FullName.Length;
+                var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace?.FullName.Length ?? 0;
                 var dirName = editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
                 g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
                     new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
@@ -157,7 +157,7 @@ namespace Slot.Main.CommandBar
                 && loc.Y >= errorButton.Top && loc.Y <= errorButton.Bottom)
                 ToggleTip();
             else
-                App.Ext.Run(editor, Cmd.OpenFile);
+                App.Ext.Run(editor, File.Cmd.OpenFile);
 
             Invalidate();
             base.OnMouseDown(e);

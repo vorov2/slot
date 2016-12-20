@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cmd.cs" />
+    <Compile Include="File\Cmd.cs" />
     <Compile Include="CommandBar\CommandBarComponent.cs" />
     <Compile Include="CommandBar\CommandBarControl.cs">
       <SubType>Component</SubType>
@@ -61,7 +61,7 @@
     <Compile Include="EnvironmentSettings.cs" />
     <Compile Include="File\EncodingValueProvider.cs" />
     <Compile Include="File\FileCommandDispatcher.cs" />
-    <Compile Include="File\FolderValueProvider.cs" />
+    <Compile Include="Workspace\FolderValueProvider.cs" />
     <Compile Include="File\ModifiedDocsValueProvider.cs" />
     <Compile Include="File\RecentDocsValueProvider.cs" />
     <Compile Include="File\SwitchBufferControl.cs">
@@ -87,6 +87,7 @@
     <Compile Include="ThemeValueProvider.cs" />
     <Compile Include="EnvironmentCommandDispatcher.cs" />
     <Compile Include="View\ViewCommandDispatcher.cs" />
+    <Compile Include="Workspace\WorkspaceCommandDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Slot.Core\Slot.Core.csproj">

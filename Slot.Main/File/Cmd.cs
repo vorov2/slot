@@ -1,7 +1,7 @@
 ﻿using System;
 using Slot.Core;
 
-namespace Slot.Main
+namespace Slot.Main.File
 {
     public static class Cmd
     {

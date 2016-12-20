@@ -9,6 +9,7 @@ using Slot.Core.Themes;
 using Slot.Core.ViewModel;
 using Slot.Core.Workspaces;
 using Slot.Editor.Lexing;
+using Slot.Main;
 using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
@@ -36,12 +37,13 @@ namespace Slot
         [STAThread]
         static void Main(string[] args)
         {
+            var fileName = args != null && args.Length > 0 ? args[0].Trim('"') : null;
             slotServer = new ApplicationServer();
             var instance = slotServer.ConnectServer();
 
             if (instance != null)
             {
-                instance.OpenView(args != null && args.Length > 0 ? args[0].Trim('"') : null);
+                instance.OpenView(fileName);
                 return;
             }
 
@@ -78,9 +80,10 @@ namespace Slot
             var theme = App.Catalog<IThemeComponent>().Default();
             theme.ChangeTheme((Identifier)"dark");
 
-            var fl = LocalFile(@"..\..\test.htm");//@"c:\test\bigcode.cs";//
-            var cmd = (Identifier)"file.openFile";
-            App.Ext.Run(ed, cmd, fl);
+            FileInfo fi;
+
+            if (fileName != null && FileUtil.TryGetInfo(fileName, out fi) && fi.Exists)
+                App.Ext.Run(ed, Slot.Main.File.Cmd.OpenFile, fi.FullName);
 
             Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();

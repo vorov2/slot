@@ -103,17 +103,6 @@ namespace Slot.Main.File
             }
         }
 
-        [Command]
-        public void OpenFolder(string dir)
-        {
-            var dirInfo = default(DirectoryInfo);
-
-            if (!FileUtil.TryGetInfo(dir, out dirInfo))
-                return;
-
-            App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dirInfo);
-        }
-
         private bool OpenFolder(DirectoryInfo dir)
         {
             return App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dir);

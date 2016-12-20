@@ -43,6 +43,19 @@
         ]
     },
 
+    //Workspace
+    {
+        "key": "workspace.openWorkspace",
+        "alias": "w-o",
+        "title": "Workspace: Open workspace",
+        "arguments": [
+            {
+                "name": "folder",
+                "valueProvider": "values.folders"
+            }
+        ]
+    },
+
     //View
     {
         "key": "view.newView",
@@ -178,17 +191,6 @@
         "key": "file.switchbuffer",
         "alias": "f-bs",
         "title": "File: Switch buffer"
-    },
-    {
-        "key": "file.openFolder",
-        "alias": "f-fo",
-        "title": "File: Open folder",
-        "arguments": [
-            {
-                "name": "folder",
-                "valueProvider": "values.folders"
-            }
-        ]
     },
     {
         "key": "file.revertFile",
