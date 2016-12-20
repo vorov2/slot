@@ -1,0 +1,39 @@
+﻿{
+    "key": "json",
+    "name": "JSON",
+    "extensions": [ "json" ],
+    "numbers": "(0123456789)[x]{0123456789.+-_abcdef}(lufdm)(ul)",
+    "delimeters": "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?",
+    "brackets": "{}[]",
+    "commentMask": "/* */",
+    "indentProvider": "indent.curly",
+    "foldingProvider": "folding.indent",
+    "styleNumbers": true,
+    "keywords": [
+            {
+                "style": "keyword",
+                "words": "true false null"
+            }
+        ],
+    "sections": [
+        {
+            "key": "comment",
+            "start": "//",
+            "style": "comment"
+        },
+        {
+            "key": "comment.multiline",
+            "start": "/*",
+            "end": "*/",
+            "style": "comment.multiline",
+            "multiline": true
+        },
+        {
+            "key": "string",
+            "start": "\"",
+            "end": "\"",
+            "escape": "\\",
+            "style": "string"
+        }
+    ]
+}

@@ -1,0 +1,177 @@
+﻿[
+    {
+        "key": "default",
+        "color": "#DCDCDC",
+        "backColor": "#1E1E1E"
+    },
+    {
+        "key": "caret",
+        "color": "white"
+    },
+    {
+        "key": "hint",
+        "backColor": "#2D2D30",
+        "color": "#DCDCDC"
+    },
+    {
+        "key": "currentline",
+        "backColor": "#262626"
+    },
+    {
+        "key": "popup",
+        "color": "#DCDCDC",
+        "backColor": "#2D2D30"
+    },
+    {
+        "key": "popupselected",
+        "backColor": "#264F78"
+    },
+    {
+        "key": "popuphover",
+        "backColor": "#3E3E42"
+    },
+    {
+        "key": "popupborder",
+        "color": "#5F5F66"
+    },
+    {
+        "key": "margin.status",
+        "color": "#BFBFBF",
+        "backColor": "#161616"
+    },
+    {
+        "key": "margin.activestatus",
+        "backColor": "#1E1E1E",
+        "color": "#CCCCCC"
+    },
+    {
+        "key": "margin.commands",
+        "color": "white",
+        "backColor": "#2D2D30"
+    },
+    {
+        "key": "margin.commandscaption",
+        "color": "#B7B7B7"
+    },
+    {
+        "key": "margin.linenumbers",
+        "color": "#505050",
+        "backColor": "#1E1E1E"
+    },
+    {
+        "key": "margin.currentlinenumber",
+        "color": "#848484",
+        "backColor": "#262626"
+    },
+    {
+        "key": "margin.scrollbar",
+        "color": "#505050",
+        "backColor": "#1E1E1E"
+    },
+    {
+        "key": "margin.activescrollbar",
+        "color": "white"
+    },
+    {
+        "key": "margin.folding",
+        "color": "#505050",
+        "backColor": "#1E1E1E"
+    },
+    {
+        "key": "margin.activefolding",
+        "color": "#C0AAF7"
+    },
+    {
+        "key": "symbol.special",
+        "color": "#505050"
+    },
+    {
+        "key": "selection",
+        "backColor": "#264F78"
+    },
+    {
+        "key": "bracket.matched",
+        "backColor": "#264F78"
+    },
+    {
+        "key": "number",
+        "color": "#B5CEA8"
+    },
+    {
+        "key": "bracket",
+        "color": "#A5A5A5"
+    },
+    {
+        "key": "keyword",
+        "color": "#569CD6"
+    },
+    {
+        "key": "keyword.special",
+        "color": "#8CDCDB"
+    },
+    {
+        "key": "keyword.typename",
+        "color": "#44C7AE"
+    },
+    {
+        "key": "keyword.literal",
+        "color": "#B8D7A3"
+    },
+    {
+        "key": "comment",
+        "color": "#579032"
+    },
+    {
+        "key": "comment.multiline",
+        "color": "#579032"
+    },
+    {
+        "key": "comment.document",
+        "color": "#579032"
+    },
+    {
+        "key": "char",
+        "color": "#D69D85"
+    },
+    {
+        "key": "string",
+        "color": "#D69D85"
+    },
+    {
+        "key": "string.multiline",
+        "color": "#D69D85"
+    },
+    {
+        "key": "string.macro",
+        "color": "#D69D85"
+    },
+    {
+        "key": "regex",
+        "color": "#C586C0"
+    },
+    {
+        "key": "error",
+        "color": "#F4443F"
+    },
+    {
+        "key": "warning",
+        "color": "#F4443F"
+    },
+    {
+        "key": "information",
+        "color": "#007ACC"
+    },
+    {
+        "key": "preprocessor",
+        "color": "#7F7F7F"
+    },
+    {
+        "key": "word.matched",
+        "backColor": "#343A40"
+    },
+    {
+        "key": "search.result",
+        "adornmentColor": "orange",
+        "adornment": "line"
+    }
+]

@@ -1,0 +1,83 @@
+﻿{
+    "key": "html",
+    "name": "HTML",
+    "extensions": [ "htm", "html" ],
+    "delimeters": "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
+    "brackets": "<>",
+    "indentProvider": "indent.block",
+    "foldingProvider": "folding.indent",
+    "autocompleteSymbols": "</",
+    "sections": [
+        {
+            "key": "preprocessor",
+            "multiline": true,
+            "start": "<!",
+            "end": ">",
+            "style": "bracket"
+        },
+        {
+            "key": "comment",
+            "multiline": true,
+            "start": "<!--",
+            "end": "-->",
+            "style": "comment.multiline"
+        },
+        {
+            "key": "test",
+            "lineStartOnly": true,
+            "start": "#",
+            "style": "regex"
+        },
+        {
+            "key": "tag",
+            "start": "<",
+            "end": ">",
+            "multiline": true,
+            "context": "</",
+            "style": "bracket",
+            "identifierStyle": "keyword.special",
+            "contextIdentifierStyle": "keyword"
+        },
+        {
+            "key": "comment2",
+            "parent": "tag",
+            "multiline": true,
+            "start": "<!--",
+            "end": "-->",
+            "style": "comment.multiline"
+        },
+        {
+            "key": "string",
+            "parent": "tag",
+            "multiline": true,
+            "start": "\"",
+            "end": "\"",
+            "style": "string.multiline"
+        },
+        {
+            "key": "cdata",
+            "multiline": true,
+            "start": "<![CDATA[",
+            "end": "]]>",
+            "style": "string.multiline"
+        },
+        {
+            "key": "csharp",
+            "multiline": true,
+            "start": "<script >",
+            "end": "</script>",
+            "dontStyleCompletely": true,
+            "ignoreCase": true,
+            "grammar": "csharp"
+        },
+        {
+            "key": "css",
+            "multiline": true,
+            "start": "<style >",
+            "end": "</style>",
+            "dontStyleCompletely": true,
+            "ignoreCase": true,
+            "grammar": "css"
+        }
+    ]
+}
