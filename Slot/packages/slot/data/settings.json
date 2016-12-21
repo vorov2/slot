@@ -1,0 +1,28 @@
+﻿{
+    "keymap": "default",
+
+    "ui.theme": "dark",
+    "ui.font": "Segoe UI",
+    "ui.fontSize": 10,
+
+    "editor.font": "Consolas",
+    "editor.fontSize": 11,
+    "editor.linePadding": 0.1,
+    "editor.showIndentationGuides": true,
+    "editor.showLineNumbers": true,
+    "editor.showWhitespace": "all",
+    "editor.showEol": false,
+    "editor.showLineLength": true,
+    "editor.currentLineIndicator": true,
+    "editor.delimeters": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+    "editor.brackets": "(){}[]",
+    "editor.matchBrackets": true,
+    "editor.matchWords": true,
+    "editor.useTabs": false,
+    "editor.indentSize": 4,
+    "editor.wordWrap": false,
+    "editor.wordWrapColumn": 80,
+    "editor.wrappingIndent": "same",
+    "editor.lineEndings": "auto",
+    "editor.longLineIndicators": [ 80 ]
+}
