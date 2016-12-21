@@ -58,10 +58,15 @@ namespace Slot.Core
                 }
                 else if (targetType == typeof(Encoding))
                 {
-                    result = Encoding.GetEncodings()
-                        .FirstOrDefault(e => e.Name.Equals((string)obj, StringComparison.OrdinalIgnoreCase))
-                        ?.GetEncoding()
-                        ?? Encoding.UTF8;
+                    var str = obj as string;
+
+                    if (str.Equals("utf-8 no bom", StringComparison.OrdinalIgnoreCase))
+                        result = new UTF8Encoding(false);
+                    else
+                        result = Encoding.GetEncodings()
+                            .FirstOrDefault(e => e.Name.Equals((string)obj, StringComparison.OrdinalIgnoreCase))
+                            ?.GetEncoding()
+                            ?? Encoding.UTF8;
                 }
                 else
                     return false;

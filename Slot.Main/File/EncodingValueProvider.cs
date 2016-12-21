@@ -18,6 +18,7 @@ namespace Slot.Main.File
             return Encoding.GetEncodings()
                 .Where(e => str == null || e.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(e => new ValueItem(e.Name, e.DisplayName))
+                .Concat(new ValueItem[] { new ValueItem(Encoding.UTF8.WebName + " no bom", Encoding.UTF8.EncodingName) })
                 .OrderBy(e => e.Value);
         }
     }
