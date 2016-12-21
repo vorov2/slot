@@ -38,3 +38,17 @@ body {
   vertical-align: super !important;
   padding-left: 1em !important;
 }
+.highlighter-rouge {
+  background-color: #2D2D30 !important;
+  color: #8CDCDB !important;
+}
+.highlight {
+  background-color: #2D2D30 !important;
+}
+.main-content pre {
+  border-color: #2D2D30 !important; 
+}
+.main-content pre > code {
+  color: #8CDCDB !important;
+  border-radius: 4.8px;
+}
