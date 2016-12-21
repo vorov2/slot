@@ -15,7 +15,7 @@ using Slot.Core;
 
 namespace Slot.Editor.ObjectModel
 {
-    public class DocumentBuffer : IMaterialBuffer
+    public class DocumentBuffer : IBuffer
     {
         private int counter;
         private bool undoGroup;
@@ -108,12 +108,12 @@ namespace Slot.Editor.ObjectModel
         internal void AddCommand(EditorCommand cmd) =>
             UndoStack.Push(new CommandInfo { Id = counter, Command = cmd });
 
-        void IMaterialBuffer.SerializeState(Stream stream)
+        void IBuffer.SerializeState(Stream stream)
         {
             DocumentBufferSerializer.Serialize(this, stream);
         }
 
-        void IMaterialBuffer.DeserializeState(Stream stream)
+        void IBuffer.DeserializeState(Stream stream)
         {
             DocumentBufferSerializer.Deserialize(this, stream);
         }
@@ -310,7 +310,7 @@ namespace Slot.Editor.ObjectModel
 
         public Identifier GrammarKey { get; set; }
 
-        public FileInfo File { get; internal set; }
+        public FileInfo File { get; set; }
 
         public Encoding Encoding { get; set; }
 

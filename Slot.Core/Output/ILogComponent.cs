@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Slot.Core.Output
 {
-    public interface ILogComponent : IMaterialBuffer, IComponent
+    public interface ILogComponent : IBuffer, IComponent
     {
         void Write(string text, EntryType type);
 

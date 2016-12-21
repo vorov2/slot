@@ -53,9 +53,7 @@ namespace Slot.Core
         public static bool Close()
         {
             var bufferManager = Catalog<IBufferManager>().Default();
-            var seq = bufferManager.EnumerateBuffers()
-                .OfType<IMaterialBuffer>()
-                .Where(b => b.IsDirty);
+            var seq = bufferManager.EnumerateBuffers().Where(b => b.IsDirty);
 
             if (seq.Any())
             {

@@ -1,11 +1,11 @@
-﻿using Slot.Core.ComponentModel;
-using Slot.Core.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 using Slot.Editor.ObjectModel;
 using Slot.Core;
 using Slot.Core.Output;
@@ -17,15 +17,21 @@ namespace Slot.Editor
     public sealed class DocumentBufferManager : IBufferManager
     {
         public const string Name = "buffermanager.default";
+        private const int MAX_RECENT = 100;
 
         private readonly List<IBuffer> buffers = new List<IBuffer>();
+        private readonly List<Recent> recents = new List<Recent>();
 
-        public IMaterialBuffer CreateBuffer()
+        class Recent
+        {
+            public FileInfo File;
+            public DateTime Date;
+        }
+
+        public IBuffer CreateBuffer()
         {
             var num = buffers.Count(b => !b.File.Exists);
-            var ret = InternalCreateBuffer(new FileInfo($"untitled-{num + 1}"), Encoding.UTF8);
-            ret.Edits++;
-            return ret;
+            return InternalCreateBuffer(new FileInfo($"untitled-{num + 1}"), Encoding.UTF8);
         }
 
         public void CloseBuffer(IBuffer buffer)
@@ -33,10 +39,10 @@ namespace Slot.Editor
             var idx = buffers.IndexOf(buffer);
 
             if (idx != -1)
-                buffers[idx] = new VirtualBuffer(buffer.File, buffer.Encoding);
+                buffers.RemoveAt(idx);
         }
 
-        public void SaveBuffer(IMaterialBuffer buffer, FileInfo file, Encoding encoding)
+        public void SaveBuffer(IBuffer buffer, FileInfo file, Encoding encoding)
         {
             var docb = buffer as DocumentBuffer;
 
@@ -56,7 +62,7 @@ namespace Slot.Editor
             docb.ClearDirtyFlag();
         }
 
-        public IMaterialBuffer CreateBuffer(FileInfo fileName, Encoding encoding)
+        public IBuffer CreateBuffer(FileInfo fileName, Encoding encoding)
         {
             fileName.Refresh();
 
@@ -96,24 +102,22 @@ namespace Slot.Editor
 
                 buf = new DocumentBuffer(doc, file, enc);
                 buffers.Add(buf);
-            }
-            else if (buf is VirtualBuffer)
-            {
-                var doc = CreateDocument(file, enc);
+                var rd = recents.FirstOrDefault(r => r.File.FullName.Equals(file.FullName, StringComparison.OrdinalIgnoreCase));
 
-                if (doc == null)
-                    return null;
+                if (rd != null)
+                    rd.Date = DateTime.Now;
+                else
+                    recents.Add(new Recent { File = file, Date = DateTime.Now });
 
-                var idx = buffers.IndexOf(buf);
-                buf = buffers[idx] = new DocumentBuffer(doc, file, enc);
+                if (recents.Count > MAX_RECENT)
+                    recents.RemoveAt(0);
             }
 
             return (DocumentBuffer)buf;
         }
 
-        public IEnumerable<IBuffer> EnumerateBuffers()
-        {
-            return buffers.OrderByDescending(b => b.LastAccess);
-        }
+        public IEnumerable<IBuffer> EnumerateBuffers() => buffers.OrderByDescending(b => b.LastAccess);
+
+        public IEnumerable<FileInfo> EnumerateRecent() => recents.OrderByDescending(r => r.Date).Select(r => r.File);
     }
 }

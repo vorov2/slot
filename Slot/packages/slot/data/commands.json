@@ -137,7 +137,12 @@
         ]
     },
     {
-        "key": "file.reopenfile",
+        "key": "file.closeFile",
+        "alias": "f-c",
+        "title": "File: Close file"
+    },
+    {
+        "key": "file.reopenFile",
         "alias": "f-ro",
         "title": "File: Reopen a file with encoding",
         "arguments": [

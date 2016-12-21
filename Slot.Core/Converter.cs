@@ -60,7 +60,7 @@ namespace Slot.Core
                 {
                     var str = obj as string;
 
-                    if (str.Equals("utf-8 no bom", StringComparison.OrdinalIgnoreCase))
+                    if (str.Equals("utf-8nb", StringComparison.OrdinalIgnoreCase))
                         result = UTF8EncodingNoBom.Instance;
                     else
                         result = Encoding.GetEncodings()

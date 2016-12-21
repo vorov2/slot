@@ -13,7 +13,7 @@ namespace Slot.Core
 
         }
 
-        public override string WebName => $"{base.WebName} No BOM";
+        public override string WebName => $"{base.WebName}nb";
 
         public static UTF8EncodingNoBom Instance { get; } = new UTF8EncodingNoBom();
     }

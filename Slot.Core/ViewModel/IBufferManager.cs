@@ -9,14 +9,16 @@ namespace Slot.Core.ViewModel
 {
     public interface IBufferManager : IComponent
     {
-        IMaterialBuffer CreateBuffer();
+        IBuffer CreateBuffer();
 
-        IMaterialBuffer CreateBuffer(FileInfo fileName, Encoding encoding);
+        IBuffer CreateBuffer(FileInfo fileName, Encoding encoding);
 
         void CloseBuffer(IBuffer buf);
 
-        void SaveBuffer(IMaterialBuffer buffer, FileInfo file, Encoding encoding);
+        void SaveBuffer(IBuffer buffer, FileInfo file, Encoding encoding);
 
         IEnumerable<IBuffer> EnumerateBuffers();
+
+        IEnumerable<FileInfo> EnumerateRecent();
     }
 }

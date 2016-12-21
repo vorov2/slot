@@ -6,10 +6,22 @@ namespace Slot.Core.ViewModel
 {
     public interface IBuffer
     {
-        FileInfo File { get; }
+        void SerializeState(Stream stream);
+
+        void DeserializeState(Stream stream);
+
+        void Truncate(string text = "");
+
+        string GetContents();
+
+        void ClearDirtyFlag();
+
+        bool IsDirty { get; }
+
+        FileInfo File { get; set; }
 
         Encoding Encoding { get; set; }
 
-        DateTime LastAccess { get; }
+        DateTime LastAccess { get; set; }
     }
 }

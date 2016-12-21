@@ -80,19 +80,52 @@ namespace Slot.Main.File
             if (!FileUtil.TryGetInfo(fileName, out fi))
                 return;
 
-            enc = enc ?? Encoding.UTF8;
-
-            if (enc is UTF8Encoding && !FileUtil.HasBom(fi))
+            if (enc == null && fi.Exists && !FileUtil.HasBom(fi))
                 enc = UTF8EncodingNoBom.Instance;
+            else
+                enc = Encoding.UTF8;
 
             var buffer = bufferManager.CreateBuffer(fi, enc);
             OpenBuffer(buffer);
         }
 
         [Command]
+        public void CloseFile()
+        {
+            var buffer = GetActiveBuffer();
+
+            if (buffer.IsDirty)
+            {
+                var sb = new StringBuilder();
+                var res = MessageBox.Show(Application.OpenForms[0],
+                    $"Do you want to save the changes made to {buffer.File.Name}?",
+                    Application.ProductName,
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Warning);
+
+                if (res == DialogResult.Yes)
+                    SaveFile();
+                else if (res == DialogResult.Cancel)
+                    return;
+            }
+
+            ViewManager.GetActiveView().DetachBuffer();
+            bufferManager.CloseBuffer(buffer);
+
+            var next = bufferManager.EnumerateBuffers()
+                .OrderByDescending(b => b.LastAccess)
+                .FirstOrDefault();
+
+            if (next == null)
+                next = bufferManager.CreateBuffer();
+
+            OpenBuffer(next);
+        }
+
+        [Command]
         public void ReopenFile(Encoding enc)
         {
-            var buffer = ViewManager.GetActiveView()?.Buffer as IMaterialBuffer;
+            var buffer = ViewManager.GetActiveView()?.Buffer;
 
             if (buffer != null)
             {
@@ -209,19 +242,7 @@ namespace Slot.Main.File
             App.Ext.Log($"File path {buffer.File.FullName} is copied to clipboard.", EntryType.Info);
         }
 
-        private IMaterialBuffer GetActiveBuffer()
-        {
-            var view = ViewManager.GetActiveView();
-            var buffer = view.Buffer as IMaterialBuffer;
-
-            if (buffer == null)
-            {
-                //basically impossible situation
-                return null;
-            }
-
-            return buffer;
-        }
+        private IBuffer GetActiveBuffer() => ViewManager.GetActiveView()?.Buffer;
 
         [Command]
         public void OpenRecentFile(string fileName)

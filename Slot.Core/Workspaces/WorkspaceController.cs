@@ -62,6 +62,7 @@ namespace Slot.Core.Workspaces
             if (!string.Equals(view.Workspace?.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase))
             {
                 view.Workspace = dir;
+                FileUtil.EnsurePath(dir);
                 Directory.SetCurrentDirectory(view.Workspace.FullName);
                 App.Catalog<ISettingsProvider>().Default().ReloadSettings(SettingsScope.Workspace);
                 OnWorkspaceChanged();

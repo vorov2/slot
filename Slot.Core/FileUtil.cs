@@ -20,12 +20,19 @@ namespace Slot.Core
 
         public static bool HasBom(FileInfo fileName)
         {
-            using (var fs = new FileStream(fileName.FullName, FileMode.Open))
+            var bom = false;
+
+            App.Ext.Handle(() =>
             {
-                var bits = new byte[3];
-                fs.Read(bits, 0, 3);
-                return bits[0] == 0xEF && bits[1] == 0xBB && bits[2] == 0xBF;
-            }
+                using (var fs = new FileStream(fileName.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    var bits = new byte[3];
+                    fs.Read(bits, 0, 3);
+                    bom = bits[0] == 0xEF && bits[1] == 0xBB && bits[2] == 0xBF;
+                }
+            });
+
+            return bom;
         }
 
         public static bool ReadFile(string fileName, Encoding encoding, out string content)
@@ -96,10 +103,14 @@ namespace Slot.Core
                 return false;
 
             fi.Refresh();
+            return EnsurePath(fi.Directory);
+        }
 
-            if (!fi.Directory.Exists)
+        public static bool EnsurePath(DirectoryInfo dir)
+        {
+            if (!dir.Exists)
             {
-                var res = App.Ext.Handle(() => fi.Directory.Create());
+                var res = App.Ext.Handle(() => dir.Create());
 
                 if (!res.Success)
                 {

@@ -104,10 +104,8 @@
     <Compile Include="UTF8EncodingNoBom.cs" />
     <Compile Include="ViewModel\IBuffer.cs" />
     <Compile Include="ViewModel\IBufferManager.cs" />
-    <Compile Include="ViewModel\IMaterialBuffer.cs" />
     <Compile Include="ViewModel\IView.cs" />
     <Compile Include="ViewModel\IViewManager.cs" />
-    <Compile Include="ViewModel\VirtualBuffer.cs" />
     <Compile Include="Workspaces\IWorkspaceController.cs" />
     <Compile Include="Workspaces\WorkspaceController.cs" />
   </ItemGroup>
