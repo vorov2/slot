@@ -1,6 +1,7 @@
 ﻿using Slot.Core;
 using System;
 using Slot.Editor;
+using System.Text;
 
 namespace Slot.Main.StatusBar
 {

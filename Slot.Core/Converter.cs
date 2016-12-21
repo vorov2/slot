@@ -61,7 +61,7 @@ namespace Slot.Core
                     var str = obj as string;
 
                     if (str.Equals("utf-8 no bom", StringComparison.OrdinalIgnoreCase))
-                        result = new UTF8Encoding(false);
+                        result = new UTF8EncodingNoBom();
                     else
                         result = Encoding.GetEncodings()
                             .FirstOrDefault(e => e.Name.Equals((string)obj, StringComparison.OrdinalIgnoreCase))
