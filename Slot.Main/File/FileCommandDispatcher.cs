@@ -80,7 +80,12 @@ namespace Slot.Main.File
             if (!FileUtil.TryGetInfo(fileName, out fi))
                 return;
 
-            var buffer = bufferManager.CreateBuffer(fi, enc ?? Encoding.UTF8);
+            enc = enc ?? Encoding.UTF8;
+
+            if (enc is UTF8Encoding && !FileUtil.HasBom(fi))
+                enc = UTF8EncodingNoBom.Instance;
+
+            var buffer = bufferManager.CreateBuffer(fi, enc);
             OpenBuffer(buffer);
         }
 

@@ -8,11 +8,13 @@ namespace Slot.Core
 {
     public sealed class UTF8EncodingNoBom : UTF8Encoding
     {
-        public UTF8EncodingNoBom() : base(false)
+        private UTF8EncodingNoBom() : base(false)
         {
 
         }
 
         public override string WebName => $"{base.WebName} No BOM";
+
+        public static UTF8EncodingNoBom Instance { get; } = new UTF8EncodingNoBom();
     }
 }

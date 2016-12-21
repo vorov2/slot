@@ -9,7 +9,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.extendend")]
     public sealed class ExtendEndCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => EndCommand.MoveEnd(Document, sel.Caret);
+        protected override Pos Select(Selection sel) => EndCommand.MoveEnd(View, sel.Caret);
 
         internal override bool SupportLimitedMode => true;
     }

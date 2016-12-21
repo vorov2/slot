@@ -8,6 +8,26 @@ namespace Slot.Core
 {
     public static class FileUtil
     {
+        public static bool HasBom(string fileName)
+        {
+            FileInfo fi;
+
+            if (!TryGetInfo(fileName, out fi))
+                return false;
+
+            return HasBom(fi);
+        }
+
+        public static bool HasBom(FileInfo fileName)
+        {
+            using (var fs = new FileStream(fileName.FullName, FileMode.Open))
+            {
+                var bits = new byte[3];
+                fs.Read(bits, 0, 3);
+                return bits[0] == 0xEF && bits[1] == 0xBB && bits[2] == 0xBF;
+            }
+        }
+
         public static bool ReadFile(string fileName, Encoding encoding, out string content)
         {
             FileInfo fi;

@@ -11,28 +11,38 @@ namespace Slot.Editor.Commands
     {
         protected override Pos GetPosition(Selection sel)
         {
-            var pos = MoveHome(Document, sel.Caret);
+            var pos = MoveHome(View, sel.Caret);
             sel.SetToRestore(Document.Lines[pos.Line].GetStripeCol(pos.Col));
             return pos;
         }
 
-        internal static Pos MoveHome(Document doc, Pos pos)
+        internal static Pos MoveHome(EditorControl ed, Pos pos)
         {
-            var ln = doc.Lines[pos.Line];
-            var ch = '\0';
+            var ln = ed.Document.Lines[pos.Line];
+            var stripe = ln.GetStripe(pos.Col);
 
-            if (pos.Col > 0 && ((ch = ln.CharAt(pos.Col - 1)) == ' ' || ch == '\t'))
-                return new Pos(pos.Line, 0);
-
-            for (var i = 0; i < ln.Length; i++)
+            if (stripe > 0)
             {
-                var c = ln.CharAt(i);
-
-                if (c != ' ' && c != '\t')
-                    return new Pos(pos.Line, i);
+                var cut = ln.GetCut(stripe - 1);
+                return new Pos(pos.Line, cut);
             }
+            else
+            {
+                var ch = '\0';
 
-            return new Pos(pos.Line, 0);
+                if (pos.Col > 0 && ((ch = ln.CharAt(pos.Col - 1)) == ' ' || ch == '\t'))
+                    return new Pos(pos.Line, 0);
+
+                for (var i = 0; i < ln.Length; i++)
+                {
+                    var c = ln.CharAt(i);
+
+                    if (c != ' ' && c != '\t')
+                        return new Pos(pos.Line, i);
+                }
+
+                return new Pos(pos.Line, 0);
+            }
         }
 
         internal override bool SupportLimitedMode => true;
