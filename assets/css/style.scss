@@ -1,7 +1,7 @@
 ---
 ---
 
-@import "jekyll-theme-cayman";
+@import "{{ site.theme }}";
 body {
   background-color: #1E1E1E !important;
   color: #DCDCDC;
