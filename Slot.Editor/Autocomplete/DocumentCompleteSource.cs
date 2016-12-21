@@ -13,7 +13,7 @@ namespace Slot.Editor.Autocomplete
 {
     public sealed class DocumentCompleteSource : ICompleteSource
     {
-        private Dictionary<int, Dictionary<string, object>> completes = new Dictionary<int, Dictionary<string, object>>();
+        private List<string> completes = new List<string>();
         private volatile bool busy;
         private DateTime lastUpdate;
         private int lastEdits = -1;
@@ -39,53 +39,29 @@ namespace Slot.Editor.Autocomplete
             if (completes.Count == 0 && t != null)
                 t.Wait();
 
-            var id = editor.AffinityManager.GetAffinityId(editor.Buffer.Selections.Main.Caret);
-
-            if (id != 0)
-            {
-                Dictionary<string, object> dict;
-
-                if (completes.TryGetValue(id, out dict))
-                {
-                    var items = dict.Keys.ToList();
-                    items.Sort();
-                    return items;
-                }
-            }
-
-            return Enumerable.Empty<string>();
+            return completes;
         }
 
-        private void WalkDocument(EditorControl ctx)
+        private void WalkDocument(EditorControl ed)
         {
-            if (ctx.Buffer.Edits == lastEdits)
+            if (ed.Buffer.Edits == lastEdits)
                 return;
 
             busy = true;
             completes.Clear();
-            var arr = ctx.Buffer.Document.Lines.ToList();
+            var grm = ed.AffinityManager.GetRootAffinity();
+            var txt = ed.Buffer.GetContents();
+            var seps = grm.GetNonWordSymbols(ed);
+            var dict = new Dictionary<string, object>();
 
-            for (var i = 0; i < arr.Count; i++)
+            foreach (var str in txt.Split((" \t\r\n" + seps).ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                var line = arr[i];
-
-                if (line.Length < 2)
-                    continue;
-
-                var grm = ctx.AffinityManager.GetAffinityId(new Pos(i, 0));
-                var seps = ctx.AffinityManager.GetAffinity(new Pos(i, 0)).GetNonWordSymbols(ctx);
-                var dict = default(Dictionary<string, object>);
-
-                if (!completes.TryGetValue(grm, out dict))
-                    completes.Add(grm, dict = new Dictionary<string, object>());
-
-                foreach (var str in line.Text.Split((" \t" + seps).ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-                {
-                    if (str.Length > 1 && !dict.ContainsKey(str) && !char.IsDigit(str[0]))
-                        dict.Add(str, null);
-                }
+                if (str.Length > 1 && !dict.ContainsKey(str) && !char.IsDigit(str[0]))
+                    dict.Add(str, null);
             }
 
+            completes.AddRange(dict.Keys);
+            completes.Sort();
             lastUpdate = DateTime.Now;
             busy = false;
         }

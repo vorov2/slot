@@ -1,4 +1,4 @@
-# What is Slot
+﻿# What is Slot
 Slot is a cross-platform command based text editor which main priorities are - minimalistic yet modern UI that reduces cognitive load while working, streamlined UX, integrated command line with quick access to all editor's functions, easy extensibility with new highlighting schemes, autocomplete and folding strategies, etc. At its core Slot is a completely safe managed application written in 100% C# with no API calls; the same Slot binaries can run under Windows (.NET or Mono), Linux and Mac OS (Mono). Slot uses an in-house developed text editing engine with lots of advanced features such as syntax highlighting, folding, multiple carets and selections, configurable word wrapping modes, soft and hard tabs, multi-level undo and redo, and much more. Slot was inspired by such editors as ViM, Atom, VSCode, and Zed.
 
 ![](docs/slot.png)
@@ -17,3 +17,10 @@ Using command line is easier and more convinient than it might appear at a first
 An `f-o` in the example above is called a _command alias_. Most of frequently used commands (such as text editing commands) also have configurable shortcuts. Last but not least Slot offers a command palette (which you might know already from other modern editors) that allows you quickly search a required command by its description. By default command palette can be triggered by pressing `F1`. (By the way a command palette in Slot is yet another command with `?` alias).
 
 Actually an easiest way to learn what Slot can do is to hit `F1` (or an icon with a question mark in a status bar) and browse a list of all available commands. Command palette displays both command alias (which can be used to invoke a command from command line) and a command shortcut.
+
+# Files and workspaces
+Slot, like many other editors, allows you to open both files and folders (workspaces). The way how Slot treats folders is somewhat different from other editors.
+
+Every time you open a file, Slot remembers the parent folder of this file and sets it as a current directory. When you switch between opened files (or Slot windows) the current directory is switched as well. Slot doesn't feature a file explorer pane, however a regular open file command defaults to the current directory, e.g. if you hit `Ctrl-O` a list of files and folders in the current directory would popup by default. This treatment of files and folders is called _implicit workspaces_.
+
+Slot also allows to create _explicit workspaces_. An explicit workspace is a folder that has a special `.slot` subfolder in it. The `.slot` subfolder can be used to store settings (that override standard settings) or build tasks. Slot looks for `.slot` folder both in the current files directory and in parent directories as well. For example, if you open a file \parent\child\file.txt with no explicit workspace configured, Slot would automatically set \parent\child as a current workspace. However, if you have configured workspace at a parent folder (e.g. you have created a folder \parent\.slot), Slot will set \parent as a current workspace.
