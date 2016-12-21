@@ -1,4 +1,14 @@
 {
+    "meta": {
+        "key": "slot",
+        "name": "Slot",
+        "description": "Slot core",
+        "version": "0.1",
+        "copyright": "(c) 2016"
+    },
+    "settings": [
+        { "file": "settings.json" }
+    ],
     "keymaps": [
         {
             "key": "default",
@@ -6,8 +16,11 @@
             "file": "keymap.json"
         }
     ],
+    "commands": [
+        { "file": "commands.json" }
+    ],
     "themes": [
-         {
+        {
             "key": "light",
             "name": "Default Light",
             "file": "themes/light.json"

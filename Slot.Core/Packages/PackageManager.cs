@@ -51,9 +51,9 @@ namespace Slot.Core.Packages
                     continue;
                 }
 
-                dict.Add("packagePath", fi.DirectoryName);
-                var pack = new PackageMetadata((Identifier)dict.String("key"),
-                    dict.String("name"), dict.String("version"), fi.Directory, dict);
+                var meta = dict.Object("meta") as Dictionary<string, object>;
+                var pack = new PackageMetadata((Identifier)meta.String("key"),
+                    meta.String("name"), meta.String("version"), fi.Directory, dict);
                 packages.Add(pack);
             }
 

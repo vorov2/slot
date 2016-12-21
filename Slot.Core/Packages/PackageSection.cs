@@ -10,6 +10,8 @@ namespace Slot.Core.Packages
 
         Themes,
 
-        Keymaps
+        Keymaps,
+
+        Commands
     }
 }

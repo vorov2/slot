@@ -6,6 +6,9 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using Slot.Core.ViewModel;
+using Slot.Core.Packages;
+using Json;
+using System.Text;
 
 namespace Slot.Core.CommandModel
 {
@@ -21,16 +24,25 @@ namespace Slot.Core.CommandModel
         [Import]
         private IViewManager viewManager = null;
 
-        [Import("directory.commands")]
-        private string commandsPath = null;
-
         private void EnsureLoaded()
         {
             if (loaded)
                 return;
 
-            var metas = CommandReader.Read(File.ReadAllText(Path.Combine(commandsPath, "commands.json")));
-            RegisterCommands(metas);
+            foreach (var pkg in App.Catalog<IPackageManager>().Default().EnumeratePackages())
+                foreach (var e in pkg.GetMetadata(PackageSection.Commands))
+                {
+                    var name = e.String("file");
+                    string content;
+
+                    if (!FileUtil.ReadFile(Path.Combine(pkg.Directory.FullName, "data", name), Encoding.UTF8, out content))
+                        return;
+
+                    var metas = CommandReader.Read(content);
+                    RegisterCommands(metas);
+                }
+
+            
             loaded = true;
         }
 
@@ -81,6 +93,10 @@ namespace Slot.Core.CommandModel
             EnsureLoaded();
             CommandMetadata ret;
             commands.TryGetValue(key, out ret);
+
+            if (ret == null)
+                throw new SlotException($"Unknown command: {key}!");
+
             return ret;
         }
     }

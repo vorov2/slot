@@ -8,6 +8,7 @@ using Slot.Core.ViewModel;
 
 namespace Slot.Core.Settings
 {
+    using System.Text;
     using MAP = Dictionary<string, object>;
     using OMAP = Dictionary<Type, SettingsBag>;
 
@@ -84,10 +85,12 @@ namespace Slot.Core.Settings
 
         private MAP ReadFile(string fileName)
         {
-            if (!File.Exists(fileName))
+            string content;
+
+            if (!FileUtil.ReadFile(fileName, Encoding.UTF8, out content))
                 return null;
 
-            var json = new JsonParser(File.ReadAllText(fileName));
+            var json = new JsonParser(content);
             return json.Parse() as MAP;
         }
 
