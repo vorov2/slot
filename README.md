@@ -11,7 +11,9 @@ Slot is a command based editor. It means that all Slot features are exposed as c
     f-o [path_to_the_file] | [encoding]
 
 Commands in Slot can accept arguments (separated by `|`). Also arguments may be optional (such as `encoding` argument in the command above) and if you do not provide a value a default value is used (Slot will open all files in UTF-8 by default).
+
 Using command line is easier and more convinient than it might appear at a first glance - Slot offers autocomplete and lists of standard argument values.
 An `f-o` in the example above is called a _command alias_. Most of frequently used commands (such as text editing commands) also have configurable shortcuts. Last but not least Slot offers a command palette (which you might know already from other modern editors) that allows you quickly search a required command by its description. By default command palette can be triggered by pressing `F1`. (By the way a command palette in Slot is yet another command with `?` alias).
+
 Actually an easiest way to learn what Slot can do is to hit `F1` (or an icon with a question mark in a status bar) and browse a list of all available commands. Command palette displays both command alias (which can be used to invoke a command from command line) and a command shortcut.
 
