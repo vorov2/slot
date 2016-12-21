@@ -1,0 +1,588 @@
+﻿[
+    {
+        "key": "app.commandPalette",
+        "alias": "?",
+        "title": "Command Palette",
+        "arguments": [
+            {
+                "name": "commandName",
+                "valueProvider": "values.commands"
+            }
+        ]
+    },
+    {
+        "key": "app.toggleCommandBar",
+        "alias": "cmd",
+        "title": "Toggle command bar"
+    },
+    {
+        "key": "app.toggleMessage",
+        "alias": "cmd-msg",
+        "title": "Display or hide error or warning message"
+    },
+    {
+        "key": "app.changeTheme",
+        "alias": "theme",
+        "title": "Change visual theme",
+        "arguments": [
+            {
+                "name": "theme",
+                "valueProvider": "values.themes"
+            }
+        ]
+    },
+    {
+        "key": "app.changeMode",
+        "alias": "mode",
+        "title": "Change language mode",
+        "arguments": [
+            {
+                "name": "mode",
+                "valueProvider": "values.modes"
+            }
+        ]
+    },
+
+    //Workspace
+    {
+        "key": "workspace.openWorkspace",
+        "alias": "w-o",
+        "title": "Workspace: Open workspace",
+        "arguments": [
+            {
+                "name": "folder",
+                "valueProvider": "values.folders"
+            }
+        ]
+    },
+
+    //View
+    {
+        "key": "view.newView",
+        "alias": "v-n",
+        "title": "View: New view"
+    },
+    {
+        "key": "view.closeView",
+        "alias": "v-c",
+        "title": "View: Close view"
+    },
+    {
+        "key": "view.switchView",
+        "alias": "v-s",
+        "title": "View: Switch view",
+        "arguments": [
+            {
+                "name": "viewName",
+                "valueProvider": "values.views"
+            }
+        ]
+    },
+    {
+        "key": "view.toggleViewTopmost",
+        "alias": "v-t",
+        "title": "View: Toggle current view topmost"
+    },
+    {
+        "key": "view.toggleViewState",
+        "alias": "v-st",
+        "title": "View: Toggle current view state"
+    },
+    {
+        "key": "view.toggleFullScreen",
+        "alias": "v-f",
+        "title": "View: Toggle current view full screen (Zen mode)"
+    },
+
+    //Buffer
+    {
+        "key": "buffer.setBufferEol",
+        "alias": "b-se",
+        "title": "Buffer: Set end of line sequence",
+        "arguments": [
+            {
+                "name": "eol",
+                "valueProvider": "values.eol"
+            }
+        ]
+    },
+    {
+        "key": "buffer.toggleWordWrap",
+        "alias": "b-sw",
+        "title": "Buffer: Toggle word wrapping"
+    },
+    {
+        "key": "buffer.toggleReadOnly",
+        "alias": "b-sr",
+        "title": "Buffer: Toggle write protect"
+    },
+
+
+    //File
+    {
+        "key": "file.openFile",
+        "alias": "f-o",
+        "title": "File: Open a file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "valueProvider": "values.systempath",
+                "affinity": "FilePath"
+            },
+            {
+                "name": "encoding",
+                "valueProvider": "values.encoding",
+                "optional": true
+            }
+        ]
+    },
+    {
+        "key": "file.reopenfile",
+        "alias": "f-ro",
+        "title": "File: Reopen a file with encoding",
+        "arguments": [
+            {
+                "name": "encoding",
+                "valueProvider": "values.encoding"
+            }
+        ]
+    },
+    {
+        "key": "file.openrecentfile",
+        "alias": "f-or",
+        "title": "File: Open a recent file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "valueProvider": "values.recentdocs"
+            }
+        ]
+    },
+    {
+        "key": "file.openmodifiedfile",
+        "alias": "f-om",
+        "title": "File: Open a modified file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "valueProvider": "values.modifieddocs"
+            }
+        ]
+    },
+    {
+        "key": "file.savefile",
+        "alias": "f-s",
+        "title": "File: Save file",
+        "arguments": [
+            {
+                "name": "fileName",
+                "optional": true
+            }
+        ]
+    },
+    {
+        "key": "file.newfile",
+        "alias": "f-n",
+        "title": "File: New file"
+    },
+
+
+    {
+        "key": "file.switchbuffer",
+        "alias": "f-bs",
+        "title": "File: Switch buffer"
+    },
+    {
+        "key": "file.revertFile",
+        "alias": "f-rf",
+        "title": "File: Revert file"
+    },
+    {
+        "key": "file.saveCopy",
+        "alias": "f-sc",
+        "title": "File: Save copy",
+        "arguments": [
+            {
+                "name": "fileName",
+                "valueProvider": "values.systempath",
+                "affinity": "FilePath"
+            }
+        ]
+    },
+    {
+        "key": "file.copyFilePath",
+        "alias": "f-pc",
+        "title": "File: Copy path of active file"
+    },
+    {
+        "key": "file.renameFile",
+        "alias": "f-rn",
+        "title": "File: Rename current file",
+        "arguments": [
+            {
+                "name": "name"
+            }
+        ]
+    },
+
+
+    //Editor
+    {
+        "key": "editor.deleteAllLeft",
+        "alias": "e-dal",
+        "title": "Editor: Delete all left"
+    },
+    {
+        "key": "editor.deleteAllRight",
+        "alias": "e-dar",
+        "title": "Editor: Delete all right"
+    },
+    {
+        "key": "editor.addCaretsToSelection",
+        "alias": "e-cas",
+        "title": "Editor: Adds carets to line ends in selection"
+    },
+    {
+        "key": "editor.gotoLine",
+        "alias": ":",
+        "title": "Editor: Go to line",
+        "arguments": [
+            {
+                "name": "line"
+            }
+        ]
+    },
+    {
+        "key": "editor.showsearch",
+        "alias": "s-f",
+        "title": "Search: Show search panel"
+    },
+    {
+        "key": "editor.searchnext",
+        "alias": "s-n",
+        "title": "Search: Search next"
+    },
+    {
+        "key": "editor.searchprevious",
+        "alias": "s-p",
+        "title": "Search: Search previous"
+    },
+    {
+        "key": "editor.searchselect",
+        "alias": "s-sa",
+        "title": "Search: Select all search results (or all occurences)"
+    },
+    {
+        "key": "editor.searchregex",
+        "alias": "s-or",
+        "title": "Search: Use regular expressions"
+    },
+    {
+        "key": "editor.searchcasesensitive",
+        "alias": "s-oc",
+        "title": "Search: Case sensitive"
+    },
+    {
+        "key": "editor.searchwholeword",
+        "alias": "s-ow",
+        "title": "Search: Match whole word"
+    },
+
+    {
+        "key": "editor.copy",
+        "alias": "e-c",
+        "title": "Editor: Copy"
+    },
+    {
+        "key": "editor.selectall",
+        "alias": "e-sa",
+        "title": "Editor: Select all"
+    },
+    {
+        "key": "editor.deleteline",
+        "alias": "e-ld",
+        "title": "Editor: Delete current line (or selected lines)"
+    },
+    {
+        "key": "editor.deleteline",
+        "alias": "e-ld",
+        "title": "Editor: Delete current line (or selected lines)"
+    },
+    {
+        "key": "editor.insertlinebelow",
+        "alias": "e-lib",
+        "title": "Editor: Insert line below caret position"
+    },
+    {
+        "key": "editor.insertlineabove",
+        "alias": "e-lia",
+        "title": "Editor: Insert line above caret position"
+    },
+    {
+        "key": "editor.addcaret",
+        "alias": "e-ca",
+        "title": "Editor: Add caret at mouse cursor position"
+    },
+    {
+        "key": "editor.addCaretAbove",
+        "alias": "e-caa",
+        "title": "Editor: Add caret above"
+    },
+    {
+        "key": "editor.addCaretBelow",
+        "alias": "e-cab",
+        "title": "Editor: Add caret below"
+    },
+    {
+        "key": "editor.autocomplete",
+        "alias": "e-as",
+        "title": "Editor: Show autocomplete window"
+    },
+    {
+        "key": "editor.selectblock",
+        "alias": "e-sb",
+        "title": "Editor: Make a rectangular selection"
+    },
+    {
+        "key": "editor.clearselections",
+        "alias": "e-sc",
+        "title": "Editor: Clear selections"
+    },
+    {
+        "key": "editor.cut",
+        "alias": "e-x",
+        "title": "Editor: Cut"
+    },
+    {
+        "key": "editor.deleteback",
+        "alias": "e-db",
+        "title": "Editor: Delete backwards"
+    },
+    {
+        "key": "editor.delete",
+        "alias": "e-d",
+        "title": "Editor: Delete"
+    },
+    {
+        "key": "editor.deletewordback",
+        "alias": "e-dwb",
+        "title": "Editor: Delete word backwards"
+    },
+    {
+        "key": "editor.deleteword",
+        "alias": "e-dw",
+        "title": "Editor: Delete word"
+    },
+    {
+        "key": "editor.documentend",
+        "alias": "e-cde",
+        "title": "Editor: Move caret to the end of the document"
+    },
+    {
+        "key": "editor.documenthome",
+        "alias": "e-cdh",
+        "title": "Editor: Move caret to the beggining of the document"
+    },
+    {
+        "key": "editor.down",
+        "alias": "e-cd",
+        "title": "Editor: Move caret down"
+    },
+    {
+        "key": "editor.end",
+        "alias": "e-ce",
+        "title": "Editor: Move caret to the end of the line"
+    },
+    {
+        "key": "editor.extenddocumentend",
+        "alias": "e-sde",
+        "title": "Editor: Extend selection to the end of the document"
+    },
+    {
+        "key": "editor.extenddocumenthome",
+        "alias": "e-sdh",
+        "title": "Editor: Extend selection to the beggining of the document"
+    },
+    {
+        "key": "editor.extendup",
+        "alias": "e-su",
+        "title": "Editor: Extend selection up"
+    },
+    {
+        "key": "editor.extenddown",
+        "alias": "e-sd",
+        "title": "Editor: Extend selection down"
+    },
+    {
+        "key": "editor.extendend",
+        "alias": "e-se",
+        "title": "Editor: Extend selection to the end of the line"
+    },
+    {
+        "key": "editor.extendhome",
+        "alias": "e-sh",
+        "title": "Editor: Extend selection to the beggining of the line"
+    },
+    {
+        "key": "editor.extendleft",
+        "alias": "e-sl",
+        "title": "Editor: Extend selection to the left"
+    },
+    {
+        "key": "editor.extendpagedown",
+        "alias": "e-spd",
+        "title": "Editor: Extend selection one page down"
+    },
+    {
+        "key": "editor.extendpageup",
+        "alias": "e-spu",
+        "title": "Editor: Extend selection one page up"
+    },
+    {
+        "key": "editor.extendright",
+        "alias": "e-sr",
+        "title": "Editor: Extend selection to the right"
+    },
+    {
+        "key": "editor.extendwordleft",
+        "alias": "e-swl",
+        "title": "Editor: Extend selection word left"
+    },
+    {
+        "key": "editor.extendwordright",
+        "alias": "e-swr",
+        "title": "Editor: Extend selection word right"
+    },
+    {
+        "key": "editor.followlink",
+        "alias": "e-fl",
+        "title": "Editor: Follow link under the cursor"
+    },
+    {
+        "key": "editor.home",
+        "alias": "e-ch",
+        "title": "Editor: Move caret to the beggining of the line"
+    },
+    {
+        "key": "editor.indent",
+        "alias": "e-li",
+        "title": "Editor: Indent selection"
+    },
+    {
+        "key": "editor.newline",
+        "alias": "e-ln",
+        "title": "Editor: Insert a new line"
+    },
+    {
+        "key": "editor.left",
+        "alias": "e-cl",
+        "title": "Editor: Move caret to the left"
+    },
+    {
+        "key": "editor.selectnormal",
+        "alias": "e-sn",
+        "title": "Editor: Select a region of text"
+    },
+    {
+        "key": "editor.overtype",
+        "alias": "e-ovr",
+        "title": "Editor: Toggle overtype mode"
+    },
+    {
+        "key": "editor.pagedown",
+        "alias": "e-cpd",
+        "title": "Editor: Move caret page down"
+    },
+    {
+        "key": "editor.pageup",
+        "alias": "e-cpu",
+        "title": "Editor: Move caret page up"
+    },
+    {
+        "key": "editor.paste",
+        "alias": "e-p",
+        "title": "Editor: Paste"
+    },
+    {
+        "key": "editor.redo",
+        "alias": "e-r",
+        "title": "Editor: Redo"
+    },
+    {
+        "key": "editor.right",
+        "alias": "e-cr",
+        "title": "Editor: Move caret right"
+    },
+    {
+        "key": "editor.scrolldown",
+        "alias": "e-lsd",
+        "title": "Editor: Scroll line down"
+    },
+    {
+        "key": "editor.scrollup",
+        "alias": "e-lsu",
+        "title": "Editor: Scroll line up"
+    },
+    {
+        "key": "editor.selectline",
+        "alias": "e-ls",
+        "title": "Editor: Select line",
+        "arguments": [
+            {
+                "name": "lineNumber",
+                "optional": true
+            }
+        ]
+    },
+    {
+        "key": "editor.selectwordadd",
+        "alias": "e-swa",
+        "title": "Editor: Add a selected word to the selections"
+    },
+    {
+        "key": "editor.selectword",
+        "alias": "e-sw",
+        "title": "Editor: Select a word"
+    },
+    {
+        "key": "editor.setcaret",
+        "alias": "e-cs",
+        "title": "Editor: Put a caret to the position under mouse cursor"
+    },
+    {
+        "key": "editor.togglefolding",
+        "alias": "e-ft",
+        "title": "Editor: Toggle folding",
+        "arguments": [
+            {
+                "name": "lineNumber",
+                "optional": true
+            }
+        ]
+    },
+    {
+        "key": "editor.undo",
+        "alias": "e-u",
+        "title": "Editor: Undo"
+    },
+    {
+        "key": "editor.unindent",
+        "alias": "e-lu",
+        "title": "Editor: Unindent lines"
+    },
+    {
+        "key": "editor.up",
+        "alias": "e-cu",
+        "title": "Editor: Move caret up"
+    },
+    {
+        "key": "editor.wordleft",
+        "alias": "e-cwl",
+        "title": "Editor: Move caret word left"
+    },
+    {
+        "key": "editor.wordright",
+        "alias": "e-cwr",
+        "title": "Editor: Move caret word right"
+    }
+]
