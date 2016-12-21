@@ -80,7 +80,7 @@ namespace Slot
             FileInfo fi;
 
             if (fileName != null && FileUtil.TryGetInfo(fileName, out fi) && fi.Exists)
-                App.Ext.Run(Slot.Main.File.Cmd.OpenFile, fi.FullName);
+                App.Ext.Run(Cmd.OpenFile, fi.FullName);
 
             Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();

@@ -17,18 +17,6 @@ namespace Slot.Core
         [Export("directory.packages")]
         public string Packages => ParsePath(AppSettings["directory.packages"]);
 
-        [Export("directory.theme")]
-        public string Theme => ParsePath(AppSettings["directory.theme"]);
-
-        [Export("directory.commands")]
-        public string Commands => ParsePath(AppSettings["directory.commands"]);
-
-        [Export("directory.grammar")]
-        public string Grammar => ParsePath(AppSettings["directory.grammar"]);
-
-        [Export("directory.settings")]
-        public string Settings => ParsePath(AppSettings["directory.settings"]);
-
         [Export("directory.user.settings")]
         public string UserSettings => ParsePath(AppSettings["directory.user.settings"]);
 

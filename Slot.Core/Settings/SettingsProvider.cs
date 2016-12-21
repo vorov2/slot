@@ -9,6 +9,7 @@ using Slot.Core.ViewModel;
 namespace Slot.Core.Settings
 {
     using System.Text;
+    using Packages;
     using MAP = Dictionary<string, object>;
     using OMAP = Dictionary<Type, SettingsBag>;
 
@@ -17,9 +18,6 @@ namespace Slot.Core.Settings
     public sealed class SettingsProvider : ISettingsProvider
     {
         private const string FILE = "settings.json";
-
-        [Import("directory.settings")]
-        private string settingsDirectory = null;
 
         [Import("directory.user.settings")]
         private string userSettingsDirectory = null;
@@ -52,9 +50,6 @@ namespace Slot.Core.Settings
         {
             switch (scope)
             {
-                case SettingsScope.Global:
-                    settings = ReadFile(SettingsFile);
-                    break;
                 case SettingsScope.User:
                     userSettings = ReadFile(UserSettingsFile);
                     break;
@@ -74,7 +69,25 @@ namespace Slot.Core.Settings
             if (settings != null)
                 return;
 
-            settings = ReadFile(SettingsFile);
+            foreach (var pkg in App.Catalog<IPackageManager>().Default().EnumeratePackages())
+                foreach (var e in pkg.GetMetadata(PackageSection.Settings))
+                {
+                    var name = Path.Combine(pkg.Directory.FullName, "data", e.String("file"));
+                    var map = ReadFile(name);
+
+                    if (settings == null)
+                        settings = map;
+                    else
+                    {
+                        try
+                        {
+                            foreach (var kv in map)
+                                settings.Add(kv.Key, kv.Value);
+                        }
+                        catch { }
+                    }
+                }
+
             userSettings = ReadFile(UserSettingsFile);
 
             var dir = viewManager.GetActiveView()?.Workspace;
@@ -93,8 +106,6 @@ namespace Slot.Core.Settings
             var json = new JsonParser(content);
             return json.Parse() as MAP;
         }
-
-        private string SettingsFile => Path.Combine(settingsDirectory, FILE);
 
         private string UserSettingsFile => Path.Combine(userSettingsDirectory, FILE);
     }

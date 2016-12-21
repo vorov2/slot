@@ -1,11 +1,10 @@
-﻿using Slot.Editor.Drawing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using Slot.Editor.Styling;
+using Slot.Drawing;
 using System.Windows.Forms;
 using Slot.Core.Themes;
 

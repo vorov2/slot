@@ -129,9 +129,6 @@
     <Compile Include="Affinity\IDocumentAffinity.cs" />
     <Compile Include="AppExtensions.cs" />
     <Compile Include="DocumentBufferManager.cs" />
-    <Compile Include="Drawing\Overlay.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="EditorCommandDispatcher.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Drawing\Renderer.cs" />

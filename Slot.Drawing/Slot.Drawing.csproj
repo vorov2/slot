@@ -46,6 +46,9 @@
     <Compile Include="Dpi.cs" />
     <Compile Include="FontExtensions.cs" />
     <Compile Include="GraphicsExtensions.cs" />
+    <Compile Include="Overlay.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SysFont.cs" />
     <Compile Include="TextFormats.cs" />

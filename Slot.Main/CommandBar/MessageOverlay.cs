@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using Slot.Core;
 using Slot.Core.Themes;
 using Slot.Drawing;
-using Slot.Editor.Drawing;
 
 namespace Slot.Main.CommandBar
 {

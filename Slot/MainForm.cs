@@ -57,7 +57,7 @@ namespace Slot
             ed.BottomMargins.Add(new ScrollBarMargin(ed, Orientation.Horizontal));
             ed.TopMargins.Add(new TopMargin(ed));
             var statusBar = new StatusBarControl(ed) { Dock = DockStyle.Bottom };
-            statusBar.Tiles.Add(new HelpTile(ed));
+            statusBar.Tiles.Add(new HelpTile());
             statusBar.Tiles.Add(new ModeTile(ed));
             statusBar.Tiles.Add(new EolTile(ed));
             statusBar.Tiles.Add(new EncodingTile(ed));
@@ -66,7 +66,7 @@ namespace Slot
             statusBar.Tiles.Add(new PosTile(ed));
             //statusBar.Tiles.Add(new ErrorsTile(ed));
             statusBar.Tiles.Add(new OvrTile(ed));
-            statusBar.Tiles.Add(new WrapTile(ed));
+            statusBar.Tiles.Add(new WrapTile());
 
 
             splitContainer.Panel1.Controls.Add(ed);

@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="File\Cmd.cs" />
+    <Compile Include="Cmd.cs" />
     <Compile Include="CommandBar\CommandBarComponent.cs" />
     <Compile Include="CommandBar\CommandBarControl.cs">
       <SubType>Component</SubType>

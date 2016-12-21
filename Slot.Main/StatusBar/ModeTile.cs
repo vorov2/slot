@@ -20,7 +20,7 @@ namespace Slot.Main.StatusBar
             get
             {
                 if ((lastMode == null && editor.Buffer.GrammarKey != null)
-                        || (editor.Buffer.GrammarKey != lastMode.Key && editor.Buffer.GrammarKey != null))
+                    || (editor.Buffer.GrammarKey != lastMode.Key && editor.Buffer.GrammarKey != null))
                 {
                     lastMode = App.Catalog<IModeManager>().Default().GetMode(editor.Buffer.GrammarKey);
                     return lastMode.Name;
@@ -33,7 +33,7 @@ namespace Slot.Main.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.Run(editor, (Identifier)"app.changeMode");
+            App.Ext.Run(editor, Cmd.ChangeMode);
             base.PerformClick();
         }
     }

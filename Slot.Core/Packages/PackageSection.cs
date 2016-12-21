@@ -12,6 +12,8 @@ namespace Slot.Core.Packages
 
         Keymaps,
 
-        Commands
+        Commands,
+
+        Settings
     }
 }

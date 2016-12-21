@@ -24,7 +24,7 @@ namespace Slot.Main.StatusBar
 
         protected internal override void PerformClick()
         {
-            App.Ext.Run(editor, (Identifier)"file.reopenfile");
+            App.Ext.Run(editor, Cmd.ReopenFile);
             base.PerformClick();
         }
     }

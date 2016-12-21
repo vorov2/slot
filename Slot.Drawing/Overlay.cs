@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Drawing;
 
-namespace Slot.Editor.Drawing
+namespace Slot.Drawing
 {
     public class Overlay : Control
     {

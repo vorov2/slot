@@ -155,7 +155,7 @@ namespace Slot.Main.CommandBar
                 && loc.Y >= errorButton.Top && loc.Y <= errorButton.Bottom)
                 ToggleTip();
             else
-                App.Ext.Run(editor, File.Cmd.OpenFile);
+                App.Ext.Run(editor, Cmd.OpenFile);
 
             Invalidate();
             base.OnMouseDown(e);

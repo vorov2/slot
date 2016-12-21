@@ -110,7 +110,7 @@
     <None Include="packages\slot\package.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="samples\settings.json">
+    <None Include="packages\slot\data\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages\slot\data\themes\dark.json">
