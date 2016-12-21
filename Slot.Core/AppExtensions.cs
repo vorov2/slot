@@ -10,6 +10,12 @@ namespace Slot
     {
         private readonly static Identifier logKey = new Identifier("log.application");
 
+        public static bool Run(this IAppExtensions _, Identifier key, params object[] args)
+        {
+            var view = App.Catalog<IViewManager>().Default().GetActiveView();
+            return Run(null, view, key, args);
+        }
+
         public static bool Run(this IAppExtensions _, IView view, Identifier key, params object[] args)
         {
             var disp = App.Catalog<ICommandDispatcher>().GetComponent(key.Namespace);

@@ -12,9 +12,9 @@ namespace Slot.Core.Keyboard
 
         InputState ProcessInput(KeyInput input);
 
-        void ChangeKeymap(Identifier key);
-
         IEnumerable<KeymapMetadata> EnumerateKeymaps();
+
+        string KeyInputToString(KeyInput input);
 
         Identifier LastKey { get; }
     }

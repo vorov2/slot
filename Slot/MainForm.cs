@@ -78,8 +78,6 @@ namespace Slot
                 statusBar.Invalidate();
                 commandBar.Invalidate();
             };
-            //var coll = StylesReader.Read(File.ReadAllText("samples\\theme2.json"));
-            //ed.Styles.Theme = coll;
         }
 
         private void InitializeOutput(EditorSettings set)

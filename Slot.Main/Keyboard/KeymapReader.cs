@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Slot.Core;
 
-namespace Slot.Core.Keyboard
+namespace Slot.Main.Keyboard
 {
     public static class KeymapReader
     {

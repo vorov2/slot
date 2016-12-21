@@ -9,8 +9,11 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using Slot.Core.Packages;
+using Slot.Core.Settings;
+using System.Windows.Forms;
+using System.Text;
 
-namespace Slot.Editor.Styling
+namespace Slot.Main.Theme
 {
     [Export(typeof(IThemeComponent))]
     [ComponentData(Name)]
@@ -31,20 +34,24 @@ namespace Slot.Editor.Styling
             return themes.Values;
         }
 
-        public bool ChangeTheme(Identifier themeKey)
+        private bool ChangeTheme(Identifier themeKey)
         {
-            ReadThemes();
             ThemeInfo th;
 
             if (themes.TryGetValue(themeKey, out th))
             {
                 if (th.File.Exists)
                 {
-                    foreach (var s in ThemeReader.Read(File.ReadAllText(th.File.FullName)))
+                    string content;
+
+                    if (!FileUtil.ReadFile(th.File, Encoding.UTF8, out content))
+                        return false;
+
+                    foreach (var s in ThemeReader.Read(content))
                         Register(s.StyleId, s.Style);
 
-                    foreach (var v in viewManager.EnumerateViews().OfType<EditorControl>())
-                        v.Redraw();
+                    foreach (var v in viewManager.EnumerateViews().OfType<Control>())
+                        v.Invalidate(true);
                 }
 
                 Theme = th;
@@ -69,10 +76,20 @@ namespace Slot.Editor.Styling
                             e.String("name"),
                             new FileInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")))
                         ));
+
+            var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
+            set.SettingsChanged += (o, ev) =>
+            {
+                var kt = (Identifier)set.Theme;
+                if (Theme?.Key != kt)
+                    ChangeTheme(kt);
+            };
+            ChangeTheme((Identifier)set.Theme);
         }
 
         public Style GetStyle(StandardStyle style)
         {
+            ReadThemes();
             Style ret;
 
             if (!styles.TryGetValue(style, out ret))

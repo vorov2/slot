@@ -5,8 +5,9 @@ using Json;
 using Slot.Drawing;
 using Slot.Core.Themes;
 
-namespace Slot.Editor.Styling
+namespace Slot.Main.Theme
 {
+    using Editor;
     using MAP = Dictionary<string, object>;
 
     public static class ThemeReader

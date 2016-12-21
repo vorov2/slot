@@ -8,7 +8,7 @@ using Slot.Core.Themes;
 
 namespace Slot.Editor
 {
-    internal static class DictionaryExtensions
+    public static class DictionaryExtensions
     {
         public static Color Color(this Dictionary<string, object> dict, string key)
         {
@@ -50,7 +50,7 @@ namespace Slot.Editor
         }
     }
 
-    internal static class StandardStyleConverter
+    public static class StandardStyleConverter
     {
         private static Dictionary<string, StandardStyle> styles;
 

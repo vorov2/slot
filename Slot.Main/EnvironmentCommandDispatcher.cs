@@ -16,6 +16,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Core.Settings;
+using Slot.Main;
 
 namespace Slot.Test
 {
@@ -63,8 +65,9 @@ namespace Slot.Test
         [Command]
         public void ChangeTheme(string themeName)
         {
-            var theme = App.Catalog<IThemeComponent>().Default();
-            theme.ChangeTheme((Identifier)themeName);
+            var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
+            set.Theme = themeName;
+            set.UpdateSettings();
         }
 
         [Command]

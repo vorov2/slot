@@ -14,7 +14,7 @@ namespace Slot.Core.CommandModel
 
         public Identifier Mode { get; internal set; }
 
-        public string Shortcut { get; internal set; }
+        public string Shortcut { get; set; }
 
         public string Alias { get; internal set; }
 

@@ -41,9 +41,7 @@ namespace Slot.Main.CommandBar
             AdjustHeight();
             App.Catalog<ILogComponent>().Default().EntryWritten += (o, e) =>
             {
-                var ovl = GetMessageOverlay();
-
-                if (ovl != null && ovl.Visible)
+                if (overlay != null && overlay.Visible)
                     HideTip();
 
                 if (e.Type == EntryType.Error)

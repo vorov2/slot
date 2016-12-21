@@ -5,10 +5,17 @@ namespace Slot.Core.Keyboard
 {
     public sealed class KeymapMetadata
     {
-        public Identifier Key { get; internal set; }
+        public KeymapMetadata(Identifier key, string name, FileInfo file)
+        {
+            Key = key;
+            Name = name;
+            File = file;
+        }
 
-        public string Name { get; internal set; }
+        public Identifier Key { get; set; }
 
-        public FileInfo File { get; internal set; }
+        public string Name { get; set; }
+
+        public FileInfo File { get; set; }
     }
 }

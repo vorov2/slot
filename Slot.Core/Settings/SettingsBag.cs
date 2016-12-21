@@ -67,6 +67,8 @@ namespace Slot.Core.Settings
             }
         }
 
+        public void UpdateSettings() => OnSettingsChanged();
+
         public event EventHandler SettingsChanged;
         protected virtual void OnSettingsChanged() => SettingsChanged?.Invoke(this, EventArgs.Empty);
     }

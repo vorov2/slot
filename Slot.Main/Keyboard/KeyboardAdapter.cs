@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.ComponentModel.Composition;
+using System.IO;
+using System.Text;
 using Json;
 using Slot.Core.CommandModel;
 using Slot.Core.ComponentModel;
 using Slot.Core.Packages;
+using Slot.Core;
+using Slot.Core.Keyboard;
+using Slot.Core.Output;
 
-namespace Slot.Core.Keyboard
+namespace Slot.Main.Keyboard
 {
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using Output;
+    using Core.Settings;
     using MAP = Dictionary<KeyInput, Identifier>;
 
     [Export(typeof(IKeyboardAdapter))]
@@ -27,6 +29,7 @@ namespace Slot.Core.Keyboard
         private readonly Dictionary<Identifier, KeymapMetadata> keymaps = new Dictionary<Identifier, KeymapMetadata>();
         private KeyInput currentChord;
         private volatile bool loaded;
+        private Identifier currentKeymap;
 
         [Import]
         private IPackageManager packageManager = null;
@@ -53,20 +56,27 @@ namespace Slot.Core.Keyboard
                     var key = (Identifier)e.String("key");
                     keymaps.Add(
                         key,
-                        new KeymapMetadata
-                        {
-                            Key = key,
-                            Name = e.String("name"),
-                            File = new FileInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")))
-                        });
+                        new KeymapMetadata(
+                            key,
+                            e.String("name"),
+                            new FileInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")))
+                        ));
                 }
 
+            var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
+            set.SettingsChanged += (o, ev) =>
+            {
+                var kid = (Identifier)set.Keymap;
+
+                if (currentKeymap != kid)
+                    ChangeKeymap(kid);
+            };
+            ChangeKeymap((Identifier)set.Keymap);
             loaded = true;
         }
 
-        public void ChangeKeymap(Identifier key)
+        private void ChangeKeymap(Identifier key)
         {
-            EnsureRead();
             KeymapMetadata km;
 
             if (!keymaps.TryGetValue(key, out km))
@@ -81,6 +91,7 @@ namespace Slot.Core.Keyboard
                 return;
 
             KeymapReader.Read(content, this);
+            currentKeymap = key;
         }
 
         public void RegisterInput(Identifier key, string shortcut)
@@ -96,6 +107,7 @@ namespace Slot.Core.Keyboard
 
         public KeyInput GetCommandShortcut(Identifier key)
         {
+            EnsureRead();
             KeyInput ret;
             shortcuts.TryGetValue(key, out ret);
             return ret;
@@ -103,6 +115,7 @@ namespace Slot.Core.Keyboard
 
         public InputState ProcessInput(KeyInput input)
         {
+            EnsureRead();
             var key = default(Identifier);
 
             if (!inputs.TryGetValue(input, out key))
@@ -173,7 +186,7 @@ namespace Slot.Core.Keyboard
         }
 
         private static Dictionary<string, SpecialKey> specialKeys;
-        internal static Dictionary<SpecialKey, string> SpecialKeysToString { get; private set; }
+        private static Dictionary<SpecialKey, string> specialKeysToString;
 
         private static bool Eq(string fst, string snd)
         {
@@ -185,7 +198,7 @@ namespace Slot.Core.Keyboard
             if (specialKeys == null)
             {
                 specialKeys = new Dictionary<string, SpecialKey>(StringComparer.OrdinalIgnoreCase);
-                SpecialKeysToString = new Dictionary<SpecialKey, string>();
+                specialKeysToString = new Dictionary<SpecialKey, string>();
                 var fields = typeof(SpecialKey).GetFields(BindingFlags.Public | BindingFlags.Static);
 
                 foreach (var fi in fields)
@@ -194,7 +207,7 @@ namespace Slot.Core.Keyboard
                         ?.ToString() ?? fi.Name;
                     var val = (SpecialKey)fi.GetValue(null);
                     specialKeys.Add(nam, val);
-                    SpecialKeysToString.Add(val, nam);
+                    specialKeysToString.Add(val, nam);
                 }
             }
 
@@ -204,6 +217,21 @@ namespace Slot.Core.Keyboard
                 return ret;
 
             return SpecialKey.None;
+        }
+
+        public string KeyInputToString(KeyInput input)
+        {
+            var ret = input.Modifier == Modifiers.None ? KeyToString(input.Key)
+                : $"{input.Modifier.ToString().Replace(", ", "+")}+{KeyToString(input.Key)}";
+            return input.Chord == null ? ret : ret + "," + input.Chord.ToString();
+        }
+
+        private string KeyToString(int key)
+        {
+            return key >= (int)SpecialKey.Space
+                ? specialKeysToString != null ?
+                    specialKeysToString[(SpecialKey)key]
+                        : ((SpecialKey)key).ToString() : ((char)key).ToString();
         }
 
         public Identifier LastKey { get; private set; }

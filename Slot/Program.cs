@@ -77,21 +77,11 @@ namespace Slot
             var frm = new MainForm();
             frm.Show();
 
-            var ed = frm.Editor;
-
-            //SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
-            //KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
-
-            var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
-            var theme = App.Catalog<IThemeComponent>().Default();
-            theme.ChangeTheme((Identifier)set.Theme);
-
             FileInfo fi;
 
             if (fileName != null && FileUtil.TryGetInfo(fileName, out fi) && fi.Exists)
-                App.Ext.Run(ed, Slot.Main.File.Cmd.OpenFile, fi.FullName);
+                App.Ext.Run(Slot.Main.File.Cmd.OpenFile, fi.FullName);
 
-            App.Catalog<IKeyboardAdapter>().Default().ChangeKeymap((Identifier)set.Keymap);
             Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();
         }

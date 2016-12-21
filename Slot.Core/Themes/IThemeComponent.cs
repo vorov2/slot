@@ -8,8 +8,6 @@ namespace Slot.Core.Themes
     {
         IEnumerable<ThemeInfo> EnumerateThemes();
 
-        bool ChangeTheme(Identifier themeKey);
-
         Style GetStyle(StandardStyle styleId);
 
         ThemeInfo Theme { get; }

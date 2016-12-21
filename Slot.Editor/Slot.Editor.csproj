@@ -221,8 +221,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrollingManager.cs" />
     <Compile Include="Styling\StyleNeededEventArgs.cs" />
-    <Compile Include="Styling\ThemeProvider.cs" />
-    <Compile Include="Styling\ThemeReader.cs" />
     <Compile Include="TextEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>

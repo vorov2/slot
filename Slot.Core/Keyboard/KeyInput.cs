@@ -31,20 +31,7 @@ namespace Slot.Core.Keyboard
             }
         }
 
-        public override string ToString()
-        {
-            var ret = Modifier == Modifiers.None ? KeyToString()
-                : $"{Modifier.ToString().Replace(", ", "+")}+{KeyToString()}";
-            return Chord == null ? ret : ret + "," + Chord.ToString();
-        }
-
-        private string KeyToString()
-        {
-            return Key >= (int)SpecialKey.Space
-                ? KeyboardAdapter.SpecialKeysToString != null ?
-                    KeyboardAdapter.SpecialKeysToString[(SpecialKey)Key]
-                        : ((SpecialKey)Key).ToString() : ((char)Key).ToString();
-        }
+        public override string ToString() => App.Catalog<IKeyboardAdapter>().Default().KeyInputToString(this);
 
         public bool Equals(KeyInput other) => Modifier == other.Modifier && Key == other.Key;
 

@@ -80,10 +80,8 @@
     <Compile Include="ComponentModel\IComponentMetadata.cs" />
     <Compile Include="FieldNameAttribute.cs" />
     <Compile Include="Keyboard\InputState.cs" />
-    <Compile Include="Keyboard\KeyboardAdapter.cs" />
     <Compile Include="Keyboard\KeyExtensions.cs" />
     <Compile Include="Keyboard\KeyInput.cs" />
-    <Compile Include="Keyboard\KeymapReader.cs" />
     <Compile Include="Keyboard\Modifiers.cs" />
     <Compile Include="Keyboard\SpecialKey.cs" />
     <Compile Include="Modes\IModeManager.cs" />
