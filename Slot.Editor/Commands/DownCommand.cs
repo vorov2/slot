@@ -56,7 +56,7 @@ namespace Slot.Editor.Commands
                 else
                 {
                     var newStart = ln.GetCut(stripe);// + 1;
-                    var newEnd = ln.GetCut(stripe + 1);
+                    var newEnd = ln.GetCut(stripe + 1) - 1;
                     var nc = newStart + tetra - shift;
                     return new Pos(pos.Line, nc > newEnd ? newEnd : nc);
                 }

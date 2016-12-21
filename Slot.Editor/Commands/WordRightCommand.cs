@@ -15,6 +15,7 @@ namespace Slot.Editor.Commands
         {
             var pos = WordRight(View, sel);
             sel.SetToRestore(Document.Lines[pos.Line].GetStripeCol(pos.Col));
+            System.Diagnostics.Debug.WriteLine(sel.RestoreCaretCol);
             return pos;
         }
 
