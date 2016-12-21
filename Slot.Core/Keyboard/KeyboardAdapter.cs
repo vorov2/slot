@@ -36,6 +36,12 @@ namespace Slot.Core.Keyboard
 
         }
 
+        public IEnumerable<KeymapMetadata> EnumerateKeymaps()
+        {
+            EnsureRead();
+            return keymaps.Values;
+        }
+
         private void EnsureRead()
         {
             if (loaded)

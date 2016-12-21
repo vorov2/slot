@@ -37,6 +37,8 @@ namespace Slot.Core.Settings
                 else
                     t.Item2.SetValue(this, null);
             }
+
+            OnSettingsChanged();
         }
 
         private void SetPropertyValue(PropertyInfo prop, object value)
@@ -64,5 +66,8 @@ namespace Slot.Core.Settings
                     prop.SetValue(this, res);
             }
         }
+
+        public event EventHandler SettingsChanged;
+        protected virtual void OnSettingsChanged() => SettingsChanged?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -9,6 +9,9 @@ namespace Slot.Main
         [Setting("keymap")]
         public string Keymap { get; set; }
 
+        [Setting("ui.theme")]
+        public string Theme { get; set; }
+
         [Setting("ui.font")]
         public string FontName { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Slot.Core.ComponentModel;
 
 namespace Slot.Core.Keyboard
@@ -12,6 +13,8 @@ namespace Slot.Core.Keyboard
         InputState ProcessInput(KeyInput input);
 
         void ChangeKeymap(Identifier key);
+
+        IEnumerable<KeymapMetadata> EnumerateKeymaps();
 
         Identifier LastKey { get; }
     }
