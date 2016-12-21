@@ -78,9 +78,12 @@
     <EmbeddedResource Include="OutputForm.resx">
       <DependentUpon>OutputForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages\slot\data\commands.json" />
     <None Include="packages\slot\data\grammars\default.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages\slot\data\keymap.json" />
+    <None Include="packages\slot\data\settings.json" />
     <None Include="samples\calc.cs" />
     <Compile Include="SplitContainerEx.cs">
       <SubType>Component</SubType>
@@ -101,16 +104,7 @@
     <None Include="packages\slot\data\grammars\json.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages\slot\data\commands.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="packages\slot\data\keymap.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages\slot\package.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="packages\slot\data\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages\slot\data\themes\dark.json">
