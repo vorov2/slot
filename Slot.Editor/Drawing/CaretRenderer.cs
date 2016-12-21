@@ -114,7 +114,7 @@ namespace Slot.Editor.Drawing
         private void DrawSurface(Graphics g, int x, int y)
         {
             if (x >= editor.Info.TextLeft - editor.Scroll.ScrollPosition.X
-                && x < editor.Info.TextRight - editor.Scroll.ScrollPosition.X
+                && x < editor.Info.TextRight - editor.Scroll.ScrollPosition.X - editor.Info.CharWidth
                 && y + editor.Info.LineHeight <= editor.Info.TextBottom - editor.Scroll.ScrollPosition.Y)
             {
                 g.DrawImage(timerBitmap, caretX, caretY);

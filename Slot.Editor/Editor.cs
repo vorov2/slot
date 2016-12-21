@@ -162,12 +162,13 @@ namespace Slot.Editor
             Renderer.DrawLines(e.Graphics, carets);
 
             e.Graphics.ResetTransform();
-            Renderer.DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
-            if (RightMargins.Count > 0)
-                Renderer.DrawMargins(ClientSize.Width - RightMargins.First().CalculateSize(), e.Graphics, RightMargins);
 
             Renderer.DrawLongLineIndicators(e.Graphics);
             Renderer.DrawWordWrapColumn(e.Graphics);
+
+            Renderer.DrawMargins(Info.TextBottom, e.Graphics, BottomMargins);
+            if (RightMargins.Count > 0)
+                Renderer.DrawMargins(ClientSize.Width - RightMargins.First().CalculateSize(), e.Graphics, RightMargins);
 
             e.Graphics.TranslateTransform(Scroll.ScrollPosition.X, Scroll.ScrollPosition.Y);
 

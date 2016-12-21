@@ -349,7 +349,7 @@ namespace Slot.Editor
                 Pos pos;
                 int count;
                 var exp = Redo(editor, editor.Buffer.RedoStack.Peek().Id, out count, out pos);
-                DoAftermath(editor, exp | KeepRedo | SetEditRange, count, pos);
+                DoAftermath(editor, exp | KeepRedo | SetEditRange, count, pos, 1);
             }
         }
 
