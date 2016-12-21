@@ -418,9 +418,9 @@ namespace Slot.Editor
 
         public void RunCommand(KeyInput input)
         {
-            if (KeyboardAdapter.Instance.ProcessInput(input) == InputState.Complete)
+            if (KeyboardAdapter.ProcessInput(input) == InputState.Complete)
             {
-                if (!RunCommand(KeyboardAdapter.Instance.LastKey))
+                if (!RunCommand(KeyboardAdapter.LastKey))
                     OnCommandRejected();
             }
         }
@@ -501,6 +501,18 @@ namespace Slot.Editor
         void IView.Close()
         {
             FindForm().Close();
+        }
+
+        private IKeyboardAdapter _keyboardAdapter;
+        internal IKeyboardAdapter KeyboardAdapter
+        {
+            get
+            {
+                if (_keyboardAdapter == null)
+                    _keyboardAdapter = App.Catalog<IKeyboardAdapter>().Default();
+
+                return _keyboardAdapter;
+            }
         }
 
         private DirectoryInfo _workspace;

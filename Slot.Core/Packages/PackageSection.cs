@@ -8,6 +8,8 @@ namespace Slot.Core.Packages
 
         Grammars,
 
-        Themes
+        Themes,
+
+        Keymaps
     }
 }

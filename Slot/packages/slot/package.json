@@ -1,4 +1,11 @@
 {
+    "keymaps": [
+        {
+            "key": "default",
+            "name": "Default keymap",
+            "file": "keymap.json"
+        }
+    ],
     "themes": [
          {
             "key": "light",

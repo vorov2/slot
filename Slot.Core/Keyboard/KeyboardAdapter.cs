@@ -1,22 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.ComponentModel.Composition;
+using Json;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.Packages;
 
 namespace Slot.Core.Keyboard
 {
-    using CommandModel;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using Output;
     using MAP = Dictionary<KeyInput, Identifier>;
 
-    public sealed class KeyboardAdapter
+    [Export(typeof(IKeyboardAdapter))]
+    [ComponentData(Name)]
+    public sealed class KeyboardAdapter : IKeyboardAdapter
     {
+        public const string Name = "keyboard.default";
+
         private readonly MAP inputs = new MAP();
         private readonly Dictionary<KeyInput, object> chords = new Dictionary<KeyInput, object>();
         private readonly Dictionary<Identifier, KeyInput> shortcuts = new Dictionary<Identifier, KeyInput>();
+        private readonly Dictionary<Identifier, KeymapMetadata> keymaps = new Dictionary<Identifier, KeymapMetadata>();
         private KeyInput currentChord;
+        private volatile bool loaded;
+
+        [Import]
+        private IPackageManager packageManager = null;
 
         private KeyboardAdapter()
         {
 
+        }
+
+        private void EnsureRead()
+        {
+            if (loaded)
+                return;
+
+            foreach (var pkg in packageManager.EnumeratePackages())
+                foreach (var e in pkg.GetMetadata(PackageSection.Keymaps))
+                {
+                    var key = (Identifier)e.String("key");
+                    keymaps.Add(
+                        key,
+                        new KeymapMetadata
+                        {
+                            Key = key,
+                            Name = e.String("name"),
+                            File = new FileInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")))
+                        });
+                }
+
+            loaded = true;
+        }
+
+        public void ChangeKeymap(Identifier key)
+        {
+            EnsureRead();
+            KeymapMetadata km;
+
+            if (!keymaps.TryGetValue(key, out km))
+            {
+                App.Ext.Log($"Unknown keymap: {key}", EntryType.Error);
+                return;
+            }
+
+            string content;
+
+            if (!FileUtil.ReadFile(km.File, Encoding.UTF8, out content))
+                return;
+
+            KeymapReader.Read(content, this);
         }
 
         public void RegisterInput(Identifier key, string shortcut)
@@ -143,7 +201,5 @@ namespace Slot.Core.Keyboard
         }
 
         public Identifier LastKey { get; private set; }
-
-        public static KeyboardAdapter Instance = new KeyboardAdapter();
     }
 }

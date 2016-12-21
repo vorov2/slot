@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Editor.Drawing;
+using Slot.Core;
 
 namespace Slot.Editor.Search
 {
@@ -38,7 +39,7 @@ namespace Slot.Editor.Search
 
         private void SearchBoxCommandRejected(object sender, EventArgs e)
         {
-            editor.RunCommand(KeyboardAdapter.Instance.LastKey);
+            editor.RunCommand(App.Catalog<IKeyboardAdapter>().Default().LastKey);
         }
 
         private void SearchBoxLostFocus(object sender, EventArgs e)

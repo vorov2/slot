@@ -48,6 +48,8 @@
     <Compile Include="App.cs" />
     <Compile Include="AppExtensions.cs" />
     <Compile Include="ApplicationPath.cs" />
+    <Compile Include="Keyboard\IKeyboardAdapter.cs" />
+    <Compile Include="Keyboard\KeymapMetadata.cs" />
     <Compile Include="Modes\ModeManager.cs" />
     <Compile Include="Packages\IPackageManager.cs" />
     <Compile Include="Packages\PackageManager.cs" />

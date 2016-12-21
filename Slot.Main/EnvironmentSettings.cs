@@ -6,6 +6,9 @@ namespace Slot.Main
 {
     public class EnvironmentSettings : SettingsBag
     {
+        [Setting("keymap")]
+        public string Keymap { get; set; }
+
         [Setting("ui.font")]
         public string FontName { get; set; }
 

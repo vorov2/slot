@@ -226,10 +226,11 @@ namespace Slot.Main.CommandBar
 
         private void EditorCommandRejected(object sender, EventArgs e)
         {
-            var key = KeyboardAdapter.Instance.LastKey;
+            var km = App.Catalog<IKeyboardAdapter>().Default();
+            var key = km.LastKey;
 
             if (key.Name != "newline" && key.Name != "up" && key.Name != "down" && key.Name != "indent")
-                App.Ext.Run(editor, KeyboardAdapter.Instance.LastKey);
+                App.Ext.Run(editor, key);
         }
 
         private AutocompleteWindow GetAutocompleteWindow()

@@ -71,6 +71,7 @@ namespace Slot
             App.RegisterCatalog<ICommandProvider>();
             App.RegisterCatalog<IModeManager>();
             App.RegisterCatalog<IPackageManager>();
+            App.RegisterCatalog<IKeyboardAdapter>();
             App.Initialize();
 
             var frm = new MainForm();
@@ -79,7 +80,7 @@ namespace Slot
             var ed = frm.Editor;
 
             //SettingsReader.Read(File.ReadAllText("samples\\settings.json"), ed);
-            KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
+            //KeymapReader.Read(File.ReadAllText(LocalFile("samples\\keymap.json")), KeyboardAdapter.Instance);
 
             var theme = App.Catalog<IThemeComponent>().Default();
             theme.ChangeTheme((Identifier)"dark");
@@ -89,6 +90,7 @@ namespace Slot
             if (fileName != null && FileUtil.TryGetInfo(fileName, out fi) && fi.Exists)
                 App.Ext.Run(ed, Slot.Main.File.Cmd.OpenFile, fi.FullName);
 
+            App.Catalog<IKeyboardAdapter>().Default().ChangeKeymap((Identifier)"default");
             Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();
         }

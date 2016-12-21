@@ -48,12 +48,14 @@ namespace Slot.Core.CommandModel
 
         public void RegisterCommands(IEnumerable<CommandMetadata> cmds)
         {
+            var km = App.Catalog<IKeyboardAdapter>().Default();
+
             foreach (var c in cmds)
             {
                 RegisterCommand(c);
 
                 if (c.Shortcut != null)
-                    KeyboardAdapter.Instance.RegisterInput(c.Key, c.Shortcut);
+                    km.RegisterInput(c.Key, c.Shortcut);
             }
         }
 

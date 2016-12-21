@@ -14,7 +14,10 @@ namespace Slot.Editor.Commands
             if (View.Search.IsSearchVisible)
                 View.Search.HideSearch();
             else
+            {
                 Buffer.Selections.Truncate();
+                Buffer.Selections.Main.Clear();
+            }
 
             if (!View.Focused)
                 View.Focus();

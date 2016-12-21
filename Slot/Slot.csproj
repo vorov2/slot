@@ -104,7 +104,7 @@
     <None Include="samples\commands.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="samples\keymap.json">
+    <None Include="packages\slot\data\keymap.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages\slot\package.json">
