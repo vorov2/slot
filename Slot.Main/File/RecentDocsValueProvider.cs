@@ -21,11 +21,9 @@ namespace Slot.Main.File
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string;
-            var cur = viewManager.GetActiveView().Buffer;
-            return bufferManager.EnumerateBuffers()
-                .Where(b => b != cur && (str == null || b.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1))
-                .OrderByDescending(b => b.LastAccess)
-                .Select(b => new ValueItem(b.File.Name, b.File.DirectoryName));
+            return bufferManager.EnumerateRecent()
+                .Where(b => str == null || b.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
+                .Select(b => new ValueItem(b.Name, b.DirectoryName));
         }
     }
 }

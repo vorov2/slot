@@ -94,6 +94,8 @@
     <Compile Include="Settings\SettingsBag.cs" />
     <Compile Include="Settings\SettingsProvider.cs" />
     <Compile Include="Settings\SettingsScope.cs" />
+    <Compile Include="State\IStateManager.cs" />
+    <Compile Include="State\StateManager.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Themes\Adornment.cs" />
     <Compile Include="Themes\IThemeComponent.cs" />

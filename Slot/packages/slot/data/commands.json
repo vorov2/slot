@@ -153,13 +153,18 @@
         ]
     },
     {
-        "key": "file.openrecentfile",
+        "key": "file.openRecentFile",
         "alias": "f-or",
         "title": "File: Open a recent file",
         "arguments": [
             {
                 "name": "fileName",
                 "valueProvider": "values.recentdocs"
+            },
+            {
+                "name": "encoding",
+                "valueProvider": "values.encoding",
+                "optional": true
             }
         ]
     },
@@ -210,6 +215,7 @@
             {
                 "name": "fileName",
                 "valueProvider": "values.systempath",
+                "optional": true,
                 "affinity": "FilePath"
             }
         ]

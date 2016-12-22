@@ -26,6 +26,7 @@ using System.Runtime.Remoting;
 using System.Security.Permissions;
 using Slot.Core.Modes;
 using Slot.Core.Packages;
+using Slot.Core.State;
 
 namespace Slot
 {
@@ -72,6 +73,7 @@ namespace Slot
             App.RegisterCatalog<IModeManager>();
             App.RegisterCatalog<IPackageManager>();
             App.RegisterCatalog<IKeyboardAdapter>();
+            App.RegisterCatalog<IStateManager>();
             App.Initialize();
 
             var frm = new MainForm();

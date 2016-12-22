@@ -20,6 +20,9 @@ namespace Slot.Core
         [Export("directory.user.settings")]
         public string UserSettings => ParsePath(AppSettings["directory.user.settings"]);
 
+        [Export("directory.user.state")]
+        public string UserState => ParsePath(AppSettings["directory.user.state"]);
+
         private string _root;
         [Export("directory.slot")]
         public string Root
@@ -41,7 +44,7 @@ namespace Slot.Core
                 };
 
             var macro = new MacroParser(macroVariables, VariableProviders.Default);
-            return macro.Parse(path);
+            return Environment.ExpandEnvironmentVariables(macro.Parse(path));
         }
     }
 }

@@ -35,6 +35,21 @@ namespace Slot.Core
             return bom;
         }
 
+        public static string GenerateFileName(string mask)
+        {
+            var tag = DateTime.Now.ToString("ddMMyyyyHHmm");
+            var name = string.Format(mask, tag);
+            var attempt = 0;
+
+            if (File.Exists(name))
+            {
+                attempt++;
+                name = string.Format(mask, tag + "(" + attempt + ")");
+            }
+
+            return name;
+        }
+
         public static bool ReadFile(string fileName, Encoding encoding, out string content)
         {
             FileInfo fi;

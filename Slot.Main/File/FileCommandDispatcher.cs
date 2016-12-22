@@ -80,6 +80,11 @@ namespace Slot.Main.File
             if (!FileUtil.TryGetInfo(fileName, out fi))
                 return;
 
+            OpenFile(fi, enc);
+        }
+
+        private void OpenFile(FileInfo fi, Encoding enc = null)
+        {
             if (enc == null && fi.Exists && !FileUtil.HasBom(fi))
                 enc = UTF8EncodingNoBom.Instance;
             else
@@ -129,10 +134,10 @@ namespace Slot.Main.File
 
             if (buffer != null)
             {
-                if (buffer.IsDirty)
-                    App.Ext.Log("File is dirty. Save file before reloading.", EntryType.Error);
-                else if (!buffer.File.Exists)
+                if (!buffer.File.Exists)
                     buffer.Encoding = enc;
+                else if (buffer.IsDirty)
+                    App.Ext.Log("File is dirty. Save file before reloading.", EntryType.Error);
                 else
                 {
                     bufferManager.CloseBuffer(buffer);
@@ -190,13 +195,15 @@ namespace Slot.Main.File
         }
 
         [Command]
-        public void SaveCopy(string fileName)
+        public void SaveCopy(string fileName = null)
         {
             var buffer = GetActiveBuffer();
 
             if (buffer == null)
                 return;
 
+            fileName = fileName ?? FileUtil.GenerateFileName(
+                buffer.File.FullName.Replace(buffer.File.Extension, "{0}" + buffer.File.Extension));
             FileUtil.WriteFile(fileName, buffer.GetContents(), buffer.Encoding);
         }
 
@@ -245,15 +252,20 @@ namespace Slot.Main.File
         private IBuffer GetActiveBuffer() => ViewManager.GetActiveView()?.Buffer;
 
         [Command]
-        public void OpenRecentFile(string fileName)
+        public void OpenRecentFile(string fileName, Encoding enc = null)
         {
-            var buf = bufferManager.EnumerateBuffers()
-                .FirstOrDefault(b => b.File.Name.IndexOf(fileName, StringComparison.OrdinalIgnoreCase) != -1);
-            OpenBuffer(buf);
+            var file = bufferManager.EnumerateRecent()
+                .FirstOrDefault(b => b.FullName.IndexOf(fileName, StringComparison.OrdinalIgnoreCase) != -1);
+            OpenFile(file, enc);
         }
 
         [Command]
-        public void OpenModifiedFile(string fileName) => OpenRecentFile(fileName);
+        public void OpenModifiedFile(string fileName)
+        {
+            var buf = bufferManager.EnumerateBuffers()
+                .FirstOrDefault(b => b.File.FullName.IndexOf(fileName, StringComparison.OrdinalIgnoreCase) != -1);
+            OpenBuffer(buf);
+        }
 
         private void OpenBuffer(IBuffer buf)
         {

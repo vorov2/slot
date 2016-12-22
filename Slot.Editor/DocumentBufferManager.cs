@@ -9,6 +9,7 @@ using Slot.Core.ViewModel;
 using Slot.Editor.ObjectModel;
 using Slot.Core;
 using Slot.Core.Output;
+using Slot.Core.State;
 
 namespace Slot.Editor
 {
@@ -21,11 +22,59 @@ namespace Slot.Editor
 
         private readonly List<IBuffer> buffers = new List<IBuffer>();
         private readonly List<Recent> recents = new List<Recent>();
+        private volatile bool recentRead = false;
+        private readonly static Guid stateId = Guid.Parse("CFFFB195-B2FF-40F6-9908-D6D403C965EC");
 
         class Recent
         {
             public FileInfo File;
             public DateTime Date;
+        }
+
+        public DocumentBufferManager()
+        {
+            App.Exit += AppExit;
+        }
+
+        private void AppExit(object sender, ExitEventArgs e)
+        {
+            var stream = App.Catalog<IStateManager>().Default().WriteState(stateId);
+
+            if (stream != null)
+                using (var bw = new BinaryWriter(stream))
+                {
+                    bw.Write(recents.Count);
+
+                    foreach (var r in recents)
+                    {
+                        bw.Write(r.Date.Ticks);
+                        bw.Write(r.File.FullName);
+                    }
+                }
+        }
+
+        private void ReadRecentItems()
+        {
+            if (recentRead)
+                return;
+
+            var stream = App.Catalog<IStateManager>().Default().ReadState(stateId);
+
+            if (stream != null)
+            {
+                using (var br = new BinaryReader(stream))
+                {
+                    var count = br.ReadInt32();
+
+                    for (var i = 0; i < count; i++)
+                        recents.Add(new Recent {
+                            Date = new DateTime(br.ReadInt64()),
+                            File = new FileInfo(br.ReadString())
+                        });
+                }
+            }
+
+            recentRead = true;
         }
 
         public IBuffer CreateBuffer()
@@ -90,6 +139,7 @@ namespace Slot.Editor
 
         private DocumentBuffer InternalCreateBuffer(FileInfo file, Encoding enc)
         {
+            ReadRecentItems();
             var buf = buffers.FirstOrDefault(b => 
                 b.File.FullName.Equals(file.FullName, StringComparison.OrdinalIgnoreCase));
 
@@ -118,6 +168,10 @@ namespace Slot.Editor
 
         public IEnumerable<IBuffer> EnumerateBuffers() => buffers.OrderByDescending(b => b.LastAccess);
 
-        public IEnumerable<FileInfo> EnumerateRecent() => recents.OrderByDescending(r => r.Date).Select(r => r.File);
+        public IEnumerable<FileInfo> EnumerateRecent()
+        {
+            ReadRecentItems();
+            return recents.OrderByDescending(r => r.Date).Select(r => r.File);
+        }
     }
 }

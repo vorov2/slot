@@ -77,14 +77,28 @@ namespace Slot.Core
                     return false;
             }
 
+            var ev = new ExitEventArgs();
+            OnExit(ev);
+
+            if (ev.Cancel)
+                return false;
+
             Terminating = true;
             Application.Exit();
             return true;
         }
 
+        public static event EventHandler<ExitEventArgs> Exit;
+        private static void OnExit(ExitEventArgs e) => Exit?.Invoke(null, e);
+
         public static bool Terminating { get; private set; }
 
         public static IAppExtensions Ext { get; } = null;
+    }
+
+    public sealed class ExitEventArgs : EventArgs
+    {
+        public bool Cancel { get; set; }
     }
 
     public interface IAppExtensions
