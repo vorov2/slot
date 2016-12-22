@@ -19,6 +19,7 @@ namespace Slot.Editor
     {
         public const string Name = "buffermanager.default";
         private const int MAX_RECENT = 100;
+        private const int BIN_VERSION = 1;
 
         private readonly List<IBuffer> buffers = new List<IBuffer>();
         private readonly List<Recent> recents = new List<Recent>();
@@ -38,11 +39,13 @@ namespace Slot.Editor
 
         private void AppExit(object sender, ExitEventArgs e)
         {
-            var stream = App.Catalog<IStateManager>().Default().WriteState(stateId);
+            var state = App.Catalog<IStateManager>().Default();
+            var stream = state.WriteState(stateId);
 
             if (stream != null)
                 using (var bw = new BinaryWriter(stream))
                 {
+                    bw.Write(BIN_VERSION);
                     bw.Write(recents.Count);
 
                     foreach (var r in recents)
@@ -50,20 +53,58 @@ namespace Slot.Editor
                         bw.Write(r.Date.Ticks);
                         bw.Write(r.File.FullName);
                     }
+
+                    bw.Write(buffers.Count);
+
+                    foreach (var b in buffers)
+                    {
+                        bw.Write(b.Id.ToByteArray());
+                        bw.Write(b.LastAccess.Ticks);
+                        bw.Write(b.Encoding is UTF8EncodingNoBom ? -b.Encoding.CodePage : b.Encoding.CodePage);
+                        bw.Write(b.File.FullName);
+                    }
+
+                    App.Ext.Log($"State saved for {recents.Count} recent item(s).", EntryType.Info);
                 }
+
+            var count = 0;
+
+            foreach (var b in buffers)
+            {
+                stream = state.WriteState(b.Id);
+
+                if (stream != null)
+                {
+                    count++;
+                    using (stream)
+                        b.SerializeState(stream);
+                }
+            }
+
+            App.Ext.Log($"State saved for {count} buffer(s).", EntryType.Info);
         }
 
-        private void ReadRecentItems()
+        private void ReadState()
         {
             if (recentRead)
                 return;
 
-            var stream = App.Catalog<IStateManager>().Default().ReadState(stateId);
+            var state = App.Catalog<IStateManager>().Default();
+            var stream = state.ReadState(stateId);
 
             if (stream != null)
             {
                 using (var br = new BinaryReader(stream))
                 {
+                    var v = br.ReadInt32();
+
+                    if (v != BIN_VERSION)
+                    {
+                        App.Ext.Log($"Invalid buffer manager state version. Expected {BIN_VERSION}, got {v}.", EntryType.Error);
+                        recentRead = true;
+                        return;
+                    }
+
                     var count = br.ReadInt32();
 
                     for (var i = 0; i < count; i++)
@@ -71,6 +112,35 @@ namespace Slot.Editor
                             Date = new DateTime(br.ReadInt64()),
                             File = new FileInfo(br.ReadString())
                         });
+
+                    App.Ext.Log($"State restored for {count} recent item(s).", EntryType.Info);
+                    count = br.ReadInt32();
+
+                    for (var i = 0; i < count; i++)
+                    {
+                        var id = new Guid(br.ReadBytes(16));
+                        var dt = new DateTime(br.ReadInt64());
+                        var cp = br.ReadInt32();
+                        var fi = new FileInfo(br.ReadString());
+                        var enc = cp < 0 ? UTF8EncodingNoBom.Instance : Encoding.GetEncoding(cp);
+
+                        if (fi.Exists)
+                        {
+                            var buf = InternalCreateBuffer(fi, enc, id);
+                            buf.LastAccess = dt;
+                        }
+                    }
+
+                    foreach (var b in buffers)
+                    {
+                        stream = state.ReadState(b.Id);
+
+                        if (stream != null)
+                            using (stream)
+                                b.DeserializeState(stream);
+                    }
+
+                    App.Ext.Log($"State restored for {count} buffer(s).", EntryType.Info);
                 }
             }
 
@@ -79,8 +149,9 @@ namespace Slot.Editor
 
         public IBuffer CreateBuffer()
         {
+            ReadState();
             var num = buffers.Count(b => !b.File.Exists);
-            return InternalCreateBuffer(new FileInfo($"untitled-{num + 1}"), Encoding.UTF8);
+            return InternalCreateBuffer(new FileInfo($"untitled-{num + 1}"), Encoding.UTF8, Guid.NewGuid());
         }
 
         public void CloseBuffer(IBuffer buffer)
@@ -113,16 +184,17 @@ namespace Slot.Editor
 
         public IBuffer CreateBuffer(FileInfo fileName, Encoding encoding)
         {
+            ReadState();
             fileName.Refresh();
 
             if (!fileName.Exists)
             {
-                var buf = InternalCreateBuffer(fileName, encoding);
+                var buf = InternalCreateBuffer(fileName, encoding, Guid.NewGuid());
                 buf.Edits++;
                 return buf;
             }
 
-            return InternalCreateBuffer(fileName, encoding);
+            return InternalCreateBuffer(fileName, encoding, Guid.NewGuid());
         }
 
         private Document CreateDocument(FileInfo fileName, Encoding encoding)
@@ -137,9 +209,8 @@ namespace Slot.Editor
             return res ? Document.FromString(txt) : null;
         }
 
-        private DocumentBuffer InternalCreateBuffer(FileInfo file, Encoding enc)
+        private DocumentBuffer InternalCreateBuffer(FileInfo file, Encoding enc, Guid id)
         {
-            ReadRecentItems();
             var buf = buffers.FirstOrDefault(b => 
                 b.File.FullName.Equals(file.FullName, StringComparison.OrdinalIgnoreCase));
 
@@ -150,7 +221,7 @@ namespace Slot.Editor
                 if (doc == null)
                     return null;
 
-                buf = new DocumentBuffer(doc, file, enc);
+                buf = new DocumentBuffer(doc, file, enc, id);
                 buffers.Add(buf);
                 var rd = recents.FirstOrDefault(r => r.File.FullName.Equals(file.FullName, StringComparison.OrdinalIgnoreCase));
 
@@ -166,11 +237,15 @@ namespace Slot.Editor
             return (DocumentBuffer)buf;
         }
 
-        public IEnumerable<IBuffer> EnumerateBuffers() => buffers.OrderByDescending(b => b.LastAccess);
+        public IEnumerable<IBuffer> EnumerateBuffers()
+        {
+            ReadState();
+            return buffers.OrderByDescending(b => b.LastAccess);
+        }
 
         public IEnumerable<FileInfo> EnumerateRecent()
         {
-            ReadRecentItems();
+            ReadState();
             return recents.OrderByDescending(r => r.Date).Select(r => r.File);
         }
     }

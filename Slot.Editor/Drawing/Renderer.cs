@@ -94,7 +94,7 @@ namespace Slot.Editor.Drawing
 
         internal void DrawLines(Graphics g, List<CaretData> carets)
         {
-            CurrentFont = editor.Settings.Font;
+            CurrentFont = editor.UseSmallFont ? editor.Settings.SmallFont : editor.Settings.Font;
             var fvl = editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
             StyleRenderer.DefaultStyle = editor.Theme.GetStyle(StandardStyle.Default);
@@ -124,6 +124,7 @@ namespace Slot.Editor.Drawing
             var nonWs = false;
             var showInd = editor.Settings.ShowIndentationGuides;
             var indentSize = editor.IndentSize;
+            var cw = editor.UseSmallFont ? editor.Info.SmallCharWidth : editor.Info.CharWidth;
 
             for (var j = 0; j < line.Stripes; j++)
             {
@@ -144,7 +145,7 @@ namespace Slot.Editor.Drawing
                     if (indent != -1)
                     {
                         tet = indent;
-                        x += tet * editor.Info.CharWidth;
+                        x += tet * cw;
                     }
 
                     for (var i = oldcut; i < cut; i++)
@@ -153,7 +154,7 @@ namespace Slot.Editor.Drawing
                         var ct = c == '\t' ? Line.GetIndentationSize(tet, editor.IndentSize) : Line.GetCharWidth(c);
 
                         tet += ct;
-                        var xw = ct * editor.Info.CharWidth;
+                        var xw = ct * cw;
                         var visible = x + editor.Scroll.ScrollPosition.X >= lmarg && x + editor.Scroll.ScrollPosition.X + xw <= cwidth;
                         var guide = false;
                         

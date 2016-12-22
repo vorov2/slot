@@ -10,5 +10,6 @@ namespace Slot
     [ComponentData("log.application")]
     public sealed class Logs : LogBuffer
     {
+
     }
 }

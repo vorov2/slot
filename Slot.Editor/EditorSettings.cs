@@ -191,8 +191,8 @@ namespace Slot.Editor
         {
             FontExtensions.Clean(_smallFont);
             _smallFont = new Font(FontName, FontSize - 1, FontStyle.Regular);
-            _smallCharWidth = _font.Width();
-            _smallCharHeight = _font.Height();
+            _smallCharWidth = _smallFont.Width();
+            _smallCharHeight = _smallFont.Height();
         }
 
         private Font _font;

@@ -8,7 +8,7 @@ namespace Slot.Editor.ObjectModel
     public class LogBuffer : DocumentBuffer, ILogComponent
     {
         public LogBuffer() 
-            : base(Document.FromString(""), new FileInfo("memory"), Encoding.UTF8)
+            : base(Document.FromString(""), new FileInfo("memory"), Encoding.UTF8, Guid.NewGuid())
         {
 
         }

@@ -544,7 +544,7 @@ namespace Slot.Editor
             set
             {
                 var doc = Document.FromString(value);
-                var buffer = new DocumentBuffer(doc, new FileInfo("untitled"), Encoding.UTF8);
+                var buffer = new DocumentBuffer(doc, new FileInfo("untitled"), Encoding.UTF8, Guid.NewGuid());
                 AttachBuffer(buffer);
             }
         }
@@ -662,6 +662,9 @@ namespace Slot.Editor
         public IThemeComponent Theme { get; }
 
         IBuffer IView.Buffer => Buffer;
+
+        [Browsable(false)]
+        public bool UseSmallFont { get; set; }
 
         public event EventHandler<TextEventArgs> BeforePaste;
         internal bool HasBeforePaste => BeforePaste != null;

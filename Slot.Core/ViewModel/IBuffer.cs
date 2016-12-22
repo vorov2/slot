@@ -16,6 +16,8 @@ namespace Slot.Core.ViewModel
 
         void ClearDirtyFlag();
 
+        Guid Id { get; }
+
         bool IsDirty { get; }
 
         FileInfo File { get; set; }

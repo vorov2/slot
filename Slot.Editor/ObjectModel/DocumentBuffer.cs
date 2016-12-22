@@ -37,8 +37,9 @@ namespace Slot.Editor.ObjectModel
             }
         }
 
-        public DocumentBuffer(Document doc, FileInfo file, Encoding encoding)
+        public DocumentBuffer(Document doc, FileInfo file, Encoding encoding, Guid id)
         {
+            Id = id;
             Document = doc;
             Selections = new SelectionList(doc);
             UndoStack = new LimitedStack<CommandInfo>();
@@ -110,12 +111,29 @@ namespace Slot.Editor.ObjectModel
 
         void IBuffer.SerializeState(Stream stream)
         {
-            DocumentBufferSerializer.Serialize(this, stream);
+            while (Views.Count > 0)
+                Views[0].DetachBuffer();
+
+            try
+            {
+                DocumentBufferSerializer.Serialize(this, stream);
+            }
+            catch
+            {
+                App.Ext.Log($"Unable to serialize buffer state: {File}", EntryType.Error);
+            }
         }
 
         void IBuffer.DeserializeState(Stream stream)
         {
-            DocumentBufferSerializer.Deserialize(this, stream);
+            try
+            {
+                DocumentBufferSerializer.Deserialize(this, stream);
+            }
+            catch
+            {
+                App.Ext.Log($"Unable to deserialize buffer state: {File}", EntryType.Error);
+            }
         }
 
         public void ClearDirtyFlag()
@@ -170,6 +188,8 @@ namespace Slot.Editor.ObjectModel
                 }
             }
         }
+
+        public Guid Id { get; }
 
         public Point ScrollPosition { get; internal set; }
 

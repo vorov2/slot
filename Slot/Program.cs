@@ -83,6 +83,14 @@ namespace Slot
 
             if (fileName != null && FileUtil.TryGetInfo(fileName, out fi) && fi.Exists)
                 App.Ext.Run(Cmd.OpenFile, fi.FullName);
+            else
+            {
+                var bm = App.Catalog<IBufferManager>().Default();
+                var buf = bm.EnumerateBuffers().FirstOrDefault();
+
+                if (buf != null)
+                    App.Ext.Run(Cmd.OpenFile, buf.File.FullName);
+            }
 
             Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();

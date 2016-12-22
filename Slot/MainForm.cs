@@ -34,14 +34,14 @@ namespace Slot
     public partial class MainForm : Form
     {
         private EditorControl ed;
-        private EditorControl output;
+        //private EditorControl output;
         private CommandBarControl commandBar;
 
         public MainForm()
         {
             InitializeComponent();
             Initialize();
-            InitializeOutput(ed.Settings);
+            //InitializeOutput(ed.Settings);
         }
 
         private void Initialize()
@@ -82,20 +82,20 @@ namespace Slot
 
         private void InitializeOutput(EditorSettings set)
         {
-            output = new EditorControl { Dock = DockStyle.Fill };
-            output.LeftMargins.Add(new GutterMargin(output));
-            output.RightMargins.Add(new ScrollBarMargin(output, Orientation.Vertical));
-            output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));
-            output.ThinCaret = true;
+            //output = new EditorControl { Dock = DockStyle.Fill };
+            //output.LeftMargins.Add(new GutterMargin(output));
+            //output.RightMargins.Add(new ScrollBarMargin(output, Orientation.Vertical));
+            //output.BottomMargins.Add(new ScrollBarMargin(output, Orientation.Horizontal));
+            //output.ThinCaret = true;
 
-            //output.Settings.Font = set.SmallFont;
-            //output.Settings.ShowEol = output.Settings.ShowLineLength = false;
-            //output.Settings.ShowWhitespace = ShowWhitespace.None;
-            output.LimitedMode = true;
-            output.AttachBuffer(App.Catalog<ILogComponent>().GetComponent((Identifier)"log.application"));
-            output.ReadOnly = true;
+            ////output.Settings.Font = set.SmallFont;
+            ////output.Settings.ShowEol = output.Settings.ShowLineLength = false;
+            ////output.Settings.ShowWhitespace = ShowWhitespace.None;
+            //output.LimitedMode = true;
+            //output.AttachBuffer(App.Catalog<ILogComponent>().GetComponent((Identifier)"log.application"));
+            //output.ReadOnly = true;
 
-            splitContainer.Panel2.Controls.Add(output);
+            //splitContainer.Panel2.Controls.Add(output);
         }
 
         //protected override CreateParams CreateParams
