@@ -26,6 +26,9 @@ namespace Slot.Editor
         private volatile bool recentRead = false;
         private readonly static Guid stateId = Guid.Parse("CFFFB195-B2FF-40F6-9908-D6D403C965EC");
 
+        [Import]
+        private IStateManager stateManager = null;
+
         class Recent
         {
             public FileInfo File;
@@ -39,8 +42,7 @@ namespace Slot.Editor
 
         private void AppExit(object sender, ExitEventArgs e)
         {
-            var state = App.Catalog<IStateManager>().Default();
-            var stream = state.WriteState(stateId);
+            var stream = stateManager.WriteState(stateId);
 
             if (stream != null)
                 using (var bw = new BinaryWriter(stream))
@@ -71,7 +73,7 @@ namespace Slot.Editor
 
             foreach (var b in buffers)
             {
-                stream = state.WriteState(b.Id);
+                stream = stateManager.WriteState(b.Id);
 
                 if (stream != null)
                 {
@@ -89,8 +91,7 @@ namespace Slot.Editor
             if (recentRead)
                 return;
 
-            var state = App.Catalog<IStateManager>().Default();
-            var stream = state.ReadState(stateId);
+            var stream = stateManager.ReadState(stateId);
 
             if (stream != null)
             {
@@ -133,7 +134,7 @@ namespace Slot.Editor
 
                     foreach (var b in buffers)
                     {
-                        stream = state.ReadState(b.Id);
+                        stream = stateManager.ReadState(b.Id);
 
                         if (stream != null)
                             using (stream)
@@ -160,6 +161,8 @@ namespace Slot.Editor
 
             if (idx != -1)
                 buffers.RemoveAt(idx);
+
+            stateManager.ClearState(buffer.Id);
         }
 
         public void SaveBuffer(IBuffer buffer, FileInfo file, Encoding encoding)

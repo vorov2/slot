@@ -34,6 +34,12 @@ namespace Slot.Core.State
             return File.Open(fn.FullName, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
         }
 
+        public void ClearState(Guid stateId)
+        {
+            var fn = GetFileInfo(stateId);
+            FileUtil.TryDelete(fn);
+        }
+
         private FileInfo GetFileInfo(Guid stateId) =>
             new FileInfo(Path.Combine(statePath, stateId.ToString()));
     }

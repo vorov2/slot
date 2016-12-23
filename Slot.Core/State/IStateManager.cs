@@ -9,5 +9,7 @@ namespace Slot.Core.State
         Stream WriteState(Guid stateId);
 
         Stream ReadState(Guid stateId);
+
+        void ClearState(Guid stateId);
     }
 }
