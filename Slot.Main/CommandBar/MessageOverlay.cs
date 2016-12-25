@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace Slot.Main.CommandBar
         {
             base.OnPaint(e);
             var st = theme.GetStyle(StandardStyle.Popup);
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.Graphics.DrawString(Text, Font, st.ForeColor.Brush(),
                 new Rectangle(
                     Padding.Left + BorderWidth,

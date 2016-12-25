@@ -173,7 +173,7 @@ namespace Slot.Main.File
         }
 
         [Command]
-        public void SaveFile(string fileName = null)
+        public void SaveFile(string fileName = null, Encoding enc = null)
         {
             var buffer = GetActiveBuffer();
 
@@ -191,7 +191,21 @@ namespace Slot.Main.File
                 fi = buffer.File;
 
             OpenFolder(fi.Directory);
-            bufferManager.SaveBuffer(buffer, fi, buffer.Encoding);
+            bufferManager.SaveBuffer(buffer, fi, enc ?? buffer.Encoding);
+        }
+
+        [Command]
+        public void SaveWithEncoding(Encoding enc)
+        {
+            var buffer = GetActiveBuffer();
+
+            if (buffer == null)
+                return;
+
+            if (!FileUtil.EnsureFilePath(buffer.File))
+                return;
+
+            bufferManager.SaveBuffer(buffer, buffer.File, enc);
         }
 
         [Command]

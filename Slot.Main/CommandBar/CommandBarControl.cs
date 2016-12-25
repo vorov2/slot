@@ -76,7 +76,10 @@ namespace Slot.Main.CommandBar
             var ed = GetEditor();
 
             if (ed.Width != PreferredEditorWidth)
+            {
                 HideEditor();
+                HideTip();
+            }
 
             var g = e.Graphics;
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
@@ -140,6 +143,7 @@ namespace Slot.Main.CommandBar
             {
                 overlay = new MessageOverlay();
                 overlay.Visible = false;
+                overlay.Click += (_, __) => HideTip();
                 FindForm().Controls.Add(overlay);
                 overlay.BringToFront();
             }

@@ -187,6 +187,22 @@
             {
                 "name": "fileName",
                 "optional": true
+            },
+            {
+                "name": "encoding",
+                "valueProvider": "values.encoding",
+                "optional": true
+            }
+        ]
+    },
+    {
+        "key": "file.saveWithEncoding",
+        "alias": "f-se",
+        "title": "File: Save current file with new encoding",
+        "arguments": [
+            {
+                "name": "encoding",
+                "valueProvider": "values.encoding"
             }
         ]
     },
