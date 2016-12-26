@@ -46,7 +46,7 @@
     //Workspace
     {
         "key": "workspace.openWorkspace",
-        "alias": "w-o",
+        "alias": "ws-o",
         "title": "Workspace: Open workspace",
         "arguments": [
             {
@@ -116,7 +116,11 @@
         "alias": "b-sr",
         "title": "Buffer: Toggle write protect"
     },
-
+    {
+        "key": "buffer.toggleOvertype",
+        "alias": "b-so",
+        "title": "Buffer: Toggle overtype mode"
+    },
 
     //File
     {
@@ -509,11 +513,6 @@
         "key": "editor.selectnormal",
         "alias": "e-sn",
         "title": "Editor: Select a region of text"
-    },
-    {
-        "key": "editor.overtype",
-        "alias": "e-ovr",
-        "title": "Editor: Toggle overtype mode"
     },
     {
         "key": "editor.pagedown",

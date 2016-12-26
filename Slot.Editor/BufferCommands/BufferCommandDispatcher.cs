@@ -50,6 +50,15 @@ namespace Slot.Editor.BufferCommands
                 buf.ReadOnly = !buf.ReadOnly;
         }
 
+        [Command]
+        public void ToggleOvertype()
+        {
+            var buf = GetBuffer();
+
+            if (buf != null)
+                buf.Overtype = !buf.Overtype;
+        }
+
         private DocumentBuffer GetBuffer()
         {
             var view = ViewManager.GetActiveView();

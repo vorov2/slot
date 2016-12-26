@@ -105,7 +105,6 @@
     <Compile Include="Commands\InsertNewLineCommand.cs" />
     <Compile Include="Commands\InsertRangeCommand.cs" />
     <Compile Include="Commands\NormalSelectCommand.cs" />
-    <Compile Include="Commands\OvertypeCommand.cs" />
     <Compile Include="Commands\PageDownCommand.cs" />
     <Compile Include="Commands\PageUpCommand.cs" />
     <Compile Include="Commands\PasteCommand.cs" />

@@ -76,5 +76,7 @@
     "editor.documentend": "ctrl+end",
     "editor.extenddocumenthome": "ctrl+shift+home",
     "editor.extenddocumentend": "ctrl+shift+end",
-    "editor.overtype": "ins"
+
+    "buffer.toggleOvertype": "ins",
+    "buffer.toggleWordwrap":  "alt+z"
 }
