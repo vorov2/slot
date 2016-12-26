@@ -84,7 +84,7 @@ namespace Slot.Editor.Autocomplete
             var caret = editor.Buffer.Selections.Main.Caret;
             var line = editor.Lines[caret.Line];
             var aff = editor.AffinityManager.GetAffinity(caret);
-            var seps = aff.NonWordSymbols ?? editor.Settings.NonWordSymbols;
+            var seps = aff.NonWordSymbols ?? editor.EditorSettings.NonWordSymbols;
             var sb = new StringBuilder();
 
             if (caret.Col > 0)

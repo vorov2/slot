@@ -10,6 +10,7 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
 using Slot.Editor;
+using Slot.Core.ViewModel;
 
 namespace Slot.Main.StatusBar
 {
@@ -28,7 +29,7 @@ namespace Slot.Main.StatusBar
         private void AdjustHeight()
         {
             var h = (int)Math.Round(
-                (double)App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font.Height()
+                (double)((IView)Editor).Settings.Get<EnvironmentSettings>().Font.Height()
                     + Dpi.GetHeight(4), MidpointRounding.AwayFromZero);
 
             if (Height != h)
@@ -42,7 +43,7 @@ namespace Slot.Main.StatusBar
             var bounds = e.ClipRectangle;
             var style = Editor.Theme.GetStyle(StandardStyle.StatusBar);
             var astyle = Editor.Theme.GetStyle(StandardStyle.ActiveStatusBar);
-            var font = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().SmallFont;
+            var font = ((IView)Editor).Settings.Get<EnvironmentSettings>().SmallFont;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             g.FillRectangle(style.BackColor.Brush(), bounds);
 

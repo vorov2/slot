@@ -29,6 +29,14 @@ namespace Slot
             return frm.Editor;
         }
 
+        public void CloseView(IView view)
+        {
+            var ed = view as EditorControl;
+
+            if (ed != null)
+                ed.FindForm().Close();
+        }
+
         public IView GetActiveView()
         {
             var frm = Form.ActiveForm as MainForm;

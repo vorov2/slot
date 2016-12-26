@@ -1,33 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using System.Text;
-using Slot.Core.Packages;
-using Slot.Core.Settings;
+using System.Windows.Forms;
+using Json;
 using Slot.Core;
-using Slot.Core.ComponentModel;
+using Slot.Core.Packages;
 using Slot.Core.Themes;
 using Slot.Core.ViewModel;
-using Json;
 
 namespace Slot.Main.Theme
 {
-    [Export(typeof(IThemeComponent))]
-    [ComponentData(Name)]
-    public sealed class ThemeProvider : IThemeComponent
+    internal sealed class RealTheme : ITheme
     {
-        public const string Name = "theme.default";
         private readonly Dictionary<Identifier, ThemeInfo> themes = new Dictionary<Identifier, ThemeInfo>();
         private readonly Dictionary<StandardStyle, Style> styles = new Dictionary<StandardStyle, Style>();
-        
-        [Import]
-        private IPackageManager packageManager = null;
+        private readonly IView view;
 
-        [Import]
-        private IViewManager viewManager = null;
+        public RealTheme(IView view)
+        {
+            this.view = view;
+        }
 
         public IEnumerable<ThemeInfo> EnumerateThemes()
         {
@@ -52,7 +46,7 @@ namespace Slot.Main.Theme
                     foreach (var s in ThemeReader.Read(content))
                         Register(s.StyleId, s.Style);
 
-                    foreach (var v in viewManager.EnumerateViews().OfType<Control>())
+                    foreach (var v in App.Catalog<IViewManager>().Default().EnumerateViews().OfType<Control>())
                         v.Invalidate(true);
                 }
 
@@ -69,7 +63,7 @@ namespace Slot.Main.Theme
             if (themes.Count > 0)
                 return;
 
-            foreach (var pkg in packageManager.EnumeratePackages())
+            foreach (var pkg in App.Catalog<IPackageManager>().Default().EnumeratePackages())
                 foreach (var e in pkg.GetMetadata(PackageSection.Themes))
                     themes.Add(
                         (Identifier)e.String("key"),
@@ -79,7 +73,7 @@ namespace Slot.Main.Theme
                             new FileInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")))
                         ));
 
-            var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
+            var set = view.Settings.Get<EnvironmentSettings>();
             ChangeTheme((Identifier)set.Theme);
         }
 

@@ -31,7 +31,7 @@ namespace Slot.Editor.Drawing
             var shift = editor.ShowEol ? editor.Info.CharWidth / 2 : 0;
             x += shift;
             var str = len.ToString();
-            g.DrawString(str, editor.Settings.SmallFont, editor.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush(),
+            g.DrawString(str, editor.EditorSettings.SmallFont, editor.Theme.GetStyle(StandardStyle.SpecialSymbol).ForeColor.Brush(),
                 new PointF(x, y), TextFormats.Compact);
             return shift + (str.Length + 1) * editor.Info.CharWidth;
         }
@@ -41,7 +41,7 @@ namespace Slot.Editor.Drawing
             if (editor.WordWrap || editor.LimitedMode)
                 return;
 
-            foreach (var i in editor.Settings.LongLineIndicators)
+            foreach (var i in editor.EditorSettings.LongLineIndicators)
             {
                 var x = editor.Info.TextLeft + i * editor.Info.CharWidth
                     + editor.Scroll.ScrollPosition.X;
@@ -73,7 +73,7 @@ namespace Slot.Editor.Drawing
             var w = editor.Info.CharWidth * 3;
             g.FillRectangle(editor.Theme.GetStyle(StandardStyle.ActiveFolding).ForeColor.Brush(),
                 new Rectangle(x, y + editor.Info.LineHeight / 4, w, editor.Info.LineHeight / 2));
-            g.DrawString("···", editor.Settings.Font.Get(editor.Theme.GetStyle(StandardStyle.Default).FontStyle),
+            g.DrawString("···", editor.EditorSettings.Font.Get(editor.Theme.GetStyle(StandardStyle.Default).FontStyle),
                 fs.BackColor.Brush(),
                 new Point(x, y), TextFormats.Compact);
             return w;
@@ -94,7 +94,7 @@ namespace Slot.Editor.Drawing
 
         internal void DrawLines(Graphics g, List<CaretData> carets)
         {
-            CurrentFont = editor.UseSmallFont ? editor.Settings.SmallFont : editor.Settings.Font;
+            CurrentFont = editor.UseSmallFont ? editor.EditorSettings.SmallFont : editor.EditorSettings.Font;
             var fvl = editor.Scroll.FirstVisibleLine;
             var lvl = editor.Scroll.LastVisibleLine;
             StyleRenderer.DefaultStyle = editor.Theme.GetStyle(StandardStyle.Default);
@@ -122,7 +122,7 @@ namespace Slot.Editor.Drawing
             var currentLine = editor.Theme.GetStyle(StandardStyle.CurrentLine);
             var indent = -1;
             var nonWs = false;
-            var showInd = editor.Settings.ShowIndentationGuides;
+            var showInd = editor.EditorSettings.ShowIndentationGuides;
             var indentSize = editor.IndentSize;
             var cw = editor.UseSmallFont ? editor.Info.SmallCharWidth : editor.Info.CharWidth;
 
@@ -207,7 +207,7 @@ namespace Slot.Editor.Drawing
                                         : StyleRenderer.DefaultStyle.BackColor);
                                     StyleRenderer.DrawAll(style, cg, new Rectangle(default(Point), rect.Size), c, pos);
 
-                                    if (editor.Settings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
+                                    if (editor.EditorSettings.LongLineIndicators.Any(ind => ind == i) || (editor.WordWrap && editor.WordWrapColumn == i))
                                         cg.DrawLine(specialSymbol.ForeColor.Pen(), 0, 0, 0, rect.Size.Height);
 
                                     if (guide)

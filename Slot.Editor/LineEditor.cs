@@ -11,7 +11,7 @@ namespace Slot.Editor
     {
         private readonly EditorControl editor;
 
-        public LineEditor(EditorControl editor) : base(editor.Settings)
+        public LineEditor(EditorControl editor)
         {
             LimitedMode = true;
             this.editor = editor;

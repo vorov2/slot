@@ -9,16 +9,17 @@ using System.Windows.Forms;
 using Slot.Core;
 using Slot.Core.Themes;
 using Slot.Drawing;
+using Slot.Editor;
 
 namespace Slot.Main.CommandBar
 {
     public sealed class MessageOverlay : Overlay
     {
-        private IThemeComponent theme;
+        private ITheme theme;
 
-        public MessageOverlay()
+        public MessageOverlay(EditorControl editor)
         {
-            theme = App.Catalog<IThemeComponent>().Default();
+            theme = editor.Theme;
         }
 
         protected override void OnPaint(PaintEventArgs e)

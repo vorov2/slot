@@ -40,7 +40,7 @@ namespace Slot
                         Left = br.ReadInt32();
                         Width = br.ReadInt32();
                         Height = br.ReadInt32();
-                        App.Catalog<IThemeComponent>().Default().ChangeTheme((Identifier)br.ReadString());
+                        ed.Theme.ChangeTheme((Identifier)br.ReadString());
                     }
             });
         }
@@ -61,7 +61,7 @@ namespace Slot
                         bw.Write(Left);
                         bw.Write(Width);
                         bw.Write(Height);
-                        bw.Write(App.Catalog<IThemeComponent>().Default().Theme.Key.ToString());
+                        bw.Write(ed.Theme.Theme.Key.ToString());
                     }
             });
         }
@@ -150,9 +150,8 @@ namespace Slot
 
         internal void UpdateTitle()
         {
-            var wm = App.Catalog<IViewManager>().Default()?.GetActiveView();
-            Text = wm.Workspace == null ? Application.ProductName
-                : $"{wm.Workspace.FullName} - {Application.ProductName}";
+            Text = ((IView)ed).Workspace == null ? Application.ProductName
+                : $"{((IView)ed).Workspace.FullName} - {Application.ProductName}";
         }
 
         private void Form1_Activated(object sender, EventArgs e)

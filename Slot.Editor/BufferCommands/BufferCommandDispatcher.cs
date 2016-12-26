@@ -36,7 +36,7 @@ namespace Slot.Editor.BufferCommands
             if (buf != null)
             {
                 var val = buf.WordWrap != null ? buf.WordWrap.Value
-                    : App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>().WordWrap;
+                    : ViewManager.GetActiveView().Settings.Get<EditorSettings>().WordWrap;
                 buf.WordWrap = !val;
             }
         }

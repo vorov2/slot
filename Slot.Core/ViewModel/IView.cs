@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Slot.Core.Settings;
+using Slot.Core.Themes;
 
 namespace Slot.Core.ViewModel
 {
@@ -9,12 +11,14 @@ namespace Slot.Core.ViewModel
 
         void DetachBuffer();
 
-        void Close();
-
         IBuffer Buffer { get; }
 
         DirectoryInfo Workspace { get; set; }
 
         Identifier Mode { get; set; }
+
+        ISettings Settings { get; }
+
+        ITheme Theme { get; }
     }
 }

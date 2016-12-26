@@ -51,7 +51,9 @@ namespace Slot.Editor
 
         public void Match()
         {
-            if (!editor.Settings.MatchBrackets
+            var set = editor.EditorSettings;
+
+            if (!set.MatchBrackets
                 || !editor.Buffer.Selections.Main.IsEmpty
                 || editor.Buffer.Selections.Count > 1
                 || (editor.Buffer.Edits == edits && lastPos == editor.Buffer.Selections.Main.Caret && editor.Document.Id == docId))
@@ -69,8 +71,8 @@ namespace Slot.Editor
                 var ln = editor.Lines[sel.Caret.Line];
                 var grm1 = editor.AffinityManager.GetAffinity(sel.Caret);
                 var grm2 = editor.AffinityManager.GetAffinity(new Pos(sel.Caret.Line, sel.Caret.Col - 1));
-                var bracketsForward = grm1.BracketSymbols ?? editor.Settings.BracketSymbols;
-                var bracketsBackward = grm2.BracketSymbols ?? editor.Settings.BracketSymbols;
+                var bracketsForward = grm1.BracketSymbols ?? set.BracketSymbols;
+                var bracketsBackward = grm2.BracketSymbols ?? set.BracketSymbols;
                 var pi = -1;
 
                 if (sel.Caret.Col < ln.Length

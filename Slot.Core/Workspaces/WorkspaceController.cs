@@ -40,6 +40,9 @@ namespace Slot.Core.Workspaces
 
         private bool IsChildFolder(DirectoryInfo ws, DirectoryInfo dir)
         {
+            if (Directory.Exists(Path.Combine(dir.FullName, ".slot")))
+                return false;
+
             if (ws == null)
                 return false;
 
@@ -64,7 +67,7 @@ namespace Slot.Core.Workspaces
                 view.Workspace = dir;
                 FileUtil.EnsurePath(dir);
                 Directory.SetCurrentDirectory(view.Workspace.FullName);
-                App.Catalog<ISettingsProvider>().Default().ReloadSettings(SettingsScope.Workspace);
+                view.Settings.ReloadSettings(SettingsScope.Workspace);
                 OnWorkspaceChanged();
                 return true;
             }

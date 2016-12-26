@@ -27,15 +27,15 @@ namespace Slot.Editor
 
         public int StripesPerScreen => TextHeight / LineHeight;
 
-        public int CharWidth => editor.Settings.CharWidth;
+        public int CharWidth => editor.EditorSettings.CharWidth;
 
-        public int CharHeight => editor.Settings.CharHeight;
+        public int CharHeight => editor.EditorSettings.CharHeight;
 
-        public int SmallCharWidth => editor.Settings.SmallCharWidth;
+        public int SmallCharWidth => editor.EditorSettings.SmallCharWidth;
 
-        public int SmallCharHeight => editor.Settings.SmallCharHeight;
+        public int SmallCharHeight => editor.EditorSettings.SmallCharHeight;
 
         public int LineHeight =>
-            CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
+            CharHeight + (int)Math.Round(CharHeight * editor.EditorSettings.LinePadding);
     }
 }

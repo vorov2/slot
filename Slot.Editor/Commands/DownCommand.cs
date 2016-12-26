@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using Slot.Core.ComponentModel;
 using Slot.Core;
 using Slot.Core.Settings;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Commands
 {
@@ -38,7 +39,7 @@ namespace Slot.Editor.Commands
                 var stripe = ln.GetStripe(pos.Col);
                 var tetra = ln.GetStripeCol(pos.Col, stripe);
                 tetra = tetra > sel.RestoreCaretCol ? tetra : sel.RestoreCaretCol;
-                var set = App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>();
+                var set = ctx.EditorSettings;
                 var shift = set.WrappingIndent == WrappingIndent.Same ? ln.Indent
                     : set.WrappingIndent == WrappingIndent.Indent ? ln.Indent /*+ set.IndentSize*/ : 0;
 

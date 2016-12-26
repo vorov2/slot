@@ -13,17 +13,9 @@ namespace Slot.Core.Settings
     using MAP = Dictionary<string, object>;
     using OMAP = Dictionary<Type, SettingsBag>;
 
-    [Export(typeof(ISettingsProvider))]
-    [ComponentData("settings.default")]
-    public sealed class SettingsProvider : ISettingsProvider
+    public sealed class RealSettings : ISettings
     {
         private const string FILE = "settings.json";
-
-        [Import("directory.user.settings")]
-        private string userSettingsDirectory = null;
-
-        [Import]
-        private IViewManager viewManager = null;
 
         private MAP settings;
         private MAP userSettings;
@@ -92,7 +84,7 @@ namespace Slot.Core.Settings
 
             userSettings = ReadFile(UserSettingsFile);
 
-            var dir = viewManager.GetActiveView()?.Workspace;
+            var dir = App.Catalog<IViewManager>().Default().GetActiveView()?.Workspace;
 
             if (dir != null)
                 workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".slot", FILE));
@@ -109,6 +101,8 @@ namespace Slot.Core.Settings
             return json.Parse() as MAP;
         }
 
-        private string UserSettingsFile => Path.Combine(userSettingsDirectory, FILE);
+        internal string UserSettingsDirectory { get; set; }
+
+        private string UserSettingsFile => Path.Combine(UserSettingsDirectory, FILE);
     }
 }

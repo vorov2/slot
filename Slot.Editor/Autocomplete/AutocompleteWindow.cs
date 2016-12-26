@@ -109,7 +109,7 @@ namespace Slot.Editor.Autocomplete
                         }
 
                         g.DrawString(s.Item.ToString(),
-                            SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
+                            SmallFont ? editor.EditorSettings.SmallFont : editor.EditorSettings.Font,
                             fc.Brush(),
                             new Rectangle(CharWidth, y, Width - CharWidth*2, LineHeight),
                             format);
@@ -121,7 +121,7 @@ namespace Slot.Editor.Autocomplete
                             foreach (var mc in mstr)
                             {
                                 g.DrawString(mc.ToString(),
-                                    SmallFont ? editor.Settings.SmallFont : editor.Settings.Font,
+                                    SmallFont ? editor.EditorSettings.SmallFont : editor.EditorSettings.Font,
                                     fc.Brush(),
                                     new Point(x, y),
                                     format);
@@ -282,7 +282,7 @@ namespace Slot.Editor.Autocomplete
 
         internal int CharHeight => SmallFont ? editor.Info.SmallCharHeight : editor.Info.CharHeight;
 
-        internal int LineHeight => CharHeight + (int)Math.Round(CharHeight * editor.Settings.LinePadding);
+        internal int LineHeight => CharHeight + (int)Math.Round(CharHeight * editor.EditorSettings.LinePadding);
 
         public ValueItem SelectedItem
         {

@@ -72,7 +72,8 @@
     <Compile Include="File\FileCommandDispatcher.cs" />
     <Compile Include="Keyboard\KeyboardAdapter.cs" />
     <Compile Include="Keyboard\KeymapReader.cs" />
-    <Compile Include="Theme\ThemeProvider.cs" />
+    <Compile Include="Theme\ThemeManager.cs" />
+    <Compile Include="Theme\RealTheme.cs" />
     <Compile Include="Theme\ThemeReader.cs" />
     <Compile Include="Workspace\FolderValueProvider.cs" />
     <Compile Include="File\ModifiedDocsValueProvider.cs" />

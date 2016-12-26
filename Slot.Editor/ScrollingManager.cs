@@ -256,7 +256,7 @@ namespace Slot.Editor
                     var ln = editor.Lines[i];
 
                     if (!ln.Invalidated || forced)
-                        ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.IndentSize, editor.Settings.WrappingIndent);
+                        ln.RecalculateCuts(twidth, editor.Info.CharWidth, editor.IndentSize, editor.EditorSettings.WrappingIndent);
                     ln.Y = maxHeight;
                     maxHeight += ln.Stripes * editor.Info.LineHeight;
                 }

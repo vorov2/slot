@@ -1,9 +1,8 @@
 ﻿using System;
-using Slot.Core.ComponentModel;
 
 namespace Slot.Core.Settings
 {
-    public interface ISettingsProvider : IComponent
+    public interface ISettings
     {
         T Get<T>() where T : SettingsBag, new();
 

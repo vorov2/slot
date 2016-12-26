@@ -16,7 +16,7 @@ namespace Slot.Editor.Lexing
     public sealed class ConfigurableLexer : IStylerComponent
     {
         public const string Name = "styler.default";
-
+        private EditorSettings settings;
         private char contextChar;
 
         public ConfigurableLexer()
@@ -27,6 +27,7 @@ namespace Slot.Editor.Lexing
         public void Style(IView view, Range range)
         {
             var ed = (EditorControl)view;
+            settings = ed.EditorSettings;
 
             if (ed.Buffer.GrammarKey == null)
                 return;
@@ -85,7 +86,7 @@ namespace Slot.Editor.Lexing
             var ln = Lines[line];
             var grammar = App.Ext.Grammars().GetGrammar(mys.GrammarKey);
             Editor.AffinityManager.Associate(line, i, grammar.GlobalId);
-            var wordSep = grammar.NonWordSymbols ?? Editor.Settings.NonWordSymbols;
+            var wordSep = grammar.NonWordSymbols ?? settings.NonWordSymbols;
             var backm = mys.Id == 0 && mys.BackDelegate != null ? mys.BackDelegate : mys;
             var last = '\0';
             var term = '\0';

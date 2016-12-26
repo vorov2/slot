@@ -59,7 +59,7 @@ namespace Slot
             App.RegisterCatalog<ICommandDispatcher>();
             App.RegisterCatalog<ICommandBar>();
             App.RegisterCatalog<IArgumentValueProvider>();
-            App.RegisterCatalog<IThemeComponent>();
+            App.RegisterCatalog<IThemeManager>();
             App.RegisterCatalog<IDentComponent>();
             App.RegisterCatalog<IFoldingComponent>();
             App.RegisterCatalog<IStylerComponent>();
@@ -67,7 +67,7 @@ namespace Slot
             App.RegisterCatalog<IBufferManager>();
             App.RegisterCatalog<IViewManager>();
             App.RegisterCatalog<ILogComponent>();
-            App.RegisterCatalog<ISettingsProvider>();
+            App.RegisterCatalog<ISettingsManager>();
             App.RegisterCatalog<IWorkspaceController>();
             App.RegisterCatalog<ICommandProvider>();
             App.RegisterCatalog<IModeManager>();

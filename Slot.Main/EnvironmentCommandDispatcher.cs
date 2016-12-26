@@ -68,7 +68,7 @@ namespace Slot.Test
         [Command]
         public void ChangeTheme(string themeName)
         {
-            App.Catalog<IThemeComponent>().Default().ChangeTheme((Identifier)themeName);
+            ViewManager.GetActiveView().Theme.ChangeTheme((Identifier)themeName);
         }
 
         [Command]

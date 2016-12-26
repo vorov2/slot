@@ -47,7 +47,7 @@ namespace Slot.Editor.Affinity
             if (id != 0)
                 grm = App.Ext.Grammars().GetGrammar(id);
 
-            return grm ?? GetRootAffinity() ?? editor.Settings;
+            return grm ?? GetRootAffinity() ?? editor.EditorSettings;
         }
 
         internal int GetAffinityId(Pos pos) => GetAffinityId(pos.Line, pos.Col);

@@ -8,6 +8,8 @@ namespace Slot.Core.ViewModel
     {
         IView CreateView();
 
+        void CloseView(IView view);
+
         IView GetActiveView();
 
         void ActivateView(IView view);

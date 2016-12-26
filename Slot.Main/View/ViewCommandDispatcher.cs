@@ -41,7 +41,7 @@ namespace Slot.Main.View
         public void CloseView()
         {
             var view = ViewManager.GetActiveView();
-            view.Close();
+            ViewManager.CloseView(view);
         }
 
         [Command]

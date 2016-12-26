@@ -109,7 +109,7 @@ namespace Slot.Editor.Folding
                 else
                 {
                     var aff = editor.AffinityManager.GetRootAffinity();
-                    var key = aff?.FoldingComponentKey ?? editor.Settings.FoldingComponentKey;
+                    var key = aff?.FoldingComponentKey ?? editor.EditorSettings.FoldingComponentKey;
 
                     if (key != null)
                     {

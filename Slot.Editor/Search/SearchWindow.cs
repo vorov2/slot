@@ -74,7 +74,7 @@ namespace Slot.Editor.Search
 
                     foreach (var c in tip)
                     {
-                        g.DrawString(c.ToString(), editor.Settings.SmallFont.Get(style.FontStyle), style.ForeColor.Brush(),
+                        g.DrawString(c.ToString(), editor.EditorSettings.SmallFont.Get(style.FontStyle), style.ForeColor.Brush(),
                             new Rectangle(x, 0, editor.Info.SmallCharWidth, editor.Info.LineHeight), format);
                         x += editor.Info.SmallCharWidth;
                     }
@@ -190,7 +190,7 @@ namespace Slot.Editor.Search
 
         private void DrawButton(Graphics g, string chars, Rectangle rect, bool set)
         {
-            var fnt = editor.Settings.Font;
+            var fnt = editor.EditorSettings.Font;
             var def = editor.Theme.GetStyle(StandardStyle.Default);
             var style = editor.Theme.GetStyle(StandardStyle.SpecialSymbol);
 

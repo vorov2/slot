@@ -47,6 +47,6 @@ namespace Slot.Editor.Commands
 
         protected Document Document => View.Buffer.Document;
 
-        protected EditorSettings Settings => View.Settings;
+        protected EditorSettings Settings => View.EditorSettings;
     }
 }

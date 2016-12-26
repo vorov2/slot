@@ -64,7 +64,7 @@ namespace Slot.Main.CommandBar
         private void AdjustHeight()
         {
             var h = (int)Math.Round(
-                Math.Max(App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font.Height() * 1.7,
+                Math.Max(((IView)editor).Settings.Get<EnvironmentSettings>().Font.Height() * 1.7,
                     editor.Info.CharHeight * 1.9), MidpointRounding.AwayFromZero);
             if (Height != h)
                 Height = h;
@@ -91,7 +91,7 @@ namespace Slot.Main.CommandBar
 
             if (!ed.Visible)
             {
-                var baseFont = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font;
+                var baseFont = ((IView)editor).Settings.Get<EnvironmentSettings>().Font;
                 var font = baseFont.Get(cs.FontStyle);
                 var x = font.Width() * 2f;
                 var h = font.Width() / 1.8f;
@@ -112,7 +112,7 @@ namespace Slot.Main.CommandBar
                 g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
                 x += g.MeasureString(editor.Buffer.File.Name, font).Width;
 
-                var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace?.FullName.Length ?? 0;
+                var ws = ((IView)editor).Workspace?.FullName.Length ?? 0;
                 var dirName = editor.Buffer.File.DirectoryName.Length < ws ? editor.Buffer.File.DirectoryName
                     : editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
                 g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
@@ -146,7 +146,7 @@ namespace Slot.Main.CommandBar
         {
             if (overlay == null)
             {
-                overlay = new MessageOverlay();
+                overlay = new MessageOverlay(editor);
                 overlay.Visible = false;
                 overlay.Click += (_, __) => HideTip();
                 FindForm().Controls.Add(overlay);
@@ -181,7 +181,7 @@ namespace Slot.Main.CommandBar
 
         private void ShowTip()
         {
-            var font = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>().Font;
+            var font = ((IView)editor).Settings.Get<EnvironmentSettings>().Font;
             var eWidth = editor.Info.TextWidth / 2;
             Size size;
             var err = "M " + error;
@@ -432,7 +432,7 @@ namespace Slot.Main.CommandBar
         {
             var tetras = commandEditor.Document.GetLine(0).GetTetras(commandEditor.IndentSize);
             var cw = commandEditor.Info.SmallCharWidth;
-            var font = commandEditor.Settings.SmallFont;
+            var font = commandEditor.EditorSettings.SmallFont;
             var x = (tetras + 2) * commandEditor.Info.CharWidth;
             var y = (commandEditor.Height - (int)(commandEditor.Info.SmallCharHeight * 1.1)) / 2;
             var style = editor.Theme.GetStyle(StandardStyle.Hint);

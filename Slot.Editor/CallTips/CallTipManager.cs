@@ -67,7 +67,7 @@ namespace Slot.Editor.CallTips
             {
                 foreach (var c in ln)
                 {
-                    var font = editor.Settings.SmallFont.Get(c.Style);
+                    var font = editor.EditorSettings.SmallFont.Get(c.Style);
                     g.DrawString(c.Val.ToString(), font, c.Color.Brush(), x, y, format);
                     x += editor.Info.SmallCharWidth;
                 }
@@ -79,7 +79,7 @@ namespace Slot.Editor.CallTips
 
         private TipInfo ProcessHtmlString(string text)
         {
-            var font = editor.Settings.SmallFont;
+            var font = editor.EditorSettings.SmallFont;
             var cw = editor.Info.SmallCharWidth;
             var max = editor.Info.TextWidth / 2;
             var width = 0;

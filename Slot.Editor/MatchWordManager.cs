@@ -59,7 +59,7 @@ namespace Slot.Editor
 
         private void Match()
         {
-            if (!editor.Settings.MatchWords)
+            if (!editor.EditorSettings.MatchWords)
                 return;
 
             var caret = editor.Buffer.Selections.Main.Caret;
@@ -89,7 +89,7 @@ namespace Slot.Editor
 
             var grmId = editor.AffinityManager.GetAffinityId(caret);
             var grm = grmId != 0 ? App.Ext.Grammars().GetGrammar(grmId) : null;
-            var seps = (" \t" + (grm?.NonWordSymbols ?? editor.Settings.NonWordSymbols)).ToCharArray();
+            var seps = (" \t" + (grm?.NonWordSymbols ?? editor.EditorSettings.NonWordSymbols)).ToCharArray();
             var regex = new Regex("\\b" + Regex.Escape(txt) + "\\b");
 
             for (var i = 0; i < editor.Lines.Count; i++)

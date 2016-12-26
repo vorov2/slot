@@ -28,7 +28,7 @@ namespace Slot.Editor.Margins
             var len = lines.Count.ToString().Length;
             var caret = Editor.Buffer.Selections.Main.Caret;
             var backBrush = lns.BackColor.Brush();
-            var font = Editor.Settings.Font.Get(lns.FontStyle);
+            var font = Editor.EditorSettings.Font.Get(lns.FontStyle);
             g.FillRectangle(backBrush, bounds);
 
             for (var i = Editor.Scroll.FirstVisibleLine; i < Editor.Scroll.LastVisibleLine + 1; i++)

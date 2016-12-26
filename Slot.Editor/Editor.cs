@@ -38,12 +38,7 @@ namespace Slot.Editor
         private Pos movePosition;
         private Point mousePosition;
 
-        public EditorControl() : this(App.Catalog<ISettingsProvider>().Default().Get<EditorSettings>())
-        {
-
-        }
-
-        public EditorControl(EditorSettings settings)
+        public EditorControl()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw
@@ -68,9 +63,7 @@ namespace Slot.Editor
             Autocomplete = new AutocompleteManager(this);
             AffinityManager = new AffinityManager(this);
             Search = new SearchManager(this);
-            Settings = settings;
             Styles = new StyleManager(this);
-            Theme = App.Catalog<IThemeComponent>().Default();
             Text = "";
 
             timer.Tick += Tick;
@@ -437,7 +430,7 @@ namespace Slot.Editor
 
         public override Color ForeColor => Theme.GetStyle(StandardStyle.Default).ForeColor;
 
-        public override Font Font => Settings.Font;
+        public override Font Font => EditorSettings.Font;
 
         public void DetachBuffer()
         {
@@ -500,11 +493,6 @@ namespace Slot.Editor
             }
         }
 
-        void IView.Close()
-        {
-            FindForm().Close();
-        }
-
         private IKeyboardAdapter _keyboardAdapter;
         internal IKeyboardAdapter KeyboardAdapter
         {
@@ -530,15 +518,12 @@ namespace Slot.Editor
             set { Buffer.Mode = value; }
         }
 
-        [Browsable(false)]
         public DocumentBuffer Buffer { get; private set; }
 
-        [Browsable(false)]
         public Document Document => Buffer.Document;
 
         internal List<Line> Lines => Document.Lines;
 
-        [Browsable(false)]
         public override string Text
         {
             get { return Buffer?.GetText(); }
@@ -550,53 +535,35 @@ namespace Slot.Editor
             }
         }
 
-        [Browsable(false)]
-        public bool WordWrap => Buffer.WordWrap ?? Settings.WordWrap;
+        public bool WordWrap => Buffer.WordWrap ?? EditorSettings.WordWrap;
 
-        [Browsable(false)]
-        public int WordWrapColumn => Buffer.WordWrapColumn ?? Settings.WordWrapColumn;
+        public int WordWrapColumn => Buffer.WordWrapColumn ?? EditorSettings.WordWrapColumn;
 
-        [Browsable(false)]
-        public bool UseTabs => Buffer.UseTabs ?? Settings.UseTabs;
+        public bool UseTabs => Buffer.UseTabs ?? EditorSettings.UseTabs;
 
-        [Browsable(false)]
-        public int IndentSize => Buffer.IndentSize ?? Settings.IndentSize;
+        public int IndentSize => Buffer.IndentSize ?? EditorSettings.IndentSize;
 
-        [Browsable(false)]
-        public bool ShowEol => Buffer.ShowEol ?? Settings.ShowEol;
+        public bool ShowEol => Buffer.ShowEol ?? EditorSettings.ShowEol;
 
-        [Browsable(false)]
         public ShowWhitespace ShowWhitespace => LimitedMode ? ShowWhitespace.None
-            : (Buffer.ShowWhitespace ?? Settings.ShowWhitespace);
+            : (Buffer.ShowWhitespace ?? EditorSettings.ShowWhitespace);
 
-        [Browsable(false)]
-        public bool ShowLineLength => !LimitedMode && (Buffer.ShowLineLength ?? Settings.ShowLineLength);
+        public bool ShowLineLength => !LimitedMode && (Buffer.ShowLineLength ?? EditorSettings.ShowLineLength);
 
-        [Browsable(false)]
-        public bool ShowLineNumbers => !LimitedMode && Settings.ShowLineNumbers;
+        public bool ShowLineNumbers => !LimitedMode && EditorSettings.ShowLineNumbers;
 
-        [Browsable(false)]
-        public bool CurrentLineIndicator => !LimitedMode && (Buffer.CurrentLineIndicator ?? Settings.CurrentLineIndicator);
+        public bool CurrentLineIndicator => !LimitedMode && (Buffer.CurrentLineIndicator ?? EditorSettings.CurrentLineIndicator);
 
-        [Browsable(false)]
-        public bool ReadOnly => Buffer.ReadOnly ?? (!LimitedMode && Settings.ReadOnly);
+        public bool ReadOnly => Buffer.ReadOnly ?? (!LimitedMode && EditorSettings.ReadOnly);
 
-        [Browsable(false)]
         public EditorInfo Info { get; }
 
-        [Browsable(false)]
-        public EditorSettings Settings { get; }
-
-        [Browsable(false)]
         public MarginList TopMargins { get; }
 
-        [Browsable(false)]
         public MarginList LeftMargins { get; }
 
-        [Browsable(false)]
         public MarginList RightMargins { get; }
 
-        [Browsable(false)]
         public MarginList BottomMargins { get; }
 
         internal CaretRenderer CaretRenderer { get; }
@@ -609,58 +576,66 @@ namespace Slot.Editor
 
         internal char InputChar { get; private set; }
 
-        [Browsable(false)]
         public bool ThinCaret
         {
             get { return CaretRenderer.ThinCaret; }
             set { CaretRenderer.ThinCaret = value; }
         }
 
-        [Browsable(false)]
         public StyleManager Styles { get; }
 
-        [Browsable(false)]
         public ScrollingManager Scroll { get; }
 
-        [Browsable(false)]
         public LocationManager Locations { get; }
 
-        [Browsable(false)]
         public FoldingManager Folding { get; }
 
-        [Browsable(false)]
         public CallTipManager CallTips { get; }
 
-        [Browsable(false)]
         public MatchBracketManager MatchBrackets { get; }
 
-        [Browsable(false)]
         public MatchWordManager MatchWords { get; }
 
-        [Browsable(false)]
         public AutocompleteManager Autocomplete { get; }
 
-        [Browsable(false)]
         public AffinityManager AffinityManager { get; }
 
-        [Browsable(false)]
         public int FirstEditLine { get; set; }
 
-        [Browsable(false)]
         public int LastEditLine { get; set; }
 
-        [Browsable(false)]
         public bool LimitedMode { get; set; }
 
-        [Browsable(false)]
         public SearchManager Search { get; }
 
-        [Browsable(false)]
-        public IThemeComponent Theme { get; }
+        private ITheme _theme;
+        public ITheme Theme
+        {
+            get
+            {
+                if (_theme == null)
+                    _theme = App.Catalog<IThemeManager>().Default().Create(this);
+
+                return _theme;
+            }
+        }
 
         IBuffer IView.Buffer => Buffer;
 
-        [Browsable(false)]
+        private ISettings _settings;
+        public ISettings Settings
+        {
+            get
+            {
+                if (_settings == null)
+                    _settings = App.Catalog<ISettingsManager>().Default().Create();
+
+                return _settings;
+            }
+        }
+
+        public EditorSettings EditorSettings => Settings.Get<EditorSettings>();
+
         public bool UseSmallFont { get; set; }
 
         public event EventHandler<TextEventArgs> BeforePaste;

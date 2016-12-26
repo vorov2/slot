@@ -15,6 +15,7 @@ using Slot.Core.Output;
 namespace Slot.Main.Keyboard
 {
     using Core.Settings;
+    using Core.ViewModel;
     using MAP = Dictionary<KeyInput, Identifier>;
 
     [Export(typeof(IKeyboardAdapter))]
@@ -63,14 +64,14 @@ namespace Slot.Main.Keyboard
                         ));
                 }
 
-            var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
-            set.SettingsChanged += (o, ev) =>
-            {
-                var kid = (Identifier)set.Keymap;
+            var set = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
+            //set.SettingsChanged += (o, ev) =>
+            //{
+            //    var kid = (Identifier)set.Keymap;
 
-                if (currentKeymap != kid)
-                    ChangeKeymap(kid);
-            };
+            //    if (currentKeymap != kid)
+            //        ChangeKeymap(kid);
+            //};
             ChangeKeymap((Identifier)set.Keymap);
             loaded = true;
         }

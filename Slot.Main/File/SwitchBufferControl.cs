@@ -43,10 +43,11 @@ namespace Slot.Main.File
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            var bag = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
-            var style = App.Catalog<IThemeComponent>().Default().GetStyle(StandardStyle.Popup);
-            var style1 = App.Catalog<IThemeComponent>().Default().GetStyle(StandardStyle.PopupSelected);
-            var style2 = App.Catalog<IThemeComponent>().Default().GetStyle(StandardStyle.PopupBorder);
+            var view = App.Catalog<IViewManager>().Default().GetActiveView();
+            var bag = view.Settings.Get<EnvironmentSettings>();
+            var style  = view.Theme.GetStyle(StandardStyle.Popup);
+            var style1 = view.Theme.GetStyle(StandardStyle.PopupSelected);
+            var style2 = view.Theme.GetStyle(StandardStyle.PopupBorder);
 
             var g = e.Graphics;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -114,7 +115,7 @@ namespace Slot.Main.File
         internal int CalculateHeight()
         {
             var max = Buffers.Count > 10 ? 10 : Buffers.Count;
-            var bag = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
+            var bag = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
             var height = (int)Math.Round(bag.Font.Height() * 1.1, MidpointRounding.AwayFromZero);
             return max * height + Dpi.GetHeight(3) * 2;
         }

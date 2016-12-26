@@ -6,22 +6,22 @@ namespace Slot.Editor.Affinity
     {
         public static string GetNonWordSymbols(this IDocumentAffinity aff, EditorControl ctx)
         {
-            return aff.NonWordSymbols ?? ctx.Settings.NonWordSymbols;
+            return aff.NonWordSymbols ?? ctx.EditorSettings.NonWordSymbols;
         }
 
         public static string GetBracketSymbols(this IDocumentAffinity aff, EditorControl ctx)
         {
-            return aff.BracketSymbols ?? ctx.Settings.BracketSymbols;
+            return aff.BracketSymbols ?? ctx.EditorSettings.BracketSymbols;
         }
 
         public static string GetAutocompleteSymbols(this IDocumentAffinity aff, EditorControl ctx)
         {
-            return aff.AutocompleteSymbols ?? ctx.Settings.AutocompleteSymbols;
+            return aff.AutocompleteSymbols ?? ctx.EditorSettings.AutocompleteSymbols;
         }
 
         public static Identifier GetIndentComponentKey(this IDocumentAffinity aff, EditorControl ctx)
         {
-            return aff.IndentComponentKey ?? ctx.Settings.IndentComponentKey;
+            return aff.IndentComponentKey ?? ctx.EditorSettings.IndentComponentKey;
         }
     }
 }

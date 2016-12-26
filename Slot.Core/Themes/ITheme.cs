@@ -4,7 +4,7 @@ using Slot.Core.ComponentModel;
 
 namespace Slot.Core.Themes
 {
-    public interface IThemeComponent : IComponent
+    public interface ITheme : IComponent
     {
         IEnumerable<ThemeInfo> EnumerateThemes();
 

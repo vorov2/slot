@@ -20,7 +20,7 @@ namespace Slot.Editor.Commands
                 return base.Execute(sel);
 
             var aff = View.AffinityManager.GetAffinity(sel.Caret);
-            var seps = aff.NonWordSymbols ?? View.Settings.NonWordSymbols;
+            var seps = aff.NonWordSymbols ?? View.EditorSettings.NonWordSymbols;
             var st = SelectWordCommand.GetStrategy(seps, ln.CharAt(sel.Caret.Col));
             var col = SelectWordCommand.FindBoundRight(seps, ln, sel.Caret.Col, st);
             var newSel = new Selection(sel.Caret, new Pos(sel.Caret.Line, col));

@@ -198,7 +198,7 @@ namespace Slot.Editor.ObjectModel
             return AppliedStyle.Empty;
         }
 
-        internal Style GetStyle(int index, IThemeComponent theme)
+        internal Style GetStyle(int index, ITheme theme)
         {
             var ret = Style.Empty;
 
