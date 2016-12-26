@@ -46,10 +46,22 @@
             "extensions": [ "cs" ]
         },
         {
+            "key": "javascript",
+            "grammar": "javascript",
+            "name": "JavaScript",
+            "extensions": [ "js", "jsx" ]
+        },
+        {
             "key": "html",
             "grammar": "html",
             "name": "HTML",
             "extensions": [ "htm", "html" ]
+        },
+        {
+            "key": "xml",
+            "grammar": "xml",
+            "name": "XML",
+            "extensions": [ "xml", "xsd", "xsl", "xslt", "config", "manifest" ]
         },
         {
             "key": "json",
@@ -82,8 +94,16 @@
             "file": "grammars/html.json"
         },
         {
+            "key": "xml",
+            "file": "grammars/xml.json"
+        },
+        {
             "key": "json",
             "file": "grammars/json.json"
+        },
+        {
+            "key": "javascript",
+            "file": "grammars/javascript.json"
         }
     ]
 }

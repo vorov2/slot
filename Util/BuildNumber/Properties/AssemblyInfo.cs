@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Slot.Core;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Slot.Drawing")]
-[assembly: AssemblyDescription(App.Description)]
-[assembly: AssemblyConfiguration(App.Configuration)]
-[assembly: AssemblyCompany(App.Company)]
-[assembly: AssemblyProduct(App.Product)]
-[assembly: AssemblyCopyright(App.Copyright)]
+[assembly: AssemblyTitle("BuildNumber")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("BuildNumber")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using Slot.Core;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("865baf51-1c60-4879-b979-8f7ee3320500")]
+[assembly: Guid("24d37662-6e3b-4ce9-884b-8206da909104")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using Slot.Core;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(App.Version)]
-[assembly: AssemblyFileVersion(App.Version)]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

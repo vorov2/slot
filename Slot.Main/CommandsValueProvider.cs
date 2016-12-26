@@ -19,6 +19,7 @@ namespace Slot.Main
             return App.Catalog<ICommandProvider>().Default().EnumerateCommands()
                 .Where(c => c.Alias != "?")
                 .Where(c => c.Title.ContainsAll(strings))
+                .OrderBy(c => c.Title)
                 .Select(c => new CommandArgumentValue(c));
         }
 

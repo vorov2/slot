@@ -12,8 +12,22 @@ using Slot.Core.ViewModel;
 
 namespace Slot.Core
 {
-    public static class App
+    public static partial class App
     {
+        public readonly static bool IsMono = Type.GetType("Mono.Runtime") != null;
+        
+        #region Info
+        public const string Product = "Slot";
+        public const string Company = "Vasily Voronkov";
+        public const string Description = "Slot, a next generation text editor";
+        public const string Copyright = "Copyright © Vasily Voronkov 2016";
+        #if PublicRelease
+        public const string Configuration = "Public";
+        #else
+        public const string Configuration = "Insiders";
+        #endif
+        #endregion
+
         private static readonly Dictionary<Type, object> catalogs = new Dictionary<Type, object>();
         private static CompositionContainer container;
 

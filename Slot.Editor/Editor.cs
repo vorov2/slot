@@ -28,7 +28,6 @@ namespace Slot.Editor
 {
     public class EditorControl : Control, IView
     {
-        public readonly static bool Mono = Type.GetType("Mono.Runtime") != null;
         private const int WM_POINTERDOWN = 0x0246;
         private const int WM_POINTERUP = 0x0247;
         private const int WM_POINTERUPDATE = 0x0245;
@@ -202,7 +201,7 @@ namespace Slot.Editor
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             if (Autocomplete.WindowShown && Autocomplete.InWindowLocation(
-                Mono ? PointToClient(e.Location) : e.Location))
+                App.IsMono ? PointToClient(e.Location) : e.Location))
                 return;
 
             if (LockMouseScrolling || Lines.Count < 2)

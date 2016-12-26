@@ -14,6 +14,9 @@ namespace Slot.Core
     {
         private Dictionary<string, string> macroVariables;
 
+        [Export("directory.slot")]
+        public string SlotFolder => ".slot";
+
         [Export("directory.packages")]
         public string Packages => ParsePath(AppSettings["directory.packages"]);
 

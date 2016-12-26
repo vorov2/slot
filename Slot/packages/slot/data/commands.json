@@ -1,8 +1,18 @@
 ﻿[
     {
+        "key": "app.showVersion",
+        "alias": "about",
+        "title": "Info: Show version information"
+    },
+    {
+        "key": "app.exit",
+        "alias": "qa",
+        "title": "Application: Quit application"
+    },
+    {
         "key": "app.commandPalette",
         "alias": "?",
-        "title": "Command Palette",
+        "title": "Application: Command Palette",
         "arguments": [
             {
                 "name": "commandName",
@@ -13,17 +23,17 @@
     {
         "key": "app.toggleCommandBar",
         "alias": "cmd",
-        "title": "Toggle command bar"
+        "title": "Application: Toggle command bar"
     },
     {
         "key": "app.toggleMessage",
         "alias": "cmd-msg",
-        "title": "Display or hide error or warning message"
+        "title": "Application: Display or hide error message"
     },
     {
         "key": "app.changeTheme",
         "alias": "theme",
-        "title": "Change visual theme",
+        "title": "Application: Change visual theme",
         "arguments": [
             {
                 "name": "theme",
@@ -34,7 +44,7 @@
     {
         "key": "app.changeMode",
         "alias": "mode",
-        "title": "Change language mode",
+        "title": "Application: Change language mode",
         "arguments": [
             {
                 "name": "mode",

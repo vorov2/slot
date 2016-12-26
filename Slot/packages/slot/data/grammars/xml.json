@@ -1,3 +1,56 @@
 {
-
+    "delimeters": "`~!@#$%^&*()=+[{]}\\|;'\",<>/?",
+    "brackets": "<>",
+    "indentProvider": "indent.block",
+    "foldingProvider": "folding.indent",
+    "autocompleteSymbols": "</",
+    "sections": [
+        {
+            "key": "preprocessor",
+            "multiline": true,
+            "start": "<?",
+            "end": ">",
+            "style": "bracket"
+        },
+        {
+            "key": "comment",
+            "multiline": true,
+            "start": "<!--",
+            "end": "-->",
+            "style": "comment.multiline"
+        },
+        {
+            "key": "tag",
+            "start": "<",
+            "end": ">",
+            "multiline": true,
+            "context": "</",
+            "style": "bracket",
+            "identifierStyle": "keyword.special",
+            "contextIdentifierStyle": "keyword"
+        },
+        {
+            "key": "comment2",
+            "parent": "tag",
+            "multiline": true,
+            "start": "<!--",
+            "end": "-->",
+            "style": "comment.multiline"
+        },
+        {
+            "key": "string",
+            "parent": "tag",
+            "multiline": true,
+            "start": "\"",
+            "end": "\"",
+            "style": "string.multiline"
+        },
+        {
+            "key": "cdata",
+            "multiline": true,
+            "start": "<![CDATA[",
+            "end": "]]>",
+            "style": "string.multiline"
+        }
+    ]
 }

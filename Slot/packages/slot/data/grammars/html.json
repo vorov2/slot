@@ -62,13 +62,13 @@
             "style": "string.multiline"
         },
         {
-            "key": "csharp",
+            "key": "javascript",
             "multiline": true,
             "start": "<script >",
             "end": "</script>",
             "dontStyleCompletely": true,
             "ignoreCase": true,
-            "grammar": "csharp"
+            "grammar": "javascript"
         },
         {
             "key": "css",

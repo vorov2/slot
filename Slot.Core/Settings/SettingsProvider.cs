@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Text;
 using Json;
 using Slot.Core.ComponentModel;
 using Slot.Core.ViewModel;
+using Slot.Core.Packages;
 
 namespace Slot.Core.Settings
 {
-    using System.Text;
-    using Packages;
     using MAP = Dictionary<string, object>;
     using OMAP = Dictionary<Type, SettingsBag>;
 

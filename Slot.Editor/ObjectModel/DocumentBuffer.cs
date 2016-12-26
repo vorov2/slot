@@ -354,21 +354,23 @@ namespace Slot.Editor.ObjectModel
 
     internal sealed class DocumentBufferSerializer
     {
-        private const int VERSION = 1;
+        private const int VERSION = 2;
 
         public static void Deserialize(DocumentBuffer buffer, Stream stream)
         {
             var sr = new BinaryReader(stream, Encoding.UTF8);
 
             if (sr.ReadInt32() != VERSION)
-                throw new SlotException($"Invalid version of document state. Expected: {VERSION}.");
+            {
+                App.Ext.Log($"Invalid version of document state. Expected: {VERSION}.", EntryType.Error);
+                return;
+            }
 
             var @lock = buffer.ObtainLock();
 
             try
             {
                 //Main
-                buffer.Edits = sr.ReadInt32();
                 buffer.ReadOnly = sr.ReadBoolean();
                 buffer.Encoding = Encoding.GetEncoding(sr.ReadInt32());
                 buffer.File = new FileInfo(sr.ReadString());
@@ -419,7 +421,6 @@ namespace Slot.Editor.ObjectModel
             sw.Write(VERSION);
 
             //Main
-            sw.Write(buffer.Edits);
             sw.Write(buffer.ReadOnly);
             sw.Write(buffer.Encoding.CodePage);
             sw.Write(buffer.File.FullName);

@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Core.Settings;
 using Slot.Main;
+using System.Reflection;
 
 namespace Slot.Test
 {
@@ -77,6 +78,28 @@ namespace Slot.Test
                 ViewManager.GetActiveView().Mode = mi;
             else
                 App.Ext.Log($"Unknown mode: {mode}.", EntryType.Error);
+        }
+
+        [Command]
+        public void Exit()
+        {
+            Application.Exit();
+        }
+
+        [Command]
+        public void ShowVersion()
+        {
+            var asm = typeof(EnvironmentCommandDispatcher).Assembly;
+            var v = asm.GetName().Version;
+            var attr = Attribute.GetCustomAttribute(asm, typeof(AssemblyConfigurationAttribute))
+                as AssemblyConfigurationAttribute;
+            var build = attr.Configuration == "Insiders" ? v.Revision + "-Insiders":"Public";
+            var plat = App.IsMono ? "Mono" : ".NET";
+            MessageBox.Show(Form.ActiveForm,
+                $"{Application.ProductName}\n\nVersion: {v.Major}.{v.Minor}.{v.Build}\nBuild: {build}\nDate: {DateTime.Parse(App.BuildDate).ToString("dd/MM/yyyy")}\nRuntime: {plat}_{Environment.Version}",
+                Application.ProductName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
     }
 }

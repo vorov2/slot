@@ -1,17 +1,17 @@
-﻿using Slot.Core;
-using Slot.Core.ComponentModel;
-using Slot.Core.Themes;
-using Slot.Core.ViewModel;
-using Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using Slot.Core.Packages;
-using Slot.Core.Settings;
 using System.Windows.Forms;
 using System.Text;
+using Slot.Core.Packages;
+using Slot.Core.Settings;
+using Slot.Core;
+using Slot.Core.ComponentModel;
+using Slot.Core.Themes;
+using Slot.Core.ViewModel;
+using Json;
 
 namespace Slot.Main.Theme
 {
@@ -80,12 +80,6 @@ namespace Slot.Main.Theme
                         ));
 
             var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
-            //set.SettingsChanged += (o, ev) =>
-            //{
-            //    var kt = (Identifier)set.Theme;
-            //    if (Theme?.Key != kt)
-            //        ChangeTheme(kt);
-            //};
             ChangeTheme((Identifier)set.Theme);
         }
 

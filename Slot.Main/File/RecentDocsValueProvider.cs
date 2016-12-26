@@ -13,9 +13,6 @@ namespace Slot.Main.File
     public sealed class RecentDocsValueProvider : IArgumentValueProvider
     {
         [Import]
-        private IViewManager viewManager = null;
-
-        [Import]
         private IBufferManager bufferManager = null;
 
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
