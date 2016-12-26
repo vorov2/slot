@@ -172,9 +172,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages\slot\docs\readme.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="packages\slot\docs\readme.txt" />
     <Content Include="Properties\app.ico" />
     <Content Include="test.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
