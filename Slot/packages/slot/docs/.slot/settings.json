@@ -1,0 +1,13 @@
+﻿{
+    "editor.wordWrap": true,
+    "editor.wordWrapColumn": 80,
+    "editor.readOnly": true,
+    "editor.matchWords": false,
+    "editor.matchBrackets": false,
+    "editor.showIndentationGuides": false,
+    "editor.showLineNumbers": false,
+    "editor.showEol": false,
+    "editor.showWhitespace": "none",
+    "editor.showLineLength": false,
+    "editor.currentLineIndicator": false
+}
