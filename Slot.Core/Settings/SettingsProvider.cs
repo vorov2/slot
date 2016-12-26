@@ -54,9 +54,11 @@ namespace Slot.Core.Settings
                     userSettings = ReadFile(UserSettingsFile);
                     break;
                 case SettingsScope.Workspace:
-                    var dir = App.Catalog<IViewManager>().Default()?.GetActiveView()?.Workspace;
+                    var dir = App.Catalog<IViewManager>().Default().GetActiveView()?.Workspace;
                     if (dir != null)
                         workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".slot", FILE));
+                    break;
+                case SettingsScope.Mode:
                     break;
             }
 

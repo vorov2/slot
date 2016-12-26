@@ -28,6 +28,7 @@ using Slot.Core.Settings;
 using Slot.Core.Workspaces;
 using Slot.Main.CommandBar;
 using Slot.Core.ViewModel;
+using Slot.Core.State;
 
 namespace Slot
 {
@@ -36,6 +37,7 @@ namespace Slot
         private EditorControl ed;
         //private EditorControl output;
         private CommandBarControl commandBar;
+        private readonly static Guid stateId = new Guid("91B8C085-429A-4460-94FB-8B320DFB0DDA");
 
         public MainForm()
         {
@@ -44,8 +46,40 @@ namespace Slot
             //InitializeOutput(ed.Settings);
         }
 
+        private void ReadState()
+        {
+            var stream = App.Catalog<IStateManager>().Default().ReadState(stateId);
+
+            if (stream != null)
+                using (var br = new BinaryReader(stream))
+                {
+                    Top = br.ReadInt32();
+                    Left = br.ReadInt32();
+                    Width = br.ReadInt32();
+                    Height = br.ReadInt32();
+                }
+        }
+
+        private void WriteState()
+        {
+            if (WindowState != FormWindowState.Normal)
+                return;
+
+            var stream = App.Catalog<IStateManager>().Default().WriteState(stateId);
+
+            if (stream != null)
+                using (var bw = new BinaryWriter(stream))
+                {
+                    bw.Write(Top);
+                    bw.Write(Left);
+                    bw.Write(Width);
+                    bw.Write(Height);
+                }
+        }
+
         private void Initialize()
         {
+            ReadState();
             ed = new EditorControl { Dock = DockStyle.Fill };
 
             commandBar = new CommandBarControl(ed) { Dock = DockStyle.Top };
@@ -150,7 +184,10 @@ namespace Slot
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (App.Terminating || Application.OpenForms.Count > 1 || !(e.Cancel = !App.Close()))
+            {
                 ed.DetachBuffer();
+                WriteState();
+            }
         }
     }
 }

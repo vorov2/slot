@@ -6,6 +6,8 @@ namespace Slot.Core.Settings
     {
         User,
 
-        Workspace
+        Workspace,
+
+        Mode
     }
 }
