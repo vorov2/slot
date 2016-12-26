@@ -98,18 +98,23 @@ namespace Slot.Main.CommandBar
                 var y = bounds.Y + ((bounds.Height - h) / 2);
                 var w = h;
 
-                if (editor.Buffer.IsDirty)
-                    g.FillEllipse(cs.ForeColor.Brush(), x, y, w, h);
-                else
-                    g.DrawEllipse(cs.ForeColor.Pen(), x, y, w, h);
+                if (!editor.ReadOnly)
+                {
+                    if (editor.Buffer.IsDirty)
+                        g.FillEllipse(cs.ForeColor.Brush(), x, y, w, h);
+                    else
+                        g.DrawEllipse(cs.ForeColor.Pen(), x, y, w, h);
+
+                    x += font.Width();
+                }
 
                 y = (bounds.Height - font.Height()) / 2;
-                x += font.Width();
                 g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
                 x += g.MeasureString(editor.Buffer.File.Name, font).Width;
 
                 var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace?.FullName.Length ?? 0;
-                var dirName = editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
+                var dirName = editor.Buffer.File.DirectoryName.Length < ws ? editor.Buffer.File.DirectoryName
+                    : editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
                 g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
                     new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
 

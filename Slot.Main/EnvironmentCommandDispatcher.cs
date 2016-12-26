@@ -19,6 +19,8 @@ using System.Windows.Forms;
 using Slot.Core.Settings;
 using Slot.Main;
 using System.Reflection;
+using Slot.Core.Packages;
+using Slot.Main.File;
 
 namespace Slot.Test
 {
@@ -84,6 +86,23 @@ namespace Slot.Test
         public void Exit()
         {
             Application.Exit();
+        }
+
+        [Command]
+        public void ShowReleaseNotes()
+        {
+            var id = (Identifier)"slot";
+            var pkg = App.Catalog<IPackageManager>().Default()
+                .EnumeratePackages()
+                .FirstOrDefault(p => p.Key == id);
+
+            if (pkg != null)
+            {
+                ViewManager.CreateView();
+                var buffer = App.Catalog<IBufferManager>().Default().CreateBuffer(
+                    new FileInfo(Path.Combine(pkg.Directory.FullName, "docs", "readme.txt")), Encoding.UTF8);
+                FileCommandDispatcher.OpenBuffer(buffer);
+            }
         }
 
         [Command]

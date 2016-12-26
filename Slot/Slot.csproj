@@ -106,6 +106,9 @@
     <None Include="packages\slot\data\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages\slot\docs\.slot\settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="samples\calc.cs" />
     <Compile Include="SplitContainerEx.cs">
       <SubType>Component</SubType>
@@ -169,6 +172,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages\slot\docs\readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Properties\app.ico" />
     <Content Include="test.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

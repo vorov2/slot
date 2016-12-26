@@ -1,8 +1,13 @@
 ﻿[
     {
         "key": "app.showVersion",
-        "alias": "about",
+        "alias": "info-about",
         "title": "Info: Show version information"
+    },
+    {
+        "key": "app.showReleaseNotes",
+        "alias": "info-release",
+        "title": "Info: Show release notes"
     },
     {
         "key": "app.exit",

@@ -41,7 +41,7 @@ namespace Slot
             //output.Settings.ShowWhitespace = ShowWhitespace.None;
             output.LimitedMode = true;
             output.AttachBuffer(App.Catalog<ILogComponent>().GetComponent((Identifier)"log.application"));
-            output.ReadOnly = true;
+            output.Buffer.ReadOnly = true;
 
             Controls.Add(output);
         }

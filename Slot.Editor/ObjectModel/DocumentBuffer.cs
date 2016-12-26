@@ -299,8 +299,8 @@ namespace Slot.Editor.ObjectModel
             }
         }
 
-        private bool _readOnly;
-        public bool ReadOnly
+        private bool? _readOnly;
+        public bool? ReadOnly
         {
             get { return _readOnly; }
             set
@@ -371,7 +371,7 @@ namespace Slot.Editor.ObjectModel
             try
             {
                 //Main
-                buffer.ReadOnly = sr.ReadBoolean();
+                buffer.ReadOnly = sr.ReadNullableBool();
                 buffer.Encoding = Encoding.GetEncoding(sr.ReadInt32());
                 buffer.File = new FileInfo(sr.ReadString());
                 buffer.GrammarKey = (Identifier)sr.ReadString();

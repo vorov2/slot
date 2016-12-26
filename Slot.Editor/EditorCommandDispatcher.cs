@@ -59,7 +59,7 @@ namespace Slot.Editor
 
             var modify = cmd.ModifyContent;
 
-            if (modify && (editor.Buffer.ReadOnly || editor.Buffer.Locked))
+            if (modify && (editor.ReadOnly || editor.Buffer.Locked))
                 return false;
 
             var lines = editor.Lines;
