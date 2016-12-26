@@ -31,11 +31,13 @@ namespace Slot.Main.Theme
 
         public IEnumerable<ThemeInfo> EnumerateThemes()
         {
+            ReadThemes();
             return themes.Values;
         }
 
-        private bool ChangeTheme(Identifier themeKey)
+        public bool ChangeTheme(Identifier themeKey)
         {
+            ReadThemes();
             ThemeInfo th;
 
             if (themes.TryGetValue(themeKey, out th))
@@ -78,12 +80,12 @@ namespace Slot.Main.Theme
                         ));
 
             var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
-            set.SettingsChanged += (o, ev) =>
-            {
-                var kt = (Identifier)set.Theme;
-                if (Theme?.Key != kt)
-                    ChangeTheme(kt);
-            };
+            //set.SettingsChanged += (o, ev) =>
+            //{
+            //    var kt = (Identifier)set.Theme;
+            //    if (Theme?.Key != kt)
+            //        ChangeTheme(kt);
+            //};
             ChangeTheme((Identifier)set.Theme);
         }
 

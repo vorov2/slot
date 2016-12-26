@@ -29,6 +29,7 @@ using Slot.Core.Workspaces;
 using Slot.Main.CommandBar;
 using Slot.Core.ViewModel;
 using Slot.Core.State;
+using Slot.Core.Themes;
 
 namespace Slot
 {
@@ -48,16 +49,20 @@ namespace Slot
 
         private void ReadState()
         {
-            var stream = App.Catalog<IStateManager>().Default().ReadState(stateId);
+            App.Ext.Handle(() =>
+            {
+                var stream = App.Catalog<IStateManager>().Default().ReadState(stateId);
 
-            if (stream != null)
-                using (var br = new BinaryReader(stream))
-                {
-                    Top = br.ReadInt32();
-                    Left = br.ReadInt32();
-                    Width = br.ReadInt32();
-                    Height = br.ReadInt32();
-                }
+                if (stream != null)
+                    using (var br = new BinaryReader(stream))
+                    {
+                        Top = br.ReadInt32();
+                        Left = br.ReadInt32();
+                        Width = br.ReadInt32();
+                        Height = br.ReadInt32();
+                        App.Catalog<IThemeComponent>().Default().ChangeTheme((Identifier)br.ReadString());
+                    }
+            });
         }
 
         private void WriteState()
@@ -65,16 +70,20 @@ namespace Slot
             if (WindowState != FormWindowState.Normal)
                 return;
 
-            var stream = App.Catalog<IStateManager>().Default().WriteState(stateId);
+            App.Ext.Handle(() =>
+            {
+                var stream = App.Catalog<IStateManager>().Default().WriteState(stateId);
 
-            if (stream != null)
-                using (var bw = new BinaryWriter(stream))
-                {
-                    bw.Write(Top);
-                    bw.Write(Left);
-                    bw.Write(Width);
-                    bw.Write(Height);
-                }
+                if (stream != null)
+                    using (var bw = new BinaryWriter(stream))
+                    {
+                        bw.Write(Top);
+                        bw.Write(Left);
+                        bw.Write(Width);
+                        bw.Write(Height);
+                        bw.Write(App.Catalog<IThemeComponent>().Default().Theme.Key.ToString());
+                    }
+            });
         }
 
         private void Initialize()

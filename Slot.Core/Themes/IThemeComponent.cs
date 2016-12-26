@@ -10,6 +10,8 @@ namespace Slot.Core.Themes
 
         Style GetStyle(StandardStyle styleId);
 
+        bool ChangeTheme(Identifier theme);
+
         ThemeInfo Theme { get; }
 
         event EventHandler ThemeChanged;

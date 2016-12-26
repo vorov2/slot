@@ -65,9 +65,7 @@ namespace Slot.Test
         [Command]
         public void ChangeTheme(string themeName)
         {
-            var set = App.Catalog<ISettingsProvider>().Default().Get<EnvironmentSettings>();
-            set.Theme = themeName;
-            set.UpdateSettings();
+            App.Catalog<IThemeComponent>().Default().ChangeTheme((Identifier)themeName);
         }
 
         [Command]
