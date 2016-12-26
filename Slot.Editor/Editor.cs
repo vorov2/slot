@@ -477,8 +477,10 @@ namespace Slot.Editor
                     Buffer = buffer;
                 }
 
-                Buffer.GrammarKey = App.Catalog<IModeManager>().Default()
-                    .SelectMode(buffer.File).Key;
+                if (Buffer.GrammarKey == null)
+                    Buffer.GrammarKey = App.Catalog<IModeManager>().Default()
+                        .SelectMode(buffer.File).Key;
+
                 Scroll.InvalidateLines(InvalidateFlags.Force);
                 Scroll.ScrollPosition = buffer.ScrollPosition;
                 Styles.RestyleDocument();

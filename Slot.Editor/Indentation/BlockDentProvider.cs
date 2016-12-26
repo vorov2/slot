@@ -10,7 +10,7 @@ namespace Slot.Editor.Indentation
     [ComponentData(Name)]
     public sealed class BlockDentProvider : IDentComponent
     {
-        public const string Name = "ident.block";
+        public const string Name = "indent.block";
 
         public int CalculateIndentation(IView view, int lineIndex)
         {
