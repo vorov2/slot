@@ -21,7 +21,7 @@ namespace Slot.Editor.Commands
             if (pos != sel.Caret)
             {
                 var newSel = new Selection(pos);
-                Buffer.Selections.Add(newSel);
+                Buffer.Selections.Add(newSel, View.Document);
                 newSel.SetToRestore(sel.RestoreCaretCol);
             }
 

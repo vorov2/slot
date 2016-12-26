@@ -10,7 +10,7 @@ namespace Slot.Editor.Commands
         {
             var pos = GetPosition(sel);
             sel.Clear(pos);
-            Buffer.Selections.ValidateCaret(sel);
+            Buffer.Selections.ValidateCaret(sel, View.Document);
             return Clean | Scroll;
         }
 

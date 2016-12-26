@@ -29,7 +29,7 @@ namespace Slot.Editor.Search
                     View.Buffer.Selections.Add(new Selection(
                         new Pos(sr.Line, sr.StartCol),
                         new Pos(sr.Line, sr.EndCol + 1)
-                        ));
+                        ), View.Document);
                 }
             }
 

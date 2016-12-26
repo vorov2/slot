@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Slot.Core;
+using Slot.Core.Settings;
 
 namespace Slot.Editor.ObjectModel
 {
@@ -19,7 +21,8 @@ namespace Slot.Editor.ObjectModel
             var doc = new Document();
             doc.OriginalEol = source.IndexOf("\r\n") != -1 ? Eol.CrLf
                 : source.IndexOf("\n") != -1 ? Eol.Lf
-                : Eol.Cr;
+                : source.IndexOf("\r") != -1 ? Eol.Cr
+                : (App.IsMono ? Eol.Lf : Eol.CrLf);
             var txt = source.Replace("\r\n", "\n").Replace('\r', '\n');
 
             foreach (var ln in txt.Split('\n'))

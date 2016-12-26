@@ -10,16 +10,14 @@ namespace Slot.Editor.ObjectModel
     public sealed class SelectionList : IEnumerable<Selection>
     {
         private readonly List<Selection> sels;
-        private readonly Document doc;
 
-        internal SelectionList(Document doc)
+        internal SelectionList()
         {
-            this.doc = doc;
             sels = new List<Selection>();
             sels.Add(new Selection());
         }
 
-        internal void ValidateCaret(Selection sel)
+        internal void ValidateCaret(Selection sel, Document doc)
         {
             var caret = sel.Caret;
             var len = sels.Count;
@@ -43,12 +41,12 @@ namespace Slot.Editor.ObjectModel
             }
         }
 
-        public void Add(Selection sel)
+        public void Add(Selection sel, Document doc)
         {
             AddFast(sel);
 
             if (sel.IsEmpty)
-                ValidateCaret(sel);
+                ValidateCaret(sel, doc);
             else
             {
                 var osel = GetIntersection(sel);

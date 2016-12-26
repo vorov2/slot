@@ -41,7 +41,7 @@ namespace Slot.Editor.ObjectModel
         {
             Id = id;
             Document = doc;
-            Selections = new SelectionList(doc);
+            Selections = new SelectionList();
             UndoStack = new LimitedStack<CommandInfo>();
             RedoStack = new LimitedStack<CommandInfo>();
             Tips = new List<CallTip>();

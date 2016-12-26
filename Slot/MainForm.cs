@@ -1,35 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Slot.Editor.Margins;
-using Slot.Editor.ObjectModel;
-using Slot.Editor.Styling;
-using Slot.Editor.Commands;
-using Slot.Editor.Folding;
-using Slot.Editor.Lexing;
-using Slot.Editor.Indentation;
-using Slot.Editor.Affinity;
-using Slot.Core.Keyboard;
-using Slot.Editor;
 using Slot.Core;
-using Slot.Core.CommandModel;
-using Slot.Core.ComponentModel;
-using Slot.ComponentModel;
-using Slot.Main.StatusBar;
-using Slot.Core.Output;
-using Slot.Core.Settings;
-using Slot.Core.Workspaces;
-using Slot.Main.CommandBar;
-using Slot.Core.ViewModel;
 using Slot.Core.State;
 using Slot.Core.Themes;
+using Slot.Core.ViewModel;
+using Slot.Core.Workspaces;
+using Slot.Editor;
+using Slot.Editor.Margins;
+using Slot.Main.CommandBar;
+using Slot.Main.StatusBar;
 
 namespace Slot
 {
@@ -105,7 +85,7 @@ namespace Slot
             statusBar.Tiles.Add(new EolTile(ed));
             statusBar.Tiles.Add(new EncodingTile(ed));
 
-            statusBar.Tiles.Add(new OutputToggleTile(this));
+            //statusBar.Tiles.Add(new OutputToggleTile(this));
             statusBar.Tiles.Add(new PosTile(ed));
             //statusBar.Tiles.Add(new ErrorsTile(ed));
             statusBar.Tiles.Add(new OvrTile(ed));
