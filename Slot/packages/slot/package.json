@@ -2,9 +2,9 @@
     "meta": {
         "key": "slot",
         "name": "Slot",
-        "description": "Slot core",
-        "version": "0.1",
-        "copyright": "(c) 2016"
+        "description": "Main Slot package with the application core and built-in functionality. This package always has the same version as the application itself.",
+        "version": "0.0.1",
+        "copyright": "Copyright (c) Vasily Voronkov"
     },
     "settings": [
         { "file": "settings.json" }

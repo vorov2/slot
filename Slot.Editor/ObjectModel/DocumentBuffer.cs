@@ -73,7 +73,8 @@ namespace Slot.Editor.ObjectModel
             try
             {
                 Document.Lines.Clear();
-                Document.Lines.Add(Line.FromString(text));
+                //Document.Lines.Add(Line.FromString(text));
+                Document.Lines.AddRange(text.MakeCharacters().MakeLines().Select(cz => new Line(cz)));
                 Selections.Set(new Pos(0, 0));
                 Edits = 0;
 

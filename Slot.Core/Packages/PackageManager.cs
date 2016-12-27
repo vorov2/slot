@@ -53,7 +53,8 @@ namespace Slot.Core.Packages
 
                 var meta = dict.Object("meta") as Dictionary<string, object>;
                 var pack = new PackageMetadata((Identifier)meta.String("key"),
-                    meta.String("name"), meta.String("version"), fi.Directory, dict);
+                    meta.String("name"), meta.String("version"), meta.String("description"),
+                    meta.String("copyright"), fi.Directory, dict);
                 packages.Add(pack);
             }
 

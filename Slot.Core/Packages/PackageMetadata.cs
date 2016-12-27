@@ -8,10 +8,14 @@ namespace Slot.Core.Packages
 {
     public sealed class PackageMetadata
     {
-        internal PackageMetadata(Identifier key, string name, string version, DirectoryInfo dir, Dictionary<string, object> metadata)
+        internal PackageMetadata(Identifier key, string name, string version,
+            string description, string copyright,
+            DirectoryInfo dir, Dictionary<string, object> metadata)
         {
             Key = key;
             Name = name;
+            Description = description;
+            Copyright = copyright;
             Version = version;
             Directory = dir;
             Metadata = metadata;
@@ -22,6 +26,10 @@ namespace Slot.Core.Packages
         public string Name { get; }
 
         public string Version { get; }
+
+        public string Description { get; }
+
+        public string Copyright { get; }
 
         public DirectoryInfo Directory { get; }
 

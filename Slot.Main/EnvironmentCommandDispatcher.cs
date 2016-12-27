@@ -102,7 +102,13 @@ namespace Slot.Main
             Release,
 
             [FieldName("license")]
-            License
+            License,
+
+            [FieldName("changelog")]
+            ChangeLog,
+
+            [FieldName("packages")]
+            Packages
         }
 
         [Command]
@@ -119,15 +125,50 @@ namespace Slot.Main
                 case Info.License:
                     ShowInfoFile("license.txt");
                     break;
+                case Info.ChangeLog:
+                    ShowInfoFile("changelog.txt");
+                    break;
+                case Info.Packages:
+                    ShowPackages();
+                    break;
             }
+        }
+
+        private void ShowPackages()
+        {
+            var sb = new StringBuilder();
+
+            foreach (var pkg in App.Catalog<IPackageManager>().Default().EnumeratePackages())
+            {
+                sb.AppendLine($"{pkg.Name} ({pkg.Key})");
+                sb.AppendLine(pkg.Copyright);
+                sb.AppendLine($"Version: {pkg.Version}");
+                sb.AppendLine($"{pkg.Description}");
+                sb.AppendLine();
+            }
+
+            var buffer = App.Catalog<IBufferManager>().Default().CreateBuffer();
+            buffer.Truncate(sb.ToString());
+            buffer.ClearDirtyFlag();
+            buffer.File = new FileInfo(Path.Combine(GetRootPackage().Directory.FullName, "docs", "packages"));
+            buffer.Flags |= BufferDisplayFlags.HideCommandBar | BufferDisplayFlags.HideStatusBar;
+
+            var view = ViewManager.CreateView();
+            FileCommandDispatcher.OpenBuffer(buffer, view);
+            ViewManager.ActivateView(view);
+        }
+
+        private PackageMetadata GetRootPackage()
+        {
+            var id = (Identifier)"slot";
+            return App.Catalog<IPackageManager>().Default()
+                .EnumeratePackages()
+                .FirstOrDefault(p => p.Key == id);
         }
 
         private void ShowInfoFile(string fileName)
         {
-            var id = (Identifier)"slot";
-            var pkg = App.Catalog<IPackageManager>().Default()
-                .EnumeratePackages()
-                .FirstOrDefault(p => p.Key == id);
+            var pkg = GetRootPackage();
 
             if (pkg != null)
             {

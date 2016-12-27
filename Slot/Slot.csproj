@@ -164,6 +164,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages\slot\docs\changelog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="packages\slot\docs\license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
