@@ -7,8 +7,10 @@ namespace Slot.Core.ViewModel
     {
         None = 0xFF,
 
-        HideCommandBar = 0x01,
+        HideHeader = 0x01,
 
-        HideStatusBar = 0x02
+        HideStatusBar = 0x02,
+
+        HideWorkspace = 0x04,
     }
 }

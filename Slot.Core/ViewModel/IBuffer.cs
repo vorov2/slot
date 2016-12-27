@@ -20,6 +20,8 @@ namespace Slot.Core.ViewModel
 
         bool IsDirty { get; }
 
+        bool Bound { get; }
+
         FileInfo File { get; set; }
 
         Encoding Encoding { get; set; }

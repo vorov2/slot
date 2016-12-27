@@ -49,7 +49,7 @@ namespace Slot.Editor
             if (seq.Any())
             {
                 var sb = new StringBuilder();
-                var res = MessageBox.Show(Application.OpenForms[0],
+                var res = MessageBox.Show(Form.ActiveForm,
                     $"Do you want to save the changes to the following files?\n\n{string.Join("\n", seq.Select(f => f.File.Name))}",
                     Application.ProductName,
                     MessageBoxButtons.YesNoCancel,
@@ -196,7 +196,7 @@ namespace Slot.Editor
         {
             var idx = buffers.IndexOf(buffer);
 
-            if (idx != -1)
+            if (idx != -1 && !buffer.Bound)
                 buffers.RemoveAt(idx);
 
             stateManager.ClearState(buffer.Id);

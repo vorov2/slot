@@ -1,5 +1,9 @@
 ﻿[
     {
+        "key": "debug.debug",
+        "alias": "debug"
+    },
+    {
         "key": "app.showInfo",
         "alias": "info",
         "title": "Application: Show application information",

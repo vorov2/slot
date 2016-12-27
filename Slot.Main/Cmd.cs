@@ -14,6 +14,7 @@ namespace Slot.Main
         public static readonly Identifier OpenFile = new Identifier("file.openFile");
         public static readonly Identifier ReopenFile = new Identifier("file.reopenFile");
         public static readonly Identifier SaveFile = new Identifier("file.save");
+        public static readonly Identifier CloseFile = new Identifier("file.closeFile");
         public static readonly Identifier SaveWithEncoding = new Identifier("file.saveWithEncoding");
     }
 }

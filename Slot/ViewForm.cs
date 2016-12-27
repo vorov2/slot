@@ -8,6 +8,7 @@ using Slot.Core.ViewModel;
 using Slot.Core.Workspaces;
 using Slot.Drawing;
 using Slot.Editor;
+using Slot.Editor.ObjectModel;
 using Slot.Main.CommandBar;
 using Slot.Main.StatusBar;
 
@@ -19,12 +20,14 @@ namespace Slot
         private readonly StandardEditor editor;
         private readonly StatusBarControl statusBar;
         private readonly CommandBarControl commandBar;
+        private readonly HeaderControl header;
 
         public ViewForm()
         {
             editor = new StandardEditor(Settings.Get<EditorSettings>());
             statusBar = new StatusBarControl(editor);
             commandBar = new CommandBarControl(editor);
+            header = new HeaderControl(editor);
             Initialize();
 
             if (!ReadState())
@@ -44,10 +47,13 @@ namespace Slot
             statusBar.Tiles.Add(new OvrTile(editor));
             statusBar.Tiles.Add(new WrapTile());
             editor.AddSlave(statusBar);
-            editor.AddSlave(commandBar);
+            editor.AddSlave(header);
             Controls.Add(editor);
             Controls.Add(statusBar);
+            Controls.Add(header);
+            commandBar.Visible = false;
             Controls.Add(commandBar);
+            commandBar.BringToFront();
             Icon = new Icon(typeof(ViewForm).Assembly.GetManifestResourceStream("Slot.Properties.app.ico"));
         }
 
@@ -62,8 +68,17 @@ namespace Slot
             }
             else
             {
-                DetachBuffer();
-                WriteState();
+                var buf = (DocumentBuffer)Buffer;
+
+                if (buf.RefCount == 1)
+                {
+                    App.Ext.Run(Main.Cmd.CloseFile);
+
+                    if (buf.RefCount == 0)
+                        WriteState();
+                    else
+                        e.Cancel = true;
+                }
             }
         }
 
@@ -78,15 +93,17 @@ namespace Slot
 
         private void UpdateTitle()
         {
-            Text = Workspace == null ? Application.ProductName
+            Text = Workspace == null || (Buffer != null && Buffer.Flags.HasFlag(BufferDisplayFlags.HideWorkspace))
+                ? Application.ProductName
                 : $"{Workspace.FullName} - {Application.ProductName}";
         }
 
         public void AttachBuffer(IBuffer buffer)
         {
             editor.AttachBuffer(buffer);
-            commandBar.Visible = !buffer.Flags.HasFlag(BufferDisplayFlags.HideCommandBar);
+            header.Visible = !buffer.Flags.HasFlag(BufferDisplayFlags.HideHeader);
             statusBar.Visible = !buffer.Flags.HasFlag(BufferDisplayFlags.HideStatusBar);
+            UpdateTitle();
             Invalidate(true);
         }
 

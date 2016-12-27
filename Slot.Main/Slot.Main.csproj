@@ -58,6 +58,9 @@
     <Compile Include="CommandBar\CommandBarControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CommandBar\HeaderControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CommandBar\CommandLineItem.cs" />
     <Compile Include="CommandBar\CommandParser.cs" />
     <Compile Include="CommandBar\Loc.cs" />
@@ -67,12 +70,16 @@
     <Compile Include="CommandBar\Statement.cs" />
     <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="CommandsValueProvider.cs" />
+    <Compile Include="Debug\DebugCommandDispatcher.cs" />
     <Compile Include="EnvironmentSettings.cs" />
     <Compile Include="File\EncodingValueProvider.cs" />
     <Compile Include="File\FileCommandDispatcher.cs" />
     <Compile Include="InfoValueProvider.cs" />
     <Compile Include="Keyboard\KeyboardAdapter.cs" />
     <Compile Include="Keyboard\KeymapReader.cs" />
+    <Compile Include="Messages\MessageWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Theme\RealTheme.cs" />
     <Compile Include="Theme\ThemeReader.cs" />
     <Compile Include="Workspace\FolderValueProvider.cs" />
@@ -121,7 +128,6 @@
       <Name>Json</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -100,7 +100,7 @@ namespace Slot.Main.File
             if (buffer.IsDirty)
             {
                 var sb = new StringBuilder();
-                var res = MessageBox.Show(Application.OpenForms[0],
+                var res = MessageBox.Show(Form.ActiveForm,
                     $"Do you want to save the changes made to {buffer.File.Name}?",
                     Application.ProductName,
                     MessageBoxButtons.YesNoCancel,

@@ -74,7 +74,7 @@ namespace Slot.Main
         [Command]
         public void Exit()
         {
-            Application.Exit();
+            App.Close();
         }
 
         public enum Info
@@ -135,7 +135,7 @@ namespace Slot.Main
             buffer.Truncate(sb.ToString());
             buffer.ClearDirtyFlag();
             buffer.File = new FileInfo(Path.Combine(GetRootPackage().Directory.FullName, "docs", "packages"));
-            buffer.Flags |= BufferDisplayFlags.HideCommandBar | BufferDisplayFlags.HideStatusBar;
+            buffer.Flags |= BufferDisplayFlags.HideHeader | BufferDisplayFlags.HideStatusBar;
 
             var view = ViewManager.CreateView();
             FileCommandDispatcher.OpenBuffer(buffer, view);
@@ -159,7 +159,8 @@ namespace Slot.Main
                 var view = ViewManager.CreateView();
                 var buffer = App.Catalog<IBufferManager>().Default().CreateBuffer(
                     new FileInfo(Path.Combine(pkg.Directory.FullName, "docs", fileName)), Encoding.UTF8);
-                buffer.Flags |= BufferDisplayFlags.HideCommandBar | BufferDisplayFlags.HideStatusBar;
+                buffer.Flags |= BufferDisplayFlags.HideHeader | BufferDisplayFlags.HideStatusBar
+                    | BufferDisplayFlags.HideWorkspace;
                 FileCommandDispatcher.OpenBuffer(buffer, view);
                 ViewManager.ActivateView(view);
             }

@@ -27,199 +27,63 @@ namespace Slot.Main.CommandBar
         private EditorControl editor;
         private EditorControl commandEditor;
         private AutocompleteWindow window;
-        private string error;
-        private Rectangle errorButton;
-        private MessageOverlay overlay;
 
         public CommandBarControl(EditorControl editor)
         {
             this.editor = editor;
-            editor.Escape += EditorEscape;
             SetStyle(ControlStyles.Selectable, false);
             SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
-            Dock = DockStyle.Top;
-            App.Catalog<ILogComponent>().Default().EntryWritten += (o, e) =>
-            {
-                if (overlay != null && overlay.Visible)
-                    HideTip();
-
-                if (e.Type == EntryType.Error)
-                    error = e.Data;
-                else
-                    error = null;
-
-                Invalidate();
-            };
         }
 
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            AdjustHeight();
+            AdjustSize();
         }
 
-        private void EditorEscape(object sender, EventArgs e)
+        private void AdjustSize()
         {
-            var ovl = GetMessageOverlay();
-
-            if (ovl != null && ovl.Visible)
-                HideTip();
-        }
-
-        private void AdjustHeight()
-        {
+            var frm = FindForm();
             var h = (int)Math.Round(
-                Math.Max(((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font.Height() * 1.7,
-                    editor.Info.CharHeight * 1.9), MidpointRounding.AwayFromZero);
+                Math.Max(((IView)frm).Settings.Get<EnvironmentSettings>().Font.Height() * 1.7,
+                    editor.Info.CharHeight * 1.9), MidpointRounding.AwayFromZero)
+                    + BorderHeight;
             if (Height != h)
                 Height = h;
+            if (Width != frm.ClientSize.Width)
+                Width = frm.ClientSize.Width;
         }
+
+        private int BorderHeight => (int)Math.Round(editor.Info.LineHeight * .1);
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            AdjustHeight();
+            AdjustSize();
             var ed = GetEditor();
 
-            if (ed.Width != PreferredEditorWidth)
-                HideEditor();
-
-            if (ClientSize.Width != lastTipClientWidth)
-                HideTip();
+            if (ed.Width != PreferredEditorWidth || editor.Buffer == null)
+            {
+                Visible = false;
+                return;
+            }
 
             var g = e.Graphics;
-            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            //e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             var bounds = ClientRectangle;
             var cs = editor.Theme.GetStyle(StandardStyle.CommandBar);
             var acs = editor.Theme.GetStyle(StandardStyle.CommandBarCaption);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
+            var shift = Dpi.GetHeight(2);
+            var rect = new Rectangle(ed.Left - editor.Info.SmallCharWidth, shift,
+                ed.Width + editor.Info.SmallCharWidth * 2, bounds.Height - shift * 2);
+            g.FillRectangle(ed.BackColor.Brush(), rect);
 
-            if (editor.Buffer == null)
-                return;
-
-            if (!ed.Visible)
-            {
-                var baseFont = ((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font;
-                var font = baseFont.Get(cs.FontStyle);
-                var x = font.Width() * 2f;
-                var h = font.Width() / 1.8f;
-                var y = bounds.Y + ((bounds.Height - h) / 2);
-                var w = h;
-
-                if (!editor.ReadOnly)
-                {
-                    if (editor.Buffer.IsDirty)
-                        g.FillEllipse(cs.ForeColor.Brush(), x, y, w, h);
-                    else
-                        g.DrawEllipse(cs.ForeColor.Pen(), x, y, w, h);
-
-                    x += font.Width();
-                }
-
-                y = (bounds.Height - font.Height()) / 2;
-                g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
-                x += g.MeasureString(editor.Buffer.File.Name, font).Width;
-
-                var ws = ((IView)FindForm()).Workspace?.FullName.Length ?? 0;
-                var dirName = editor.Buffer.File.DirectoryName.Length < ws ? editor.Buffer.File.DirectoryName
-                    : editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
-                g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
-                    new RectangleF(x, y, bounds.Width - x - font.Width(), bounds.Height), TextFormats.Path);
-
-                var tipRect = new Rectangle(bounds.Width - font.Width() * 2,
-                    bounds.Y + ((bounds.Height - font.Width()) / 2), font.Width(), font.Width());
-
-                if (error != null)
-                {
-                    errorButton = tipRect;
-                    g.FillRectangle(editor.Theme.GetStyle(StandardStyle.Error).ForeColor.Brush(), errorButton);
-                }
-                else
-                {
-                    errorButton = default(Rectangle);
-                    g.FillRectangle(editor.Theme.GetStyle(StandardStyle.Default).BackColor.Brush(), tipRect);
-                    g.DrawRectangle(ControlPaint.Dark(cs.BackColor, .2f).Pen(), tipRect);
-                }
-            }
-            else
-            {
-                var shift = Dpi.GetHeight(2);
-                var rect = new Rectangle(ed.Left - editor.Info.SmallCharWidth, shift,
-                    ed.Width + editor.Info.SmallCharWidth * 2, bounds.Height - shift * 2);
-                g.FillRectangle(ed.BackColor.Brush(), rect);
-            }
-        }
-
-        private MessageOverlay GetMessageOverlay()
-        {
-            if (overlay == null)
-            {
-                overlay = new MessageOverlay(editor);
-                overlay.Visible = false;
-                overlay.Click += (_, __) => HideTip();
-                FindForm().Controls.Add(overlay);
-                overlay.BringToFront();
-            }
-
-            return overlay;
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            var loc = e.Location;
-
-            if (loc.X >= errorButton.Left && loc.X <= errorButton.Right
-                && loc.Y >= errorButton.Top && loc.Y <= errorButton.Bottom)
-                ToggleTip();
-            else
-                App.Ext.Run(Cmd.OpenFile);
-
-            Invalidate();
-            base.OnMouseDown(e);
-        }
-
-        public void ToggleTip()
-        {
-            var wnd = GetMessageOverlay();
-            if (wnd == null || !wnd.Visible)
-                ShowTip();
-        }
-
-        private int lastTipClientWidth;
-        private void ShowTip()
-        {
-            lastTipClientWidth = ClientSize.Width;
-            var font = ((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font;
-            var eWidth = editor.Info.TextWidth / 2;
-            Size size;
-            var err = "M " + error;
-            error = null;
-
-            using (var g = CreateGraphics())
-                size = g.MeasureString(err, font, eWidth).ToSize();
-
-            var ovl = GetMessageOverlay();
-            var xpad = Dpi.GetWidth(8);
-            var ypad = Dpi.GetHeight(4);
-            ovl.Padding = new Padding(xpad, ypad, xpad, ypad);
-            ovl.Width = size.Width + xpad * 2 + ovl.BorderWidth * 2;
-            ovl.Height = size.Height + ypad * 2 + ovl.BorderWidth * 2;
-            ovl.Location = new Point(FindForm().ClientRectangle.Width - ovl.Width, ClientSize.Height + editor.Info.TextTop);
-            ovl.Font = font;
-            ovl.Text = err;
-            ovl.Visible = true;
-        }
-
-        private void HideTip()
-        {
-            var ovl = GetMessageOverlay();
-            if (ovl != null && ovl.Visible)
-            {
-                ovl.Visible = false;
-                error = null;
-            }
+            var ds = editor.Theme.GetStyle(StandardStyle.Default);
+            g.FillRectangle(ControlPaint.Dark(ds.BackColor, .05f).Brush(), 
+                new RectangleF(bounds.X, bounds.Y + bounds.Height - BorderHeight, bounds.Width, BorderHeight));
         }
 
         private EditorControl GetEditor()
@@ -227,15 +91,13 @@ namespace Slot.Main.CommandBar
             if (commandEditor == null)
             {
                 commandEditor = new LineEditor(editor);
-                commandEditor.Visible = false;
                 commandEditor.LostFocus += EditorLostFocus;
                 commandEditor.KeyDown += EditorKeyDown;
                 commandEditor.Paint += EditorPaint;
                 commandEditor.Styles.StyleNeeded += EditorStyleNeeded;
                 commandEditor.CommandRejected += EditorCommandRejected;
                 ResetBuffer();
-                FindForm().Controls.Add(commandEditor);
-                commandEditor.BringToFront();
+                Controls.Add(commandEditor);
             }
 
             return commandEditor;
@@ -310,7 +172,7 @@ namespace Slot.Main.CommandBar
                     ?.Arguments.Count(a => !a.Optional))
                 ExecuteCommand(commandEditor.Text);
             else if (currentAffinity != ArgumentAffinity.FilePath)
-                App.Ext.Run(commandEditor, (Identifier)"editor.insertrange", " ".MakeCharacters());
+                App.Ext.Run(commandEditor, Editor.Cmd.InsertRange, " ".MakeCharacters());
         }
 
         private bool HideAutocompleteWindow()
@@ -493,18 +355,18 @@ namespace Slot.Main.CommandBar
                 else if (commandComplete != null && commandComplete.Any())
                 {
                     var cmd = commandComplete.First();
-                    HideEditor();
+                    CloseInput();
                     ExecuteCommand(cmd.Alias);
                 }
                 else
                 {
                     var cl = commandEditor.Text;
-                    HideEditor();
+                    CloseInput();
                     ExecuteCommand(cl);
                 }
             }
             else if (e.KeyData == Keys.Escape)
-                HideEditor();
+                CloseInput();
             else if (e.KeyData == Keys.Tab)
                 InsertCompleteString();
             else if (e.KeyData == Keys.Up && window != null && window.Visible)
@@ -561,17 +423,18 @@ namespace Slot.Main.CommandBar
 
         private void EditorLostFocus(object sender, EventArgs e) => CloseInput();
 
-        public void ShowInput(Statement stmt)
+        public void OpenInput(Statement stmt)
         {
             ContinuationStatement = statement = stmt;
-            ShowInput(default(string));
+            OpenInput(default(string));
             commandEditor.Invalidate();
         }
 
-        public void ShowInput() => ShowInput(default(string));
+        public void OpenInput() => OpenInput(default(string));
 
-        public void ShowInput(string cmd)
+        public void OpenInput(string cmd)
         {
+            Visible = true;
             ContinuationStatement = statement = null;
             ShowEditor();
 
@@ -585,34 +448,32 @@ namespace Slot.Main.CommandBar
             commandEditor.Focus();
         }
 
-        public void CloseInput() => HideEditor();
-
         private void ShowEditor()
         {
-            HideTip();
-            AdjustHeight();
+            AdjustSize();
             var ed = (LineEditor)GetEditor();
+            var h = ClientRectangle.Height;// - BorderHeight;
             ed.AdjustHeight();
-            ed.Top = (ClientRectangle.Height - ed.Height) / 2;
+            ed.Top = (h - ed.Height) / 2;
             ed.Left = editor.ClientSize.Width / 20;
             ed.Width = PreferredEditorWidth;
-            ed.Visible = true;
             Invalidate();
         }
 
-        private void HideEditor()
+        public void CloseInput()
         {
             var hidden = false;
 
             if (commandEditor != null && commandEditor.Visible)
             {
                 ResetBuffer();
-                commandEditor.Visible = false;
                 hidden = true;
             }
 
             if (HideAutocompleteWindow() || hidden)
                 Invalidate();
+
+            Visible = false;
         }
 
         private static readonly object[] defargs = new object[0];
@@ -628,7 +489,7 @@ namespace Slot.Main.CommandBar
                     ? statement.Arguments.Select(a => a.Value).ToArray() : defargs;
                 statement = null;
                 ContinuationStatement = null;
-                HideEditor();
+                CloseInput();
                 App.Ext.Run(editor, md.Key, args);
             }
         }

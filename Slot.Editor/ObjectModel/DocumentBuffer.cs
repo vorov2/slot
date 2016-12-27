@@ -78,7 +78,7 @@ namespace Slot.Editor.ObjectModel
                 Selections.Set(new Pos(0, 0));
                 Edits = 0;
 
-                foreach (var v in Views)
+                foreach (var v in Editors)
                     v.AttachBuffer(this);
             }
             finally
@@ -112,8 +112,8 @@ namespace Slot.Editor.ObjectModel
 
         void IBuffer.SerializeState(Stream stream)
         {
-            while (Views.Count > 0)
-                Views[0].DetachBuffer();
+            while (Editors.Count > 0)
+                Editors[0].DetachBuffer();
 
             try
             {
@@ -144,18 +144,18 @@ namespace Slot.Editor.ObjectModel
             RequestRedraw();
         }
 
-        internal readonly List<EditorControl> Views = new List<EditorControl>();
+        internal readonly List<EditorControl> Editors = new List<EditorControl>();
         public void RequestRedraw()
         {
             if (!Locked)
-                foreach (var e in Views)
+                foreach (var e in Editors)
                     e.Redraw();
         }
 
         internal void ResetInvalidation()
         {
             if (!Locked)
-                foreach (var v in Views)
+                foreach (var v in Editors)
                 {
                     v.Scroll.ScrollPosition = default(Point);
                     v.Scroll.InvalidateLines(InvalidateFlags.Force);
@@ -166,20 +166,20 @@ namespace Slot.Editor.ObjectModel
         internal void InvalidateLines()
         {
             if (!Locked)
-                foreach (var e in Views)
+                foreach (var e in Editors)
                     e.Scroll.InvalidateLines();
         }
 
         internal void ScrollToCaret()
         {
             if (!Locked)
-                foreach (var e in Views)
+                foreach (var e in Editors)
                     e.Scroll.UpdateVisibleRectangle();
         }
 
         internal void UpdateScrollInfo(EditorControl view)
         {
-            foreach (var e in Views)
+            foreach (var e in Editors)
             {
                 if (e != view)
                 {
@@ -197,6 +197,10 @@ namespace Slot.Editor.ObjectModel
         internal bool LastAtomicChange { get; set; }
 
         public bool Locked => lockCount > 0;
+
+        public bool Bound => Editors.Count > 0;
+
+        public int RefCount => Editors.Count;
 
         internal List<CallTip> Tips { get; }
 
@@ -221,7 +225,7 @@ namespace Slot.Editor.ObjectModel
                     _overtype = value;
 
                     if (!Locked)
-                        foreach (var v in Views)
+                        foreach (var v in Editors)
                         {
                             v.CaretRenderer.BlockCaret = value;
                             v.Redraw();
@@ -346,7 +350,7 @@ namespace Slot.Editor.ObjectModel
 
                 if (!Locked)
                 {
-                    Views.First().Styles.RestyleDocument();
+                    Editors.First().Styles.RestyleDocument();
                     RequestRedraw();
                 }
             }

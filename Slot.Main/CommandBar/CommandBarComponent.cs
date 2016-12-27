@@ -24,20 +24,20 @@ namespace Slot.Main.CommandBar
         {
             var cm = GetCommandBarControl();
 
-            if (!cm.Visible)
-            {
-                var vm = App.Catalog<IViewManager>().Default();
-                var act = vm.GetActiveView();
-                act = vm.EnumerateViews().FirstOrDefault(v => v != act);
+            //if (!cm.Visible)
+            //{
+            //    var vm = App.Catalog<IViewManager>().Default();
+            //    var act = vm.GetActiveView();
+            //    act = vm.EnumerateViews().FirstOrDefault(v => v != act);
 
-                if (act != null)
-                {
-                    vm.ActivateView(act);
-                    Show(commandAlias, args);
-                }
+            //    if (act != null)
+            //    {
+            //        vm.ActivateView(act);
+            //        Show(commandAlias, args);
+            //    }
 
-                return;
-            }
+            //    return;
+            //}
 
             if (cm != null)
             {
@@ -45,21 +45,21 @@ namespace Slot.Main.CommandBar
                 {
                     var stmt = new Statement(commandAlias);
                     stmt.Arguments.AddRange(args.Select(a => new StatementArgument(a)));
-                    cm.ShowInput(stmt);
+                    cm.OpenInput(stmt);
                 }
                 else if (commandAlias != null)
-                    cm.ShowInput(commandAlias);
+                    cm.OpenInput(commandAlias);
                 else
-                    cm.ShowInput();
+                    cm.OpenInput();
             }
         }
 
         public void ToggleMessage()
         {
-            var cm = GetCommandBarControl();
+            //var cm = GetCommandBarControl();
 
-            if (cm != null)
-                cm.ToggleTip();
+            //if (cm != null)
+            //    cm.ToggleTip();
         }
 
         public void Hide()

@@ -51,7 +51,7 @@ namespace Slot.Editor.Search
 
         private void Search()
         {
-            var txt = overlay.SearchBox.Buffer.GetText();
+            var txt = overlay.SearchBox?.Buffer?.GetText();
             ClearMatches();
 
             if (!string.IsNullOrEmpty(txt))

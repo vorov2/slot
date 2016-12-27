@@ -442,7 +442,7 @@ namespace Slot.Editor
             if (buf != null)
             {
                 buf.ScrollPosition = Scroll.ScrollPosition;
-                buf.Views.Remove(this);
+                buf.Editors.Remove(this);
                 MatchWords.ClearMatches();
                 MatchBrackets.ClearMatches();
                 Search.ClearMatches();
@@ -469,7 +469,7 @@ namespace Slot.Editor
 
                 if (buffer != Buffer)
                 {
-                    buffer.Views.Add(this);
+                    buffer.Editors.Add(this);
                     Buffer = buffer;
                 }
 
