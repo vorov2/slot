@@ -13,7 +13,7 @@ using Slot.Main.StatusBar;
 
 namespace Slot
 {
-    public sealed class ViewForm : Form, IView
+    public sealed partial class ViewForm : Form, IView
     {
         private readonly object syncRoot = new object();
         private readonly StandardEditor editor;
@@ -27,9 +27,11 @@ namespace Slot
             commandBar = new CommandBarControl(editor);
             Initialize();
 
-            Width = 800 * Dpi.GetWidth(1);
-            Height = 600 * Dpi.GetWidth(1);
-            Icon = new Icon(typeof(ViewForm).Assembly.GetManifestResourceStream("Slot.Properties.app.ico"));
+            if (!ReadState())
+            {
+                Width = 800 * Dpi.GetWidth(1);
+                Height = 600 * Dpi.GetWidth(1);
+            }
         }
 
         private void Initialize()
@@ -46,6 +48,7 @@ namespace Slot
             Controls.Add(editor);
             Controls.Add(statusBar);
             Controls.Add(commandBar);
+            Icon = new Icon(typeof(ViewForm).Assembly.GetManifestResourceStream("Slot.Properties.app.ico"));
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -57,17 +60,16 @@ namespace Slot
                 e.Cancel = true;
                 App.Catalog<IViewManager>().Default().CloseView(this);
             }
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
+            else
+                WriteState();
         }
 
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
-            Activations++;
+
+            if (Buffer != null)
+                Buffer.LastAccess = DateTime.Now;
         }
 
         private void UpdateTitle()
@@ -79,6 +81,8 @@ namespace Slot
         public void AttachBuffer(IBuffer buffer)
         {
             editor.AttachBuffer(buffer);
+            commandBar.Visible = !buffer.Flags.HasFlag(BufferDisplayFlags.HideCommandBar);
+            statusBar.Visible = !buffer.Flags.HasFlag(BufferDisplayFlags.HideStatusBar);
             Invalidate(true);
         }
 
@@ -90,8 +94,6 @@ namespace Slot
         }
 
         public void DetachBuffer() => editor.DetachBuffer();
-
-        public int Activations { get; private set; }
 
         public object CommandBar => commandBar;
 
@@ -107,7 +109,7 @@ namespace Slot
                 if (_settings == null)
                     lock (syncRoot)
                         if (_settings == null)
-                            _settings = App.Catalog<ISettingsManager>().Default().Create();
+                            _settings = App.Catalog<ISettingsManager>().Default().Create(this);
 
                 return _settings;
             }

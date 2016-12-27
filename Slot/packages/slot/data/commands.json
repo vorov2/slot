@@ -1,13 +1,14 @@
 ﻿[
     {
-        "key": "app.showVersion",
-        "alias": "info-about",
-        "title": "Info: Show version information"
-    },
-    {
-        "key": "app.showReleaseNotes",
-        "alias": "info-release",
-        "title": "Info: Show release notes"
+        "key": "app.showInfo",
+        "alias": "info",
+        "title": "Application: Show application information",
+        "arguments": [
+            {
+                "name": "kind",
+                "valueProvider": "values.infos"
+            }
+        ]
     },
     {
         "key": "app.exit",

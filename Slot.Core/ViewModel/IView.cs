@@ -11,8 +11,6 @@ namespace Slot.Core.ViewModel
 
         void DetachBuffer();
 
-        int Activations { get; }
-
         object CommandBar { get; }
 
         IEditor Editor { get; }

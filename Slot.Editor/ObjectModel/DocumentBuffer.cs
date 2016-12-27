@@ -350,19 +350,21 @@ namespace Slot.Editor.ObjectModel
                 }
             }
         }
+
+        public BufferDisplayFlags Flags { get; set; }
     }
 
     internal sealed class DocumentBufferSerializer
     {
-        private const int VERSION = 2;
+        private const int BIN_VERSION = 3;
 
         public static void Deserialize(DocumentBuffer buffer, Stream stream)
         {
             var sr = new BinaryReader(stream, Encoding.UTF8);
 
-            if (sr.ReadInt32() != VERSION)
+            if (sr.ReadInt32() != BIN_VERSION)
             {
-                App.Ext.Log($"Invalid version of document state. Expected: {VERSION}.", EntryType.Error);
+                App.Ext.Log($"Invalid version of document state. Expected: {BIN_VERSION}.", EntryType.Error);
                 return;
             }
 
@@ -375,6 +377,7 @@ namespace Slot.Editor.ObjectModel
                 buffer.Encoding = Encoding.GetEncoding(sr.ReadInt32());
                 buffer.File = new FileInfo(sr.ReadString());
                 buffer.GrammarKey = (Identifier)sr.ReadString();
+                buffer.Flags = (BufferDisplayFlags)sr.ReadInt32();
 
                 //ScrollPosition
                 buffer.ScrollPosition = new Point(sr.ReadInt32(), sr.ReadInt32());
@@ -418,13 +421,14 @@ namespace Slot.Editor.ObjectModel
         public static void Serialize(DocumentBuffer buffer, Stream stream)
         {
             var sw = new BinaryWriter(stream, Encoding.UTF8);
-            sw.Write(VERSION);
+            sw.Write(BIN_VERSION);
 
             //Main
             sw.Write(buffer.ReadOnly);
             sw.Write(buffer.Encoding.CodePage);
             sw.Write(buffer.File.FullName);
             sw.Write(buffer.GrammarKey.ToString());
+            sw.Write((int)buffer.Flags);
 
             //ScrollPosition
             sw.Write(buffer.ScrollPosition.X);

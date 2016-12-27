@@ -146,9 +146,9 @@ namespace Slot.Main.File
             }
         }
 
-        private static bool OpenFolder(DirectoryInfo dir)
+        private static bool OpenFolder(IView view, DirectoryInfo dir)
         {
-            return App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dir);
+            return App.Catalog<IWorkspaceController>().Default().OpenWorkspace(view, dir);
         }
 
         [Command]
@@ -190,7 +190,7 @@ namespace Slot.Main.File
             else
                 fi = buffer.File;
 
-            OpenFolder(fi.Directory);
+            OpenFolder(ViewManager.GetActiveView(), fi.Directory);
             bufferManager.SaveBuffer(buffer, fi, enc ?? buffer.Encoding);
         }
 
@@ -281,13 +281,13 @@ namespace Slot.Main.File
             OpenBuffer(buf);
         }
 
-        internal static void OpenBuffer(IBuffer buf)
+        internal static void OpenBuffer(IBuffer buf, IView view = null)
         {
             if (buf != null)
             {
-                var view = App.Catalog<IViewManager>().Default().GetActiveView();
+                view = view ?? App.Catalog<IViewManager>().Default().GetActiveView();
 
-                if (buf.File.Directory != null && OpenFolder(buf.File.Directory))
+                if (buf.File.Directory != null && OpenFolder(view, buf.File.Directory))
                     App.Ext.Log($"Workspace opened: {view.Workspace}", EntryType.Info);
 
                 view.AttachBuffer(buf);

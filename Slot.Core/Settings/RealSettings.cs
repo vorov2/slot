@@ -21,6 +21,12 @@ namespace Slot.Core.Settings
         private MAP userSettings;
         private MAP workspaceSettings;
         private readonly OMAP bagMap = new OMAP();
+        private readonly IView view;
+
+        public RealSettings(IView view)
+        {
+            this.view = view;
+        }
 
         public T Get<T>() where T : SettingsBag, new()
         {
@@ -46,7 +52,7 @@ namespace Slot.Core.Settings
                     userSettings = ReadFile(UserSettingsFile);
                     break;
                 case SettingsScope.Workspace:
-                    var dir = App.Catalog<IViewManager>().Default().GetActiveView()?.Workspace;
+                    var dir = view.Workspace;
                     if (dir != null)
                         workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".slot", FILE));
                     break;
@@ -84,7 +90,7 @@ namespace Slot.Core.Settings
 
             userSettings = ReadFile(UserSettingsFile);
 
-            var dir = App.Catalog<IViewManager>().Default().GetActiveView()?.Workspace;
+            var dir = view.Workspace;
 
             if (dir != null)
                 workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".slot", FILE));

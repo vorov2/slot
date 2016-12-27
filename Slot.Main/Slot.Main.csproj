@@ -70,6 +70,7 @@
     <Compile Include="EnvironmentSettings.cs" />
     <Compile Include="File\EncodingValueProvider.cs" />
     <Compile Include="File\FileCommandDispatcher.cs" />
+    <Compile Include="InfoValueProvider.cs" />
     <Compile Include="Keyboard\KeyboardAdapter.cs" />
     <Compile Include="Keyboard\KeymapReader.cs" />
     <Compile Include="Theme\RealTheme.cs" />

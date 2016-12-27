@@ -117,6 +117,7 @@
     <Compile Include="Themes\StyleInfo.cs" />
     <Compile Include="Themes\ThemeInfo.cs" />
     <Compile Include="UTF8EncodingNoBom.cs" />
+    <Compile Include="ViewModel\BufferDisplayFlags.cs" />
     <Compile Include="ViewModel\IBuffer.cs" />
     <Compile Include="ViewModel\IBufferManager.cs" />
     <Compile Include="ViewModel\IEditor.cs" />

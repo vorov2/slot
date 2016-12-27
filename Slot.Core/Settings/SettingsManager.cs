@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Core.Settings
 {
@@ -13,9 +14,9 @@ namespace Slot.Core.Settings
         [Import("directory.user.settings")]
         private string userSettingsDirectory = null;
 
-        public ISettings Create()
+        public ISettings Create(IView view)
         {
-            return new RealSettings { UserSettingsDirectory = userSettingsDirectory };
+            return new RealSettings(view) { UserSettingsDirectory = userSettingsDirectory };
         }
     }
 }

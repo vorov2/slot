@@ -14,12 +14,9 @@ namespace Slot.Core.Workspaces
         public const string Name = "workspaces.default";
         private const string FOLDER = ".slot";
 
-        [Import]
-        private IViewManager viewManager = null;
-
-        public bool OpenWorkspace(DirectoryInfo dir)
+        public bool OpenWorkspace(IView view, DirectoryInfo dir)
         {
-            if (IsChildFolder(viewManager.GetActiveView().Workspace, dir))
+            if (IsChildFolder(view.Workspace, dir))
                 return false;
 
             var baseDir = dir;
@@ -29,13 +26,13 @@ namespace Slot.Core.Workspaces
                 var ws = Path.Combine(dir.FullName, FOLDER);
 
                 if (Directory.Exists(ws))
-                    return DirectOpenWorkspace(dir);
+                    return DirectOpenWorkspace(view, dir);
 
                 dir = dir.Parent;
             }
             while (dir != null);
 
-            return DirectOpenWorkspace(baseDir);
+            return DirectOpenWorkspace(view, baseDir);
         }
 
         private bool IsChildFolder(DirectoryInfo ws, DirectoryInfo dir)
@@ -58,10 +55,8 @@ namespace Slot.Core.Workspaces
             return false;
         }
 
-        private bool DirectOpenWorkspace(DirectoryInfo dir)
+        private bool DirectOpenWorkspace(IView view, DirectoryInfo dir)
         {
-            var view = viewManager.GetActiveView();
-
             if (!string.Equals(view.Workspace?.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase))
             {
                 FileUtil.EnsurePath(dir);

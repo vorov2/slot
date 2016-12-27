@@ -80,6 +80,9 @@
     <Compile Include="ViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ViewForm.State.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ViewManager.cs" />
     <EmbeddedResource Include="OutputForm.resx">
       <DependentUpon>OutputForm.cs</DependentUpon>
@@ -161,6 +164,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages\slot\docs\license.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="packages\slot\docs\readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

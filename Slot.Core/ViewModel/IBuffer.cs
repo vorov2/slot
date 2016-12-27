@@ -25,5 +25,7 @@ namespace Slot.Core.ViewModel
         Encoding Encoding { get; set; }
 
         DateTime LastAccess { get; set; }
+
+        BufferDisplayFlags Flags { get; set; }
     }
 }

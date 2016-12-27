@@ -1,28 +1,22 @@
-﻿using Slot.ComponentModel;
-using Slot.Core;
-using Slot.Core.CommandModel;
-using Slot.Core.ComponentModel;
-using Slot.Core.Keyboard;
-using Slot.Core.Output;
-using Slot.Core.Themes;
-using Slot.Core.ViewModel;
-using Slot.Main.CommandBar;
-using Slot.Editor;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Slot.Core.Settings;
-using Slot.Main;
 using System.Reflection;
+using System.Text;
+using System.Windows.Forms;
+using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.Output;
 using Slot.Core.Packages;
+using Slot.Core.Themes;
+using Slot.Core.ViewModel;
+using Slot.Editor;
+using Slot.Main.CommandBar;
 using Slot.Main.File;
 
-namespace Slot.Test
+namespace Slot.Main
 {
     [Export(typeof(ICommandDispatcher))]
     [ComponentData("app")]
@@ -35,6 +29,22 @@ namespace Slot.Test
         public void ToggleCommandBar()
         {
             var cm = CommandBarComponent.GetCommandBarControl();
+
+            if (!cm.Visible)
+            {
+                var act = ViewManager.GetActiveView();
+                act = ViewManager.EnumerateViews()
+                    .OrderByDescending(v => v.Buffer.LastAccess)
+                    .FirstOrDefault(v => v != act);
+
+                if (act != null)
+                {
+                    ViewManager.ActivateView(act);
+                    ToggleCommandBar();
+                }
+
+                return;
+            }
 
             if (cm != null && cm.IsActive)
                 cm.CloseInput();
@@ -83,8 +93,36 @@ namespace Slot.Test
             Application.Exit();
         }
 
+        public enum Info
+        {
+            [FieldName("about")]
+            About,
+
+            [FieldName("release")]
+            Release,
+
+            [FieldName("license")]
+            License
+        }
+
         [Command]
-        public void ShowReleaseNotes()
+        public void ShowInfo(Info info)
+        {
+            switch (info)
+            {
+                case Info.About:
+                    ShowAbout();
+                    break;
+                case Info.Release:
+                    ShowInfoFile("readme.txt");
+                    break;
+                case Info.License:
+                    ShowInfoFile("license.txt");
+                    break;
+            }
+        }
+
+        private void ShowInfoFile(string fileName)
         {
             var id = (Identifier)"slot";
             var pkg = App.Catalog<IPackageManager>().Default()
@@ -93,15 +131,16 @@ namespace Slot.Test
 
             if (pkg != null)
             {
-                ViewManager.CreateView();
+                var view = ViewManager.CreateView();
                 var buffer = App.Catalog<IBufferManager>().Default().CreateBuffer(
-                    new FileInfo(Path.Combine(pkg.Directory.FullName, "docs", "readme.txt")), Encoding.UTF8);
-                FileCommandDispatcher.OpenBuffer(buffer);
+                    new FileInfo(Path.Combine(pkg.Directory.FullName, "docs", fileName)), Encoding.UTF8);
+                buffer.Flags |= BufferDisplayFlags.HideCommandBar | BufferDisplayFlags.HideStatusBar;
+                FileCommandDispatcher.OpenBuffer(buffer, view);
+                ViewManager.ActivateView(view);
             }
         }
 
-        [Command]
-        public void ShowVersion()
+        private void ShowAbout()
         {
             var asm = typeof(EnvironmentCommandDispatcher).Assembly;
             var v = asm.GetName().Version;

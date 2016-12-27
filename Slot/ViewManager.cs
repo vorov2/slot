@@ -28,9 +28,12 @@ namespace Slot
 
         public IView CreateView()
         {
-            var act = GetActiveView();
+            var act = (ViewForm)GetActiveView();
             var frm = new ViewForm();
+            frm.Width = act.Width;
+            frm.Height = act.Height;
             frm.Show();
+            frm.AttachBuffer(act.Buffer);
             frm.Workspace = act.Workspace;
             return frm;
         }
@@ -53,35 +56,29 @@ namespace Slot
 
         public IView GetActiveView()
         {
-            var frm = Form.ActiveForm as IView;
-
-            if (frm == null)
-                frm = Application.OpenForms
-                    .OfType<IView>()
-                    .OrderByDescending(f => f.Activations)
-                    .FirstOrDefault();
-
-            return frm;
+            return Application.OpenForms
+                .OfType<IView>()
+                .OrderByDescending(f => f.Buffer?.LastAccess)
+                .FirstOrDefault();
         }
 
         public IEnumerable<IView> EnumerateViews()
         {
             return Application.OpenForms
                 .OfType<IView>()
-                .OrderByDescending(f => f.Activations);
+                .OrderByDescending(f => f.Buffer?.LastAccess);
         }
 
         public void ActivateView(IView view)
         {
-            var editor = view as EditorControl;
+            var frm = view as ViewForm;
 
-            if (editor != null)
+            if (frm != null)
             {
-                editor.Buffer.LastAccess = DateTime.Now;
-                editor.FindForm().Activate();
+                frm.Activate();
 
-                if (view.Workspace != null)
-                    Directory.SetCurrentDirectory(view.Workspace.FullName);
+                if (frm.Workspace != null)
+                    Directory.SetCurrentDirectory(frm.Workspace.FullName);
             }
         }
     }

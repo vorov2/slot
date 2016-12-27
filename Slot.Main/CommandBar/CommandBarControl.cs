@@ -82,10 +82,10 @@ namespace Slot.Main.CommandBar
             var ed = GetEditor();
 
             if (ed.Width != PreferredEditorWidth)
-            {
                 HideEditor();
+
+            if (ClientSize.Width != lastTipClientWidth)
                 HideTip();
-            }
 
             var g = e.Graphics;
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
@@ -184,12 +184,12 @@ namespace Slot.Main.CommandBar
             var wnd = GetMessageOverlay();
             if (wnd == null || !wnd.Visible)
                 ShowTip();
-            else
-                HideTip();
         }
 
+        private int lastTipClientWidth;
         private void ShowTip()
         {
+            lastTipClientWidth = ClientSize.Width;
             var font = ((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font;
             var eWidth = editor.Info.TextWidth / 2;
             Size size;

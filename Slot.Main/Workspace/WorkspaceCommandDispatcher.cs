@@ -34,7 +34,7 @@ namespace Slot.Main.Workspace
 
             var view = ViewManager.CreateView();
 
-            if (App.Catalog<IWorkspaceController>().Default().OpenWorkspace(dirInfo))
+            if (App.Catalog<IWorkspaceController>().Default().OpenWorkspace(view, dirInfo))
             {
                 if (view.Workspace.FullName.Equals(dirInfo.FullName, StringComparison.OrdinalIgnoreCase))
                 {
