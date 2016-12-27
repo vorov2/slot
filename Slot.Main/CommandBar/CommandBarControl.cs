@@ -146,9 +146,9 @@ namespace Slot.Main.CommandBar
             else
             {
                 var shift = Dpi.GetHeight(2);
-                g.FillRectangle(ed.BackColor.Brush(),
-                    new Rectangle(ed.Left - editor.Info.SmallCharWidth, shift,
-                    ed.Width + editor.Info.SmallCharWidth * 2, bounds.Height - shift * 2));
+                var rect = new Rectangle(ed.Left - editor.Info.SmallCharWidth, shift,
+                    ed.Width + editor.Info.SmallCharWidth * 2, bounds.Height - shift * 2);
+                g.FillRectangle(ed.BackColor.Brush(), rect);
             }
         }
 

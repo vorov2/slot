@@ -28,9 +28,7 @@ namespace Slot.Main.File
         [Command]
         public void SwitchBuffer()
         {
-            var buffers = bufferManager.EnumerateBuffers()
-                .OrderByDescending(b => b.LastAccess)
-                .ToList();
+            var buffers = bufferManager.EnumerateBuffers().ToList();
 
             if (buffers.Count < 2)
                 return;
@@ -116,10 +114,7 @@ namespace Slot.Main.File
 
             ViewManager.GetActiveView().DetachBuffer();
             bufferManager.CloseBuffer(buffer);
-
-            var next = bufferManager.EnumerateBuffers()
-                .OrderByDescending(b => b.LastAccess)
-                .FirstOrDefault();
+            var next = bufferManager.EnumerateBuffers().FirstOrDefault();
 
             if (next == null)
                 next = bufferManager.CreateBuffer();

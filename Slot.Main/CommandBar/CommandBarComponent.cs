@@ -28,9 +28,7 @@ namespace Slot.Main.CommandBar
             {
                 var vm = App.Catalog<IViewManager>().Default();
                 var act = vm.GetActiveView();
-                act = vm.EnumerateViews()
-                    .OrderByDescending(v => v.Buffer.LastAccess)
-                    .FirstOrDefault(v => v != act);
+                act = vm.EnumerateViews().FirstOrDefault(v => v != act);
 
                 if (act != null)
                 {

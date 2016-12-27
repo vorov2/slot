@@ -41,6 +41,7 @@ namespace Slot.Core.Modes
 
         public ModeMetadata GetMode(Identifier key)
         {
+            EnsureLoad();
             var ret = modes.FirstOrDefault(m => m.Key == key);
 
             if (ret == null)

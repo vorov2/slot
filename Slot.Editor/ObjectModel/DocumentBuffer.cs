@@ -375,7 +375,8 @@ namespace Slot.Editor.ObjectModel
             {
                 //Main
                 buffer.ReadOnly = sr.ReadNullableBool();
-                buffer.Encoding = Encoding.GetEncoding(sr.ReadInt32());
+                var cp = sr.ReadInt32();
+                buffer.Encoding = Encoding.GetEncoding(cp);
                 buffer.File = new FileInfo(sr.ReadString());
                 buffer.GrammarKey = (Identifier)sr.ReadString();
                 buffer.Flags = (BufferDisplayFlags)sr.ReadInt32();
@@ -479,7 +480,10 @@ namespace Slot.Editor.ObjectModel
         public static bool? ReadNullableBool(this BinaryReader sr)
         {
             if (!sr.ReadBoolean())
+            {
+                sr.ReadBoolean();
                 return null;
+            }
 
             return sr.ReadBoolean();
         }
@@ -487,7 +491,10 @@ namespace Slot.Editor.ObjectModel
         public static int? ReadNullableInt32(this BinaryReader sr)
         {
             if (!sr.ReadBoolean())
+            {
+                sr.ReadInt32();
                 return null;
+            }
 
             return sr.ReadInt32();
         }
@@ -495,7 +502,10 @@ namespace Slot.Editor.ObjectModel
         public static ShowWhitespace? ReadNullableShowWhitespace(this BinaryReader sr)
         {
             if (!sr.ReadBoolean())
+            {
+                sr.ReadInt32();
                 return null;
+            }
 
             return (ShowWhitespace)sr.ReadInt32();
         }

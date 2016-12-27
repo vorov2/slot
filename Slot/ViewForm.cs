@@ -61,15 +61,19 @@ namespace Slot
                 App.Catalog<IViewManager>().Default().CloseView(this);
             }
             else
+            {
+                DetachBuffer();
                 WriteState();
+            }
         }
 
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
+            LastAccess = DateTime.Now;
 
             if (Buffer != null)
-                Buffer.LastAccess = DateTime.Now;
+                Buffer.LastAccess = LastAccess;
         }
 
         private void UpdateTitle()
@@ -100,6 +104,8 @@ namespace Slot
         public IEditor Editor => editor;
 
         public IBuffer Buffer => editor.Buffer;
+
+        public DateTime LastAccess { get; set; }
 
         private ISettings _settings;
         public ISettings Settings

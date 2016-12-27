@@ -21,11 +21,6 @@ namespace Slot
     {
         public const string Name = "views.default";
 
-        public ViewManager()
-        {
-
-        }
-
         public IView CreateView()
         {
             var act = (ViewForm)GetActiveView();
@@ -54,20 +49,12 @@ namespace Slot
             }
         }
 
-        public IView GetActiveView()
-        {
-            return Application.OpenForms
-                .OfType<IView>()
-                .OrderByDescending(f => f.Buffer?.LastAccess)
-                .FirstOrDefault();
-        }
+        public IView GetActiveView() => EnumerateViews().FirstOrDefault();
 
-        public IEnumerable<IView> EnumerateViews()
-        {
-            return Application.OpenForms
+        public IEnumerable<IView> EnumerateViews() =>
+            Application.OpenForms
                 .OfType<IView>()
-                .OrderByDescending(f => f.Buffer?.LastAccess);
-        }
+                .OrderByDescending(f => f.LastAccess);
 
         public void ActivateView(IView view)
         {

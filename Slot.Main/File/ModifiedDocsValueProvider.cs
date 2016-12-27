@@ -20,7 +20,6 @@ namespace Slot.Main.File
             var str = curvalue as string;
             return bufferManager.EnumerateBuffers()
                 .Where(b => b.IsDirty && (str == null || b.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1))
-                .OrderByDescending(b => b.LastAccess)
                 .Select(b => new ValueItem(b.File.Name, b.File.DirectoryName));
         }
     }

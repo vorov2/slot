@@ -22,5 +22,7 @@ namespace Slot.Core.ViewModel
         Identifier Mode { get; set; }
 
         ISettings Settings { get; }
+
+        DateTime LastAccess { get; }
     }
 }
