@@ -24,6 +24,23 @@ namespace Slot.Main.CommandBar
         {
             var cm = GetCommandBarControl();
 
+            if (!cm.Visible)
+            {
+                var vm = App.Catalog<IViewManager>().Default();
+                var act = vm.GetActiveView();
+                act = vm.EnumerateViews()
+                    .OrderByDescending(v => v.Buffer.LastAccess)
+                    .FirstOrDefault(v => v != act);
+
+                if (act != null)
+                {
+                    vm.ActivateView(act);
+                    Show(commandAlias, args);
+                }
+
+                return;
+            }
+
             if (cm != null)
             {
                 if (commandAlias != null && args != null && args.Length > 0)
@@ -54,6 +71,8 @@ namespace Slot.Main.CommandBar
             if (cm != null)
                 cm.CloseInput();
         }
+
+        public bool InputVisible => GetCommandBarControl()?.IsActive ?? false;
 
         internal static CommandBarControl GetCommandBarControl()
         {

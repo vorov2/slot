@@ -18,6 +18,7 @@ using Slot.Core.ViewModel;
 using Slot.Editor;
 using Slot.Core.Output;
 using Slot.Editor.Drawing;
+using System.Collections.Generic;
 
 namespace Slot.Main.CommandBar
 {
@@ -348,13 +349,14 @@ namespace Slot.Main.CommandBar
             }
         }
 
+        private List<CommandMetadata> commandComplete;
         private void EditorPaint(object sender, PaintEventArgs e)
         {
             if (statement != null && !string.IsNullOrWhiteSpace(statement.Command))
             {
                 var spaced = commandEditor.Document.GetLine(0).Text.EndsWith(" ");
                 var cmd = statement.Command;
-                var arr =
+                var arr = commandComplete =
                     App.Catalog<ICommandProvider>().Default().EnumerateCommands()
                     .Where(c => c.Alias != null && (spaced ? c.Alias == cmd : c.Alias.StartsWith(cmd)))
                     .ToList();
@@ -370,6 +372,7 @@ namespace Slot.Main.CommandBar
                 }
                 else if (arr.Count > 0)
                 {
+                    commandComplete = null;
                     var ci = arr[0];
                     var ind = GetCurrentArgument(statement);
                     DrawStringWithPeriods(g, ci.ToString(), ind, hl: true);
@@ -487,6 +490,12 @@ namespace Slot.Main.CommandBar
             {
                 if (window != null && window.Visible)
                     AutocompleteClick(window, null);
+                else if (commandComplete != null && commandComplete.Any())
+                {
+                    var cmd = commandComplete.First();
+                    HideEditor();
+                    ExecuteCommand(cmd.Alias);
+                }
                 else
                 {
                     var cl = commandEditor.Text;
@@ -496,7 +505,7 @@ namespace Slot.Main.CommandBar
             }
             else if (e.KeyData == Keys.Escape)
                 HideEditor();
-            else if (e.KeyData == Keys.Tab && window != null && window.Visible)
+            else if (e.KeyData == Keys.Tab)
                 InsertCompleteString();
             else if (e.KeyData == Keys.Up && window != null && window.Visible)
                 window.SelectUp();
@@ -506,16 +515,34 @@ namespace Slot.Main.CommandBar
 
         private void InsertCompleteString()
         {
-            var idx = GetCurrentArgument(statement);
+            string str;
             var sels = commandEditor.Buffer.Selections;
 
-            if (!string.IsNullOrEmpty(lastLookupInput) && idx < statement.Arguments.Count)
+            if (commandComplete != null && commandComplete.Any())
             {
-                sels.Main.Start = new Pos(0, statement.Arguments[idx].Location.Start);
-                sels.Main.End = new Pos(0, statement.Arguments[idx].Location.End);
-            }
+                var fst = commandComplete.First();
+                str = fst.Alias + " ";
 
-            var str = window.SelectedItem.Value;
+                if (statement != null)
+                {
+                    sels.Main.Start = new Pos(0, statement.Location.Start);
+                    sels.Main.End = new Pos(0, statement.Location.End);
+                }
+            }
+            else if (window != null && window.Visible)
+            {
+                var idx = GetCurrentArgument(statement);
+                str = window.SelectedItem.Value;
+
+                if (!string.IsNullOrEmpty(lastLookupInput) && idx < statement.Arguments.Count)
+                {
+                    sels.Main.Start = new Pos(0, statement.Arguments[idx].Location.Start);
+                    sels.Main.End = new Pos(0, statement.Arguments[idx].Location.End);
+                }
+            }
+            else
+                return;
+
             App.Ext.Run(commandEditor, Editor.Cmd.InsertRange, str.MakeCharacters());
             HideAutocompleteWindow();
         }

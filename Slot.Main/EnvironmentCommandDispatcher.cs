@@ -28,28 +28,12 @@ namespace Slot.Main
         [Command]
         public void ToggleCommandBar()
         {
-            var cm = CommandBarComponent.GetCommandBarControl();
+            var cb = App.Catalog<ICommandBar>().Default();
 
-            if (!cm.Visible)
-            {
-                var act = ViewManager.GetActiveView();
-                act = ViewManager.EnumerateViews()
-                    .OrderByDescending(v => v.Buffer.LastAccess)
-                    .FirstOrDefault(v => v != act);
-
-                if (act != null)
-                {
-                    ViewManager.ActivateView(act);
-                    ToggleCommandBar();
-                }
-
-                return;
-            }
-
-            if (cm != null && cm.IsActive)
-                cm.CloseInput();
-            else if (cm != null)
-                cm.ShowInput();
+            if (cb.InputVisible)
+                cb.Hide();
+            else
+                cb.Show();
         }
 
         [Command]

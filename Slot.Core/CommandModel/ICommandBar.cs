@@ -14,5 +14,7 @@ namespace Slot.Core.CommandModel
         void ToggleMessage();
 
         void Hide();
+
+        bool InputVisible { get; }
     }
 }
