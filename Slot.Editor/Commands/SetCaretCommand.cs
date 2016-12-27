@@ -16,14 +16,14 @@ namespace Slot.Editor.Commands
             var newsel = default(Selection);
             var range = default(Range);
 
-            if (!sel.IsEmpty && (range = SelectWordCommand.SelectWord(View, View.Caret)) != null
+            if (!sel.IsEmpty && (range = SelectWordCommand.SelectWord(Ed, Ed.Caret)) != null
                 && range.Start == sel.Start && range.End == sel.End)
             {
                 newsel = new Selection(new Pos(sel.Caret.Line, 0),
                     new Pos(sel.Caret.Line, Document.Lines[sel.Caret.Line].Length));
             }
             else
-                newsel = new Selection(View.Caret);
+                newsel = new Selection(Ed.Caret);
 
             Buffer.Selections.Set(newsel);
             return Clean;

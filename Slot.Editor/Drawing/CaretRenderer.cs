@@ -58,6 +58,7 @@ namespace Slot.Editor.Drawing
         private void Tick(object sender, EventArgs e)
         {
             if ((!editor.Focused && timerDraw)
+                || editor.Buffer == null
                 || OverlapRectangle(editor.CallTips.TipRectangle)
                 || editor.ReadOnly)
                 return;

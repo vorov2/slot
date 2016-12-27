@@ -31,7 +31,7 @@ namespace Slot.Editor.Commands
             return Converter.Convert(obj, typeof(T), out res) ? (T)res : def;
         }
 
-        internal EditorControl View { get; set; }
+        internal EditorControl Ed { get; set; }
 
         internal bool GroupUndo { get; set; }
 
@@ -43,10 +43,10 @@ namespace Slot.Editor.Commands
 
         internal virtual EditorCommand Clone() => this;
 
-        protected DocumentBuffer Buffer => View.Buffer;
+        protected DocumentBuffer Buffer => Ed.Buffer;
 
-        protected Document Document => View.Buffer.Document;
+        protected Document Document => Ed.Buffer.Document;
 
-        protected EditorSettings Settings => View.EditorSettings;
+        protected EditorSettings Settings => Ed.EditorSettings;
     }
 }

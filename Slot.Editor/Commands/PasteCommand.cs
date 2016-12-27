@@ -14,10 +14,10 @@ namespace Slot.Editor.Commands
         {
             var str = Clipboard.GetText();
             
-            if (View.HasBeforePaste)
+            if (Ed.HasBeforePaste)
             {
                 var ev = new TextEventArgs(str);
-                View.OnBeforePaste(ev);
+                Ed.OnBeforePaste(ev);
                 str = ev.Text;
             }
 

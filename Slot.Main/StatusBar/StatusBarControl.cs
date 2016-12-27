@@ -21,19 +21,25 @@ namespace Slot.Main.StatusBar
             SetStyle(ControlStyles.Selectable, false);
             SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
+            Dock = DockStyle.Bottom;
             Cursor = Cursors.Default;
             Editor = editor;
-            AdjustHeight();
         }
 
         private void AdjustHeight()
         {
             var h = (int)Math.Round(
-                (double)((IView)Editor).Settings.Get<EnvironmentSettings>().Font.Height()
+                (double)((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font.Height()
                     + Dpi.GetHeight(4), MidpointRounding.AwayFromZero);
 
             if (Height != h)
                 Height = h;
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            AdjustHeight();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -41,9 +47,10 @@ namespace Slot.Main.StatusBar
             AdjustHeight();
             var g = e.Graphics;
             var bounds = e.ClipRectangle;
-            var style = Editor.Theme.GetStyle(StandardStyle.StatusBar);
-            var astyle = Editor.Theme.GetStyle(StandardStyle.ActiveStatusBar);
-            var font = ((IView)Editor).Settings.Get<EnvironmentSettings>().SmallFont;
+            var theme = App.Catalog<ITheme>().Default();
+            var style = theme.GetStyle(StandardStyle.StatusBar);
+            var astyle = theme.GetStyle(StandardStyle.ActiveStatusBar);
+            var font = ((IView)FindForm()).Settings.Get<EnvironmentSettings>().SmallFont;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             g.FillRectangle(style.BackColor.Brush(), bounds);
 

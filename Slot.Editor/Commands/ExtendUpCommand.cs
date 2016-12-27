@@ -9,6 +9,6 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.extendup")]
     public sealed class ExtendUpCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => UpCommand.MoveUp(View, sel);
+        protected override Pos Select(Selection sel) => UpCommand.MoveUp(Ed, sel);
     }
 }

@@ -59,7 +59,7 @@ namespace Slot
             App.RegisterCatalog<ICommandDispatcher>();
             App.RegisterCatalog<ICommandBar>();
             App.RegisterCatalog<IArgumentValueProvider>();
-            App.RegisterCatalog<IThemeManager>();
+            App.RegisterCatalog<ITheme>();
             App.RegisterCatalog<IDentComponent>();
             App.RegisterCatalog<IFoldingComponent>();
             App.RegisterCatalog<IStylerComponent>();
@@ -76,7 +76,7 @@ namespace Slot
             App.RegisterCatalog<IStateManager>();
             App.Initialize();
 
-            var frm = new MainForm();
+            var frm = new ViewForm();
             frm.Show();
 
             FileInfo fi;
@@ -94,10 +94,6 @@ namespace Slot
 
             Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();
-        }
-        private static string LocalFile(string fileName)
-        {
-            return Path.Combine(new FileInfo(typeof(MainForm).Assembly.Location).DirectoryName, fileName);
         }
     }
 

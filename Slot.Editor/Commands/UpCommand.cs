@@ -14,7 +14,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.up")]
     public class UpCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveUp(View, sel);
+        protected override Pos GetPosition(Selection sel) => MoveUp(Ed, sel);
 
         internal static Pos MoveUp(EditorControl ctx, Selection sel)
         {

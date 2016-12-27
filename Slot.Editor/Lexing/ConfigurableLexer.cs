@@ -26,7 +26,7 @@ namespace Slot.Editor.Lexing
 
         public void Style(IView view, Range range)
         {
-            var ed = (EditorControl)view;
+            var ed = (EditorControl)view.Editor;
             settings = ed.EditorSettings;
 
             if (ed.Buffer.GrammarKey == null)

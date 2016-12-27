@@ -11,7 +11,7 @@ namespace Slot.Editor.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            View.Search.UseRegex = !View.Search.UseRegex;
+            Ed.Search.UseRegex = !Ed.Search.UseRegex;
             return ActionResults.Clean;
         }
 

@@ -43,9 +43,9 @@ namespace Slot.Editor
             return ret;
         }
 
-        public bool Execute(IView view, Identifier commandKey, params object[] args)
+        public bool Execute(IEditor ed, Identifier commandKey, params object[] args)
         {
-            var editor = view as EditorControl;
+            var editor = ed as EditorControl;
 
             if (editor == null)
                 return false;
@@ -75,7 +75,7 @@ namespace Slot.Editor
                 var fel = lastSel.GetFirstLine();
                 var lel = lastSel.GetLastLine();
                 cmd = cmd.Clone();
-                cmd.View = editor;
+                cmd.Ed = editor;
                 exp = cmd.Execute(lastSel, args);
 
                 if (exp.Has(Modify) && (!editor.Buffer.LastAtomicChange || !exp.Has(AtomicChange))
@@ -105,7 +105,7 @@ namespace Slot.Editor
                     var fel = sel.GetFirstLine();
                     var lel = sel.GetLastLine();
                     cmd = cmd.Clone();
-                    cmd.View = editor;
+                    cmd.Ed = editor;
                     var e = cmd.Execute(sel, args);
                     exp |= e;
 
@@ -312,7 +312,7 @@ namespace Slot.Editor
 
                 if (cmd.Id == id)
                 {
-                    cmd.Command.View = editor;
+                    cmd.Command.Ed = editor;
                     Pos p;
                     var e = cmd.Command.Undo(out p);
 
@@ -366,7 +366,7 @@ namespace Slot.Editor
 
                 if (cmd.Id == id)
                 {
-                    cmd.Command.View = editor;
+                    cmd.Command.Ed = editor;
                     Pos p;
                     var e = cmd.Command.Redo(out p);
                     pos = p;

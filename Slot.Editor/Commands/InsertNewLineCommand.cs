@@ -8,6 +8,7 @@ using static Slot.Editor.Commands.ActionResults;
 using Slot.Core.ComponentModel;
 using Slot.Core;
 using Slot.Editor.ComponentModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Commands
 {
@@ -27,14 +28,14 @@ namespace Slot.Editor.Commands
             redoSel = selection.Clone();
 
             if (!selection.IsEmpty)
-                @string = DeleteRangeCommand.DeleteRange(View, selection);
+                @string = DeleteRangeCommand.DeleteRange(Ed, selection);
 
-            var indentKey = View.AffinityManager.GetAffinity(new Pos(undoPos.Line, 0)).GetIndentComponentKey(View);
+            var indentKey = Ed.AffinityManager.GetAffinity(new Pos(undoPos.Line, 0)).GetIndentComponentKey(Ed);
             var pos = InsertNewLine(Document, undoPos);
             selection.Clear(pos);
 
             var comp = indentKey != null ? App.Catalog<IDentComponent>().GetComponent(indentKey) : null;
-            indent = comp != null ? comp.CalculateIndentation(View, pos.Line) : 0;
+            indent = comp != null ? comp.CalculateIndentation((IView)Ed.FindForm(), pos.Line) : 0;
 
             if (indent > 0)
             {
@@ -49,7 +50,7 @@ namespace Slot.Editor.Commands
                     }
                 }
 
-                var str = View.UseTabs ? new string('\t', indent / View.IndentSize)
+                var str = Ed.UseTabs ? new string('\t', indent / Ed.IndentSize)
                     : new string(' ', indent);
                 Document.Lines[pos.Line].Insert(0, str.MakeCharacters());
                 selection.Clear(new Pos(pos.Line, pos.Col + str.Length));
@@ -80,7 +81,7 @@ namespace Slot.Editor.Commands
 
             if (indent > 0)
             {
-                var real = View.UseTabs ? indent / View.IndentSize : indent;
+                var real = Ed.UseTabs ? indent / Ed.IndentSize : indent;
                 nextLine.RemoveRange(0, real);
             }
 

@@ -19,7 +19,7 @@ namespace Slot.Editor.Commands
             for (var i = 0; i < Buffer.Selections.Count; i++)
             {
                 var s = Buffer.Selections[i];
-                var str = GetTextRange(View, s);
+                var str = GetTextRange(Ed, s);
                 sb.Append(str);
                 if (i != Buffer.Selections.Count - 1)
                     sb.Append(Buffer.Eol.AsString());

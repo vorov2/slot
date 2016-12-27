@@ -14,7 +14,7 @@ namespace Slot.Editor.Indentation
 
         public int CalculateIndentation(IView view, int lineIndex)
         {
-            var editor = (EditorControl)view;
+            var editor = (EditorControl)view.Editor;
 
             if (lineIndex > 0)
             {

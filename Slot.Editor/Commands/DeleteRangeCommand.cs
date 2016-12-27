@@ -14,7 +14,7 @@ namespace Slot.Editor.Commands
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
             redoSel = sel.Clone();
-            data = DeleteRange(View, sel);
+            data = DeleteRange(Ed, sel);
             undoPos = sel.Caret;
             return data != null ? Change : Pure;
         }

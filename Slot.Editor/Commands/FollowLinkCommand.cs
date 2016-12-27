@@ -14,7 +14,7 @@ namespace Slot.Editor.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            var pos = View.Caret;
+            var pos = Ed.Caret;
             var ln = Document.Lines[pos.Line];
             var a = ln.FindHyperlink(pos.Col);
 

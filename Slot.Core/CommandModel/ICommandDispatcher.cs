@@ -6,6 +6,6 @@ namespace Slot.Core.CommandModel
 {
     public interface ICommandDispatcher : IComponent
     {
-        bool Execute(IView ctx, Identifier commandKey, params object[] args);
+        bool Execute(IEditor editor, Identifier commandKey, params object[] args);
     }
 }

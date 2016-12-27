@@ -10,7 +10,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.right")]
     public class RightCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveRight(View, sel);
+        protected override Pos GetPosition(Selection sel) => MoveRight(Ed, sel);
 
         internal static Pos MoveRight(EditorControl ctx, Selection sel)
         {

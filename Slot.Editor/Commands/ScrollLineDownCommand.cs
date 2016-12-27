@@ -13,7 +13,7 @@ namespace Slot.Editor.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            View.Scroll.ScrollY(-1);
+            Ed.Scroll.ScrollY(-1);
             return Clean | AutocompleteKeep;
         }
     }

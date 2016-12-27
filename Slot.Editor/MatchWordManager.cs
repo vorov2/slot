@@ -59,7 +59,7 @@ namespace Slot.Editor
 
         private void Match()
         {
-            if (!editor.EditorSettings.MatchWords)
+            if (!editor.EditorSettings.MatchWords || editor.Buffer == null)
                 return;
 
             var caret = editor.Buffer.Selections.Main.Caret;

@@ -12,7 +12,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.down")]
     public class DownCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => MoveDown(View, sel);
+        protected override Pos GetPosition(Selection sel) => MoveDown(Ed, sel);
 
         internal static Pos MoveDown(EditorControl ctx, Selection sel)
         {

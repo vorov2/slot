@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using Slot.Core.ComponentModel;
 using Slot.Core;
 using Slot.Core.CommandModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Commands
 {
@@ -21,7 +22,7 @@ namespace Slot.Editor.Commands
             if (line < 0)
             {
                 var alias = App.Catalog<ICommandProvider>().Default().GetCommandByKey(Cmd.GotoLine).Alias;
-                App.Catalog<ICommandBar>().Default().Show(View, alias);
+                App.Catalog<ICommandBar>().Default().Show(alias);
                 return Pure;
             }
 

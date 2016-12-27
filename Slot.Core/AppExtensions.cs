@@ -13,13 +13,13 @@ namespace Slot
         public static bool Run(this IAppExtensions _, Identifier key, params object[] args)
         {
             var view = App.Catalog<IViewManager>().Default().GetActiveView();
-            return Run(null, view, key, args);
+            return Run(null, view.Editor, key, args);
         }
 
-        public static bool Run(this IAppExtensions _, IView view, Identifier key, params object[] args)
+        public static bool Run(this IAppExtensions _, IEditor editor, Identifier key, params object[] args)
         {
             var disp = App.Catalog<ICommandDispatcher>().GetComponent(key.Namespace);
-            return disp != null ? disp.Execute(view, key, args) : false;
+            return disp != null ? disp.Execute(editor, key, args) : false;
         }
 
         public static void Log(this IAppExtensions _, string message, EntryType type)

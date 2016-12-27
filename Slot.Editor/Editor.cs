@@ -1,32 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using Slot.Editor.Margins;
-using Slot.Editor.ObjectModel;
-using Slot.Editor.Drawing;
-using Slot.Editor.Styling;
-using Slot.Editor.Folding;
-using Slot.Editor.Autocomplete;
-using Slot.Editor.Affinity;
-using Slot.Editor.CallTips;
 using Slot.Core;
 using Slot.Core.Keyboard;
-using System.Text;
-using System.IO;
-using Slot.Core.ViewModel;
-using Slot.Editor.Search;
-using Slot.Core.Settings;
-using Slot.Core.Themes;
-using Slot.Drawing;
 using Slot.Core.Modes;
+using Slot.Core.Themes;
+using Slot.Core.ViewModel;
+using Slot.Drawing;
+using Slot.Editor.Affinity;
+using Slot.Editor.Autocomplete;
+using Slot.Editor.CallTips;
+using Slot.Editor.Drawing;
+using Slot.Editor.Folding;
+using Slot.Editor.Margins;
+using Slot.Editor.ObjectModel;
+using Slot.Editor.Search;
+using Slot.Editor.Styling;
 
 namespace Slot.Editor
 {
-    public class EditorControl : Control, IView
+    public class EditorControl : Control, IEditor
     {
         private const int WM_POINTERDOWN = 0x0246;
         private const int WM_POINTERUP = 0x0247;
@@ -38,7 +36,7 @@ namespace Slot.Editor
         private Pos movePosition;
         private Point mousePosition;
 
-        public EditorControl()
+        public EditorControl(EditorSettings settings)
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw
@@ -47,6 +45,7 @@ namespace Slot.Editor
             TabStop = true;
             AllowDrop = true;
 
+            EditorSettings = settings;
             TopMargins = new MarginList(this);
             LeftMargins = new MarginList(this);
             RightMargins = new MarginList(this);
@@ -64,8 +63,6 @@ namespace Slot.Editor
             AffinityManager = new AffinityManager(this);
             Search = new SearchManager(this);
             Styles = new StyleManager(this);
-            Text = "";
-
             timer.Tick += Tick;
         }
 
@@ -84,7 +81,7 @@ namespace Slot.Editor
             if (data != null)
             {
                 foreach (var f in data)
-                    RunCommand((Identifier)"file.openfile", f);
+                    RunCommand((Identifier)"file.openFile", f);
             }
 
             base.OnDragDrop(drgevent);
@@ -139,6 +136,9 @@ namespace Slot.Editor
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (Buffer == null)
+                return;
+
             CaretRenderer.Suspend();
             var dt = DateTime.Now;
 
@@ -211,6 +211,9 @@ namespace Slot.Editor
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+
+            if (Buffer == null)
+                return;
 
             if (mouseThief != null)
             {
@@ -352,7 +355,7 @@ namespace Slot.Editor
                         return true;
                     default:
                         InputChar = ch;
-                        RunCommand((Identifier)"editor.insertchar");
+                        RunCommand(Cmd.InsertChar);
                         break;
                 }
 
@@ -505,24 +508,11 @@ namespace Slot.Editor
             }
         }
 
-        private DirectoryInfo _workspace;
-        DirectoryInfo IView.Workspace
-        {
-            get { return _workspace; }
-            set { _workspace = value; }
-        }
-
-        Identifier IView.Mode
-        {
-            get { return Buffer.Mode; }
-            set { Buffer.Mode = value; }
-        }
-
         public DocumentBuffer Buffer { get; private set; }
 
-        public Document Document => Buffer.Document;
+        public Document Document => Buffer?.Document;
 
-        internal List<Line> Lines => Document.Lines;
+        internal List<Line> Lines => Document?.Lines;
 
         public override string Text
         {
@@ -614,27 +604,13 @@ namespace Slot.Editor
             get
             {
                 if (_theme == null)
-                    _theme = App.Catalog<IThemeManager>().Default().Create(this);
+                    _theme = App.Catalog<ITheme>().Default();
 
                 return _theme;
             }
         }
 
-        IBuffer IView.Buffer => Buffer;
-
-        private ISettings _settings;
-        public ISettings Settings
-        {
-            get
-            {
-                if (_settings == null)
-                    _settings = App.Catalog<ISettingsManager>().Default().Create();
-
-                return _settings;
-            }
-        }
-
-        public EditorSettings EditorSettings => Settings.Get<EditorSettings>();
+        public EditorSettings EditorSettings { get; }
 
         public bool UseSmallFont { get; set; }
 

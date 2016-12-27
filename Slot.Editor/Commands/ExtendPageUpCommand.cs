@@ -9,6 +9,6 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.extendpageup")]
     public sealed class ExtendPageUpCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => PageUpCommand.PageUp(View);
+        protected override Pos Select(Selection sel) => PageUpCommand.PageUp(Ed);
     }
 }

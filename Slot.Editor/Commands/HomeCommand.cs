@@ -11,7 +11,7 @@ namespace Slot.Editor.Commands
     {
         protected override Pos GetPosition(Selection sel)
         {
-            var pos = MoveHome(View, sel.Caret);
+            var pos = MoveHome(Ed, sel.Caret);
             sel.SetToRestore(Document.Lines[pos.Line].GetStripeCol(pos.Col));
             return pos;
         }

@@ -17,8 +17,8 @@ namespace Slot.Editor.Commands
             if (sel.Caret.Col == 0)
                 return base.Execute(sel);
 
-            var aff = View.AffinityManager.GetAffinity(sel.Caret);
-            var seps = aff.NonWordSymbols ?? View.EditorSettings.NonWordSymbols;
+            var aff = Ed.AffinityManager.GetAffinity(sel.Caret);
+            var seps = aff.NonWordSymbols ?? Ed.EditorSettings.NonWordSymbols;
             var st = SelectWordCommand.GetStrategy(seps, ln.CharAt(sel.Caret.Col - 1));
             var col = SelectWordCommand.FindBoundLeft(seps, ln, sel.Caret.Col - 1, st);
             sel.End = new Pos(sel.Caret.Line, col != 0 ? col + 1 : col);

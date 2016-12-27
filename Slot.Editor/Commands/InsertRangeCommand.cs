@@ -9,9 +9,11 @@ using Slot.Core.ComponentModel;
 namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
-    [ComponentData("editor.insertrange")]
+    [ComponentData(Name)]
     public class InsertRangeCommand : EditorCommand
     {
+        public const string Name = "editor.insertRange";
+
         private Selection undo;
         protected Selection redoSel;
         private IEnumerable<Character> deleteString;
@@ -28,7 +30,7 @@ namespace Slot.Editor.Commands
             redoSel = sel.Clone();
 
             if (!sel.IsEmpty)
-                deleteString = DeleteRangeCommand.DeleteRange(View, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(Ed, sel);
 
             var pos = InsertRange(Document, sel.Start, insertString);
             undo = new Selection(sel.Start, pos);
@@ -47,7 +49,7 @@ namespace Slot.Editor.Commands
 
         public override ActionResults Undo(out Pos pos)
         {
-            DeleteRangeCommand.DeleteRange(View, undo);
+            DeleteRangeCommand.DeleteRange(Ed, undo);
             pos = undo.Caret;
 
             if (deleteString != null)

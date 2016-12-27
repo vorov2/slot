@@ -112,7 +112,6 @@
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Themes\Adornment.cs" />
     <Compile Include="Themes\ITheme.cs" />
-    <Compile Include="Themes\IThemeManager.cs" />
     <Compile Include="Themes\StandardStyle.cs" />
     <Compile Include="Themes\Style.cs" />
     <Compile Include="Themes\StyleInfo.cs" />
@@ -120,6 +119,7 @@
     <Compile Include="UTF8EncodingNoBom.cs" />
     <Compile Include="ViewModel\IBuffer.cs" />
     <Compile Include="ViewModel\IBufferManager.cs" />
+    <Compile Include="ViewModel\IEditor.cs" />
     <Compile Include="ViewModel\IView.cs" />
     <Compile Include="ViewModel\IViewManager.cs" />
     <Compile Include="Workspaces\IWorkspaceController.cs" />

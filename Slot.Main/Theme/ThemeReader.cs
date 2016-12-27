@@ -4,10 +4,10 @@ using System.Linq;
 using Json;
 using Slot.Drawing;
 using Slot.Core.Themes;
+using Slot.Editor;
 
 namespace Slot.Main.Theme
 {
-    using Editor;
     using MAP = Dictionary<string, object>;
 
     public static class ThemeReader

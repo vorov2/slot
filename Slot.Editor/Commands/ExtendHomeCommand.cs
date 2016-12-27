@@ -9,7 +9,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.extendhome")]
     public sealed class ExtendHomeCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => HomeCommand.MoveHome(View, sel.Caret);
+        protected override Pos Select(Selection sel) => HomeCommand.MoveHome(Ed, sel.Caret);
 
         internal override bool SupportLimitedMode => true;
     }

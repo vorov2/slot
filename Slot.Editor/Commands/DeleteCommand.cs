@@ -24,7 +24,7 @@ namespace Slot.Editor.Commands
             if (!sel.IsEmpty)
             {
                 res = Change;
-                deleteString = DeleteRangeCommand.DeleteRange(View, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(Ed, sel);
             }
             else
             {

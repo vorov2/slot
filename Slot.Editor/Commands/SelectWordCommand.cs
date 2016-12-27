@@ -26,7 +26,7 @@ namespace Slot.Editor.Commands
             //    return Clean;
 
             var caret = sel.Caret;
-            var range = SelectWord(View, caret);
+            var range = SelectWord(Ed, caret);
             
             if (range == null)
             {

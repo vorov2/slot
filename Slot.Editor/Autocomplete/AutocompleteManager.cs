@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Autocomplete
 {
@@ -53,7 +54,7 @@ namespace Slot.Editor.Autocomplete
 
         public void ShowAutocomplete(Pos pos)
         {
-            completeSource.Initialize(editor);
+            completeSource.Initialize((IView)editor.FindForm());
             var list = completeSource.GetItems();
             ShowAutocomplete(pos, list);
         }

@@ -16,20 +16,20 @@ namespace Slot.Editor.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            var seq = View.Search.HasSearchResults ? View.Search.EnumerateSearchResults()
-                : View.MatchWords.HasSearchResults ? View.MatchWords.EnumerateSearchResults()
+            var seq = Ed.Search.HasSearchResults ? Ed.Search.EnumerateSearchResults()
+                : Ed.MatchWords.HasSearchResults ? Ed.MatchWords.EnumerateSearchResults()
                 : null;
 
             if (seq != null)
             {
-                View.Buffer.Selections.Clear();
+                Ed.Buffer.Selections.Clear();
 
                 foreach (var sr in seq)
                 {
-                    View.Buffer.Selections.Add(new Selection(
+                    Ed.Buffer.Selections.Add(new Selection(
                         new Pos(sr.Line, sr.StartCol),
                         new Pos(sr.Line, sr.EndCol + 1)
-                        ), View.Document);
+                        ), Ed.Document);
                 }
             }
 

@@ -9,7 +9,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.pagedown")]
     public sealed class PageDownCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => PageDown(View);
+        protected override Pos GetPosition(Selection sel) => PageDown(Ed);
 
         internal static Pos PageDown(EditorControl ctx)
         {

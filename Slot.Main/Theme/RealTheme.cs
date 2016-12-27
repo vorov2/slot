@@ -1,26 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Json;
 using Slot.Core;
+using Slot.Core.ComponentModel;
 using Slot.Core.Packages;
 using Slot.Core.Themes;
 using Slot.Core.ViewModel;
 
 namespace Slot.Main.Theme
 {
+    [Export(typeof(ITheme))]
+    [ComponentData(Name)]
     internal sealed class RealTheme : ITheme
     {
+        public const string Name = "themes.default";
+
         private readonly Dictionary<Identifier, ThemeInfo> themes = new Dictionary<Identifier, ThemeInfo>();
         private readonly Dictionary<StandardStyle, Style> styles = new Dictionary<StandardStyle, Style>();
-        private readonly IView view;
 
-        public RealTheme(IView view)
+        public RealTheme()
         {
-            this.view = view;
+
         }
 
         public IEnumerable<ThemeInfo> EnumerateThemes()
@@ -73,8 +78,7 @@ namespace Slot.Main.Theme
                             new FileInfo(Path.Combine(pkg.Directory.FullName, "data", e.String("file")))
                         ));
 
-            var set = view.Settings.Get<EnvironmentSettings>();
-            ChangeTheme((Identifier)set.Theme);
+            ChangeTheme((Identifier)"dark");
         }
 
         public Style GetStyle(StandardStyle style)

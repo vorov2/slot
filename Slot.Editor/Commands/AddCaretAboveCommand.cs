@@ -17,12 +17,12 @@ namespace Slot.Editor.Commands
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
             sel = Buffer.Selections.OrderBy(s => s.Start > s.End ? s.End : s.Start).First();
-            var pos = UpCommand.MoveUp(View, sel);
+            var pos = UpCommand.MoveUp(Ed, sel);
 
             if (pos != sel.Caret)
             {
                 var newSel = new Selection(pos);
-                Buffer.Selections.Add(newSel, View.Document);
+                Buffer.Selections.Add(newSel, Ed.Document);
                 newSel.SetToRestore(sel.RestoreCaretCol);
             }
 

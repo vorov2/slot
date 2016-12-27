@@ -17,12 +17,12 @@ namespace Slot.Editor.Autocomplete
         private volatile bool busy;
         private DateTime lastUpdate;
         private int lastEdits = -1;
-        private EditorControl editor;
+        private EditorControl ed;
         private const string SEPS = " \r\n\t`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?";
 
         public void Initialize(IView view)
         {
-            this.editor = (EditorControl)view;
+            this.ed = (EditorControl)view.Editor;
         }
 
         public IEnumerable<string> GetItems()
@@ -33,7 +33,7 @@ namespace Slot.Editor.Autocomplete
                 (lastUpdate == DateTime.MinValue || DateTime.Now - lastUpdate > TimeSpan.FromSeconds(10)))
             {
                 Console.WriteLine("Generate CompleteSource");
-                t = Task.Run(() => WalkDocument(editor));
+                t = Task.Run(() => WalkDocument());
             }
 
             if (completes.Count == 0 && t != null)
@@ -42,7 +42,7 @@ namespace Slot.Editor.Autocomplete
             return completes;
         }
 
-        private void WalkDocument(EditorControl ed)
+        private void WalkDocument()
         {
             if (ed.Buffer.Edits == lastEdits)
                 return;

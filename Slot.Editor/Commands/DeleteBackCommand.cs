@@ -24,20 +24,20 @@ namespace Slot.Editor.Commands
             var lines = Document.Lines;
             var caret = sel.Caret;
             var ln = lines[caret.Line];
-            var indentSize = Line.GetIndentationSize(ln.GetTetras(caret.Col, View.IndentSize), View.IndentSize);
-            unindent = indentSize == View.IndentSize ? indentSize : View.IndentSize - indentSize;
+            var indentSize = Line.GetIndentationSize(ln.GetTetras(caret.Col, Ed.IndentSize), Ed.IndentSize);
+            unindent = indentSize == Ed.IndentSize ? indentSize : Ed.IndentSize - indentSize;
 
             if (!sel.IsEmpty)
             {
                 unindent = 0;
                 res = Change;
-                deleteString = DeleteRangeCommand.DeleteRange(View, sel);
+                deleteString = DeleteRangeCommand.DeleteRange(Ed, sel);
             }
-            else if (!View.UseTabs && (unindent = GetMaximum(ln, caret.Col, unindent)) > 1 && caret.Col >= unindent)
+            else if (!Ed.UseTabs && (unindent = GetMaximum(ln, caret.Col, unindent)) > 1 && caret.Col >= unindent)
             {
                 res = Change;
                 var np = new Pos(caret.Line, caret.Col - unindent);
-                deleteString = DeleteRangeCommand.DeleteRange(View, new Selection(caret, np));
+                deleteString = DeleteRangeCommand.DeleteRange(Ed, new Selection(caret, np));
                 sel.Clear(np);
             }
             else
@@ -90,7 +90,7 @@ namespace Slot.Editor.Commands
             {
                 var caret = redoSel.Caret;
                 var np = new Pos(caret.Line, caret.Col - unindent);
-                DeleteRangeCommand.DeleteRange(View, new Selection(caret, np));
+                DeleteRangeCommand.DeleteRange(Ed, new Selection(caret, np));
             }
             else
                 Execute(redoSel);
@@ -108,7 +108,7 @@ namespace Slot.Editor.Commands
             else if (deleteChar == Character.NewLine)
             {
                 pos = new Pos(undoPos.Line, undoPos.Col);
-                var txt = DeleteRangeCommand.DeleteRange(View, new Selection(pos,
+                var txt = DeleteRangeCommand.DeleteRange(Ed, new Selection(pos,
                     new Pos(pos.Line, Document.Lines[pos.Line].Length)));
                 var ipos = InsertNewLineCommand.InsertNewLine(Document, pos);
 

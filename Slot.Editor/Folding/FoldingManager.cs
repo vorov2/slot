@@ -3,6 +3,7 @@ using Slot.Editor.ObjectModel;
 using System;
 using System.Collections.Generic;
 using Slot.Editor.ComponentModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Folding
 {
@@ -114,7 +115,7 @@ namespace Slot.Editor.Folding
                     if (key != null)
                     {
                         var fp = App.Catalog<IFoldingComponent>().GetComponent(key);
-                        fp.Fold(editor, range);
+                        fp.Fold((IView)editor.FindForm(), range);
                     }
                 }
             }

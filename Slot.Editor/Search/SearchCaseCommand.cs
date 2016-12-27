@@ -11,7 +11,7 @@ namespace Slot.Editor.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            View.Search.CaseSensitive = !View.Search.CaseSensitive;
+            Ed.Search.CaseSensitive = !Ed.Search.CaseSensitive;
             return ActionResults.Clean;
         }
 

@@ -11,19 +11,19 @@ namespace Slot.Editor.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (View.Search.IsSearchVisible)
-                View.Search.HideSearch();
+            if (Ed.Search.IsSearchVisible)
+                Ed.Search.HideSearch();
             else
             {
                 Buffer.Selections.Truncate();
                 Buffer.Selections.Main.Clear();
             }
 
-            if (!View.Focused)
-                View.Focus();
+            if (!Ed.Focused)
+                Ed.Focus();
 
-            if (View.HasEscape)
-                View.OnEscape();
+            if (Ed.HasEscape)
+                Ed.OnEscape();
 
             return Clean;
         }

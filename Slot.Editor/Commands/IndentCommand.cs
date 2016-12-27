@@ -22,16 +22,16 @@ namespace Slot.Editor.Commands
             {
                 redoSel = sel.Clone();
                 useTab = Settings.UseTabs;
-                undoIndents = Indent(View, sel);
+                undoIndents = Indent(Ed, sel);
                 return Modify | Scroll;
             }
             else
             {
-                var indent = View.UseTabs ? "\t"
+                var indent = Ed.UseTabs ? "\t"
                     : new string(' ', Line.GetIndentationSize(startLine.GetTetras(
-                        sel.Start.Col, View.IndentSize), View.IndentSize));
+                        sel.Start.Col, Ed.IndentSize), Ed.IndentSize));
 
-                if (!View.UseTabs && startLine.WhiteSpaceBefore(sel.Start.Col))
+                if (!Ed.UseTabs && startLine.WhiteSpaceBefore(sel.Start.Col))
                 {
                     var newIndent = FindIndent(true, sel.Caret.Line, indent.Length);
 
@@ -82,7 +82,7 @@ namespace Slot.Editor.Commands
                 if (c.Char == ' ')
                     spaces++;
                 else if (c.Char == '\t')
-                    spaces += View.IndentSize;
+                    spaces += Ed.IndentSize;
                 else
                     return spaces;
 

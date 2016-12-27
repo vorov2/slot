@@ -19,6 +19,9 @@ namespace Slot.Main.StatusBar
         {
             get
             {
+                if (editor.Buffer == null)
+                    return "";
+
                 if ((lastMode == null && editor.Buffer.GrammarKey != null)
                     || (editor.Buffer.GrammarKey != lastMode.Key && editor.Buffer.GrammarKey != null))
                 {

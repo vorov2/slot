@@ -17,7 +17,7 @@ namespace Slot.Main
         public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
         {
             var str = curvalue as string;
-            var theme = App.Catalog<IViewManager>().Default().GetActiveView().Theme;
+            var theme = App.Catalog<ITheme>().Default();
             return theme.EnumerateThemes()
                 .Where(t => str == null || t.Key.ToString().IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(t => new ValueItem(t.Key.ToString(), t.Name));

@@ -11,7 +11,7 @@ namespace Slot.Editor.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            View.Search.WholeWord = !View.Search.WholeWord;
+            Ed.Search.WholeWord = !Ed.Search.WholeWord;
             return ActionResults.Clean;
         }
 

@@ -22,11 +22,10 @@ namespace Slot
         public IView CreateView()
         {
             var act = GetActiveView();
-            var frm = new MainForm();
+            var frm = new ViewForm();
             frm.Show();
-            ((IView)frm.Editor).Workspace = act.Workspace;
-            frm.UpdateTitle();
-            return frm.Editor;
+            frm.Workspace = act.Workspace;
+            return frm;
         }
 
         public void CloseView(IView view)
@@ -39,24 +38,22 @@ namespace Slot
 
         public IView GetActiveView()
         {
-            var frm = Form.ActiveForm as MainForm;
+            var frm = Form.ActiveForm as IView;
 
             if (frm == null)
                 frm = Application.OpenForms
-                    .OfType<MainForm>()
+                    .OfType<IView>()
                     .OrderByDescending(f => f.Activations)
                     .FirstOrDefault();
 
-            return frm?.Editor;
+            return frm;
         }
 
         public IEnumerable<IView> EnumerateViews()
         {
             return Application.OpenForms
-                .OfType<MainForm>()
-                .OrderByDescending(f => f.Activations)
-                .Distinct()
-                .Select(f => f.Editor);
+                .OfType<IView>()
+                .OrderByDescending(f => f.Activations);
         }
 
         public void ActivateView(IView view)

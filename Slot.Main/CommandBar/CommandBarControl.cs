@@ -38,7 +38,7 @@ namespace Slot.Main.CommandBar
             SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.AllPaintingInWmPaint | ControlStyles.FixedHeight, true);
             Cursor = Cursors.Default;
-            AdjustHeight();
+            Dock = DockStyle.Top;
             App.Catalog<ILogComponent>().Default().EntryWritten += (o, e) =>
             {
                 if (overlay != null && overlay.Visible)
@@ -53,6 +53,12 @@ namespace Slot.Main.CommandBar
             };
         }
 
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            AdjustHeight();
+        }
+
         private void EditorEscape(object sender, EventArgs e)
         {
             var ovl = GetMessageOverlay();
@@ -64,7 +70,7 @@ namespace Slot.Main.CommandBar
         private void AdjustHeight()
         {
             var h = (int)Math.Round(
-                Math.Max(((IView)editor).Settings.Get<EnvironmentSettings>().Font.Height() * 1.7,
+                Math.Max(((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font.Height() * 1.7,
                     editor.Info.CharHeight * 1.9), MidpointRounding.AwayFromZero);
             if (Height != h)
                 Height = h;
@@ -89,9 +95,12 @@ namespace Slot.Main.CommandBar
             var acs = editor.Theme.GetStyle(StandardStyle.CommandBarCaption);
             g.FillRectangle(cs.BackColor.Brush(), bounds);
 
+            if (editor.Buffer == null)
+                return;
+
             if (!ed.Visible)
             {
-                var baseFont = ((IView)editor).Settings.Get<EnvironmentSettings>().Font;
+                var baseFont = ((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font;
                 var font = baseFont.Get(cs.FontStyle);
                 var x = font.Width() * 2f;
                 var h = font.Width() / 1.8f;
@@ -112,7 +121,7 @@ namespace Slot.Main.CommandBar
                 g.DrawString(editor.Buffer.File.Name, font, cs.ForeColor.Brush(), x, y, TextFormats.Compact);
                 x += g.MeasureString(editor.Buffer.File.Name, font).Width;
 
-                var ws = ((IView)editor).Workspace?.FullName.Length ?? 0;
+                var ws = ((IView)FindForm()).Workspace?.FullName.Length ?? 0;
                 var dirName = editor.Buffer.File.DirectoryName.Length < ws ? editor.Buffer.File.DirectoryName
                     : editor.Buffer.File.DirectoryName.Substring(ws).TrimStart('/', '\\');
                 g.DrawString(dirName, font.Get(acs.FontStyle), acs.ForeColor.Brush(), 
@@ -164,7 +173,7 @@ namespace Slot.Main.CommandBar
                 && loc.Y >= errorButton.Top && loc.Y <= errorButton.Bottom)
                 ToggleTip();
             else
-                App.Ext.Run(editor, Cmd.OpenFile);
+                App.Ext.Run(Cmd.OpenFile);
 
             Invalidate();
             base.OnMouseDown(e);
@@ -181,7 +190,7 @@ namespace Slot.Main.CommandBar
 
         private void ShowTip()
         {
-            var font = ((IView)editor).Settings.Get<EnvironmentSettings>().Font;
+            var font = ((IView)FindForm()).Settings.Get<EnvironmentSettings>().Font;
             var eWidth = editor.Info.TextWidth / 2;
             Size size;
             var err = "M " + error;
@@ -237,7 +246,7 @@ namespace Slot.Main.CommandBar
             var key = km.LastKey;
 
             if (key.Name != "newline" && key.Name != "up" && key.Name != "down" && key.Name != "indent")
-                App.Ext.Run(editor, key);
+                App.Ext.Run(key);
         }
 
         private AutocompleteWindow GetAutocompleteWindow()
@@ -289,7 +298,7 @@ namespace Slot.Main.CommandBar
                     var a = statement.Arguments[arg];
                     commandEditor.Buffer.Selections.Set(new Selection(
                         new Pos(0, a.Location.Start), new Pos(0, a.Location.End)));
-                    App.Ext.Run(commandEditor, (Identifier)"editor.insertrange", window.SelectedItem.Value.MakeCharacters());
+                    App.Ext.Run(commandEditor, Editor.Cmd.InsertRange, window.SelectedItem.Value.MakeCharacters());
                 }
                 else
                     InsertCompleteString();
@@ -507,12 +516,15 @@ namespace Slot.Main.CommandBar
             }
 
             var str = window.SelectedItem.Value;
-            App.Ext.Run(commandEditor, (Identifier)"editor.insertrange", str.MakeCharacters());
+            App.Ext.Run(commandEditor, Editor.Cmd.InsertRange, str.MakeCharacters());
             HideAutocompleteWindow();
         }
 
         private void ResetBuffer(string text = "")
         {
+            if (commandEditor.Buffer == null)
+                commandEditor.Text = text;
+
             commandEditor.Buffer.Truncate(text);
             commandEditor.Buffer.CurrentLineIndicator = false;
             commandEditor.Buffer.ShowEol = false;

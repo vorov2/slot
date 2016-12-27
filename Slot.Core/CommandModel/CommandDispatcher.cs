@@ -17,7 +17,7 @@ namespace Slot.Core.CommandModel
 
         private Dictionary<string, MethodInfo> commands;
 
-        public bool Execute(IView ctx, Identifier commandKey, params object[] args) 
+        public bool Execute(IEditor ed, Identifier commandKey, params object[] args) 
         {
             ResolveCommands();
             MethodInfo cmd;
@@ -47,7 +47,7 @@ namespace Slot.Core.CommandModel
                     {
                         if (args.Length <= i && !pars[i].HasDefaultValue)
                         {
-                            ProcessNotEnoughArguments(ctx, commandKey, args);
+                            ProcessNotEnoughArguments(commandKey, args);
                             return false;
                         }
 
@@ -66,7 +66,7 @@ namespace Slot.Core.CommandModel
 
                 if (vals.Length < pars.Length)
                 {
-                    ProcessNotEnoughArguments(ctx, commandKey, args);
+                    ProcessNotEnoughArguments(commandKey, args);
                     return false;
                 }
 
@@ -79,10 +79,10 @@ namespace Slot.Core.CommandModel
             }
         }
 
-        protected virtual void ProcessNotEnoughArguments(IView ctx, Identifier commandKey, object[] args)
+        protected virtual void ProcessNotEnoughArguments(Identifier commandKey, object[] args)
         {
             var cmd = App.Catalog<ICommandProvider>().Default().GetCommandByKey(commandKey);
-            App.Catalog<ICommandBar>().Default().Show(ctx, cmd.Alias, args);
+            App.Catalog<ICommandBar>().Default().Show(cmd.Alias, args);
         }
 
         private void ResolveCommands()

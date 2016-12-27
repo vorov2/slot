@@ -201,7 +201,8 @@ namespace Slot.Editor
 
         internal void InvalidateLines(InvalidateFlags flags = InvalidateFlags.None)
         {
-            var dt = DateTime.Now;
+            if (editor.Buffer == null)
+                return;
 
             var startLine = 0;
             var endLine = editor.Lines.Count;

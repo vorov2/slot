@@ -16,7 +16,7 @@ namespace Slot.Editor.Folding
 
         public void Fold(IView view, Range range)
         {
-            var ed = (EditorControl)view;
+            var ed = (EditorControl)view.Editor;
             var prevIndent = 0;
             var li = range.Start.Line;
 

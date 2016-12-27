@@ -9,9 +9,11 @@ using Slot.Core.ComponentModel;
 namespace Slot.Editor.Commands
 {
     [Export(typeof(EditorCommand))]
-    [ComponentData("editor.insertchar")]
+    [ComponentData(Name)]
     public class InsertCharCommand : EditorCommand
     {
+        public const string Name = "editor.insertChar";
+
         private Character deleteChar;
         private Character insertChar;
         private IEnumerable<Character> insertString;
@@ -20,7 +22,7 @@ namespace Slot.Editor.Commands
 
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            insertChar = new Character(View.InputChar);
+            insertChar = new Character(Ed.InputChar);
 
             var line = Document.Lines[sel.Caret.Line];
             undoPos = sel.Start;
@@ -28,7 +30,7 @@ namespace Slot.Editor.Commands
             var res = Change;
 
             if (!sel.IsEmpty)
-                insertString = DeleteRangeCommand.DeleteRange(View, sel);
+                insertString = DeleteRangeCommand.DeleteRange(Ed, sel);
             else if (Buffer.Overtype && sel.Caret.Col < line.Length)
             {
                 res |= AtomicChange;
@@ -49,8 +51,8 @@ namespace Slot.Editor.Commands
         //TODO: check performance
         private bool CanShowAutocomplete(Selection sel, char c)
         {
-            var aff = View.AffinityManager.GetAffinity(sel.Caret);
-            var sym = aff.GetAutocompleteSymbols(View);
+            var aff = Ed.AffinityManager.GetAffinity(sel.Caret);
+            var sym = aff.GetAutocompleteSymbols(Ed);
             return (sym != null ? sym.IndexOf(c) != -1 : false) || char.IsLetter(c);
         }
 

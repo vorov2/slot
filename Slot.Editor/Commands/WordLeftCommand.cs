@@ -13,7 +13,7 @@ namespace Slot.Editor.Commands
     {
         protected override Pos GetPosition(Selection sel)
         {
-            var pos = WordLeft(View, sel);
+            var pos = WordLeft(Ed, sel);
             sel.SetToRestore(Document.Lines[pos.Line].GetStripeCol(pos.Col));
             return pos;
         }

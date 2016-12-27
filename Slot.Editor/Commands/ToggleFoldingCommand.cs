@@ -28,7 +28,7 @@ namespace Slot.Editor.Commands
                 if (line.Folding.Has(FoldingStates.Header) && (level == -1 || line.FoldingLevel < level))
                 {
                     undoLine = ln;
-                    View.Folding.ToggleExpand(undoLine);
+                    Ed.Folding.ToggleExpand(undoLine);
                     break;
                 }
 
@@ -43,14 +43,14 @@ namespace Slot.Editor.Commands
 
         public override ActionResults Undo(out Pos pos)
         {
-            View.Folding.ToggleExpand(undoLine);
+            Ed.Folding.ToggleExpand(undoLine);
             pos = undoCaret;
             return Modify | ShallowChange;
         }
 
         public override ActionResults Redo(out Pos pos)
         {
-            View.Folding.ToggleExpand(undoLine);
+            Ed.Folding.ToggleExpand(undoLine);
             pos = undoCaret;
             return Modify | ShallowChange;
         }

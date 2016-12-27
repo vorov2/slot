@@ -9,7 +9,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.extendwordleft")]
     public sealed class ExtendWordLeftCommandCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => WordLeftCommand.WordLeft(View, sel);
+        protected override Pos Select(Selection sel) => WordLeftCommand.WordLeft(Ed, sel);
 
         internal override bool SupportLimitedMode => true;
     }

@@ -12,7 +12,7 @@ namespace Slot.Editor.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            DoSelection(View.Caret);
+            DoSelection(Ed.Caret);
             return Clean | Scroll;
         }
 

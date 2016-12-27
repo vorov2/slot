@@ -64,18 +64,14 @@ namespace Slot.Core.Workspaces
 
             if (!string.Equals(view.Workspace?.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase))
             {
-                view.Workspace = dir;
                 FileUtil.EnsurePath(dir);
-                Directory.SetCurrentDirectory(view.Workspace.FullName);
+                Directory.SetCurrentDirectory(dir.FullName);
+                view.Workspace = dir;
                 view.Settings.ReloadSettings(SettingsScope.Workspace);
-                OnWorkspaceChanged();
                 return true;
             }
 
             return false;
         }
-
-        public event EventHandler WorkspaceChanged;
-        private void OnWorkspaceChanged() => WorkspaceChanged?.Invoke(this, EventArgs.Empty);
     }
 }

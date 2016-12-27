@@ -44,10 +44,11 @@ namespace Slot.Main.File
         {
             base.OnPaint(e);
             var view = App.Catalog<IViewManager>().Default().GetActiveView();
+            var theme = App.Catalog<ITheme>().Default();
             var bag = view.Settings.Get<EnvironmentSettings>();
-            var style  = view.Theme.GetStyle(StandardStyle.Popup);
-            var style1 = view.Theme.GetStyle(StandardStyle.PopupSelected);
-            var style2 = view.Theme.GetStyle(StandardStyle.PopupBorder);
+            var style  = theme.GetStyle(StandardStyle.Popup);
+            var style1 = theme.GetStyle(StandardStyle.PopupSelected);
+            var style2 = theme.GetStyle(StandardStyle.PopupBorder);
 
             var g = e.Graphics;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;

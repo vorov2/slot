@@ -16,7 +16,7 @@ namespace Slot.Main.StatusBar
         {
             get
             {
-                return editor.Buffer.Overtype ? "OVR" : "INS";
+                return editor.Buffer != null && editor.Buffer.Overtype ? "OVR" : "INS";
             }
             set { base.Text = value; }
         }

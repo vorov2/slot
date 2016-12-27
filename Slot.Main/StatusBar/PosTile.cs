@@ -17,6 +17,9 @@ namespace Slot.Main.StatusBar
         {
             get
             {
+                if (editor.Buffer == null)
+                    return "";
+
                 var caret = editor.Buffer.Selections.Main.Caret;
                 return $"Ln {caret.Line + 1}, Ch {caret.Col + 1}";
             }

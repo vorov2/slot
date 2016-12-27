@@ -8,6 +8,7 @@ using Slot.Core.ViewModel;
 using Slot.Core.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
+using Slot.Core;
 
 namespace Slot.Main.CommandBar
 {
@@ -17,9 +18,9 @@ namespace Slot.Main.CommandBar
     {
         public const string Name = "commandbar.default";
 
-        public void Show(IView view) => Show(view, null);
+        public void Show() => Show(null);
 
-        public void Show(IView view, string commandAlias, params object[] args)
+        public void Show(string commandAlias, params object[] args)
         {
             var cm = GetCommandBarControl();
 
@@ -46,7 +47,7 @@ namespace Slot.Main.CommandBar
                 cm.ToggleTip();
         }
 
-        public void Hide(IView view)
+        public void Hide()
         {
             var cm = GetCommandBarControl();
 
@@ -56,9 +57,7 @@ namespace Slot.Main.CommandBar
 
         internal static CommandBarControl GetCommandBarControl()
         {
-            return Form.ActiveForm.Controls.OfType<SplitContainer>()
-                .FirstOrDefault()
-                .Panel1.Controls.OfType<CommandBarControl>().FirstOrDefault();
+            return (CommandBarControl)App.Catalog<IViewManager>().Default().GetActiveView().CommandBar;
         }
     }
 }

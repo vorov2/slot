@@ -16,16 +16,16 @@ namespace Slot.Editor.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (!View.Search.IsSearchVisible)
-                View.Search.ShowSearch();
+            if (!Ed.Search.IsSearchVisible)
+                Ed.Search.ShowSearch();
 
             var caret = sel.Caret;
             var found = false;
 
-            foreach (var sr in View.Search.EnumerateSearchResults().OrderByDescending(s => new Pos(s.Line, s.StartCol)))
+            foreach (var sr in Ed.Search.EnumerateSearchResults().OrderByDescending(s => new Pos(s.Line, s.StartCol)))
                 if (sr.Line < caret.Line || (sr.Line == caret.Line && sr.StartCol < caret.Col && sr.EndCol + 1 < caret.Col))
                 {
-                    View.Buffer.Selections.Set(new Selection(
+                    Ed.Buffer.Selections.Set(new Selection(
                         new Pos(sr.Line, sr.StartCol),
                         new Pos(sr.Line, sr.EndCol + 1)
                         ));
@@ -33,7 +33,7 @@ namespace Slot.Editor.Search
                     break;
                 }
 
-            var pos = new Pos(View.Lines.Count, View.Lines[View.Lines.Count - 1].Length);
+            var pos = new Pos(Ed.Lines.Count, Ed.Lines[Ed.Lines.Count - 1].Length);
             if (!found && caret != pos)
                 return Execute(new Selection(pos));
 

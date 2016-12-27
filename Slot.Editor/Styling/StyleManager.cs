@@ -4,6 +4,7 @@ using Slot.Editor.ObjectModel;
 using Slot.ComponentModel;
 using Slot.Core;
 using Slot.Core.Themes;
+using Slot.Core.ViewModel;
 
 namespace Slot.Editor.Styling
 {
@@ -62,7 +63,7 @@ namespace Slot.Editor.Styling
                 var styler = grm == null ? null
                     : App.Catalog<IStylerComponent>().GetComponent(grm.StylerKey ?? defaultStyler);
                 if (styler != null)
-                    styler.Style(editor, range);
+                    styler.Style((IView)editor.FindForm(), range);
             }
         }
 

@@ -11,7 +11,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.pageup")]
     public sealed class PageUpCommand : CaretCommand
     {
-        protected override Pos GetPosition(Selection sel) => PageUp(View);
+        protected override Pos GetPosition(Selection sel) => PageUp(Ed);
 
         internal static Pos PageUp(EditorControl ctx)
         {

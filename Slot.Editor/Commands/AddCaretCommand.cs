@@ -13,7 +13,7 @@ namespace Slot.Editor.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            var newSel = new Selection(View.Caret);
+            var newSel = new Selection(Ed.Caret);
             Buffer.Selections.AddFast(newSel);
 
             var osel = Buffer.Selections.GetIntersection(newSel);

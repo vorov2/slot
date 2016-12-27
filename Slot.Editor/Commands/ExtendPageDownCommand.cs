@@ -9,6 +9,6 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.extendpagedown")]
     public sealed class ExtendPageDownCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => PageDownCommand.PageDown(View);
+        protected override Pos Select(Selection sel) => PageDownCommand.PageDown(Ed);
     }
 }

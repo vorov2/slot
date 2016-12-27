@@ -11,6 +11,12 @@ namespace Slot.Core.ViewModel
 
         void DetachBuffer();
 
+        int Activations { get; }
+
+        object CommandBar { get; }
+
+        IEditor Editor { get; }
+
         IBuffer Buffer { get; }
 
         DirectoryInfo Workspace { get; set; }
@@ -18,7 +24,5 @@ namespace Slot.Core.ViewModel
         Identifier Mode { get; set; }
 
         ISettings Settings { get; }
-
-        ITheme Theme { get; }
     }
 }

@@ -9,7 +9,7 @@ namespace Slot.Editor.Commands
     [ComponentData("editor.extendleft")]
     public sealed class ExtendLeftCommand : SelectionCommand
     {
-        protected override Pos Select(Selection sel) => LeftCommand.MoveLeft(View, sel);
+        protected override Pos Select(Selection sel) => LeftCommand.MoveLeft(Ed, sel);
 
         internal override bool SupportLimitedMode => true;
     }

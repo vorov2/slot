@@ -34,17 +34,12 @@ namespace Slot.Test
         [Command]
         public void ToggleCommandBar()
         {
-            var ed = ViewManager.GetActiveView() as EditorControl;
+            var cm = CommandBarComponent.GetCommandBarControl();
 
-            if (ed != null)
-            {
-                var cm = CommandBarComponent.GetCommandBarControl();
-
-                if (cm != null && cm.IsActive)
-                    cm.CloseInput();
-                else if (cm != null)
-                    cm.ShowInput();
-            }
+            if (cm != null && cm.IsActive)
+                cm.CloseInput();
+            else if (cm != null)
+                cm.ShowInput();
         }
 
         [Command]
@@ -62,13 +57,13 @@ namespace Slot.Test
                 return;
             }
 
-            App.Ext.Run(ViewManager.GetActiveView(), cmd.Key);
+            App.Ext.Run(cmd.Key);
         }
 
         [Command]
         public void ChangeTheme(string themeName)
         {
-            ViewManager.GetActiveView().Theme.ChangeTheme((Identifier)themeName);
+            App.Catalog<ITheme>().Default().ChangeTheme((Identifier)themeName);
         }
 
         [Command]

@@ -16,10 +16,10 @@ namespace Slot.Editor.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (!View.Search.IsFocused)
-                View.Search.ShowSearch();
+            if (!Ed.Search.IsFocused)
+                Ed.Search.ShowSearch();
             else
-                View.Focus();
+                Ed.Focus();
 
             return ActionResults.Clean;
         }

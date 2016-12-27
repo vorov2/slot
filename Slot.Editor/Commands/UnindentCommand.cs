@@ -20,8 +20,8 @@ namespace Slot.Editor.Commands
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
             redoSel = sel.Clone();
-            useTab = View.UseTabs;
-            undoIndents = Unindent(View, sel);
+            useTab = Ed.UseTabs;
+            undoIndents = Unindent(Ed, sel);
 
             if (undoIndents.Sum() > 0)
             {

@@ -16,16 +16,16 @@ namespace Slot.Editor.Search
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            if (!View.Search.IsSearchVisible)
-                View.Search.ShowSearch();
+            if (!Ed.Search.IsSearchVisible)
+                Ed.Search.ShowSearch();
 
             var caret = sel.Caret;
             var found = false;
 
-            foreach (var sr in View.Search.EnumerateSearchResults())
+            foreach (var sr in Ed.Search.EnumerateSearchResults())
                 if (sr.Line > caret.Line || (sr.Line == caret.Line && sr.StartCol > caret.Col))
                 {
-                    View.Buffer.Selections.Set(new Selection(
+                    Ed.Buffer.Selections.Set(new Selection(
                         new Pos(sr.Line, sr.StartCol),
                         new Pos(sr.Line, sr.EndCol + 1)
                         ));

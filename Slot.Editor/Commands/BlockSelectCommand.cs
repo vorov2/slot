@@ -15,7 +15,7 @@ namespace Slot.Editor.Commands
     {
         internal override ActionResults Execute(Selection sel, params object[] args)
         {
-            DoSelection(View.Caret, View.PointToClient(Cursor.Position));
+            DoSelection(Ed.Caret, Ed.PointToClient(Cursor.Position));
             return Scroll | Clean;
         }
 
@@ -23,14 +23,14 @@ namespace Slot.Editor.Commands
         {
             var start = Buffer.Selections[Buffer.Selections.Count - 1].Start;
             var pline = p.Line;
-            var tetra = (loc.X - View.Info.TextLeft) / View.Info.CharWidth;
+            var tetra = (loc.X - Ed.Info.TextLeft) / Ed.Info.CharWidth;
             tetra = tetra < 0 ? 0 : tetra;
             var lines = Document.Lines;
 
             if (lines[pline].Length == 0)
                 return;
 
-            var indentSize = View.IndentSize;
+            var indentSize = Ed.IndentSize;
             var startTetra = lines[start.Line].GetTetras(start.Col, indentSize);
             var maxLen = p.Col;
             Buffer.Selections.Clear();

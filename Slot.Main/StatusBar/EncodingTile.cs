@@ -18,7 +18,7 @@ namespace Slot.Main.StatusBar
         {
             get
             {
-                return editor.Buffer.Encoding.WebName.ToUpper();
+                return editor.Buffer?.Encoding?.WebName?.ToUpper();
             }
             set { base.Text = value; }
         }
