@@ -1,6 +1,7 @@
 ﻿using System;
 using Slot.Core;
 using Slot.Core.CommandModel;
+using Slot.Core.Messages;
 using Slot.Core.Output;
 using Slot.Core.ViewModel;
 
@@ -25,6 +26,11 @@ namespace Slot
         public static void Log(this IAppExtensions _, string message, EntryType type)
         {
             App.Catalog<ILogComponent>().GetComponent(logKey).Write(message, type);
+        }
+
+        public static MessageButtons Show(this IAppExtensions _, string caption, string text, MessageButtons buttons = MessageButtons.Close)
+        {
+            return App.Catalog<IMessageBox>().Default().Show(caption, text, buttons);
         }
 
         public static ExecResult Handle(this IAppExtensions _, Action act)

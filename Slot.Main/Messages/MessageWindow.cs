@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Core;
+using Slot.Core.Messages;
 using Slot.Core.Themes;
 using Slot.Core.ViewModel;
 using Slot.Drawing;
@@ -28,10 +29,12 @@ namespace Slot.Main.Messages
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.CenterParent;
             Padding = new Padding(Dpi.GetWidth(3), Dpi.GetHeight(10), Dpi.GetWidth(3), Dpi.GetWidth(3));
+            Width = Dpi.GetWidth(400);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            Height = MeasureSize(e.Graphics);
             var theme = App.Catalog<ITheme>().Default();
             var g = e.Graphics;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -48,14 +51,110 @@ namespace Slot.Main.Messages
             using (var bigfont = new Font(env.FontName, env.FontSize + 3))
             {
                 var x = Padding.Left + padx;
-                var y = Padding.Top + pady;
+                var y = Padding.Top + pady + 0f;
                 var width = Width - Padding.Left - Padding.Right - padx * 2;
                 var size = g.MeasureString(Caption, bigfont, width, TextFormats.Wrap);
+
                 g.DrawString(Caption, bigfont, theme.GetStyle(StandardStyle.Keyword).ForeColor.Brush(), 
-                    new Rectangle(x, y, width, Height), TextFormats.Wrap);
+                    new RectangleF(x, y, width, Height), TextFormats.Wrap);
+                y += size.Height + bigfont.Height;
+
+                foreach (var str in Detail.Split('\n'))
+                {
+                    size = g.MeasureString(str, env.Font, width, TextFormats.Wrap);
+                    g.DrawString(str, env.Font, theme.GetStyle(StandardStyle.Default).ForeColor.Brush(),
+                        new RectangleF(x, y, width, Height), TextFormats.Wrap);
+                    y += size.Height;
+                }
+
+                y += bigfont.Height;
+                AddButtons(x, (int)y);
             }
 
             base.OnPaint(e);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            foreach (var b in Controls.OfType<MessageButton>())
+                if (b.ProcessKeys(e.KeyData))
+                    break;
+        }
+
+        private bool buttonsAdded;
+        private void AddButtons(int x, int y)
+        {
+            if (buttonsAdded)
+                return;
+
+            if (Buttons.HasFlag(MessageButtons.Ok))
+                x += AddButton(x, y, MessageButtons.Ok, true);
+            if (Buttons.HasFlag(MessageButtons.Yes))
+                x += AddButton(x, y, MessageButtons.Yes);
+            if (Buttons.HasFlag(MessageButtons.No))
+                x += AddButton(x, y, MessageButtons.No, true);
+            if (Buttons.HasFlag(MessageButtons.Save))
+                x += AddButton(x, y, MessageButtons.Save, true);
+            if (Buttons.HasFlag(MessageButtons.SaveAll))
+                x += AddButton(x, y, MessageButtons.SaveAll, true);
+            if (Buttons.HasFlag(MessageButtons.DontSave))
+                x += AddButton(x, y, MessageButtons.DontSave);
+            if (Buttons.HasFlag(MessageButtons.Cancel))
+                x += AddButton(x, y, MessageButtons.Cancel, false, true);
+            if (Buttons.HasFlag(MessageButtons.Close))
+                x += AddButton(x, y, MessageButtons.Close, true, true);
+
+            buttonsAdded = true;
+        }
+
+        private int AddButton(int x, int y, MessageButtons button, bool accept = false, bool cancel = false)
+        {
+            var but = new MessageButton(button, accept, cancel)
+            {
+                Top = y,
+                Left = x
+            };
+            but.ButtonClick += (o, e) =>
+            {
+                ButtonClicked = e.Button;
+                Close();
+            };
+            Controls.Add(but);
+            but.Invalidate();
+            return but.Width + Dpi.GetWidth(10);
+        }
+
+        private int MeasureSize(Graphics g)
+        {
+            var env = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
+            var padx = Dpi.GetWidth(30);
+            var pady = Dpi.GetWidth(20);
+
+            using (var bigfont = new Font(env.FontName, env.FontSize + 3))
+            {
+                var x = Padding.Left + padx;
+                var y = Padding.Top + pady + 0f;
+                var width = Width - Padding.Left - Padding.Right - padx * 2;
+                var size = g.MeasureString(Caption, bigfont, width, TextFormats.Wrap);
+                y += size.Height + bigfont.Height;
+
+                foreach (var str in Detail.Split('\n'))
+                {
+                    size = g.MeasureString(str, env.Font, width, TextFormats.Wrap);
+                    y += size.Height;
+                }
+
+                var ret = (int)Math.Round(y + pady, MidpointRounding.AwayFromZero);
+
+                if (Buttons != MessageButtons.None)
+                {
+                    ret += bigfont.Height;
+                    ret += env.Font.Height * 2;
+                }
+
+                return ret;
+            }
         }
 
         protected override void WndProc(ref Message m)
@@ -68,5 +167,9 @@ namespace Slot.Main.Messages
         public string Caption { get; set; }
 
         public string Detail { get; set; }
+
+        public MessageButtons Buttons { get; set; }
+
+        public MessageButtons ButtonClicked { get; private set; }
     }
 }

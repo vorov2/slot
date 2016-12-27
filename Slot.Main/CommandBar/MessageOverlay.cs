@@ -43,7 +43,7 @@ namespace Slot.Main.CommandBar
                     Font.Width()));
         }
 
-        public int BorderWidth => (int)BorderColor.Pen().Width;
+        public int BorderWidth => Dpi.GetWidth(1);
 
         public override Color BackgroundColor => theme.GetStyle(StandardStyle.Popup).BackColor;
 

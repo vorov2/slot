@@ -14,5 +14,12 @@ namespace Slot.Core
                 yield return attr != null ? attr.ToString() : fi.Name;
             }
         }
+
+        public static string GetDisplayName<T>(this T en) where T : struct
+        {
+            var fi = typeof(T).GetField(en.ToString(), BindingFlags.Public | BindingFlags.Static);
+            var attr = Attribute.GetCustomAttribute(fi, typeof(FieldNameAttribute)) as FieldNameAttribute;
+            return attr != null ? attr.ToString() : fi.Name;
+        }
     }
 }

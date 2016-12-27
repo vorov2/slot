@@ -84,7 +84,7 @@ namespace Slot.Editor.Autocomplete
             g.FillRectangle(ps.BackColor.Brush(), e.ClipRectangle);
             g.DrawRectangle(borderPen,
                 e.ClipRectangle.Location.X, e.ClipRectangle.Location.Y,
-                e.ClipRectangle.Width - borderPen.Width, e.ClipRectangle.Height - borderPen.Width);
+                e.ClipRectangle.Width - borderPen.Size(), e.ClipRectangle.Height - borderPen.Size());
             format.Trimming = Trimming;
 
             if (items != null)
@@ -133,7 +133,7 @@ namespace Slot.Editor.Autocomplete
             }
 
             scrollBar.Size = CharWidth;
-            var border = (int)Math.Round(borderPen.Width, MidpointRounding.AwayFromZero);
+            var border = (int)borderPen.Width;
             scrollBar.Draw(g, new Rectangle(
                 Width - CharWidth - border,
                 border,

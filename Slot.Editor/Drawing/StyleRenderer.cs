@@ -29,7 +29,7 @@ namespace Slot.Editor.Drawing
             if (style.Adornment == Adornment.Line)
             {
                 var p = style.AdornmentColor.ThickPen();
-                var pw = (int)Math.Round(p.Width, MidpointRounding.AwayFromZero);
+                var pw = (int)p.Width;
                 g.DrawLine(p,
                     new Point(rect.X, rect.Y + rect.Height - pw),
                     new Point(rect.X + rect.Width, rect.Y + rect.Height - pw));

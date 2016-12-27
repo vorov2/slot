@@ -174,11 +174,8 @@ namespace Slot.Main
                 as AssemblyConfigurationAttribute;
             var build = attr.Configuration == "Insiders" ? v.Revision + "-Insiders":"Public";
             var plat = App.IsMono ? "Mono" : ".NET";
-            MessageBox.Show(Form.ActiveForm,
-                $"{Application.ProductName}\n\nVersion: {v.Major}.{v.Minor}.{v.Build}\nBuild: {build}\nDate: {DateTime.Parse(App.BuildDate).ToString("dd/MM/yyyy")}\nRuntime: {plat}_{Environment.Version}",
-                Application.ProductName,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            App.Ext.Show(Application.ProductName,
+                $"Version: {v.Major}.{v.Minor}.{v.Build}\nBuild: {build}\nDate: {DateTime.Parse(App.BuildDate).ToString("dd/MM/yyyy")}\nRuntime: {plat} {Environment.Version}");
         }
     }
 }

@@ -544,7 +544,7 @@ namespace Slot.Editor
 
         public bool CurrentLineIndicator => !LimitedMode && (Buffer.CurrentLineIndicator ?? EditorSettings.CurrentLineIndicator);
 
-        public bool ReadOnly => Buffer.ReadOnly ?? (!LimitedMode && EditorSettings.ReadOnly);
+        public bool ReadOnly => Buffer?.ReadOnly ?? (!LimitedMode && EditorSettings.ReadOnly);
 
         public EditorInfo Info { get; }
 

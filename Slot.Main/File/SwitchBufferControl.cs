@@ -64,7 +64,7 @@ namespace Slot.Main.File
             g.FillRectangle(style.BackColor.Brush(), e.ClipRectangle);
             var pen = style2.ForeColor.Pen();
             g.DrawRectangle(pen, new Rectangle(e.ClipRectangle.Location,
-                new Size(e.ClipRectangle.Width - (int)pen.Width, e.ClipRectangle.Height - (int)pen.Width)));
+                new Size(e.ClipRectangle.Width - pen.Size(), e.ClipRectangle.Height - pen.Size())));
             var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace;
 
             for (var i = 0; i < Buffers.Count; i++)

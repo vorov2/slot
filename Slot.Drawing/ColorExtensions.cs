@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Slot.Drawing
@@ -45,6 +46,7 @@ namespace Slot.Drawing
             if (!penCache.TryGetValue(color, out p))
             {
                 p = new Pen(color);
+                p.Alignment = PenAlignment.Inset;
                 p.Width = Dpi.GetWidth(1);
                 penCache.Add(color, p);
             }
@@ -60,6 +62,7 @@ namespace Slot.Drawing
             {
                 p = new Pen(color);
                 p.Width = Dpi.GetWidth(2);
+                p.Alignment = PenAlignment.Inset;
                 thickPenCache.Add(color, p);
             }
 
@@ -73,8 +76,9 @@ namespace Slot.Drawing
             if (!dashedPenCache.TryGetValue(color, out p))
             {
                 p = new Pen(color);
+                p.Alignment = PenAlignment.Inset;
                 p.Width = Dpi.GetWidth(1);
-                p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                p.DashStyle = DashStyle.Dash;
                 dashedPenCache.Add(color, p);
             }
 
@@ -88,12 +92,18 @@ namespace Slot.Drawing
             if (!dottedPenCache.TryGetValue(color, out p))
             {
                 p = new Pen(color);
+                p.Alignment = PenAlignment.Inset;
                 p.Width = Dpi.GetWidth(1);
-                p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                p.DashStyle = DashStyle.Dot;
                 dottedPenCache.Add(color, p);
             }
 
             return p;
         }
+    }
+
+    public static class PenExtensions
+    {
+        public static int Size(this Pen pen) => pen.Width == 1 ? (int)pen.Width : 0;
     }
 }

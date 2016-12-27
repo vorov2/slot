@@ -71,6 +71,11 @@
     <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="CommandsValueProvider.cs" />
     <Compile Include="Debug\DebugCommandDispatcher.cs" />
+    <Compile Include="Messages\MessageBoxService.cs" />
+    <Compile Include="Messages\MessageButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Messages\MessageButtonEventArgs.cs" />
     <Compile Include="EnvironmentSettings.cs" />
     <Compile Include="File\EncodingValueProvider.cs" />
     <Compile Include="File\FileCommandDispatcher.cs" />

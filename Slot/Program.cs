@@ -27,6 +27,7 @@ using System.Security.Permissions;
 using Slot.Core.Modes;
 using Slot.Core.Packages;
 using Slot.Core.State;
+using Slot.Core.Messages;
 
 namespace Slot
 {
@@ -74,6 +75,7 @@ namespace Slot
             App.RegisterCatalog<IPackageManager>();
             App.RegisterCatalog<IKeyboardAdapter>();
             App.RegisterCatalog<IStateManager>();
+            App.RegisterCatalog<IMessageBox>();
             App.Initialize();
 
             var frm = new ViewForm();

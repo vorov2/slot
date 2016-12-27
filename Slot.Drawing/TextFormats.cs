@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,15 @@ namespace Slot.Drawing
             LineAlignment = StringAlignment.Center,
             Alignment = StringAlignment.Near,
             Trimming = StringTrimming.None,
+            FormatFlags = StringFormatFlags.NoWrap
+        };
+
+        public static readonly StringFormat CenteredAll = new StringFormat(StringFormat.GenericTypographic)
+        {
+            LineAlignment = StringAlignment.Center,
+            Alignment = StringAlignment.Center,
+            Trimming = StringTrimming.None,
+            HotkeyPrefix = HotkeyPrefix.Show,
             FormatFlags = StringFormatFlags.NoWrap
         };
     }
