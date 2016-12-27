@@ -106,9 +106,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="samples\calc.cs" />
-    <Compile Include="SplitContainerEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <None Include="packages\slot\data\grammars\csharp.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -130,7 +127,7 @@
     <None Include="packages\slot\data\themes\light.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="test.json">
+    <None Include="samples\test.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -168,7 +165,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Properties\app.ico" />
-    <Content Include="test.htm">
+    <Content Include="samples\test.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

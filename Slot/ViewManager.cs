@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Editor;
+using Slot.Core;
+using Slot.Core.CommandModel;
 
 namespace Slot
 {
@@ -18,6 +20,11 @@ namespace Slot
     public sealed class ViewManager : IViewManager
     {
         public const string Name = "views.default";
+
+        public ViewManager()
+        {
+
+        }
 
         public IView CreateView()
         {
@@ -30,10 +37,18 @@ namespace Slot
 
         public void CloseView(IView view)
         {
-            var ed = view as EditorControl;
+            if (EnumerateViews().Count() == 1)
+                App.Close();
+            else
+            {
+                var frm = view as ViewForm;
 
-            if (ed != null)
-                ed.FindForm().Close();
+                if (frm != null)
+                {
+                    frm.AllowClose = true;
+                    frm.Close();
+                }
+            }
         }
 
         public IView GetActiveView()

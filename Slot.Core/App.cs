@@ -66,31 +66,6 @@ namespace Slot.Core
 
         public static bool Close()
         {
-            var bufferManager = Catalog<IBufferManager>().Default();
-            var seq = bufferManager.EnumerateBuffers().Where(b => b.IsDirty);
-
-            if (seq.Any())
-            {
-                var sb = new StringBuilder();
-                var res = MessageBox.Show(Application.OpenForms[0],
-                    $"Do you want to save the changes to the following files?\n\n{string.Join("\n", seq.Select(f => f.File.Name))}",
-                    Application.ProductName,
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Warning);
-
-                if (res == DialogResult.Yes)
-                {
-                    var cmd = (Identifier)"file.save";
-                    var exec = Catalog<ICommandDispatcher>().GetComponent(cmd.Namespace);
-
-                    foreach (var d in seq)
-                        exec.Execute(null, cmd, d.File.FullName);
-                }
-
-                if (res == DialogResult.Cancel)
-                    return false;
-            }
-
             var ev = new ExitEventArgs();
             OnExit(ev);
 

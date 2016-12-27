@@ -48,6 +48,17 @@ namespace Slot
             Controls.Add(commandBar);
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (!AllowClose)
+            {
+                e.Cancel = true;
+                App.Catalog<IViewManager>().Default().CloseView(this);
+            }
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -69,6 +80,13 @@ namespace Slot
         {
             editor.AttachBuffer(buffer);
             Invalidate(true);
+        }
+
+        private bool _allowClose;
+        public bool AllowClose
+        {
+            get { return _allowClose || App.Terminating; }
+            set { _allowClose = value; }
         }
 
         public void DetachBuffer() => editor.DetachBuffer();
