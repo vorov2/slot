@@ -10,6 +10,7 @@ using Slot.Drawing;
 using Slot.Editor;
 using Slot.Editor.ObjectModel;
 using Slot.Main.CommandBar;
+using Slot.Main.Notifications;
 using Slot.Main.StatusBar;
 
 namespace Slot.Main.View
@@ -120,6 +121,8 @@ namespace Slot.Main.View
         }
 
         public void DetachBuffer() => editor.DetachBuffer();
+
+        public object Header => header;
 
         public object CommandBar => commandBar;
 

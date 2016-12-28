@@ -58,19 +58,20 @@
     <Compile Include="CommandBar\CommandBarControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CommandBar\HeaderControl.cs">
+    <Compile Include="Notifications\HeaderControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CommandBar\CommandLineItem.cs" />
     <Compile Include="CommandBar\CommandParser.cs" />
     <Compile Include="CommandBar\Loc.cs" />
-    <Compile Include="CommandBar\MessageOverlay.cs">
+    <Compile Include="Notifications\MessageOverlay.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CommandBar\Statement.cs" />
     <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="CommandsValueProvider.cs" />
     <Compile Include="Logs.cs" />
+    <Compile Include="Notifications\NotificationService.cs" />
     <Compile Include="View\OutputForm.cs" />
     <Compile Include="View\OutputForm.Designer.cs">
       <DependentUpon>OutputForm.cs</DependentUpon>

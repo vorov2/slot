@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Slot.Core;
 using Slot.Core.CommandModel;
 using Slot.Core.ComponentModel;
+using Slot.Core.Notifications;
 using Slot.Core.Output;
 using Slot.Core.Packages;
 using Slot.Core.Settings;
@@ -24,7 +25,7 @@ namespace Slot.Main
     public sealed class EnvironmentCommandDispatcher : CommandDispatcher
     {
         [Import]
-        private ICommandBar commandBar = null;
+        private INotificationService notifications = null;
 
         [Import("directory.user.settings")]
         private string userSettingsDirectory = null;
@@ -41,7 +42,7 @@ namespace Slot.Main
         }
 
         [Command]
-        public void ToggleMessage() => commandBar.ToggleMessage();
+        public void ToggleNotification() => notifications.ToggleNotification();
 
         [Command]
         public void CommandPalette(string commandName)

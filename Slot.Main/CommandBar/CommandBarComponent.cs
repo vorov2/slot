@@ -1,14 +1,9 @@
-﻿using Slot.Core.CommandModel;
-using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Slot.Core.ViewModel;
-using Slot.Core.ComponentModel;
-using System.ComponentModel.Composition;
-using System.Windows.Forms;
 using Slot.Core;
+using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
 namespace Slot.Main.CommandBar
 {
@@ -37,14 +32,6 @@ namespace Slot.Main.CommandBar
                 else
                     cm.OpenInput();
             }
-        }
-
-        public void ToggleMessage()
-        {
-            //var cm = GetCommandBarControl();
-
-            //if (cm != null)
-            //    cm.ToggleTip();
         }
 
         public void Hide()

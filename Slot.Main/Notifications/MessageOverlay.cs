@@ -11,7 +11,7 @@ using Slot.Core.Themes;
 using Slot.Drawing;
 using Slot.Editor;
 
-namespace Slot.Main.CommandBar
+namespace Slot.Main.Notifications
 {
     public sealed class MessageOverlay : Overlay
     {

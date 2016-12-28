@@ -9,8 +9,6 @@ namespace Slot.Core.CommandModel
 
         void Show(string commandAlias, params object[] args);
 
-        void ToggleMessage();
-
         void Hide();
 
         bool InputVisible { get; }

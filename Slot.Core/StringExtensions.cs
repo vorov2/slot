@@ -17,21 +17,32 @@ namespace Slot.Core
 
         public static int LongestCommonSubstring(this string self, string other)
         {
-            var output = "";
-            var lenx = self.Length;
+            if (string.IsNullOrEmpty(self) || string.IsNullOrEmpty(other))
+                return 0;
 
-            for (var j = 0; j < lenx; j++)
+            int[,] num = new int[self.Length, other.Length];
+            var maxlen = 0;
+
+            for (var i = 0; i < self.Length; i++)
             {
-                for (var k = lenx - j; k > -1; k--)
+                for (var j = 0; j < other.Length; j++)
                 {
-                    var common = self.Substring(j, k);
-                    if (other.IndexOf(common, StringComparison.OrdinalIgnoreCase) > -1 
-                        && common.Length > output.Length)
-                        output = common;
+                    if (char.ToUpperInvariant(self[i]) != other[j])
+                        num[i, j] = 0;
+                    else
+                    {
+                        if (i == 0 || j == 0)
+                            num[i, j] = 1;
+                        else
+                            num[i, j] = 1 + num[i - 1, j - 1];
+
+                        if (num[i, j] > maxlen)
+                            maxlen = num[i, j];
+                    }
                 }
             }
 
-            return output.Length;
+            return maxlen;
         }
 
         public static int LongestCommonSubsequence(this string self, string other, int index1 = 0, int index2 = 0)

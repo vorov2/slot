@@ -156,6 +156,7 @@ namespace Slot.Main.Messages
             but.ButtonClick += (o, e) =>
             {
                 ButtonClicked = e.Button;
+                AllowClose = true;
                 Close();
             };
             Controls.Add(but);
@@ -202,6 +203,16 @@ namespace Slot.Main.Messages
             if (m.Msg == WM_NCHITTEST)
                 m.Result = (IntPtr)(HT_CAPTION);
         }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (!AllowClose)
+                e.Cancel = true;
+        }
+
+        private bool AllowClose { get; set; }
 
         public string Caption { get; set; }
 

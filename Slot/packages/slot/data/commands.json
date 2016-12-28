@@ -47,9 +47,9 @@
         "title": "Application: Toggle command bar"
     },
     {
-        "key": "app.toggleMessage",
-        "alias": "cmd-msg",
-        "title": "Application: Display or hide error message"
+        "key": "app.toggleNotification",
+        "alias": "cmd-n",
+        "title": "Application: Toggle notification"
     },
     {
         "key": "app.changeTheme",

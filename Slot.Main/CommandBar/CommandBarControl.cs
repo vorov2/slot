@@ -144,17 +144,10 @@ namespace Slot.Main.CommandBar
 
             if (filtered == null && !string.IsNullOrEmpty(lastLookupInput))
             {
-                if (App.IsMono)
-                {
-                    var arr = lastLookupInput.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                    items = items.Where(i => i.Value.ContainsAll(arr));
-                }
-                else
-                {
-                    var nitems = items.Select(i => new Sort { Diff = i.Value.LongestCommonSubstring(lastLookupInput), Val = i });
-                    var max = nitems.Max(i => i.Diff);
-                    items = nitems.Where(i => i.Diff == max).Select(i => i.Val);
-                }
+                lastLookupInput = lastLookupInput.ToUpper();
+                var nitems = items.Select(i => new Sort { Diff = i.Value.LongestCommonSubstring(lastLookupInput), Val = i });
+                var max = nitems.Max(i => i.Diff);
+                items = nitems.Where(i => i.Diff == max).Select(i => i.Val);
             }
 
             if (items.Any()

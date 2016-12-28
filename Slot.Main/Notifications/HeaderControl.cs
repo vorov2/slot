@@ -11,7 +11,7 @@ using System.Drawing;
 using Slot.Core;
 using Slot.Core.Output;
 
-namespace Slot.Main.CommandBar
+namespace Slot.Main.Notifications
 {
     public sealed class HeaderControl : Control
     {
@@ -134,7 +134,7 @@ namespace Slot.Main.CommandBar
 
             if (loc.X >= errorButton.Left && loc.X <= errorButton.Right
                 && loc.Y >= errorButton.Top && loc.Y <= errorButton.Bottom)
-                ToggleTip();
+                ToggleNotification();
             else
                 App.Ext.Run(Cmd.OpenFile);
 
@@ -156,7 +156,7 @@ namespace Slot.Main.CommandBar
             return overlay;
         }
         
-        public void ToggleTip()
+        public void ToggleNotification()
         {
             var wnd = GetMessageOverlay();
             if (wnd == null || !wnd.Visible)
