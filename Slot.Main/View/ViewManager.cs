@@ -1,19 +1,13 @@
-﻿using Slot.Core.ComponentModel;
-using Slot.Core.ViewModel;
-using Slot.Editor.ObjectModel;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Slot.Editor;
 using Slot.Core;
-using Slot.Core.CommandModel;
+using Slot.Core.ComponentModel;
+using Slot.Core.ViewModel;
 
-namespace Slot
+namespace Slot.Main.View
 {
     [Export(typeof(IViewManager))]
     [ComponentData(Name)]
@@ -23,13 +17,18 @@ namespace Slot
 
         public IView CreateView()
         {
-            var act = (ViewForm)ActiveView;
+            var act = ActiveView as ViewForm;
             var frm = new ViewForm();
-            frm.Width = act.Width;
-            frm.Height = act.Height;
+
+            if (act != null)
+            {
+                frm.Width = act.Width;
+                frm.Height = act.Height;
+                frm.AttachBuffer(act.Buffer);
+                frm.Workspace = act.Workspace;
+            }
+
             frm.Show();
-            frm.AttachBuffer(act.Buffer);
-            frm.Workspace = act.Workspace;
             return frm;
         }
 

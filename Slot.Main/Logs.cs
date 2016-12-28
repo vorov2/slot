@@ -4,7 +4,7 @@ using Slot.Editor.ObjectModel;
 using System;
 using System.ComponentModel.Composition;
 
-namespace Slot
+namespace Slot.Main
 {
     [Export(typeof(ILogComponent))]
     [ComponentData("log.application")]

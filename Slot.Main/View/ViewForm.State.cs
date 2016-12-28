@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Slot.Core;
 using Slot.Core.Output;
 using Slot.Core.State;
 
-namespace Slot
+namespace Slot.Main.View
 {
     partial class ViewForm
     {

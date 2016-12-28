@@ -5,16 +5,15 @@ using System.Windows.Forms;
 using Slot.Core;
 using Slot.Core.Settings;
 using Slot.Core.ViewModel;
-using Slot.Core.Workspaces;
 using Slot.Drawing;
 using Slot.Editor;
 using Slot.Editor.ObjectModel;
 using Slot.Main.CommandBar;
 using Slot.Main.StatusBar;
 
-namespace Slot
+namespace Slot.Main.View
 {
-    public sealed partial class ViewForm : Form, IView
+    internal sealed partial class ViewForm : Form, IView
     {
         private readonly object syncRoot = new object();
         private readonly StandardEditor editor;
@@ -54,7 +53,7 @@ namespace Slot
             commandBar.Visible = false;
             Controls.Add(commandBar);
             commandBar.BringToFront();
-            Icon = new Icon(typeof(ViewForm).Assembly.GetManifestResourceStream("Slot.Properties.app.ico"));
+            Icon = new Icon(typeof(ViewForm).Assembly.GetManifestResourceStream("Slot.Main.Properties.app.ico"));
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

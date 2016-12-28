@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Slot.Editor;
 using Slot.Editor.Margins;
 
-namespace Slot
+namespace Slot.Main
 {
     public sealed class StandardEditor : EditorControl
     {

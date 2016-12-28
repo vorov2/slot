@@ -70,6 +70,12 @@
     <Compile Include="CommandBar\Statement.cs" />
     <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="CommandsValueProvider.cs" />
+    <Compile Include="Logs.cs" />
+    <Compile Include="View\OutputForm.cs" />
+    <Compile Include="View\OutputForm.Designer.cs">
+      <DependentUpon>OutputForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\OutputToggleTile.cs" />
     <Compile Include="SettingsValueProvider.cs" />
     <Compile Include="Debug\DebugCommandDispatcher.cs" />
     <Compile Include="Messages\MessageBoxService.cs" />
@@ -86,8 +92,18 @@
     <Compile Include="Messages\MessageWindow.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="StandardEditor.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Theme\RealTheme.cs" />
     <Compile Include="Theme\ThemeReader.cs" />
+    <Compile Include="View\ViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ViewForm.State.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ViewManager.cs" />
     <Compile Include="Workspace\FolderValueProvider.cs" />
     <Compile Include="File\ModifiedDocsValueProvider.cs" />
     <Compile Include="File\RecentDocsValueProvider.cs" />
@@ -133,6 +149,14 @@
       <Project>{2c727444-c7dd-4db3-8546-964f4b354242}</Project>
       <Name>Json</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="View\OutputForm.resx">
+      <DependentUpon>OutputForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\app.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

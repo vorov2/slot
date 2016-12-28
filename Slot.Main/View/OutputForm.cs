@@ -14,7 +14,7 @@
 //using Slot.Editor.Styling;
 //using Slot.Core.Themes;
 
-//namespace Slot
+//namespace Slot.Main.View
 //{
 //    public partial class OutputForm : Form
 //    {
