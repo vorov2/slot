@@ -36,7 +36,16 @@ namespace Slot.Core
             var catalog = new AggregateCatalog();
             var path = new FileInfo(typeof(App).Assembly.Location).DirectoryName;
             catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
-            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.exe"));
+
+            var ap = new ApplicationPath();
+
+            foreach (var dir in Directory.EnumerateDirectories(ap.Packages))
+            {
+                var pat = Path.Combine(dir, "bin");
+                if (Directory.Exists(pat))
+                    catalog.Catalogs.Add(new DirectoryCatalog(pat, "*.dll"));
+            }
+
             container = new CompositionContainer(catalog);
 
             foreach (var c in catalogs.Values)

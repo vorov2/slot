@@ -68,6 +68,8 @@
     <Compile Include="Messages\IMessageBox.cs" />
     <Compile Include="Messages\MessageButtons.cs" />
     <Compile Include="Modes\ModeManager.cs" />
+    <Compile Include="Output\EntryType.cs" />
+    <Compile Include="Output\LogEventArgs.cs" />
     <Compile Include="Packages\IPackageManager.cs" />
     <Compile Include="Packages\PackageManager.cs" />
     <Compile Include="Packages\PackageMetadata.cs" />

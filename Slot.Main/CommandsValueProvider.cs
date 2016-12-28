@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Slot.Core.ViewModel;
 
 namespace Slot.Main
 {
@@ -14,8 +15,10 @@ namespace Slot.Main
     {
         public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
+            var mode = App.Component<IViewManager>().ActiveView?.Mode;
             return App.Component<ICommandProvider>().EnumerateCommands()
-                .Where(c => c.Title != null && c.Alias != "?")
+                .Where(c => (c.Title != null && c.Alias != "?")
+                    && (c.Mode == null || c.Mode == mode))
                 .Select(c => new CommandArgumentValue(c));
         }
 
