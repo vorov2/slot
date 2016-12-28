@@ -72,7 +72,7 @@ namespace Slot.Main.View
 
                 if (buf.RefCount == 1)
                 {
-                    App.Ext.Run(Main.Cmd.CloseFile);
+                    App.Ext.Run(Cmd.CloseFile);
 
                     if (buf.RefCount > 0)
                         e.Cancel = true;

@@ -113,6 +113,11 @@ namespace Slot.Main.File
             }
 
             ViewManager.ActiveView.DetachBuffer();
+            CloseBuffer(buffer);
+        }
+
+        private void CloseBuffer(IBuffer buffer)
+        {
             bufferManager.CloseBuffer(buffer);
             var next = bufferManager.EnumerateBuffers().FirstOrDefault();
 
@@ -120,6 +125,29 @@ namespace Slot.Main.File
                 next = bufferManager.CreateBuffer();
 
             OpenBuffer(next);
+        }
+
+        [Command]
+        public void CloseAllFiles()
+        {
+            var act = ViewManager.ActiveView;
+
+            foreach (var b in bufferManager.EnumerateBuffers().Where(b => !b.IsDirty))
+            {
+                var views = ViewManager.EnumerateViews().Where(v => v.Buffer == b);
+
+                foreach (var v in views)
+                {
+                    v.DetachBuffer();
+                    if (v != act)
+                        ViewManager.CloseView(v);
+                }
+
+                CloseBuffer(b);
+            }
+
+            if (!bufferManager.EnumerateBuffers().Any())
+                NewFile();
         }
 
         [Command]
@@ -187,6 +215,13 @@ namespace Slot.Main.File
 
             OpenFolder(ViewManager.ActiveView, fi.Directory);
             bufferManager.SaveBuffer(buffer, fi, enc ?? buffer.Encoding);
+        }
+
+        [Command]
+        public void SaveAll()
+        {
+            foreach (var b in bufferManager.EnumerateBuffers().Where(b => b.IsDirty))
+                bufferManager.SaveBuffer(b, b.File, b.Encoding);
         }
 
         [Command]

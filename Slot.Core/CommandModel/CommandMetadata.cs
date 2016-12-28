@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Slot.Core.ComponentModel;
-using Slot.Core.Keyboard;
 
 namespace Slot.Core.CommandModel
 {
-    public sealed class CommandMetadata
+    public sealed class CommandMetadata : IEquatable<CommandMetadata>
     {
         public Identifier Key { get; internal set; }
 
@@ -33,6 +29,12 @@ namespace Slot.Core.CommandModel
                 return _arguments;
             }
         }
+
+        public override int GetHashCode() => Key.GetHashCode();
+
+        public bool Equals(CommandMetadata other) => other != null && Key.Equals(other.Key);
+
+        public override bool Equals(object obj) => Equals(obj as CommandMetadata);
 
         public override string ToString()
         {

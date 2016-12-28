@@ -1,13 +1,10 @@
-﻿using Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Json;
 
 namespace Slot.Core.CommandModel
 {
-    public static class CommandReader
+    internal static class CommandReader
     {
         public static IEnumerable<CommandMetadata> Read(string source)
         {

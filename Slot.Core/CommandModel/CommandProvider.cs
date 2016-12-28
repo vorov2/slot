@@ -1,14 +1,13 @@
-﻿using Slot.Core.ComponentModel;
-using Slot.Core.Keyboard;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using Slot.Core.ViewModel;
-using Slot.Core.Packages;
-using Json;
 using System.Text;
+using Json;
+using Slot.Core.ComponentModel;
+using Slot.Core.Keyboard;
+using Slot.Core.Packages;
+using Slot.Core.ViewModel;
 
 namespace Slot.Core.CommandModel
 {

@@ -177,6 +177,11 @@
         "title": "File: Close file"
     },
     {
+        "key": "file.closeAllFiles",
+        "alias": "f-ca",
+        "title": "File: Close all files (not modified)"
+    },
+    {
         "key": "file.reopenFile",
         "alias": "f-ro",
         "title": "File: Reopen a file with encoding",
@@ -204,7 +209,7 @@
         ]
     },
     {
-        "key": "file.openmodifiedfile",
+        "key": "file.openModifiedFile",
         "alias": "f-om",
         "title": "File: Open a modified file",
         "arguments": [
@@ -215,7 +220,7 @@
         ]
     },
     {
-        "key": "file.savefile",
+        "key": "file.saveFile",
         "alias": "f-s",
         "title": "File: Save file",
         "arguments": [
@@ -229,6 +234,11 @@
                 "optional": true
             }
         ]
+    },
+    {
+        "key": "file.saveAll",
+        "alias": "f-sa",
+        "title": "File: Save all"
     },
     {
         "key": "file.saveWithEncoding",
@@ -249,7 +259,7 @@
 
 
     {
-        "key": "file.switchbuffer",
+        "key": "file.switchBuffer",
         "alias": "f-bs",
         "title": "File: Switch buffer"
     },

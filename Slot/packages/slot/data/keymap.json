@@ -9,9 +9,10 @@
     "file.newfile": "ctrl+n",
     "file.openfile": "ctrl+o",
     "file.closeFile": "ctrl+w",
-    "file.openrecentfile": "ctrl+shift+o",
-    "file.savefile": "ctrl+s",
-    "file.switchbuffer": "ctrl+tab",
+    "file.openRecentFile": "ctrl+shift+o",
+    "file.saveFile": "ctrl+s",
+    "file.saveAll": "ctrl+shift+s",
+    "file.switchBuffer": "ctrl+tab",
 
     "editor.showsearch": "ctrl+f",
     "editor.searchnext": "f3",

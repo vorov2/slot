@@ -1,5 +1,6 @@
-﻿using Slot.Core.ComponentModel;
+﻿using System;
 using System.Collections.Generic;
+using Slot.Core.ComponentModel;
 
 namespace Slot.Core.CommandModel
 {

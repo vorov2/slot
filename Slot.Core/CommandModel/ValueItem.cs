@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Slot.Core.CommandModel
 {
-    public class ValueItem
+    public class ValueItem : IEquatable<ValueItem>
     {
         public ValueItem(string text) : this(text, null)
         {
@@ -29,6 +25,22 @@ namespace Slot.Core.CommandModel
 
         public override string ToString() => (Value ?? "").ToString();
 
-        //public virtual void Draw(Action<string,Rectangle> drawMain)
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (Value ?? "").GetHashCode();
+                hash = hash * 23 + (Meta ?? "").GetHashCode();
+                return hash;
+            }
+        }
+
+        public static bool Equals(ValueItem fst, ValueItem snd) =>
+            fst == snd || fst != null && snd != null && fst.Value == snd.Value && fst.Meta == snd.Meta;
+
+        public bool Equals(ValueItem other) => Equals(this, other);
+
+        public override bool Equals(object obj) => Equals(this, obj as ValueItem);
     }
 }

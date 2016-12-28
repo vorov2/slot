@@ -63,6 +63,7 @@
     <Compile Include="ApplicationPath.cs" />
     <Compile Include="AssemblyCommitAttribute.cs" />
     <Compile Include="CommandModel\EnumValueProvider.cs" />
+    <Compile Include="CommandModel\IFilteredArgumentValueProvider.cs" />
     <Compile Include="Keyboard\IKeyboardAdapter.cs" />
     <Compile Include="Keyboard\KeymapMetadata.cs" />
     <Compile Include="Messages\IMessageBox.cs" />
