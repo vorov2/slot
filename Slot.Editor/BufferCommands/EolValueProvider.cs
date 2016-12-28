@@ -10,14 +10,8 @@ namespace Slot.Editor.BufferCommands
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.eol")]
-    public sealed class EolValueProvider : IArgumentValueProvider
+    public sealed class EolValueProvider : EnumValueProvider<Eol>
     {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
-        {
-            var str = curvalue as string;
-            return Enums.GetDisplayNames<Eol>()
-                .Where(e => str == null || e.Contains(str))
-                .Select(e => new ValueItem(e));
-        }
+
     }
 }

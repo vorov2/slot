@@ -14,11 +14,9 @@ namespace Slot.Main
     [ComponentData("values.modes")]
     public sealed class ModeValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
-            var str = (curvalue ?? "").ToString();
-            return App.Catalog<IModeManager>().Default().EnumerateModes()
-                .Where(g => g.Key.ToString().IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
+            return App.Component<IModeManager>().EnumerateModes()
                 .Select(g => new ValueItem(g.Key.ToString(), g.Name));
         }
     }

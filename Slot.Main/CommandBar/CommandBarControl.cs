@@ -105,7 +105,7 @@ namespace Slot.Main.CommandBar
 
         private void EditorCommandRejected(object sender, EventArgs e)
         {
-            var km = App.Catalog<IKeyboardAdapter>().Default();
+            var km = App.Component<IKeyboardAdapter>();
             var key = km.LastKey;
 
             if (key.Name != "newline" && key.Name != "up" && key.Name != "down" && key.Name != "indent")
@@ -126,13 +126,30 @@ namespace Slot.Main.CommandBar
             return window;
         }
 
+        struct Sort
+        {
+            public int Diff;
+            public ValueItem Val;
+        }
+
         private string lastLookupInput;
         private ArgumentAffinity currentAffinity;
         private void ShowAutocompleteWindow(IArgumentValueProvider prov)
         {
             var wnd = GetAutocompleteWindow();
             wnd.PreferredWidth = commandEditor.Width + editor.Info.SmallCharWidth*2;
-            var items = prov.EnumerateArgumentValues(lastLookupInput);
+            var filtered = prov as IFilteredArgumentValueProvider;
+            var items = filtered != null 
+                ? filtered.EnumerateArgumentValues(lastLookupInput) : prov.EnumerateArgumentValues();
+
+            if (filtered == null && !string.IsNullOrEmpty(lastLookupInput))
+            {
+                var nitems = items.Select(i => new Sort { Diff = i.Value.LongestCommonSubstring(lastLookupInput), Val = i });
+                var max = nitems.Max(i => i.Diff);
+                items = nitems.Where(i => i.Diff == max).Select(i => i.Val);
+                //items = nitems.OrderByDescending(i => i.Diff)
+                //    .Select(i => new ValueItem(i.Val.Value + " " + i.Diff, i.Val.Meta));
+            }
 
             if (items.Any()
                 && (!items.JustOne()
@@ -168,7 +185,7 @@ namespace Slot.Main.CommandBar
             }
 
             if (currentAffinity != ArgumentAffinity.FilePath
-                && statement.Arguments.Count >= App.Catalog<ICommandProvider>().Default().GetCommandByAlias(statement.Command)
+                && statement.Arguments.Count >= App.Component<ICommandProvider>().GetCommandByAlias(statement.Command)
                     ?.Arguments.Count(a => !a.Optional))
                 ExecuteCommand(commandEditor.Text);
             else if (currentAffinity != ArgumentAffinity.FilePath)
@@ -219,7 +236,7 @@ namespace Slot.Main.CommandBar
                 var spaced = commandEditor.Document.GetLine(0).Text.EndsWith(" ");
                 var cmd = statement.Command;
                 var arr = commandComplete =
-                    App.Catalog<ICommandProvider>().Default().EnumerateCommands()
+                    App.Component<ICommandProvider>().EnumerateCommands()
                     .Where(c => c.Alias != null && (spaced ? c.Alias == cmd : c.Alias.StartsWith(cmd)))
                     .ToList();
                 var g = e.Graphics;
@@ -481,7 +498,7 @@ namespace Slot.Main.CommandBar
         {
             statement = new CommandParser(ContinuationStatement?.Clone()).Parse(command);
             var md = statement != null && statement.Command != null
-                ? App.Catalog<ICommandProvider>().Default().GetCommandByAlias(statement.Command) : null;
+                ? App.Component<ICommandProvider>().GetCommandByAlias(statement.Command) : null;
 
             if (md != null)
             {

@@ -12,6 +12,7 @@ using Slot.Core.Output;
 using Slot.Core.State;
 using System.Windows.Forms;
 using Slot.Core.CommandModel;
+using Slot.Core.Messages;
 
 namespace Slot.Editor
 {
@@ -49,13 +50,13 @@ namespace Slot.Editor
             if (seq.Any())
             {
                 var sb = new StringBuilder();
-                var res = MessageBox.Show(Form.ActiveForm,
-                    $"Do you want to save the changes to the following files?\n\n{string.Join("\n", seq.Select(f => f.File.Name))}",
-                    Application.ProductName,
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Warning);
+                var res = App.Ext.Show(
+                    "Do you want to save the changes to the following files?",
+                    string.Join("\n", seq.Select(f => f.File.Name)),
+                    MessageButtons.SaveAll | MessageButtons.DontSave | MessageButtons.Cancel
+                    );
 
-                if (res == DialogResult.Yes)
+                if (res == MessageButtons.SaveAll)
                 {
                     var cmd = (Identifier)"file.saveFile";
                     var exec = App.Catalog<ICommandDispatcher>().GetComponent(cmd.Namespace);
@@ -64,7 +65,7 @@ namespace Slot.Editor
                         exec.Execute(null, cmd, d.File.FullName);
                 }
 
-                if (res == DialogResult.Cancel)
+                if (res == MessageButtons.Cancel)
                 {
                     e.Cancel = true;
                     return false;

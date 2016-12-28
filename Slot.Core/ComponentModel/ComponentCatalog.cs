@@ -45,7 +45,7 @@ namespace Slot.Core.ComponentModel
             return ret;
         }
 
-        public T Default()
+        internal T Default()
         {
             var ret = componentMap.Values.FirstOrDefault();
 

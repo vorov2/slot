@@ -74,7 +74,7 @@ namespace Slot.Main.CommandBar
 
         internal static CommandBarControl GetCommandBarControl()
         {
-            return (CommandBarControl)App.Catalog<IViewManager>().Default().GetActiveView().CommandBar;
+            return (CommandBarControl)App.Component<IViewManager>().ActiveView.CommandBar;
         }
     }
 }

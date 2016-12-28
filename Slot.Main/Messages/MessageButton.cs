@@ -38,8 +38,8 @@ namespace Slot.Main.Messages
         {
             base.OnPaint(e);
             var g = e.Graphics;
-            var env = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
-            var theme = App.Catalog<ITheme>().Default();
+            var env = App.Component<IViewManager>().ActiveView.Settings.Get<EnvironmentSettings>();
+            var theme = App.Component<ITheme>();
             var style = theme.GetStyle(StandardStyle.Default);
 
             var pen = acceptButton ? style.ForeColor.ThickPen() : style.ForeColor.Pen();
@@ -55,7 +55,7 @@ namespace Slot.Main.Messages
 
         private void MeasureSize(Graphics g)
         {
-            var env = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
+            var env = App.Component<IViewManager>().ActiveView.Settings.Get<EnvironmentSettings>();
             var size = g.MeasureString(Text, env.Font);
             Width = (int)Math.Round(size.Width * 1.5, MidpointRounding.AwayFromZero);
             Height = (int)Math.Round(size.Height * 1.5, MidpointRounding.AwayFromZero);

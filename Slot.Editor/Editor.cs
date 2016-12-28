@@ -474,7 +474,7 @@ namespace Slot.Editor
                 }
 
                 if (Buffer.GrammarKey == null)
-                    Buffer.GrammarKey = App.Catalog<IModeManager>().Default()
+                    Buffer.GrammarKey = App.Component<IModeManager>()
                         .SelectMode(buffer.File).Key;
 
                 Scroll.InvalidateLines(InvalidateFlags.Force);
@@ -502,7 +502,7 @@ namespace Slot.Editor
             get
             {
                 if (_keyboardAdapter == null)
-                    _keyboardAdapter = App.Catalog<IKeyboardAdapter>().Default();
+                    _keyboardAdapter = App.Component<IKeyboardAdapter>();
 
                 return _keyboardAdapter;
             }
@@ -544,7 +544,7 @@ namespace Slot.Editor
 
         public bool CurrentLineIndicator => !LimitedMode && (Buffer.CurrentLineIndicator ?? EditorSettings.CurrentLineIndicator);
 
-        public bool ReadOnly => Buffer?.ReadOnly ?? (!LimitedMode && EditorSettings.ReadOnly);
+        public bool ReadOnly => Buffer.ReadOnly;
 
         public EditorInfo Info { get; }
 
@@ -604,7 +604,7 @@ namespace Slot.Editor
             get
             {
                 if (_theme == null)
-                    _theme = App.Catalog<ITheme>().Default();
+                    _theme = App.Component<ITheme>();
 
                 return _theme;
             }

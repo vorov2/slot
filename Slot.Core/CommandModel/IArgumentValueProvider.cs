@@ -9,6 +9,11 @@ namespace Slot.Core.CommandModel
 {
     public interface IArgumentValueProvider : IComponent
     {
-        IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue);
+        IEnumerable<ValueItem> EnumerateArgumentValues();
+    }
+
+    public interface IFilteredArgumentValueProvider : IArgumentValueProvider
+    {
+        IEnumerable<ValueItem> EnumerateArgumentValues(string filter);
     }
 }

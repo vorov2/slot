@@ -10,10 +10,10 @@ namespace Slot.Core.ViewModel
 
         void CloseView(IView view);
 
-        IView GetActiveView();
-
         void ActivateView(IView view);
 
         IEnumerable<IView> EnumerateViews();
+
+        IView ActiveView { get; }
     }
 }

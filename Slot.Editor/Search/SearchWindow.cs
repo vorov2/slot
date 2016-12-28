@@ -39,7 +39,7 @@ namespace Slot.Editor.Search
 
         private void SearchBoxCommandRejected(object sender, EventArgs e)
         {
-            editor.RunCommand(App.Catalog<IKeyboardAdapter>().Default().LastKey);
+            editor.RunCommand(App.Component<IKeyboardAdapter>().LastKey);
         }
 
         private void SearchBoxLostFocus(object sender, EventArgs e)

@@ -64,7 +64,7 @@ namespace Slot
             if (!AllowClose)
             {
                 e.Cancel = true;
-                App.Catalog<IViewManager>().Default().CloseView(this);
+                App.Component<IViewManager>().CloseView(this);
             }
             else
             {
@@ -132,7 +132,7 @@ namespace Slot
                 if (_settings == null)
                     lock (syncRoot)
                         if (_settings == null)
-                            _settings = App.Catalog<ISettingsManager>().Default().Create(this);
+                            _settings = App.Component<ISettingsManager>().Create(this);
 
                 return _settings;
             }

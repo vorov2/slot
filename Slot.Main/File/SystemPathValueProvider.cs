@@ -10,13 +10,14 @@ namespace Slot.Main.File
 {
     [Export(typeof(IArgumentValueProvider))]
     [ComponentData("values.systempath")]
-    public class SystemPathValueProvider : IArgumentValueProvider
+    public class SystemPathValueProvider : IFilteredArgumentValueProvider
     {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues(string str)
         {
-            var str = curvalue as string;
             return GetPathElements(str) ?? Enumerable.Empty<ValueItem>();
         }
+
+        public IEnumerable<ValueItem> EnumerateArgumentValues() => EnumerateArgumentValues(null);
 
         private IEnumerable<ValueItem> GetPathElements(string pat)
         {

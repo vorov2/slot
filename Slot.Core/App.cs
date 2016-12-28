@@ -64,6 +64,8 @@ namespace Slot.Core
             return (ComponentCatalog<T>)ret;
         }
 
+        public static T Component<T>() where T : IComponent => Catalog<T>().Default();
+
         public static bool Close()
         {
             var ev = new ExitEventArgs();

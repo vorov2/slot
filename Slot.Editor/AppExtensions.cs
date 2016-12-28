@@ -13,7 +13,7 @@ namespace Slot.Editor
         public static IGrammarComponent Grammars(this IAppExtensions _)
         {
             if (_grammar == null)
-                _grammar = App.Catalog<IGrammarComponent>().Default();
+                _grammar = App.Component<IGrammarComponent>();
             return _grammar;
         }
     }

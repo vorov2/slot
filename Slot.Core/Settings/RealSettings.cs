@@ -17,7 +17,7 @@ namespace Slot.Core.Settings
     {
         private const string FILE = "settings.json";
 
-        private MAP settings;
+        private static MAP settings;
         private MAP userSettings;
         private MAP workspaceSettings;
         private readonly OMAP bagMap = new OMAP();
@@ -64,10 +64,10 @@ namespace Slot.Core.Settings
                 b.Fill(settings, userSettings, workspaceSettings);
         }
 
-        private void LoadSettings()
+        internal static MAP LoadGlobalSettings()
         {
             if (settings != null)
-                return;
+                return settings;
 
             foreach (var pkg in App.Catalog<IPackageManager>().Default().EnumeratePackages())
                 foreach (var e in pkg.GetMetadata(PackageSection.Settings))
@@ -88,6 +88,15 @@ namespace Slot.Core.Settings
                     }
                 }
 
+            return settings;
+        }
+
+        private void LoadSettings()
+        {
+            if (settings != null)
+                return;
+
+            LoadGlobalSettings();
             userSettings = ReadFile(UserSettingsFile);
 
             var dir = view.Workspace;
@@ -96,7 +105,7 @@ namespace Slot.Core.Settings
                 workspaceSettings = ReadFile(Path.Combine(dir.FullName, ".slot", FILE));
         }
 
-        private MAP ReadFile(string fileName)
+        private static MAP ReadFile(string fileName)
         {
             string content;
 

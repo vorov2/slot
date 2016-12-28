@@ -24,7 +24,7 @@ namespace Slot.Main.View
         [Command]
         public void NewView()
         {
-            var act = ViewManager.GetActiveView();
+            var act = ViewManager.ActiveView;
             var view = ViewManager.CreateView();
             view.AttachBuffer(act.Buffer);
         }
@@ -40,14 +40,14 @@ namespace Slot.Main.View
         [Command]
         public void CloseView()
         {
-            var view = ViewManager.GetActiveView();
+            var view = ViewManager.ActiveView;
             ViewManager.CloseView(view);
         }
 
         [Command]
         public void ToggleViewTopmost()
         {
-            var view = ViewManager.GetActiveView();
+            var view = ViewManager.ActiveView;
             var frm = ((Control)view).FindForm();
             frm.TopMost = !frm.TopMost;
         }
@@ -55,7 +55,7 @@ namespace Slot.Main.View
         [Command]
         public void ToggleViewState()
         {
-            var view = ViewManager.GetActiveView();
+            var view = ViewManager.ActiveView;
             var frm = ((Control)view).FindForm();
 
             if (frm.WindowState == FormWindowState.Maximized)
@@ -67,7 +67,7 @@ namespace Slot.Main.View
         [Command]
         public void ToggleFullScreen()
         {
-            var view = ViewManager.GetActiveView();
+            var view = ViewManager.ActiveView;
             var frm = ((Control)view).FindForm();
 
             if (frm.FormBorderStyle == FormBorderStyle.None)

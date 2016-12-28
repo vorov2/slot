@@ -14,12 +14,9 @@ namespace Slot.Main
     [ComponentData("values.themes")]
     public sealed class ThemeValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
-            var str = curvalue as string;
-            var theme = App.Catalog<ITheme>().Default();
-            return theme.EnumerateThemes()
-                .Where(t => str == null || t.Key.ToString().IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
+            return App.Component<ITheme>().EnumerateThemes()
                 .Select(t => new ValueItem(t.Key.ToString(), t.Name));
         }
     }

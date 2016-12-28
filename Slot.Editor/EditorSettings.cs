@@ -57,9 +57,6 @@ namespace Slot.Editor
         [Setting("editor.wordWrapColumn")]
         public int WordWrapColumn { get; set; }
 
-        [Setting("editor.readOnly")]
-        public bool ReadOnly { get; set; }
-
         [Setting("editor.wrappingIndent")]
         public WrappingIndent WrappingIndent { get; set; }
 

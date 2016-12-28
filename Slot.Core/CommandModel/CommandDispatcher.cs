@@ -26,7 +26,7 @@ namespace Slot.Core.CommandModel
                 return false;
 
             var meta = CommandProvider.GetCommandByKey(commandKey);
-            var mode = ViewManager.GetActiveView()?.Mode;
+            var mode = ViewManager.ActiveView?.Mode;
 
             if (meta.Mode != null && meta.Mode != mode)
             {

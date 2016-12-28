@@ -36,7 +36,7 @@ namespace Slot.Editor.BufferCommands
             if (buf != null)
             {
                 var val = buf.WordWrap != null ? buf.WordWrap.Value
-                    : ViewManager.GetActiveView().Settings.Get<EditorSettings>().WordWrap;
+                    : ViewManager.ActiveView.Settings.Get<EditorSettings>().WordWrap;
                 buf.WordWrap = !val;
             }
         }
@@ -46,7 +46,7 @@ namespace Slot.Editor.BufferCommands
         {
             var buf = GetBuffer();
 
-            if (buf != null)
+            if (buf != null && (buf.Flags & BufferDisplayFlags.ReadOnly) != BufferDisplayFlags.ReadOnly)
                 buf.ReadOnly = !buf.ReadOnly;
         }
 
@@ -61,7 +61,7 @@ namespace Slot.Editor.BufferCommands
 
         private DocumentBuffer GetBuffer()
         {
-            var view = ViewManager.GetActiveView();
+            var view = ViewManager.ActiveView;
             return view?.Buffer as DocumentBuffer;
         }
     }

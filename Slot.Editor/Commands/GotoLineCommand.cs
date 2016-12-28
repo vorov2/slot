@@ -21,8 +21,8 @@ namespace Slot.Editor.Commands
 
             if (line < 0)
             {
-                var alias = App.Catalog<ICommandProvider>().Default().GetCommandByKey(Cmd.GotoLine).Alias;
-                App.Catalog<ICommandBar>().Default().Show(alias);
+                var alias = App.Component<ICommandProvider>().GetCommandByKey(Cmd.GotoLine).Alias;
+                App.Component<ICommandBar>().Show(alias);
                 return Pure;
             }
 

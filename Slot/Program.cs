@@ -87,7 +87,7 @@ namespace Slot
                 App.Ext.Run(Cmd.OpenFile, fi.FullName);
             else
             {
-                var bm = App.Catalog<IBufferManager>().Default();
+                var bm = App.Component<IBufferManager>();
                 var buf = bm.EnumerateBuffers().FirstOrDefault();
 
                 if (buf != null)
@@ -115,8 +115,8 @@ namespace Slot
         {
             Application.OpenForms[0].Invoke((MethodInvoker)(() =>
             {
-                var view = App.Catalog<IViewManager>().Default().CreateView();
-                var buf = App.Catalog<IBufferManager>().Default();
+                var view = App.Component<IViewManager>().CreateView();
+                var buf = App.Component<IBufferManager>();
                 FileInfo fi;
 
                 if (fileName != null && FileUtil.TryGetInfo(fileName, out fi))
@@ -124,7 +124,7 @@ namespace Slot
                 else
                     view.AttachBuffer(buf.CreateBuffer());
 
-                App.Catalog<IViewManager>().Default().ActivateView(view);
+                App.Component<IViewManager>().ActivateView(view);
             }));
         }
 

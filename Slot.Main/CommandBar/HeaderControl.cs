@@ -29,7 +29,7 @@ namespace Slot.Main.CommandBar
             Cursor = Cursors.Default;
             Dock = DockStyle.Top;
             editor.Escape += EditorEscape;
-            App.Catalog<ILogComponent>().Default().EntryWritten += (o, e) =>
+            App.Component<ILogComponent>().EntryWritten += (o, e) =>
             {
                 if (overlay != null && overlay.Visible)
                     HideTip();

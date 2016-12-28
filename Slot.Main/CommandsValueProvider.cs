@@ -12,14 +12,10 @@ namespace Slot.Main
     [ComponentData("values.commands")]
     public sealed class CommandsValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
-            var strings = (curvalue as string ?? "")
-                .Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            return App.Catalog<ICommandProvider>().Default().EnumerateCommands()
-                .Where(c => c.Alias != "?")
-                .Where(c => c.Title.ContainsAll(strings))
-                .OrderBy(c => c.Title)
+            return App.Component<ICommandProvider>().EnumerateCommands()
+                .Where(c => c.Title != null && c.Alias != "?")
                 .Select(c => new CommandArgumentValue(c));
         }
 

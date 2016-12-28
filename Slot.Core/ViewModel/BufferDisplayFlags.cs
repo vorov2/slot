@@ -12,5 +12,7 @@ namespace Slot.Core.ViewModel
         HideStatusBar = 0x02,
 
         HideWorkspace = 0x04,
+
+        ReadOnly = 0x08
     }
 }

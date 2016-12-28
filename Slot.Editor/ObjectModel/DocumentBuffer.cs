@@ -304,10 +304,14 @@ namespace Slot.Editor.ObjectModel
             }
         }
 
-        private bool? _readOnly;
-        public bool? ReadOnly
+        private bool _readOnly;
+        public bool ReadOnly
         {
-            get { return _readOnly; }
+            get
+            {
+                return _readOnly
+                      || (Flags & BufferDisplayFlags.ReadOnly) == BufferDisplayFlags.ReadOnly;
+            }
             set
             {
                 if (value != _readOnly)
@@ -361,7 +365,7 @@ namespace Slot.Editor.ObjectModel
 
     internal sealed class DocumentBufferSerializer
     {
-        private const int BIN_VERSION = 3;
+        private const int BIN_VERSION = 4;
 
         public static void Deserialize(DocumentBuffer buffer, Stream stream)
         {
@@ -378,7 +382,7 @@ namespace Slot.Editor.ObjectModel
             try
             {
                 //Main
-                buffer.ReadOnly = sr.ReadNullableBool();
+                buffer.ReadOnly = sr.ReadBoolean();
                 var cp = sr.ReadInt32();
                 buffer.Encoding = Encoding.GetEncoding(cp);
                 buffer.File = new FileInfo(sr.ReadString());

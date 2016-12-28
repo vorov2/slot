@@ -70,6 +70,7 @@
     <Compile Include="CommandBar\Statement.cs" />
     <Compile Include="CommandBar\StatementArgument.cs" />
     <Compile Include="CommandsValueProvider.cs" />
+    <Compile Include="SettingsValueProvider.cs" />
     <Compile Include="Debug\DebugCommandDispatcher.cs" />
     <Compile Include="Messages\MessageBoxService.cs" />
     <Compile Include="Messages\MessageButton.cs">

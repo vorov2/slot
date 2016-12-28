@@ -47,7 +47,7 @@ namespace Slot.Main.StatusBar
             AdjustHeight();
             var g = e.Graphics;
             var bounds = e.ClipRectangle;
-            var theme = App.Catalog<ITheme>().Default();
+            var theme = App.Component<ITheme>();
             var style = theme.GetStyle(StandardStyle.StatusBar);
             var astyle = theme.GetStyle(StandardStyle.ActiveStatusBar);
             var font = ((IView)FindForm()).Settings.Get<EnvironmentSettings>().SmallFont;

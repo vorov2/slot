@@ -23,7 +23,7 @@ namespace Slot
 
         public IView CreateView()
         {
-            var act = (ViewForm)GetActiveView();
+            var act = (ViewForm)ActiveView;
             var frm = new ViewForm();
             frm.Width = act.Width;
             frm.Height = act.Height;
@@ -49,7 +49,7 @@ namespace Slot
             }
         }
 
-        public IView GetActiveView() => EnumerateViews().FirstOrDefault();
+        public IView ActiveView => EnumerateViews().FirstOrDefault();
 
         public IEnumerable<IView> EnumerateViews() =>
             Application.OpenForms

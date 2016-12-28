@@ -74,7 +74,7 @@ namespace Slot.Core.CommandModel
         public IEnumerable<CommandMetadata> EnumerateCommands()
         {
             EnsureLoaded();
-            var mode = viewManager.GetActiveView()?.Mode;
+            var mode = viewManager.ActiveView?.Mode;
             return commands
                 .Where(p => p.Value.Mode == null || p.Value.Mode == mode)
                 .Select(p => p.Value);

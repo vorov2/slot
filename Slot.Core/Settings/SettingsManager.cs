@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.IO;
+using Json;
 using Slot.Core.ComponentModel;
 using Slot.Core.ViewModel;
 
@@ -17,6 +19,13 @@ namespace Slot.Core.Settings
         public ISettings Create(IView view)
         {
             return new RealSettings(view) { UserSettingsDirectory = userSettingsDirectory };
+        }
+
+        public string GenerateGlobalSettings()
+        {
+            var map = RealSettings.LoadGlobalSettings();
+            var fmt = new JsonFormatter(JsonFormatInfo.Default);
+            return fmt.Format(map);
         }
     }
 }

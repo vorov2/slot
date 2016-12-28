@@ -43,8 +43,8 @@ namespace Slot.Main.File
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            var view = App.Catalog<IViewManager>().Default().GetActiveView();
-            var theme = App.Catalog<ITheme>().Default();
+            var view = App.Component<IViewManager>().ActiveView;
+            var theme = App.Component<ITheme>();
             var bag = view.Settings.Get<EnvironmentSettings>();
             var style  = theme.GetStyle(StandardStyle.Popup);
             var style1 = theme.GetStyle(StandardStyle.PopupSelected);
@@ -65,7 +65,7 @@ namespace Slot.Main.File
             var pen = style2.ForeColor.Pen();
             g.DrawRectangle(pen, new Rectangle(e.ClipRectangle.Location,
                 new Size(e.ClipRectangle.Width - pen.Size(), e.ClipRectangle.Height - pen.Size())));
-            var ws = App.Catalog<IViewManager>().Default().GetActiveView().Workspace;
+            var ws = App.Component<IViewManager>().ActiveView.Workspace;
 
             for (var i = 0; i < Buffers.Count; i++)
             {
@@ -116,7 +116,7 @@ namespace Slot.Main.File
         internal int CalculateHeight()
         {
             var max = Buffers.Count > 10 ? 10 : Buffers.Count;
-            var bag = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
+            var bag = App.Component<IViewManager>().ActiveView.Settings.Get<EnvironmentSettings>();
             var height = (int)Math.Round(bag.Font.Height() * 1.1, MidpointRounding.AwayFromZero);
             return max * height + Dpi.GetHeight(3) * 2;
         }

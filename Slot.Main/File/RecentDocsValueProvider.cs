@@ -15,11 +15,9 @@ namespace Slot.Main.File
         [Import]
         private IBufferManager bufferManager = null;
 
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
-            var str = curvalue as string;
             return bufferManager.EnumerateRecent()
-                .Where(b => str == null || b.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(b => new ValueItem(b.Name, b.DirectoryName));
         }
     }

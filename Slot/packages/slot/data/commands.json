@@ -4,6 +4,17 @@
         "alias": "debug"
     },
     {
+        "key": "app.openSettings",
+        "alias": "set",
+        "title": "Application: Open settings",
+        "arguments": [
+            {
+                "name": "settings",
+                "valueProvider": "values.settings"
+            }
+        ]
+    },
+    {
         "key": "app.showInfo",
         "alias": "info",
         "title": "Application: Show application information",

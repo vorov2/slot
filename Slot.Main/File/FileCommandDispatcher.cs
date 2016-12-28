@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Slot.Core.Messages;
 
 namespace Slot.Main.File
 {
@@ -33,7 +34,7 @@ namespace Slot.Main.File
             if (buffers.Count < 2)
                 return;
 
-            var cur = ViewManager.GetActiveView()?.Buffer;
+            var cur = ViewManager.ActiveView?.Buffer;
             var idx = cur != null ? buffers.IndexOf(cur) : 0;
 
             if (switchBufferControl == null)
@@ -100,19 +101,18 @@ namespace Slot.Main.File
             if (buffer.IsDirty)
             {
                 var sb = new StringBuilder();
-                var res = MessageBox.Show(Form.ActiveForm,
+                var res = App.Ext.Show(
                     $"Do you want to save the changes made to {buffer.File.Name}?",
-                    Application.ProductName,
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Warning);
+                    "Your changes will be lost if you don't save them.",
+                    MessageButtons.Save | MessageButtons.DontSave | MessageButtons.Cancel);
 
-                if (res == DialogResult.Yes)
+                if (res == MessageButtons.Save)
                     SaveFile();
-                else if (res == DialogResult.Cancel)
+                else if (res == MessageButtons.Cancel)
                     return;
             }
 
-            ViewManager.GetActiveView().DetachBuffer();
+            ViewManager.ActiveView.DetachBuffer();
             bufferManager.CloseBuffer(buffer);
             var next = bufferManager.EnumerateBuffers().FirstOrDefault();
 
@@ -125,7 +125,7 @@ namespace Slot.Main.File
         [Command]
         public void ReopenFile(Encoding enc)
         {
-            var buffer = ViewManager.GetActiveView()?.Buffer;
+            var buffer = ViewManager.ActiveView?.Buffer;
 
             if (buffer != null)
             {
@@ -143,7 +143,7 @@ namespace Slot.Main.File
 
         private static bool OpenFolder(IView view, DirectoryInfo dir)
         {
-            return App.Catalog<IWorkspaceController>().Default().OpenWorkspace(view, dir);
+            return App.Component<IWorkspaceController>().OpenWorkspace(view, dir);
         }
 
         [Command]
@@ -156,7 +156,7 @@ namespace Slot.Main.File
         [Command]
         public void RevertFile()
         {
-            var buf = ViewManager.GetActiveView()?.Buffer;
+            var buf = ViewManager.ActiveView?.Buffer;
 
             if (buf != null && buf.File.Exists)
             {
@@ -185,7 +185,7 @@ namespace Slot.Main.File
             else
                 fi = buffer.File;
 
-            OpenFolder(ViewManager.GetActiveView(), fi.Directory);
+            OpenFolder(ViewManager.ActiveView, fi.Directory);
             bufferManager.SaveBuffer(buffer, fi, enc ?? buffer.Encoding);
         }
 
@@ -258,7 +258,7 @@ namespace Slot.Main.File
             App.Ext.Log($"File path {buffer.File.FullName} is copied to clipboard.", EntryType.Info);
         }
 
-        private IBuffer GetActiveBuffer() => ViewManager.GetActiveView()?.Buffer;
+        private IBuffer GetActiveBuffer() => ViewManager.ActiveView?.Buffer;
 
         [Command]
         public void OpenRecentFile(string fileName, Encoding enc = null)
@@ -280,7 +280,7 @@ namespace Slot.Main.File
         {
             if (buf != null)
             {
-                view = view ?? App.Catalog<IViewManager>().Default().GetActiveView();
+                view = view ?? App.Component<IViewManager>().ActiveView;
 
                 if (buf.File.Directory != null && OpenFolder(view, buf.File.Directory))
                     App.Ext.Log($"Workspace opened: {view.Workspace}", EntryType.Info);

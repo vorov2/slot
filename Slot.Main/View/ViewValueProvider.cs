@@ -16,12 +16,10 @@ namespace Slot.Main.View
         [Import]
         private IViewManager viewManager = null;
 
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
-            var str = curvalue as string;
-            var act = viewManager.GetActiveView();
+            var act = viewManager.ActiveView;
             return viewManager.EnumerateViews()
-                .Where(f => str == null || f.Buffer.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(f => new ValueItem(f.Buffer.File.Name, f == act ? "Current view" : ""));
         }
     }

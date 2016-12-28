@@ -34,8 +34,7 @@ namespace Slot.Main.Messages
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Height = MeasureSize(e.Graphics);
-            var theme = App.Catalog<ITheme>().Default();
+            var theme = App.Component<ITheme>();
             var g = e.Graphics;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             g.FillRectangle(theme.GetStyle(StandardStyle.PopupBorder).ForeColor.Brush(), ClientRectangle);
@@ -44,7 +43,7 @@ namespace Slot.Main.Messages
                     ClientRectangle.Width - Padding.Right - Padding.Left,
                     ClientRectangle.Height - Padding.Top - Padding.Bottom));
 
-            var env = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
+            var env = App.Component<IViewManager>().ActiveView.Settings.Get<EnvironmentSettings>();
             var padx = Dpi.GetWidth(30);
             var pady = Dpi.GetWidth(20);
 
@@ -125,12 +124,13 @@ namespace Slot.Main.Messages
             return but.Width + Dpi.GetWidth(10);
         }
 
-        private int MeasureSize(Graphics g)
+        internal int MeasureHeight()
         {
-            var env = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
+            var env = App.Component<IViewManager>().ActiveView.Settings.Get<EnvironmentSettings>();
             var padx = Dpi.GetWidth(30);
             var pady = Dpi.GetWidth(20);
 
+            using (var g = CreateGraphics())
             using (var bigfont = new Font(env.FontName, env.FontSize + 3))
             {
                 var x = Padding.Left + padx;

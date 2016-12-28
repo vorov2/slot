@@ -13,7 +13,7 @@ namespace Slot
 
         public static bool Run(this IAppExtensions _, Identifier key, params object[] args)
         {
-            var view = App.Catalog<IViewManager>().Default().GetActiveView();
+            var view = App.Component<IViewManager>().ActiveView;
             return Run(null, view.Editor, key, args);
         }
 

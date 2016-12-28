@@ -25,7 +25,7 @@ namespace Slot.Main.StatusBar
                 if ((lastMode == null && editor.Buffer.GrammarKey != null)
                     || (editor.Buffer.GrammarKey != lastMode.Key && editor.Buffer.GrammarKey != null))
                 {
-                    lastMode = App.Catalog<IModeManager>().Default().GetMode(editor.Buffer.GrammarKey);
+                    lastMode = App.Component<IModeManager>().GetMode(editor.Buffer.GrammarKey);
                     return lastMode.Name;
                 }
                 else

@@ -21,8 +21,9 @@ namespace Slot.Main.Messages
                 Detail = text ?? "",
                 Buttons = buttons
             };
+            frm.Height = frm.MeasureHeight();
             frm.ShowDialog(Form.ActiveForm);
-            var vm = App.Catalog<IViewManager>().Default().GetActiveView();
+            var vm = App.Component<IViewManager>().ActiveView;
             ((Control)vm.Editor).Focus();
             return frm.ButtonClicked;
         }

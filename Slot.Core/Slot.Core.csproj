@@ -59,6 +59,7 @@
     <Compile Include="App.Version.cs" />
     <Compile Include="AppExtensions.cs" />
     <Compile Include="ApplicationPath.cs" />
+    <Compile Include="CommandModel\EnumValueProvider.cs" />
     <Compile Include="Keyboard\IKeyboardAdapter.cs" />
     <Compile Include="Keyboard\KeymapMetadata.cs" />
     <Compile Include="Messages\IMessageBox.cs" />

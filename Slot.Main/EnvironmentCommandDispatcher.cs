@@ -10,6 +10,7 @@ using Slot.Core.CommandModel;
 using Slot.Core.ComponentModel;
 using Slot.Core.Output;
 using Slot.Core.Packages;
+using Slot.Core.Settings;
 using Slot.Core.Themes;
 using Slot.Core.ViewModel;
 using Slot.Editor;
@@ -25,10 +26,13 @@ namespace Slot.Main
         [Import]
         private ICommandBar commandBar = null;
 
+        [Import("directory.user.settings")]
+        private string userSettingsDirectory = null;
+
         [Command]
         public void ToggleCommandBar()
         {
-            var cb = App.Catalog<ICommandBar>().Default();
+            var cb = App.Component<ICommandBar>();
 
             if (cb.InputVisible)
                 cb.Hide();
@@ -42,7 +46,7 @@ namespace Slot.Main
         [Command]
         public void CommandPalette(string commandName)
         {
-            var cmd = App.Catalog<ICommandProvider>().Default().EnumerateCommands()
+            var cmd = App.Component<ICommandProvider>().EnumerateCommands()
                 .FirstOrDefault(c => c.Title.Equals(commandName, StringComparison.OrdinalIgnoreCase));
 
             if (cmd == null)
@@ -57,7 +61,7 @@ namespace Slot.Main
         [Command]
         public void ChangeTheme(string themeName)
         {
-            App.Catalog<ITheme>().Default().ChangeTheme((Identifier)themeName);
+            App.Component<ITheme>().ChangeTheme((Identifier)themeName);
         }
 
         [Command]
@@ -66,7 +70,7 @@ namespace Slot.Main
             var mi = (Identifier)mode;
 
             if (mi != null && App.Ext.Grammars().GetGrammar(mi) != null)
-                ViewManager.GetActiveView().Mode = mi;
+                ViewManager.ActiveView.Mode = mi;
             else
                 App.Ext.Log($"Unknown mode: {mode}.", EntryType.Error);
         }
@@ -118,11 +122,56 @@ namespace Slot.Main
             }
         }
 
+        [Command]
+        public void OpenSettings(string settings)
+        {
+            if (settings.Equals("global", StringComparison.OrdinalIgnoreCase))
+                ShowGlobalSettings();
+            else if (settings.Equals("user", StringComparison.OrdinalIgnoreCase))
+                ShowSettings(userSettingsDirectory);
+            else if (settings.Equals("workspace", StringComparison.OrdinalIgnoreCase))
+            {
+                var ws = ViewManager.ActiveView.Workspace;
+                ShowSettings(Path.Combine(ws.FullName, ".slot"));
+            }
+        }
+
+        private void ShowSettings(string dir)
+        {
+            var fi = new FileInfo(Path.Combine(dir, "settings.json"));
+
+            if (!fi.Exists)
+            {
+                if (!FileUtil.EnsureFilePath(fi))
+                    return;
+
+                using (var sr = new StreamWriter(fi.OpenWrite()))
+                {
+                    sr.WriteLine("//Place your settings here");
+                    sr.WriteLine("{");
+                    sr.WriteLine("}");
+                }
+            }
+
+            var buffer = App.Component<IBufferManager>().CreateBuffer(fi, Encoding.UTF8);
+            OpenBuffer(buffer);
+        }
+
+        private void ShowGlobalSettings()
+        {
+            var str = App.Component<ISettingsManager>().GenerateGlobalSettings();
+            var buffer = App.Component<IBufferManager>().CreateBuffer();
+            str = "//You can override settings from this file in user settings\n//or workspace settings.\n" + str;
+            buffer.Truncate(str);
+            buffer.File = new FileInfo(Path.Combine(GetRootPackage().Directory.FullName, "docs", "settings.json"));
+            OpenSpecialBuffer(buffer);
+        }
+
         private void ShowPackages()
         {
             var sb = new StringBuilder();
 
-            foreach (var pkg in App.Catalog<IPackageManager>().Default().EnumeratePackages())
+            foreach (var pkg in App.Component<IPackageManager>().EnumeratePackages())
             {
                 sb.AppendLine($"{pkg.Name} ({pkg.Key})");
                 sb.AppendLine(pkg.Copyright);
@@ -131,21 +180,16 @@ namespace Slot.Main
                 sb.AppendLine();
             }
 
-            var buffer = App.Catalog<IBufferManager>().Default().CreateBuffer();
+            var buffer = App.Component<IBufferManager>().CreateBuffer();
             buffer.Truncate(sb.ToString());
-            buffer.ClearDirtyFlag();
             buffer.File = new FileInfo(Path.Combine(GetRootPackage().Directory.FullName, "docs", "packages"));
-            buffer.Flags |= BufferDisplayFlags.HideHeader | BufferDisplayFlags.HideStatusBar;
-
-            var view = ViewManager.CreateView();
-            FileCommandDispatcher.OpenBuffer(buffer, view);
-            ViewManager.ActivateView(view);
+            OpenSpecialBuffer(buffer);
         }
 
         private PackageMetadata GetRootPackage()
         {
             var id = (Identifier)"slot";
-            return App.Catalog<IPackageManager>().Default()
+            return App.Component<IPackageManager>()
                 .EnumeratePackages()
                 .FirstOrDefault(p => p.Key == id);
         }
@@ -156,14 +200,24 @@ namespace Slot.Main
 
             if (pkg != null)
             {
-                var view = ViewManager.CreateView();
-                var buffer = App.Catalog<IBufferManager>().Default().CreateBuffer(
+                var buffer = App.Component<IBufferManager>().CreateBuffer(
                     new FileInfo(Path.Combine(pkg.Directory.FullName, "docs", fileName)), Encoding.UTF8);
-                buffer.Flags |= BufferDisplayFlags.HideHeader | BufferDisplayFlags.HideStatusBar
-                    | BufferDisplayFlags.HideWorkspace;
-                FileCommandDispatcher.OpenBuffer(buffer, view);
-                ViewManager.ActivateView(view);
+                OpenSpecialBuffer(buffer);
             }
+        }
+
+        private void OpenSpecialBuffer(IBuffer buffer)
+        {
+            buffer.Flags |= BufferDisplayFlags.HideHeader | BufferDisplayFlags.HideStatusBar
+                | BufferDisplayFlags.HideWorkspace | BufferDisplayFlags.ReadOnly;
+            OpenBuffer(buffer);
+        }
+
+        private void OpenBuffer(IBuffer buffer)
+        {
+            var view = ViewManager.CreateView();
+            FileCommandDispatcher.OpenBuffer(buffer, view);
+            ViewManager.ActivateView(view);
         }
 
         private void ShowAbout()

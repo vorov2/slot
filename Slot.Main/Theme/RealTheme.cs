@@ -51,7 +51,7 @@ namespace Slot.Main.Theme
                     foreach (var s in ThemeReader.Read(content))
                         Register(s.StyleId, s.Style);
 
-                    foreach (var v in App.Catalog<IViewManager>().Default().EnumerateViews().OfType<Control>())
+                    foreach (var v in App.Component<IViewManager>().EnumerateViews().OfType<Control>())
                         v.Invalidate(true);
                 }
 
@@ -68,7 +68,7 @@ namespace Slot.Main.Theme
             if (themes.Count > 0)
                 return;
 
-            foreach (var pkg in App.Catalog<IPackageManager>().Default().EnumeratePackages())
+            foreach (var pkg in App.Component<IPackageManager>().EnumeratePackages())
                 foreach (var e in pkg.GetMetadata(PackageSection.Themes))
                     themes.Add(
                         (Identifier)e.String("key"),

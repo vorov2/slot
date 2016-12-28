@@ -64,7 +64,7 @@ namespace Slot.Main.Keyboard
                         ));
                 }
 
-            var set = App.Catalog<IViewManager>().Default().GetActiveView().Settings.Get<EnvironmentSettings>();
+            var set = App.Component<IViewManager>().ActiveView.Settings.Get<EnvironmentSettings>();
             //set.SettingsChanged += (o, ev) =>
             //{
             //    var kid = (Identifier)set.Keymap;
@@ -101,7 +101,7 @@ namespace Slot.Main.Keyboard
             shortcuts.Remove(key);
             shortcuts.Add(key, chord);
 
-            var cmd = App.Catalog<ICommandProvider>().Default().GetCommandByKey(key);
+            var cmd = App.Component<ICommandProvider>().GetCommandByKey(key);
             if (cmd != null)
                 cmd.Shortcut = chord.ToString();
         }

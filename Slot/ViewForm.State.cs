@@ -20,7 +20,7 @@ namespace Slot
         {
             var res = App.Ext.Handle(() =>
             {
-                var stream = App.Catalog<IStateManager>().Default().ReadState(stateId);
+                var stream = App.Component<IStateManager>().ReadState(stateId);
 
                 if (stream != null)
                     using (var br = new BinaryReader(stream))
@@ -47,7 +47,7 @@ namespace Slot
 
             App.Ext.Handle(() =>
             {
-                var stream = App.Catalog<IStateManager>().Default().WriteState(stateId);
+                var stream = App.Component<IStateManager>().WriteState(stateId);
 
                 if (stream != null)
                     using (var bw = new BinaryWriter(stream))

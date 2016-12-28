@@ -12,11 +12,9 @@ namespace Slot.Main.File
     [ComponentData("values.encoding")]
     public sealed class EncodingValueProvider : IArgumentValueProvider
     {
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
-            var str = curvalue as string;
             return Encoding.GetEncodings()
-                .Where(e => str == null || e.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(e => new ValueItem(e.Name, e.DisplayName))
                 .Concat(new ValueItem[] { new ValueItem(Encoding.UTF8.WebName + "NB", $"Unicode (UTF-8 No BOM)") })
                 .OrderBy(e => e.Value);

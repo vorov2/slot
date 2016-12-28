@@ -15,11 +15,10 @@ namespace Slot.Main.File
         [Import]
         private IBufferManager bufferManager = null;
 
-        public IEnumerable<ValueItem> EnumerateArgumentValues(object curvalue)
+        public IEnumerable<ValueItem> EnumerateArgumentValues()
         {
-            var str = curvalue as string;
             return bufferManager.EnumerateBuffers()
-                .Where(b => b.IsDirty && (str == null || b.File.Name.IndexOf(str, StringComparison.OrdinalIgnoreCase) != -1))
+                .Where(b => b.IsDirty)
                 .Select(b => new ValueItem(b.File.Name, b.File.DirectoryName));
         }
     }
