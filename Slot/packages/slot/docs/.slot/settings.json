@@ -1,7 +1,6 @@
 ﻿{
     "editor.wordWrap": true,
     "editor.wordWrapColumn": 80,
-    "editor.readOnly": true,
     "editor.matchWords": false,
     "editor.matchBrackets": false,
     "editor.showIndentationGuides": false,
