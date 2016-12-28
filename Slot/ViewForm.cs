@@ -68,15 +68,14 @@ namespace Slot
             }
             else
             {
+                WriteState();
                 var buf = (DocumentBuffer)Buffer;
 
                 if (buf.RefCount == 1)
                 {
                     App.Ext.Run(Main.Cmd.CloseFile);
 
-                    if (buf.RefCount == 0)
-                        WriteState();
-                    else
+                    if (buf.RefCount > 0)
                         e.Cancel = true;
                 }
             }

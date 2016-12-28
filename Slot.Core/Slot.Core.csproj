@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PublicRelease|AnyCPU'">
-    <OutputPath>bin\PublicRelease\</OutputPath>
+    <OutputPath>..\release\</OutputPath>
     <DefineConstants>TRACE;PublicRelease</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -59,6 +61,7 @@
     <Compile Include="App.Version.cs" />
     <Compile Include="AppExtensions.cs" />
     <Compile Include="ApplicationPath.cs" />
+    <Compile Include="AssemblyCommitAttribute.cs" />
     <Compile Include="CommandModel\EnumValueProvider.cs" />
     <Compile Include="Keyboard\IKeyboardAdapter.cs" />
     <Compile Include="Keyboard\KeymapMetadata.cs" />
@@ -145,7 +148,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)Util\BuildNumber\bin\bn.exe "$(ProjectDir)App.Version.cs"</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)Util\BuildNumber\bin\bn.exe "$(ProjectDir)App.Version.cs" "$(SolutionDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

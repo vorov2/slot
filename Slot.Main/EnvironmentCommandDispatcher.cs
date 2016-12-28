@@ -229,7 +229,7 @@ namespace Slot.Main
             var build = $"{v.Revision}-{attr.Configuration}";
             var plat = App.IsMono ? "Mono" : ".NET";
             App.Ext.Show(Application.ProductName,
-                $"Version: {v.Major}.{v.Minor}.{v.Build}\nBuild: {build}\nDate: {DateTime.Parse(App.BuildDate).ToString("dd/MM/yyyy")}\nRuntime: {plat} {Environment.Version}");
+                $"Version: {v.Major}.{v.Minor}.{v.Build}\nBuild: {build}\nCommit: {App.Commit}\nDate: {DateTime.Parse(App.BuildDate).ToString("dd/MM/yyyy")}\nRuntime: {plat} {Environment.Version}");
         }
     }
 }

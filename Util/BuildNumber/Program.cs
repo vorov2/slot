@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,13 +8,14 @@ public static class Program
 {
     private const string REGEX = "Version\\s*=\\s*\"([0-9.]*)\"";
     private const string REGEX1 = "BuildDate\\s*=\\s*\"([0-9-]*)\"";
+    private const string REGEX2 = "Commit\\s*=\\s*\"(.*)\"";
 
     static int Main(string[] args)
     {
-        return Increment(args?[0]?.Trim('"'));
+        return PerformJob(args?[0]?.Trim('"'), args?[1]?.Trim('"'));
     }
 
-    static int Increment(string fn)
+    static int PerformJob(string fn, string path)
     {
         if (string.IsNullOrEmpty(fn))
             return Error("File not specified");
@@ -60,6 +62,15 @@ public static class Program
             sb.Replace(g.Value, DateTime.Today.ToString("yyyy-MM-dd"), g.Index - 1, g.Value.Length + 1);
         }
 
+        regex = new Regex(REGEX2);
+        m = regex.Match(content);
+
+        if (m.Success && m.Groups.Count > 1)
+        {
+            g = m.Groups[1];
+            sb.Replace(g.Value, GetGitHash(path), g.Index - 1, g.Value.Length + 1);
+        }
+
         try
         {
             File.WriteAllText(fn, sb.ToString());
@@ -70,6 +81,26 @@ public static class Program
         }
 
         return OK(rev);
+    }
+
+    static string GetGitHash(string path)
+    {
+        var p = new Process();
+        var processInfo = new ProcessStartInfo
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            FileName = "git.exe",
+            CreateNoWindow = true,
+            WorkingDirectory = (path != null && Directory.Exists(path)) ? path : Environment.CurrentDirectory
+        };
+        p.StartInfo = processInfo;
+        p.StartInfo.Arguments = "rev-parse HEAD";
+        p.Start();
+
+        var output = p.StandardOutput.ReadToEnd().Trim();
+        p.WaitForExit();
+        return output;
     }
 
     static int Error(string reason = null)

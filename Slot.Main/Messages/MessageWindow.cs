@@ -29,7 +29,7 @@ namespace Slot.Main.Messages
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.CenterParent;
             Padding = new Padding(Dpi.GetWidth(3), Dpi.GetHeight(10), Dpi.GetWidth(3), Dpi.GetWidth(3));
-            Width = Dpi.GetWidth(400);
+            Width = Dpi.GetWidth(420);
         }
 
         protected override void OnPaint(PaintEventArgs e)

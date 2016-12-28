@@ -34,3 +34,4 @@ using Slot.Core;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(App.Version)]
 [assembly: AssemblyFileVersion(App.Version)]
+[assembly: AssemblyCommit(App.Commit)]
