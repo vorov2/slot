@@ -226,7 +226,7 @@ namespace Slot.Main
             var v = asm.GetName().Version;
             var attr = Attribute.GetCustomAttribute(asm, typeof(AssemblyConfigurationAttribute))
                 as AssemblyConfigurationAttribute;
-            var build = attr.Configuration == "Insiders" ? v.Revision + "-Insiders":"Public";
+            var build = $"{v.Revision}-{attr.Configuration}";
             var plat = App.IsMono ? "Mono" : ".NET";
             App.Ext.Show(Application.ProductName,
                 $"Version: {v.Major}.{v.Minor}.{v.Build}\nBuild: {build}\nDate: {DateTime.Parse(App.BuildDate).ToString("dd/MM/yyyy")}\nRuntime: {plat} {Environment.Version}");
