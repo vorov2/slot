@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Windows.Forms;
 using Slot.Core;
 using Slot.Core.ComponentModel;
@@ -15,6 +16,7 @@ namespace Slot.Main.Messages
 
         public MessageButtons Show(string caption, string text, MessageButtons buttons)
         {
+            var par = Form.ActiveForm;
             var frm = new MessageWindow
             {
                 Caption = caption ?? "",
@@ -22,7 +24,9 @@ namespace Slot.Main.Messages
                 Buttons = buttons
             };
             frm.Height = frm.MeasureHeight();
-            frm.ShowDialog(Form.ActiveForm);
+            frm.MaximumSize = new Size(frm.Width, frm.Height);
+            frm.MinimumSize = frm.MaximumSize;
+            frm.ShowDialog(par);
             var vm = App.Component<IViewManager>().ActiveView;
             ((Control)vm.Editor).Focus();
             return frm.ButtonClicked;

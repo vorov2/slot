@@ -6,7 +6,7 @@
     "view.closeView": "ctrl+shift+w",
     "view.toggleFullScreen": "f11",
     
-    "file.newfile": "ctrl+n",
+    "file.newFile": "ctrl+n",
     "file.openfile": "ctrl+o",
     "file.closeFile": "ctrl+w",
     "file.openRecentFile": "ctrl+shift+o",

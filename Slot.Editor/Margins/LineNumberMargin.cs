@@ -65,7 +65,7 @@ namespace Slot.Editor.Margins
         public bool Enabled => Editor.ShowLineNumbers;
 
         public override int CalculateSize() =>
-            Enabled ? (Editor.Document.Lines.Count.ToString().Length + 2) * Editor.Info.CharWidth : 0;
+            Enabled && Editor.Buffer != null ? (Editor.Document.Lines.Count.ToString().Length + 2) * Editor.Info.CharWidth : 0;
 
         public bool MarkCurrentLine { get; set; }
     }

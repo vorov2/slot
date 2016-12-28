@@ -25,11 +25,14 @@ namespace Slot.Main.Messages
 
         public MessageWindow()
         {
+            DoubleBuffered = true;
+            SetStyle(ControlStyles.FixedHeight | ControlStyles.FixedWidth, true);
             ShowInTaskbar = ControlBox = MinimizeBox = MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.CenterParent;
             Padding = new Padding(Dpi.GetWidth(3), Dpi.GetHeight(10), Dpi.GetWidth(3), Dpi.GetWidth(3));
             Width = Dpi.GetWidth(420);
+            KeyPreview = true;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -73,12 +76,45 @@ namespace Slot.Main.Messages
             base.OnPaint(e);
         }
 
+        protected override bool IsInputKey(Keys keyData)
+        {
+            if (keyData == Keys.Left || keyData == Keys.Right)
+                return true;
+            else
+                return base.IsInputKey(keyData);
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            foreach (var b in Controls.OfType<MessageButton>())
-                if (b.ProcessKeys(e.KeyData))
-                    break;
+
+            if (e.KeyData == Keys.Left || e.KeyData == Keys.Right)
+            {
+                var inc = e.KeyData == Keys.Left ? -1 : 1;
+                var arr = Controls.OfType<MessageButton>().ToList();
+                var bt = arr.FirstOrDefault(b => b.Selected);
+                var idx = 0;
+
+                if (bt != null)
+                {
+                    bt.Selected = false;
+                    idx = arr.IndexOf(bt) + inc;
+
+                    if (idx >= arr.Count)
+                        idx = 0;
+                    else if (idx < 0)
+                        idx = arr.Count - 1;
+                }
+
+                ((MessageButton)Controls[idx]).Selected = true;
+                Invalidate(true);
+            }
+            else
+            {
+                foreach (var b in Controls.OfType<MessageButton>())
+                    if (b.ProcessKeys(e.KeyData))
+                        break;
+            }
         }
 
         private bool buttonsAdded;
@@ -104,12 +140,15 @@ namespace Slot.Main.Messages
             if (Buttons.HasFlag(MessageButtons.Close))
                 x += AddButton(x, y, MessageButtons.Close, true, true);
 
+            if (Controls.Count > 0)
+                Controls[0].Focus();
+
             buttonsAdded = true;
         }
 
-        private int AddButton(int x, int y, MessageButtons button, bool accept = false, bool cancel = false)
+        private int AddButton(int x, int y, MessageButtons button, bool selected = false, bool cancel = false)
         {
-            var but = new MessageButton(button, accept, cancel)
+            var but = new MessageButton(button, selected, cancel)
             {
                 Top = y,
                 Left = x

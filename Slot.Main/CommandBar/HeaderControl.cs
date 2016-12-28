@@ -89,6 +89,9 @@ namespace Slot.Main.CommandBar
             var y = bounds.Y + ((bounds.Height - h) / 2);
             var w = h;
 
+            if (editor.Buffer == null)
+                return;
+
             if (!editor.ReadOnly)
             {
                 if (editor.Buffer.IsDirty)

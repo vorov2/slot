@@ -79,6 +79,8 @@ namespace Slot
 
                 if (buf != null)
                     App.Ext.Run(Cmd.OpenFile, buf.File.FullName);
+                else
+                    App.Ext.Run(Cmd.NewFile);
             }
 
             Application.ApplicationExit += (o, e) => slotServer.StopServer();

@@ -7,10 +7,10 @@ Version 0.1.0 provides support for all basic editing functions (including multip
 Other notable features include:
 
     * Split editing of the same buffer (command v-n)
-    * Open multiple files at one and switch between them instantly (Ctrl+Tab by default)
+    * Open multiple files at once and switch between them instantly (Ctrl+Tab by default)
     * Automatically save editing sessions
     * Fully control file encodings when saving/reading files (UTF-8 or UTF-8 No BOM is assumed by default)
-    * Workspaces with an ability to override settings per workspace level by placing settings.json file in the workspace subfolder under the name '.slot'
+    * Workspaces with an ability to override settings per workspace level by placing settings.json file in the workspace subfolder under the name of '.slot'
     * Match brackets configurable per mode
     * Match words configurable per mode
     * Incremental search with support for regular expressions

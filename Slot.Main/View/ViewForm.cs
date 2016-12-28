@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using Slot.Core;
 using Slot.Core.Settings;
+using Slot.Core.Themes;
 using Slot.Core.ViewModel;
 using Slot.Drawing;
 using Slot.Editor;
@@ -78,6 +79,12 @@ namespace Slot.Main.View
                         e.Cancel = true;
                 }
             }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            BackColor = App.Component<ITheme>().GetStyle(StandardStyle.Default).BackColor;
+            base.OnPaint(e);
         }
 
         protected override void OnActivated(EventArgs e)

@@ -18,17 +18,17 @@ namespace Slot.Main.Messages
     {
         private bool mouse;
         private readonly MessageButtons button;
-        private readonly bool acceptButton;
         private readonly bool cancelButton;
 
-        public MessageButton(MessageButtons button, bool acceptButton, bool cancelButton)
+        public MessageButton(MessageButtons button, bool selected, bool cancelButton)
         {
             this.button = button;
-            this.acceptButton = acceptButton;
+            Selected = selected;
             this.cancelButton = cancelButton;
             Text = button.GetDisplayName();
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint
                 | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Selectable, true);
+            TabStop = true;
 
             using (var g = CreateGraphics())
                 MeasureSize(g);
@@ -42,7 +42,7 @@ namespace Slot.Main.Messages
             var theme = App.Component<ITheme>();
             var style = theme.GetStyle(StandardStyle.Default);
 
-            var pen = acceptButton ? style.ForeColor.ThickPen() : style.ForeColor.Pen();
+            var pen = Selected ? style.ForeColor.ThickPen() : style.ForeColor.Pen();
             var rect = new RectangleF(0, 0, Width - pen.Size(), Height - pen.Size());
             g.FillRectangle(
                 mouse
@@ -59,6 +59,14 @@ namespace Slot.Main.Messages
             var size = g.MeasureString(Text, env.Font);
             Width = (int)Math.Round(size.Width * 1.5, MidpointRounding.AwayFromZero);
             Height = (int)Math.Round(size.Height * 1.5, MidpointRounding.AwayFromZero);
+        }
+
+        protected override bool IsInputKey(Keys keyData)
+        {
+            if (keyData == Keys.Left || keyData == Keys.Right)
+                return true;
+            else
+                return base.IsInputKey(keyData);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -80,6 +88,7 @@ namespace Slot.Main.Messages
         {
             base.OnMouseEnter(e);
             mouse = true;
+            Focus();
             Invalidate();
         }
 
@@ -92,7 +101,7 @@ namespace Slot.Main.Messages
 
         public bool ProcessKeys(Keys keys)
         {
-            if (keys == Keys.Enter && acceptButton
+            if (keys == Keys.Enter && Selected
                 || keys == Keys.Escape && cancelButton)
             {
                 PerformClick();
@@ -126,7 +135,7 @@ namespace Slot.Main.Messages
             return false;
         }
 
-        public bool AcceptButton => acceptButton;
+        public bool Selected { get; set; }
 
         public bool CancelButton => cancelButton;
 

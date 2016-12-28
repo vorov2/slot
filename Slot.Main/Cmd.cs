@@ -11,6 +11,7 @@ namespace Slot.Main
         public static readonly Identifier ToggleCommandBar = new Identifier("app.toggleCommandBar");
         public static readonly Identifier ToggleMessage = new Identifier("app.toggleMessage");
 
+        public static readonly Identifier NewFile = new Identifier("file.newFile");
         public static readonly Identifier OpenFile = new Identifier("file.openFile");
         public static readonly Identifier OpenRecentFile = new Identifier("file.openRecentFile");
         public static readonly Identifier OpenModifiedFile = new Identifier("file.openModifiedFile");

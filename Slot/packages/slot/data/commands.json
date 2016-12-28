@@ -252,12 +252,10 @@
         ]
     },
     {
-        "key": "file.newfile",
+        "key": "file.newFile",
         "alias": "f-n",
         "title": "File: New file"
     },
-
-
     {
         "key": "file.switchBuffer",
         "alias": "f-bs",

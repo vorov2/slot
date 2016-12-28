@@ -4,8 +4,8 @@ namespace Slot.Core
 {
     public static partial class App
     {
-        public const string Version = "0.1.0.491";
+        public const string Version = "0.1.0.515";
         public const string BuildDate = "2016-12-28";
-        public const string Commit = "6eda45ba727a9fe012561c9a65bc867953295b67";
+        public const string Commit = "b59ef29e20cb42fcfc858110f5108145a6a115e4";
     }
 }
