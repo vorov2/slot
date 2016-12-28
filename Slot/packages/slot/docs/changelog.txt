@@ -1,1 +1,5 @@
-empty
+﻿Change log
+(+added -removed *changed)
+
+0.1.0
+Initial release of Slot
