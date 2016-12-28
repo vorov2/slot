@@ -81,8 +81,8 @@ namespace Slot.Core.CommandModel
 
         protected virtual void ProcessNotEnoughArguments(Identifier commandKey, object[] args)
         {
-            var cmd = App.Catalog<ICommandProvider>().Default().GetCommandByKey(commandKey);
-            App.Catalog<ICommandBar>().Default().Show(cmd.Alias, args);
+            var cmd = App.Component<ICommandProvider>().GetCommandByKey(commandKey);
+            App.Component<ICommandBar>().Show(cmd.Alias, args);
         }
 
         private void ResolveCommands()

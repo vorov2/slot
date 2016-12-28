@@ -47,7 +47,7 @@ namespace Slot.Main
         public void CommandPalette(string commandName)
         {
             var cmd = App.Component<ICommandProvider>().EnumerateCommands()
-                .FirstOrDefault(c => c.Title.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(c => c.Title != null && c.Title.Equals(commandName, StringComparison.OrdinalIgnoreCase));
 
             if (cmd == null)
             {
@@ -55,6 +55,7 @@ namespace Slot.Main
                 return;
             }
 
+            App.Component<ICommandBar>().Hide();
             App.Ext.Run(cmd.Key);
         }
 
