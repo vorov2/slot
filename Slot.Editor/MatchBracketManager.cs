@@ -25,7 +25,7 @@ namespace Slot.Editor
             this.editor = editor;
         }
 
-        internal bool IsBracketStyle(Line line, int col)
+        private bool IsBracketStyle(Line line, int col)
         {
             foreach (var a in line.AppliedStyles)
                 if (col >= a.Start && col <= a.End)

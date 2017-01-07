@@ -139,8 +139,8 @@ namespace Slot.Editor
             if (Buffer == null)
                 return;
 
-            CaretRenderer.Suspend();
             var dt = DateTime.Now;
+            CaretRenderer.Suspend();
 
             e.Graphics.FillRectangle(Theme.GetStyle(StandardStyle.Default).BackColor.Brush(),
                 new Rectangle(Info.TextLeft, Info.TextTop, Info.TextWidth, Info.TextHeight));
@@ -178,7 +178,7 @@ namespace Slot.Editor
             }
 
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
-            base.OnPaint(e);
+            //base.OnPaint(e);
         }
 
         protected override void OnResize(EventArgs eventargs)
@@ -513,17 +513,6 @@ namespace Slot.Editor
         public Document Document => Buffer?.Document;
 
         internal List<Line> Lines => Document?.Lines;
-
-        public override string Text
-        {
-            get { return Buffer?.GetText(); }
-            set
-            {
-                var doc = Document.FromString(value);
-                var buffer = new DocumentBuffer(doc, new FileInfo("untitled"), Encoding.UTF8, Guid.NewGuid());
-                AttachBuffer(buffer);
-            }
-        }
 
         public bool WordWrap => Buffer.WordWrap ?? EditorSettings.WordWrap;
 

@@ -2,6 +2,7 @@
 (+added -removed *changed/fixed)
 
 0.1.1
+*Performance improved on Mono (especially noticeable when fast scrolling huge files).
 *When moving caret up ('Up' key by default) a caret position could be incorrectly restored (with word wrap enabled, word wrap indent set to 'Same').
 
 0.1.0

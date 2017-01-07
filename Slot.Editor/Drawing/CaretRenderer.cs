@@ -87,11 +87,17 @@ namespace Slot.Editor.Drawing
 
         public void Suspend()
         {
-            timer.Enabled = false;
+            if (timer.Enabled)
+                timer.Enabled = false;
+
             timerDraw = true;
         }
 
-        public void Resume() => timer.Enabled = true;
+        public void Resume()
+        {
+            if (!timer.Enabled)
+                timer.Enabled = true;
+        }
 
         public Graphics GetDrawingSurface()
         {
