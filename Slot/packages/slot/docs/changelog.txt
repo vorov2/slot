@@ -1,5 +1,8 @@
 ﻿Change log
-(+added -removed *changed)
+(+added -removed *changed/fixed)
+
+0.1.1
+*When moving caret up ('Up' key by default) a caret position could be incorrectly restored (with word wrap enabled, word wrap indent set to 'Same').
 
 0.1.0
 Initial release of Slot

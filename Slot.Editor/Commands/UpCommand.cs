@@ -29,6 +29,14 @@ namespace Slot.Editor.Commands
             return pos;
         }
 
+        private static int GetShift(int lni, EditorControl ctx)
+        {
+            var set = ctx.EditorSettings;
+            var ln = ctx.Lines[lni];
+            return set.WrappingIndent == WrappingIndent.Same ? ln.Indent
+                : set.WrappingIndent == WrappingIndent.Indent ? ln.Indent /*+ set.IndentSize*/ : 0;
+        }
+
         private static Pos InternalMoveUp(EditorControl ctx, Selection sel, Pos pos)
         {
             var doc = ctx.Buffer.Document;
@@ -39,9 +47,6 @@ namespace Slot.Editor.Commands
                 var stripe = ln.GetStripe(pos.Col);
                 var tetra = ln.GetStripeCol(pos.Col, stripe);
                 tetra = tetra > sel.RestoreCaretCol ? tetra : sel.RestoreCaretCol;
-                var set = ctx.EditorSettings;
-                var shift = set.WrappingIndent == WrappingIndent.Same ? ln.Indent
-                    : set.WrappingIndent == WrappingIndent.Indent ? ln.Indent /*+ set.IndentSize*/ : 0;
 
                 if (stripe == 0)
                 {
@@ -49,6 +54,7 @@ namespace Slot.Editor.Commands
                         return pos;
                     else
                     {
+                        var shift = GetShift(pos.Line - 1, ctx);
                         var newLn = doc.Lines[pos.Line - 1];
                         var strp = newLn.Stripes - 2;
                         var newCut = newLn.GetCut(strp < 0 ? 0 : strp);
@@ -64,6 +70,7 @@ namespace Slot.Editor.Commands
                 }
                 else
                 {
+                    var shift = GetShift(pos.Line, ctx);
                     var newStart = stripe > 1 ? ln.GetCut(stripe - 2) : 0;
                     var newEnd = ln.GetCut(stripe - 1) - 1;
                     shift = stripe - 1 == 0 ? 0 : shift;
