@@ -374,11 +374,6 @@
         "title": "Editor: Delete current line (or selected lines)"
     },
     {
-        "key": "editor.deleteline",
-        "alias": "e-ld",
-        "title": "Editor: Delete current line (or selected lines)"
-    },
-    {
         "key": "editor.insertlinebelow",
         "alias": "e-lib",
         "title": "Editor: Insert line below caret position"
