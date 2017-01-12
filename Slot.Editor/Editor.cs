@@ -178,7 +178,7 @@ namespace Slot.Editor
             }
 
             Console.WriteLine("OnPaint time: " + (DateTime.Now - dt).TotalMilliseconds);
-            //base.OnPaint(e);
+            base.OnPaint(e);
         }
 
         protected override void OnResize(EventArgs eventargs)
