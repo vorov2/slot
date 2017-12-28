@@ -25,7 +25,7 @@ namespace Slot.Main.CommandBar
     public class CommandBarControl : Control
     {
         private EditorControl editor;
-        private EditorControl commandEditor;
+        private LineEditor commandEditor;
         private AutocompleteWindow window;
 
         public CommandBarControl(EditorControl editor)

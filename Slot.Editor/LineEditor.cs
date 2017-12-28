@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Slot.Editor
 {
@@ -30,6 +25,12 @@ namespace Slot.Editor
         {
             AdjustHeight();
             base.OnPaint(e);
+        }
+
+        public override string Text
+        {
+            get { return base.DocumentText; }
+            set { base.DocumentText = value; }
         }
     }
 }

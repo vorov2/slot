@@ -514,6 +514,17 @@ namespace Slot.Editor
 
         internal List<Line> Lines => Document?.Lines;
 
+        public string DocumentText
+        {
+            get { return Buffer?.GetText(); }
+            set
+            {
+                var doc = Document.FromString(value);
+                var buffer = new DocumentBuffer(doc, new FileInfo("untitled"), Encoding.UTF8, Guid.NewGuid());
+                AttachBuffer(buffer);
+            }
+        }
+
         public bool WordWrap => Buffer.WordWrap ?? EditorSettings.WordWrap;
 
         public int WordWrapColumn => Buffer.WordWrapColumn ?? EditorSettings.WordWrapColumn;

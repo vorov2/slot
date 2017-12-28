@@ -28,6 +28,7 @@ namespace Slot.Editor.Search
         public SearchWindow(EditorControl editor)
         {
             this.editor = editor;
+            
             Cursor = Cursors.Default;
             SearchBox = new LineEditor(editor);
             SearchBox.Paint += SearchBoxPaint;
@@ -35,6 +36,8 @@ namespace Slot.Editor.Search
             SearchBox.CommandRejected += SearchBoxCommandRejected;
             SearchBox.LostFocus += SearchBoxLostFocus;
             Controls.Add(SearchBox);
+            SearchBox.Text = "";
+            SearchBox.EditorSettings.ShowEol = false;
         }
 
         private void SearchBoxCommandRejected(object sender, EventArgs e)
