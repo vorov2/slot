@@ -83,6 +83,7 @@ namespace Slot
                     App.Ext.Run(Cmd.NewFile);
             }
 
+            Application.EnableVisualStyles();
             Application.ApplicationExit += (o, e) => slotServer.StopServer();
             Application.Run();
         }
