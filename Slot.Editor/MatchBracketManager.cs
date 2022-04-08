@@ -68,6 +68,9 @@ namespace Slot.Editor
 
             foreach (var sel in editor.Buffer.Selections)
             {
+                if (sel.Caret.Line >= editor.Lines.Count)
+                    continue;
+
                 var ln = editor.Lines[sel.Caret.Line];
                 var grm1 = editor.AffinityManager.GetAffinity(sel.Caret);
                 var grm2 = editor.AffinityManager.GetAffinity(new Pos(sel.Caret.Line, sel.Caret.Col - 1));

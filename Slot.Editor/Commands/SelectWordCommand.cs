@@ -51,6 +51,10 @@ namespace Slot.Editor.Commands
         internal static Range SelectWord(EditorControl ctx, Pos caret, Strategy strategy = Strategy.None)
         {
             var doc = ctx.Buffer.Document;
+
+            if (caret.Line >= doc.Lines.Count)
+                return null;
+            
             var line = doc.Lines[caret.Line];
             var seps = ctx.AffinityManager.GetAffinity(caret).GetNonWordSymbols(ctx);
 
